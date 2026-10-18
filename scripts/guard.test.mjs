@@ -43,6 +43,19 @@ check(r1.status === 1, "a repo with violations fails");
 for (const [kind, file] of [["size", "big.json"], ["weights", "model.safetensors"], ["env", ".env"], ["crlf", "crlf.txt"], ["secret", "aws.md"], ["secret", "gh.md"], ["secret", "pk.md"], ["path", "home.md"], ["path", "bash.md"]])
   check(new RegExp(`^${kind}\\s+${file.replace(".", "\\.")}`, "m").test(r1.stdout), `flags ${kind} in ${file}`);
 
+// The allow list waives size only for the exact reviewed bytes.
+const { createHash } = await import("node:crypto");
+const big = "y".repeat(5 * 1024 * 1024 + 1);
+const sha = createHash("sha256").update(big).digest("hex");
+const allowJson = (s) => JSON.stringify([{ path: "model.bin", sha256: s, reason: "test" }]);
+const okAllow = repo({ "model.bin": big, "guard.allow.json": allowJson(sha) });
+check(run(okAllow).status === 0, "an allow-listed large file with its reviewed hash passes");
+const badAllow = repo({ "model.bin": big + "z", "guard.allow.json": allowJson(sha) });
+check(/^allow\s+model\.bin\s+sha256/m.test(run(badAllow).stdout), "an allow-listed file whose bytes changed fails");
+const ghost = repo({ "README.md": "x\n", "guard.allow.json": allowJson(sha) });
+check(/^allow\s+model\.bin\s+listed/m.test(run(ghost).stdout), "an allow entry for an untracked file fails");
+for (const d of [okAllow, badAllow, ghost]) rmSync(d, { recursive: true, force: true });
+
 rmSync(clean, { recursive: true, force: true });
 rmSync(bad, { recursive: true, force: true });
 console.log(failed ? `\n${failed} check(s) failed` : "\nall checks pass");
