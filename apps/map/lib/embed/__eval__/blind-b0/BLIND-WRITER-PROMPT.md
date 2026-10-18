@@ -8,9 +8,9 @@ You are writing search queries for an evaluation of the search box on eye.jcamd.
 
 ## What you may read
 
-Read exactly one other file: `C:\Users\jcdav\writeups\panel-2026-10-18b\b0\blind-b0\writer\CORPUS-DESCRIPTION.md`. Its sha256 must be `3bd39548c5a37a5695a2ebbac776e834098de7a842df68311ef0736b6aab8d6a`. If it is not, stop and say so.
+Read exactly one other file: `C:\Users\<name>\writeups\panel-2026-10-18b\b0\blind-b0\writer\CORPUS-DESCRIPTION.md`. Its sha256 must be `3bd39548c5a37a5695a2ebbac776e834098de7a842df68311ef0736b6aab8d6a`. If it is not, stop and say so.
 
-Do not open anything else: nothing under `C:\Users\jcdav\writeups\` outside this `writer` folder (in particular not `panel-2026-10-18b\b0\` itself, `eye-embeddings-2026-10-16\` or anything named blind, records-eval or search-eval), no `gods-eye-view*` folder, not the live site or its API, and no search results. Do not run a search to test a query. The queries must come from the description alone. If you open anything else by mistake, say which file in `WRITER-NOTE.md`; the set will then be thrown away.
+Do not open anything else: nothing under `C:\Users\<name>\writeups\` outside this `writer` folder (in particular not `panel-2026-10-18b\b0\` itself, `eye-embeddings-2026-10-16\` or anything named blind, records-eval or search-eval), no `gods-eye-view*` folder, not the live site or its API, and no search results. Do not run a search to test a query. The queries must come from the description alone. If you open anything else by mistake, say which file in `WRITER-NOTE.md`; the set will then be thrown away.
 
 ## What to write
 
@@ -36,7 +36,7 @@ Do **not** say which records are relevant, and do not grade anything.
 
 ## Output
 
-Write two files, both in `C:\Users\jcdav\writeups\panel-2026-10-18b\b0\blind-b0\writer\`:
+Write two files, both in `C:\Users\<name>\writeups\panel-2026-10-18b\b0\blind-b0\writer\`:
 
 1. `queries.blind.json`, UTF-8 with LF line endings, in this shape:
 

@@ -4,8 +4,8 @@ Written 2026-10-18T18:57:26Z by claude-fable-5-1, session 0c2607d0-340d-4849-875
 
 ## Files read
 
-1. `C:\Users\jcdav\writeups\panel-2026-10-18b\b0\blind-b0\writer\BLIND-WRITER-PROMPT.md` (the task).
-2. `C:\Users\jcdav\writeups\panel-2026-10-18b\b0\blind-b0\writer\CORPUS-DESCRIPTION.md`. Its sha256 was computed with a one-shot `sha256sum` shell command (through the Monitor tool, the only shell available in this session) and came back `3bd39548c5a37a5695a2ebbac776e834098de7a842df68311ef0736b6aab8d6a`, matching the prompt.
+1. `C:\Users\<name>\writeups\panel-2026-10-18b\b0\blind-b0\writer\BLIND-WRITER-PROMPT.md` (the task).
+2. `C:\Users\<name>\writeups\panel-2026-10-18b\b0\blind-b0\writer\CORPUS-DESCRIPTION.md`. Its sha256 was computed with a one-shot `sha256sum` shell command (through the Monitor tool, the only shell available in this session) and came back `3bd39548c5a37a5695a2ebbac776e834098de7a842df68311ef0736b6aab8d6a`, matching the prompt.
 
 No other file was opened. No search was run against the site or its API, and no query was tested anywhere. Nothing under `panel-2026-10-18b\b0\` outside this `writer` folder, nothing named blind, records-eval or search-eval, and no `gods-eye-view*` folder was touched.
 
