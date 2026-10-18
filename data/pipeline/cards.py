@@ -1,0 +1,133 @@
+"""The collections the snapshot builder knows, and the one region it builds today.
+
+Each collection names the eye route it reads, that route's box limits (read from eye's code on origin/master
+ed1a907), how a record's place is read from the source's own fields, and the publisher layer that gives the
+count. Box limits: eye clamps a box to `span` degrees around its centre and snaps it outward to a `grid`
+degree grid, so tiles of exactly `span` on that grid come back unchanged (the builder checks the echoed bbox).
+"""
+
+from __future__ import annotations
+
+import re
+
+EYE = "https://eye.jcamd.com"
+
+NCES = "https://nces.ed.gov/opengis/rest/services/K12_School_Locations/EDGE_ADMINDATA_PUBLICSCH_2425/MapServer/1"
+NID = "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0"
+NRHP = "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0"
+
+# eye's own filter on NRHP points (app/api/land/route.ts NRHP_WHERE): listed, and no restricted address.
+NRHP_EYE_WHERE = "STATUS='Listed' AND (Address IS NULL OR UPPER(Address) NOT LIKE '%RESTRICT%')"
+
+REGIONS = {
+    "texas": {
+        "id": "texas",
+        "name": "Texas",
+        "stateFips": "48",
+        "stateUsps": "TX",
+        "stateName": "Texas",
+        # eye's state outlines: /api/economy?op=areas&level=state (Census TIGERweb, generalised 1:20M).
+        "boundaryUrl": f"{EYE}/api/economy?op=areas&level=state",
+        "boundaryId": "state:48",
+    },
+}
+
+# The 20M outline is generalised: a coastal or river-border point can fall a little outside it. A record is in
+# the region when its source says the state AND its point lies within this many degrees of the outline.
+BOUNDARY_TOLERANCE_DEG = 0.05
+
+
+def _county_code(details: dict) -> str | None:
+    """NCES: details.county reads "Travis County (48453)"; the code is NCES's own CNTY field."""
+    m = re.search(r"\((\d{5})\)\s*$", str(details.get("county", "")))
+    return m.group(1) if m else None
+
+
+def schools_state(details: dict, region: dict):
+    """(source stateFips or None, place or None). The state is the first two digits of NCES's county code."""
+    c = _county_code(details)
+    if not c:
+        return None, None
+    st = c[:2]
+    place = {"stateFips": st, "stateUsps": region["stateUsps"], "countyFips": c, "method": "source-field"} if st == region["stateFips"] else None
+    return st, place
+
+
+def named_state(details: dict, region: dict):
+    """NID and NRHP: details.state is the state's name ("Texas", "TEXAS"), matched to the code table."""
+    s = str(details.get("state", "")).strip().upper()
+    if not s:
+        return None, None
+    if s == region["stateName"].upper():
+        return region["stateFips"], {"stateFips": region["stateFips"], "stateUsps": region["stateUsps"], "method": "name-lookup"}
+    return f"other:{s}", None
+
+
+COLLECTIONS = {
+    "nid-dams": {
+        "route": "infra",
+        "op": "dams",
+        "span": 1.5,
+        "grid": 0.25,
+        "nameRule": "public-name",
+        "state": named_state,
+        "stateSource": "NID's STATE field (eye's details.state)",
+        "withheld": [],
+        "publisher": {
+            "layer": NID,
+            "stateWhere": lambda r: f"STATE='{r['stateName']}'",
+            "idField": "NIDID",
+            "statusField": None,
+            "eyeId": lambda a: f"nid:{a['NIDID']}",
+        },
+    },
+    "nces-public-schools": {
+        "route": "civic",
+        "op": "schools",
+        "span": 0.2,
+        "grid": 0.05,
+        "nameRule": "public-name",
+        "state": schools_state,
+        "stateSource": "the first two digits of NCES's county code CNTY (eye's details.county)",
+        "withheld": [],
+        "publisher": {
+            "layer": NCES,
+            "stateWhere": lambda r: f"LSTATE='{r['stateUsps']}'",
+            "idField": "NCESSCH",
+            "statusField": "SY_STATUS_TEXT",
+            "eyeId": lambda a: f"nces:{a['NCESSCH']}",
+            # eye leaves out schools NCES marks Inactive or Future (lib/civic/schools.ts NOT_OPERATING).
+            "notServed": lambda a: a.get("SY_STATUS_TEXT") in ("Inactive", "Future"),
+            "notServedWhy": "NCES status {SY_STATUS_TEXT}: not operating in 2024-25, and eye does not draw it",
+        },
+    },
+    "nrhp-listed": {
+        "route": "land",
+        "op": "historic",
+        "span": 0.12,
+        "grid": 0.02,
+        "nameRule": "label-by-id",
+        "state": named_state,
+        "stateSource": "NPS's State field (eye's details.state)",
+        "withheld": [
+            {
+                "field": "property name (as NPS lists it)",
+                "why": "NPS's RESNAME can be a person's name (eye's nrhp-listed card: never searched or embedded); a training snapshot leaves it out",
+            }
+        ],
+        "publisher": {
+            "layer": NRHP,
+            "stateWhere": lambda r: f"State='{r['stateName'].upper()}'",
+            "idField": "OBJECTID",
+            "statusField": "STATUS",
+            "eyeId": lambda a: f"nrhp:pt:{a['OBJECTID']}",
+            "notServed": lambda a: a.get("STATUS") != "Listed",
+            "notServedWhy": "NPS STATUS {STATUS}: not a current listing, and eye asks only STATUS='Listed'",
+            # Rows eye's filter keeps; a Listed row outside this set has a restricted address (never requested here).
+            "eyeWhere": NRHP_EYE_WHERE,
+        },
+    },
+}
+
+# Build order: smallest first, so a problem shows up before the long runs.
+ORDER = ["nid-dams", "nces-public-schools", "nrhp-listed"]

@@ -19,7 +19,7 @@ A project lives here only if it serves one of these jobs.
 - No search or embedding of private individuals.
 - Large data, caches and model weights don't go in git.
 
-The record and snapshot format these rules apply to is in [data/SCHEMA.md](data/SCHEMA.md).
+The record and snapshot format these rules apply to is in [data/SCHEMA.md](data/SCHEMA.md). How snapshots are built and read is in [data/PIPELINE.md](data/PIPELINE.md).
 
 ## Status
 

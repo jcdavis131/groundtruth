@@ -7,6 +7,7 @@ __pycache__/
 .env*
 !.env.example
 data/raw/
+data/snapshots/
 *.parquet
 *.pt
 *.safetensors

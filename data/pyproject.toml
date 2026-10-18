@@ -1,0 +1,14 @@
+[project]
+name = "groundtruth-data"
+version = "0.1.0"
+description = "Snapshot builder and reader for groundtruth's record/1 snapshots (data/SCHEMA.md, data/pipeline/)"
+requires-python = ">=3.11"
+license = "MIT"
+# One dependency, pinned. DuckDB's spatial extension is loaded at runtime from DuckDB's own keyless
+# extension repository (INSTALL spatial), not from pip.
+dependencies = ["duckdb==1.4.4"]
+
+[tool.groundtruth]
+venv = "data/.venv (gitignored)"
+run = "data/.venv/Scripts/python data/pipeline/build.py <collection> (Windows) or data/.venv/bin/python (elsewhere)"
+test = "python -m unittest discover -s data/pipeline -p test_*.py"

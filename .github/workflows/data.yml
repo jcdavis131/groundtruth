@@ -1,6 +1,9 @@
 # The data spec's own test: every valid record and manifest fixture passes,
 # every invalid one fails for its stated reason, and each fixture snapshot's
 # files hash to what its manifest says. Plain Node, no install, no network.
+# Then the committed snapshot manifests (data/manifests/, whose files live
+# outside git) are checked on their own, and the snapshot reader's tests run
+# with the one pinned Python dependency.
 name: data
 
 on:
@@ -27,3 +30,28 @@ jobs:
         run: node data/schema/validate.test.mjs
       - name: validate the fixture snapshots from the command line
         run: node data/schema/validate.mjs manifest data/schema/fixtures/snapshots/*/manifest.json
+      - name: validate the committed snapshot manifests (their files are in the data root, not in git)
+        run: |
+          shopt -s nullglob
+          files=(data/manifests/*/*.json)
+          if [ ${#files[@]} -eq 0 ]; then echo "no committed manifests"; exit 0; fi
+          node data/schema/validate.mjs manifest --no-files "${files[@]}"
+
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: install the one pinned dependency (data/pyproject.toml)
+        run: python -m pip install $(python -c 'import tomllib; print(" ".join(tomllib.load(open("data/pyproject.toml", "rb"))["project"]["dependencies"]))')
+      - name: reader and tiling tests (a tampered snapshot file is refused)
+        run: python -m unittest discover -s data/pipeline -p "test_*.py" -v
