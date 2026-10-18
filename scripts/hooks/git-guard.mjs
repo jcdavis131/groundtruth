@@ -919,8 +919,10 @@ function checkSegment(words, ctx, depth, env = {}, brace = false) {
     if (name === "xargs") return checkXargs(args, ctx, env);
     if (STDIN_WRAPPERS.has(name) && !args.some((a) => !a.text.startsWith("-")) && tokenIn(ctx.root))
       return `a pipe into ${name}, with git in the command: the guard can't see what it reads. Run git directly`;
-    // Any word may be a string the wrapper hands to sh: watch 'git push -f', flock /tmp/l -c '...'.
+    // Any word may be a string the wrapper hands to sh: watch 'git push -f', flock /tmp/l -c '...'. Words
+    // after git itself are git's arguments (a commit message), which the precise path checks below.
     for (const a of args) {
+      if (cmdName(a.text) === "git") break;
       const r = scanText(a.text, false, ctx, depth + 1);
       if (r) return r;
     }

@@ -478,6 +478,7 @@ const SAFE = [
   ["B", "git -C /tmp/repo log -1", "none"],
   ["B", "GIT_TRACE=1 git fetch origin", "F"],
   ["B", "timeout 120 git fetch origin", "F"],
+  ["B", 'timeout 120 git commit -m "teach git to push to a branch, not master"', "F"],
   ["B", "for f in a.txt; do git add \"$f\"; done", "F"],
   ["B", 'gh pr create --title "Block force push to master" --body "git push --force is denied"', "F"],
   ["B", "gh pr view 5 --json body -q .body", "F"],
