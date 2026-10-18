@@ -1,7 +1,7 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 const STORAGE_KEY = "eye-chrome-theme";
 const LIGHT_META = "#ffffff";
@@ -25,16 +25,19 @@ export function applyTheme(theme: "light" | "dark") {
   }
 }
 
+/** The theme lives on <html class="dark">; watch that attribute instead of copying it into state in an effect. */
+function subscribeTheme(onChange: () => void): () => void {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  return () => observer.disconnect();
+}
+const serverTheme = (): "light" | "dark" => "light";
+
 /** Sun/moon toggle between the paper shell (default) and the night-board cockpit. */
 export default function ThemeToggle({ className = "hidden md:inline-flex" }: { className?: string }) {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-  useEffect(() => {
-    setTheme(currentTheme());
-  }, []);
+  const theme = useSyncExternalStore(subscribeTheme, currentTheme, serverTheme);
   const toggle = useCallback(() => {
-    const next = currentTheme() === "dark" ? "light" : "dark";
-    applyTheme(next);
-    setTheme(next);
+    applyTheme(currentTheme() === "dark" ? "light" : "dark");
   }, []);
   const Icon = theme === "dark" ? Sun : Moon;
   return (
