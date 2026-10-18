@@ -45,7 +45,10 @@ const SECRETS = [
   ["google api key", /\bAIza[0-9A-Za-z_-]{35}\b/],
   ["private key", /-----BEGIN (?:RSA |EC |OPENSSH |DSA |ENCRYPTED |PGP )?PRIVATE KEY(?: BLOCK)?-----/],
 ];
-const HOME_PATH = /[A-Za-z]:(?:\\+|\/+)Users(?:\\+|\/+)[^\\/\s"'<>]+|\/[A-Za-z]\/Users\/[^/\s"'<>]+/i;
+// Drive-letter paths match in any case. The Git Bash form needs "Users" capitalized and a single drive letter
+// that isn't part of a longer path, so web routes like /c/users/42 or /api/r/Users/top are not flagged.
+const HOME_PATH = /[A-Za-z]:(?:\\+|\/+)Users(?:\\+|\/+)[^\\/\s"'<>]+|(?<![\w/.-])\/[A-Za-z]\/Users\/[^/\s"'<>]+/i;
+const GITBASH_CASE = /\/[A-Za-z]\/Users\//;
 
 function textOf(buf) {
   if (buf[0] === 0xff && buf[1] === 0xfe) return buf.subarray(2).toString("utf16le");
@@ -85,7 +88,9 @@ for (const f of files) {
   for (const [name, re] of SECRETS) if (re.test(scan)) findings.push(`secret   ${f}  (${name})`);
   if (text === null) continue;
   if (text.includes("\r")) findings.push(`crlf     ${f}`);
-  const m = text.match(HOME_PATH);
+  const m = [...text.matchAll(new RegExp(HOME_PATH.source, "gi"))].find(
+    (h) => /^[A-Za-z]:/.test(h[0]) || GITBASH_CASE.test(h[0]),
+  );
   if (m) findings.push(`path     ${f}  (${m[0].slice(0, 40)})`);
 }
 const tracked = new Set(files);
