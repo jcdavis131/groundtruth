@@ -78,8 +78,6 @@
     "satellites",
     "sgp4",
     "earthquakes",
-    "osint",
-    "nextjs",
-    "spy-satellite"
+    "nextjs"
   ]
 }

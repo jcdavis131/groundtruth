@@ -4,11 +4,15 @@
 import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
 const cesiumPkg = dirname(require.resolve("cesium/package.json"));
 const src = join(cesiumPkg, "Build", "Cesium");
-const dest = join(process.cwd(), "public", "cesium");
+// The app's public/ folder, found from this script rather than the working
+// directory, so a run from the groundtruth root still fills apps/map/public.
+const appRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
+const dest = join(appRoot, "public", "cesium");
 const version = JSON.parse(readFileSync(join(cesiumPkg, "package.json"), "utf8")).version;
 const stamp = join(dest, ".version");
 

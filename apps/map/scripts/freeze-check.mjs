@@ -6,8 +6,10 @@
 //
 // Before the date, more entries than "max" fails with the new ids named;
 // on or after it, or at or under the cap, it passes and prints the count.
-// Plain Node, no dependencies. Run from the repository root:
-//   node scripts/freeze-check.mjs
+// Plain Node, no dependencies. FREEZE.json and lib/catalog/collections.ts are
+// read from the app root (apps/map), wherever the command runs from:
+//   node scripts/freeze-check.mjs            (in apps/map)
+//   node apps/map/scripts/freeze-check.mjs   (at the groundtruth root)
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -47,7 +49,9 @@ export function verdict(ids, freeze, today) {
 }
 
 function main() {
-  const root = process.cwd();
+  // The app root is this script's parent folder, so the check reads the same
+  // files whether it runs from apps/map (CI) or from the groundtruth root.
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
   const freeze = JSON.parse(fs.readFileSync(path.join(root, "FREEZE.json"), "utf8"));
   const ids = collectionIds(fs.readFileSync(path.join(root, "lib/catalog/collections.ts"), "utf8"));
   if (new Set(ids).size !== ids.length) console.log("warning: duplicate collection ids in COLLECTIONS");
