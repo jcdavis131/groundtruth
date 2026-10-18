@@ -1,7 +1,7 @@
 // Two boundaries around the people data (docs/PEOPLE.md):
 //
-// T1  What is stored. The committed bundle, the class overrides and every
-//     fixture are walked: no address, mailing, phone, signature, footnote,
+// T1  What is stored. The class overrides and every fixture are walked (the
+//     real bundle is not committed here; a committed one would be walked too): no address, mailing, phone, signature, footnote,
 //     remarks or former-name key, and no value shaped like a US street line,
 //     a PO box, a care-of line, a suite, a state and ZIP, or a phone number.
 //     Keys match exactly, so "businesses", "stateFips" and "zips" pass.
@@ -171,9 +171,14 @@ describe("T1: no address, signature, footnote or remarks in the people data", ()
 
   const files = [...jsonFiles(path.join(__dirname, "data")), ...jsonFiles(path.join(__dirname, "fixtures"))];
 
-  it("walks the committed bundle and every fixture", () => {
+  // groundtruth keeps the real roster out of the repository (charter decision 3),
+  // so the walk covers the fixture and whatever else sits in data/ (the class
+  // overrides). If a bundle is ever committed again, it lands in `files` and
+  // gets every check below, but this test fails first so that is a decision.
+  it("walks every fixture and the data folder, which holds no committed bundle", () => {
     const names = files.map(rel);
-    expect(names).toContain("lib/people/data/insiders.json");
+    expect(names).not.toContain("lib/people/data/insiders.json");
+    expect(names).toContain("lib/people/data/class-overrides.json");
     expect(names).toContain("lib/people/fixtures/insiders.fixture.json");
   });
 
@@ -233,8 +238,8 @@ describe("T1: no address, signature, footnote or remarks in the people data", ()
 
   const bundles = files.filter((f) => /insiders(?:\.fixture)?\.json$/.test(f));
 
-  it("checks the names in the committed bundle and the fixture", () => {
-    expect(bundles.map(rel).sort()).toEqual(["lib/people/data/insiders.json", "lib/people/fixtures/insiders.fixture.json"]);
+  it("checks the names in the fixture, the only bundle in the repository", () => {
+    expect(bundles.map(rel).sort()).toEqual(["lib/people/fixtures/insiders.fixture.json"]);
   });
 
   it.each(bundles.map((f) => [rel(f), f]))("%s: no individual's name carries a disambiguator", (_name, file) => {

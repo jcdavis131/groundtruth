@@ -1,6 +1,7 @@
 // The notable-people store: SEC Form 3/4/5 reporting owners by issuer, read
 // from lib/people/data/insiders.json (built offline by scripts/people-data.py;
-// docs/PEOPLE.md, "The bundle").
+// docs/PEOPLE.md, "The bundle"). groundtruth does not commit that file, so
+// unless a deployment builds it, the store is the empty one (built: false).
 //
 // Server only. The file is read once per process, on first use, with
 // node:fs, never imported: nothing under public/, no client module and no
@@ -326,14 +327,14 @@ export async function loadPeopleStore(file: string): Promise<PeopleStore> {
   return createPeopleStore(JSON.parse(text) as PeopleBundle);
 }
 
-/** The committed bundle, relative to the app root. */
+/** Where the bundle goes, relative to the app root. Not committed in groundtruth; missing reads as the empty store. */
 export function peopleBundlePath(): string {
   return path.join(process.cwd(), "lib", "people", "data", "insiders.json");
 }
 
 let store: Promise<PeopleStore> | null = null;
 
-/** The process-wide store over the committed bundle, loaded on first use. A failed load is retried on the next call. */
+/** The process-wide store over the bundle (empty when the file is missing), loaded on first use. A failed load is retried on the next call. */
 export function getPeopleStore(): Promise<PeopleStore> {
   store ??= loadPeopleStore(peopleBundlePath()).catch((err: unknown) => {
     store = null;

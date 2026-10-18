@@ -1,5 +1,6 @@
 // The people store over the hand-written fixture (placeholder CIKs above
-// EDGAR's range, names removed) and, once, over the committed bundle:
+// EDGAR's range, names removed) and, once, the process-wide store, which is
+// empty here because the real bundle is not committed:
 // issuer to people, owner to issuers, padded and unpadded CIK lookups,
 // vehicles with no name or CIK, and a load that refuses a bundle whose layout
 // it does not know.
@@ -242,27 +243,18 @@ describe("a bundle the reader does not know is refused", () => {
   });
 });
 
-describe("the committed bundle", () => {
-  it("loads once per process and indexes every row both ways", async () => {
+// groundtruth does not commit lib/people/data/insiders.json (charter decision 3),
+// so the process-wide store is the honest empty one: not built, no quarters, no
+// rows, the same as a deployment that never ran scripts/people-data.py.
+describe("the process-wide store with no committed bundle", () => {
+  it("loads once per process and answers empty, not 'no insiders'", async () => {
     const s = await getPeopleStore();
     expect(await getPeopleStore()).toBe(s);
-    expect(s.meta.built).toBe(true);
-    expect(s.meta.quarters.at(-1)).toMatch(/^\d{4}q[1-4]$/);
-
-    const bundle = JSON.parse(readFileSync(path.join(__dirname, "data", "insiders.json"), "utf8")) as PeopleBundle & {
-      counts: { issuers: number; edges: number };
-    };
-    const keys = Object.keys(bundle.issuers);
-    expect(keys).toHaveLength(bundle.counts.issuers);
-    let edges = 0;
-    for (const k of keys) edges += s.roster(k).length;
-    expect(edges).toBe(bundle.counts.edges);
-
-    const [issuer, rows] = Object.entries(bundle.issuers).find(([, rs]) => rs.some((r) => r[2] === "i"))!;
-    const person = rows.find((r) => r[2] === "i")!;
-    const o = s.owner(person[0])!;
-    expect(o.ownerClass).toBe("individual");
-    expect(o.links.map((l) => l.issuerCik)).toContain(issuer);
-    expect(s.roster(Number(issuer))).toEqual(s.roster(issuer));
+    expect(s.meta.built).toBe(false);
+    expect(s.meta.quarters).toEqual([]);
+    expect(s.roster(A)).toEqual([]);
+    expect(s.owner(9000001)).toBeNull();
+    expect(s.isIssuer(A)).toBe(false);
+    expect(s.isReportingOwner(9000001)).toBe(false);
   });
 });
