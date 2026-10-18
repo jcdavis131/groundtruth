@@ -401,6 +401,11 @@ const CASES = [
   ["deny", "P", "Set-Alias g git; g push -f origin feature", "F"],
   ["deny", "B", "git status && $(echo git) push -f origin feature", "F"],
   ["deny", "B", "git status | bash", "F"],
+  // Denied on purpose, though safe: git inside $( ), and a variable set to text with git in it.
+  ["deny", "B", "b=$(git rev-parse --abbrev-ref HEAD)", "F"],
+  ["deny", "B", "for f in $(git diff --name-only); do echo $f; done", "F"],
+  ["deny", "B", '[ -z "$(git status --porcelain)" ] && echo clean', "F"],
+  ["deny", "B", 'msg="guard: block git push --force"; git commit -m "$msg"', "F"],
 
   // allowed: feature-branch pushes
   ["allow", "B", "git push origin feature", "F"],
@@ -575,6 +580,9 @@ const SAFE = [
   ["P", "if (Test-Path .git) { Write-Output ok }; git status", "F"],
   ["P", "$files = git diff --name-only; git add $files", "F"],
   ["P", "git log -3 | Out-String", "F"],
+  ["P", "git branch | Sort-Object", "F"],
+  ["P", "git status --porcelain | Tee-Object -FilePath status.txt", "F"],
+  ["B", "mkdir -p /tmp/work/git", "F"],
 ];
 
 let failed = 0;

@@ -32,7 +32,8 @@
 // whatever their own words, since they may read the git from a pipe, a here-string or a variable.
 // Constructs that hold no git are left alone: Get-ChildItem | ForEach-Object { $_.Name }; git status passes.
 // Some safe commands are denied on purpose: bash -c 'git status', (git status), echo `git x`,
-// git add src/{a,b}.js, if ($x) { git status }. Run git as its own command instead.
+// b=$(git rev-parse HEAD), msg="... git ..."; git commit -m "$msg", git add src/{a,b}.js,
+// if ($x) { git status }. Run git as its own command instead (PowerShell $b = git ... is fine).
 //
 // Blocks:
 //   push      --force, -f (alone or in a cluster like -fu), --force-with-lease, --force-if-includes,
@@ -839,12 +840,12 @@ const LAUNCHERS = new Set([
 const INERT = new Set([
   "echo", "printf", "cat", "grep", "egrep", "fgrep", "rg", "ls", "head", "tail", "wc", "sort", "uniq", "cut", "tr",
   "tee", "nl", "diff", "cmp", "comm", "which", "type", "pwd", "basename", "dirname", "realpath", "readlink", "stat",
-  "test", "[", "[[", "true", "false", ":", "gh",
+  "test", "[", "[[", "true", "false", ":", "gh", "mkdir", "touch", "cp", "mv", "rm",
   // PowerShell
   "write-output", "write-host", "get-content", "gc", "get-childitem", "gci", "dir", "select-string", "sls",
   "select-object", "select", "test-path", "join-path", "split-path", "resolve-path", "get-item", "gi",
   "get-location", "measure-object", "measure", "out-null", "out-string", "out-file", "format-table", "ft",
-  "format-list", "fl",
+  "format-list", "fl", "sort-object", "out-host", "convertto-json", "compare-object", "get-unique", "tee-object",
 ]);
 // Options that make an INERT tool run a program: sort --compress-program, rg --pre.
 const RUNS_PROGRAM = /^--(?:pre(?:-glob)?(?:=|$)|compress)/;
