@@ -1,0 +1,419 @@
+[
+ {
+  "permitnum": "7135199-CN",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Addition/Alteration",
+  "description": "Construct tenant improvements for restaurant on ground floor of mixed-use building  per plan",
+  "housingunitsremoved": "0.0",
+  "housingunitsadded": "0.0",
+  "estprojectcost": "50000.0000",
+  "applieddate": "2026-08-18T00:00:00.000",
+  "issueddate": "2026-09-23T00:00:00.000",
+  "expiresdate": "2028-03-23T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "1103 1ST AVE",
+  "originalzip": "98101",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7135199-CN"
+  },
+  "latitude": "47.60550957",
+  "longitude": "-122.33731600"
+ },
+ {
+  "permitnum": "7163258-BK",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Tenant Improvment",
+  "description": "Construct blanket permit tenant improvements to Snell & Wilmer on the 37th floor of existing commercial building  per plan.",
+  "estprojectcost": "206000.0000",
+  "applieddate": "2026-09-21T00:00:00.000",
+  "issueddate": "2026-09-23T00:00:00.000",
+  "expiresdate": "2028-03-23T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "601 UNION ST",
+  "originalzip": "98101",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7163258-BK"
+  },
+  "latitude": "47.61043100",
+  "longitude": "-122.33207692"
+ },
+ {
+  "permitnum": "7163264-BK",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Tenant Improvment",
+  "description": "Construct blanket permit tenant improvements to Snell & Wilmer on the 37th floor of existing commercial building  per plan.",
+  "estprojectcost": "64000.0000",
+  "applieddate": "2026-09-21T00:00:00.000",
+  "issueddate": "2026-09-23T00:00:00.000",
+  "expiresdate": "2028-03-23T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "601 UNION ST",
+  "originalzip": "98101",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7163264-BK"
+  },
+  "latitude": "47.61043100",
+  "longitude": "-122.33207692"
+ },
+ {
+  "permitnum": "7153872-CN",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Addition/Alteration",
+  "description": "Construct initial tenant improvement to existing commercial building ( Seattle convention Center) at level 2  occupy per plan.",
+  "housingunitsremoved": "0.0",
+  "housingunitsadded": "0.0",
+  "estprojectcost": "491670.0000",
+  "applieddate": "2026-09-09T00:00:00.000",
+  "issueddate": "2026-09-21T00:00:00.000",
+  "expiresdate": "2028-03-21T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "906 PINE ST",
+  "originalzip": "98101",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7153872-CN"
+  },
+  "latitude": "47.61416350",
+  "longitude": "-122.33180671"
+ },
+ {
+  "permitnum": "7120882-CN",
+  "permitclass": "Multifamily",
+  "permitclassmapped": "Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Addition/Alteration",
+  "description": "Construct alterations to existing mixed use building on levels 1-5  per plan.",
+  "housingunitsremoved": "0.0",
+  "housingunitsadded": "0.0",
+  "estprojectcost": "92500.0000",
+  "applieddate": "2025-12-17T00:00:00.000",
+  "issueddate": "2026-09-18T00:00:00.000",
+  "expiresdate": "2028-03-18T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "1310 MINOR AVE",
+  "originalzip": "98101",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7120882-CN"
+  },
+  "latitude": "47.61270827",
+  "longitude": "-122.32635179"
+ },
+ {
+  "permitnum": "7151731-CN",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Addition/Alteration",
+  "description": "Construct tenant improvement to existing commercial building at level 19 tenant space (Stripe)  occupy per plan.",
+  "housingunitsremoved": "0.0",
+  "housingunitsadded": "0.0",
+  "estprojectcost": "887852.0000",
+  "applieddate": "2026-07-15T00:00:00.000",
+  "issueddate": "2026-09-18T00:00:00.000",
+  "expiresdate": "2028-03-18T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "920 5TH AVE",
+  "originalzip": "98104",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7151731-CN"
+  },
+  "latitude": "47.60647850",
+  "longitude": "-122.33136470"
+ },
+ {
+  "permitnum": "7157907-CN",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Addition/Alteration",
+  "description": "Construct alterations to existing retail space for new tenant (Bounty of the Salish Sea)  and occupy per plan.",
+  "housingunitsremoved": "0.0",
+  "housingunitsadded": "0.0",
+  "estprojectcost": "74999.0000",
+  "applieddate": "2026-09-08T00:00:00.000",
+  "issueddate": "2026-09-18T00:00:00.000",
+  "expiresdate": "2028-03-18T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "1916 Pike PL",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7157907-CN"
+  },
+  "latitude": "47.61013919",
+  "longitude": "-122.34250640"
+ },
+ {
+  "permitnum": "7162802-CN",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Addition/Alteration",
+  "description": "Construct tenant improvement to level 14 of commercial office space  subject to field inspection  STFI.",
+  "housingunitsremoved": "0.0",
+  "housingunitsadded": "0.0",
+  "estprojectcost": "70000.0000",
+  "applieddate": "2026-09-15T00:00:00.000",
+  "issueddate": "2026-09-16T00:00:00.000",
+  "expiresdate": "2028-03-16T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "1201 2ND AVE",
+  "originalzip": "98101",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7162802-CN"
+  },
+  "latitude": "47.60669166",
+  "longitude": "-122.33701095"
+ },
+ {
+  "permitnum": "7137485-CN",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Addition/Alteration",
+  "description": "Construct alterations to retail space #103A on ground floor  per plan.",
+  "housingunitsremoved": "0.0",
+  "housingunitsadded": "0.0",
+  "estprojectcost": "20000.0000",
+  "applieddate": "2026-08-27T00:00:00.000",
+  "issueddate": "2026-09-16T00:00:00.000",
+  "expiresdate": "2028-03-16T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "101 YESLER WAY",
+  "originalzip": "98104",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7137485-CN"
+  },
+  "latitude": "47.60147604",
+  "longitude": "-122.33378808"
+ },
+ {
+  "permitnum": "7160931-BK",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Tenant Improvment",
+  "description": "Construct blanket permit tenant improvements to Avenue5 Residential on the 50th floor of existing commercial building  per plan.",
+  "estprojectcost": "1107000.0000",
+  "applieddate": "2026-09-02T00:00:00.000",
+  "issueddate": "2026-09-15T00:00:00.000",
+  "expiresdate": "2028-03-15T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "601 UNION ST",
+  "originalzip": "98101",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7160931-BK"
+  },
+  "latitude": "47.61043100",
+  "longitude": "-122.33207692"
+ },
+ {
+  "permitnum": "7121231-CN",
+  "permitclass": "Multifamily",
+  "permitclassmapped": "Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Addition/Alteration",
+  "description": "Construct alterations to institutional building (Cascade Tower) to create a cafe on the 4th floor  occupy per plan.",
+  "housingunitsremoved": "0.0",
+  "housingunitsadded": "0.0",
+  "estprojectcost": "3000000.0000",
+  "applieddate": "2026-04-28T00:00:00.000",
+  "issueddate": "2026-09-14T00:00:00.000",
+  "expiresdate": "2028-03-14T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "725 9TH AVE",
+  "originalzip": "98104",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7121231-CN"
+  },
+  "latitude": "47.60662550",
+  "longitude": "-122.32634399"
+ },
+ {
+  "permitnum": "7153895-CN",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Addition/Alteration",
+  "description": "Construct alterations in commercial building for assembly spaces on levels 27 & 28  occupy per plan.",
+  "housingunitsremoved": "0.0",
+  "housingunitsadded": "0.0",
+  "estprojectcost": "192628.0000",
+  "applieddate": "2026-07-28T00:00:00.000",
+  "issueddate": "2026-09-14T00:00:00.000",
+  "expiresdate": "2028-03-14T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "1420 5TH AVE",
+  "originalzip": "98101",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7153895-CN"
+  },
+  "latitude": "47.61055079",
+  "longitude": "-122.33467931"
+ },
+ {
+  "permitnum": "7152276-BK",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Tenant Improvment",
+  "description": "Construct blanket permit tenant improvements to PwC on the 27th and 28th floors of existing commercial building  per plan.",
+  "estprojectcost": "1950000.0000",
+  "applieddate": "2026-07-10T00:00:00.000",
+  "issueddate": "2026-09-14T00:00:00.000",
+  "expiresdate": "2028-03-14T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "1420 5TH AVE",
+  "originalzip": "98101",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7152276-BK"
+  },
+  "latitude": "47.61055079",
+  "longitude": "-122.33467931"
+ },
+ {
+  "permitnum": "7154693-BK",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Tenant Improvment",
+  "description": "Construct blanket permit tenant improvements to Puget Sound Clean Air Agency on the seventh floor of existing commercial building  per plan.",
+  "estprojectcost": "312000.0000",
+  "applieddate": "2026-07-24T00:00:00.000",
+  "issueddate": "2026-09-14T00:00:00.000",
+  "expiresdate": "2028-03-14T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "600 UNIVERSITY ST",
+  "originalzip": "98101",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7154693-BK"
+  },
+  "latitude": "47.60967251",
+  "longitude": "-122.33230647"
+ },
+ {
+  "permitnum": "7162146-RR",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Roof",
+  "description": "Re-roof of building down to existing vapor barrier and re-install new roofing of like kind.",
+  "estprojectcost": "250000.0000",
+  "issueddate": "2026-09-10T00:00:00.000",
+  "expiresdate": "2028-03-10T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "1507 WESTERN AVE",
+  "originalzip": "98101",
+  "contractorcompanyname": "Axiom Division 7",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7162146-RR"
+  },
+  "latitude": "47.60846274",
+  "longitude": "-122.34167114"
+ },
+ {
+  "permitnum": "7115943-CN",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Addition/Alteration",
+  "description": "Construct addition at level 01 for existing mixed use building  and occupy per plan.",
+  "housingunitsremoved": "0.0",
+  "housingunitsadded": "0.0",
+  "estprojectcost": "378000.0000",
+  "applieddate": "2025-12-05T00:00:00.000",
+  "issueddate": "2026-09-08T00:00:00.000",
+  "expiresdate": "2028-03-08T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "720 3RD AVE",
+  "originalzip": "98104",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7115943-CN"
+  },
+  "latitude": "47.60411459",
+  "longitude": "-122.33226664"
+ },
+ {
+  "permitnum": "7158473-BK",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Tenant Improvment",
+  "description": "Construct blanket permit tenant improvements to Ogletree Deakins on the 51st floor of existing commercial building  per plan.",
+  "estprojectcost": "1012678.0000",
+  "applieddate": "2026-08-17T00:00:00.000",
+  "issueddate": "2026-09-08T00:00:00.000",
+  "expiresdate": "2028-03-08T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "1201 3RD AVE",
+  "originalzip": "98101",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7158473-BK"
+  },
+  "latitude": "47.60723772",
+  "longitude": "-122.33612134"
+ },
+ {
+  "permitnum": "7161721-RR",
+  "permitclass": "Multifamily",
+  "permitclassmapped": "Residential",
+  "permittypemapped": "Roof",
+  "description": "Remove old modified bitumen roof and replae with new Certainteed SBS roof membrane system. Specification :SBS-C-2-T",
+  "estprojectcost": "449966.0000",
+  "issueddate": "2026-09-08T00:00:00.000",
+  "expiresdate": "2028-03-08T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "903 UNION ST",
+  "originalzip": "98101",
+  "contractorcompanyname": "Edca Inc",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7161721-RR"
+  },
+  "latitude": "47.61150655",
+  "longitude": "-122.32985692"
+ },
+ {
+  "permitnum": "7142326-CN",
+  "permitclass": "Single Family/Duplex",
+  "permitclassmapped": "Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "New",
+  "description": "Establish a standard plan for a one-family dwelling (no construction)",
+  "estprojectcost": "266935.0000",
+  "applieddate": "2026-07-16T00:00:00.000",
+  "issueddate": "2026-09-03T00:00:00.000",
+  "expiresdate": "2028-03-03T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "700 5TH AVE",
+  "originalzip": "98104",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7142326-CN"
+  },
+  "latitude": "47.60501319",
+  "longitude": "-122.32989532"
+ },
+ {
+  "permitnum": "7157792-BK",
+  "permitclass": "Commercial",
+  "permitclassmapped": "Non-Residential",
+  "permittypemapped": "Building",
+  "permittypedesc": "Tenant Improvment",
+  "description": "Construct blanket permit tenant improvements to Hazen and Sawyer on the 20th floor of existing commercial building  per plan.",
+  "estprojectcost": "100000.0000",
+  "applieddate": "2026-08-13T00:00:00.000",
+  "issueddate": "2026-09-02T00:00:00.000",
+  "expiresdate": "2028-03-02T00:00:00.000",
+  "statuscurrent": "Issued",
+  "originaladdress1": "1601 5TH AVE",
+  "originalzip": "98101",
+  "link": {
+   "url": "https://services.seattle.gov/portal/customize/LinkToRecord.aspx?altId=7157792-BK"
+  },
+  "latitude": "47.61192997",
+  "longitude": "-122.33718625"
+ }
+]

@@ -1,0 +1,508 @@
+{
+  "version": "blind-1",
+  "writtenBy": "blind-writer subagent, Claude Opus 5.5, session_01GBLp4kADgPC6ENk3jE6ma2",
+  "writtenAt": "2026-10-18T03:12:32.214Z",
+  "descriptionSha256": "3bd39548c5a37a5695a2ebbac776e834098de7a842df68311ef0736b6aab8d6a",
+  "queries": [
+    {
+      "id": "b001",
+      "type": "attribute",
+      "q": "gap status 1 wilderness"
+    },
+    {
+      "id": "b002",
+      "type": "negative",
+      "q": "where is the fire burning right now"
+    },
+    {
+      "id": "b003",
+      "type": "place",
+      "q": "hospitals in central montana"
+    },
+    {
+      "id": "b004",
+      "type": "topical",
+      "q": "polluted rivers"
+    },
+    {
+      "id": "b005",
+      "type": "attribute",
+      "q": "level 1 trama center"
+    },
+    {
+      "id": "b006",
+      "type": "known-item",
+      "q": "blackwater refuge marsh"
+    },
+    {
+      "id": "b007",
+      "type": "place",
+      "q": "former army sites in alaska"
+    },
+    {
+      "id": "b008",
+      "type": "topical",
+      "q": "factories that report chemical releases"
+    },
+    {
+      "id": "b009",
+      "type": "attribute",
+      "q": "counties with the most open tank leaks"
+    },
+    {
+      "id": "b010",
+      "type": "attribute",
+      "q": "national historic landmarks"
+    },
+    {
+      "id": "b011",
+      "type": "place",
+      "q": "schools in dodge city kansas"
+    },
+    {
+      "id": "b012",
+      "type": "known-item",
+      "q": "rainbow row charleston"
+    },
+    {
+      "id": "b013",
+      "type": "topical",
+      "q": "hazardus waste generators"
+    },
+    {
+      "id": "b014",
+      "type": "place",
+      "q": "flood zones in galveston"
+    },
+    {
+      "id": "b015",
+      "type": "attribute",
+      "q": "online virtual schools"
+    },
+    {
+      "id": "b016",
+      "type": "place",
+      "q": "brownfields in detroit"
+    },
+    {
+      "id": "b017",
+      "type": "negative",
+      "q": "nuclear power plants"
+    },
+    {
+      "id": "b018",
+      "type": "topical",
+      "q": "toxic release inventory"
+    },
+    {
+      "id": "b019",
+      "type": "place",
+      "q": "hazardous waste handlers in ohio"
+    },
+    {
+      "id": "b020",
+      "type": "known-item",
+      "q": "pine ridge reservation"
+    },
+    {
+      "id": "b021",
+      "type": "negative",
+      "q": "urgent care open now"
+    },
+    {
+      "id": "b022",
+      "type": "known-item",
+      "q": "black hills ordnance depot"
+    },
+    {
+      "id": "b023",
+      "type": "attribute",
+      "q": "impaired waters that have a tmdl"
+    },
+    {
+      "id": "b024",
+      "type": "topical",
+      "q": "toxic waste sites"
+    },
+    {
+      "id": "b025",
+      "type": "attribute",
+      "q": "charter schools"
+    },
+    {
+      "id": "b026",
+      "type": "topical",
+      "q": "unexploded ordnance"
+    },
+    {
+      "id": "b027",
+      "type": "known-item",
+      "q": "childrens mercy hospital kansas city"
+    },
+    {
+      "id": "b028",
+      "type": "topical",
+      "q": "abandoned industrial lots"
+    },
+    {
+      "id": "b029",
+      "type": "place",
+      "q": "wildfire risk around santa fe"
+    },
+    {
+      "id": "b030",
+      "type": "known-item",
+      "q": "rocky mountain arsenal wildlife refuge"
+    },
+    {
+      "id": "b031",
+      "type": "attribute",
+      "q": "federal facility superfund sites"
+    },
+    {
+      "id": "b032",
+      "type": "place",
+      "q": "tri facilities in texas"
+    },
+    {
+      "id": "b033",
+      "type": "known-item",
+      "q": "eldorado canyon state park"
+    },
+    {
+      "id": "b034",
+      "type": "attribute",
+      "q": "superfund sites on the final npl"
+    },
+    {
+      "id": "b035",
+      "type": "topical",
+      "q": "leaking gas station tanks"
+    },
+    {
+      "id": "b036",
+      "type": "attribute",
+      "q": "hospitals with a helipad"
+    },
+    {
+      "id": "b037",
+      "type": "negative",
+      "q": "tornado shelters"
+    },
+    {
+      "id": "b038",
+      "type": "place",
+      "q": "schools in columbus ohio"
+    },
+    {
+      "id": "b039",
+      "type": "negative",
+      "q": "hurricane track"
+    },
+    {
+      "id": "b040",
+      "type": "negative",
+      "q": "deer hunting season dates"
+    },
+    {
+      "id": "b041",
+      "type": "topical",
+      "q": "historic buildings"
+    },
+    {
+      "id": "b042",
+      "type": "place",
+      "q": "prairie potholes north dakota"
+    },
+    {
+      "id": "b043",
+      "type": "negative",
+      "q": "lead in drinking water test results"
+    },
+    {
+      "id": "b044",
+      "type": "negative",
+      "q": "restaurants downtown"
+    },
+    {
+      "id": "b045",
+      "type": "known-item",
+      "q": "santa fe high school"
+    },
+    {
+      "id": "b046",
+      "type": "topical",
+      "q": "superfund cleanup boundaries"
+    },
+    {
+      "id": "b047",
+      "type": "negative",
+      "q": "flight tracker"
+    },
+    {
+      "id": "b048",
+      "type": "negative",
+      "q": "radon levels by county"
+    },
+    {
+      "id": "b049",
+      "type": "place",
+      "q": "historic sites santa fe new mexico"
+    },
+    {
+      "id": "b050",
+      "type": "known-item",
+      "q": "duwamish waterway"
+    },
+    {
+      "id": "b051",
+      "type": "attribute",
+      "q": "historic districts listed before 1970"
+    },
+    {
+      "id": "b052",
+      "type": "known-item",
+      "q": "love canal"
+    },
+    {
+      "id": "b053",
+      "type": "place",
+      "q": "leaking tanks by county in florida"
+    },
+    {
+      "id": "b054",
+      "type": "negative",
+      "q": "air quality index today"
+    },
+    {
+      "id": "b055",
+      "type": "topical",
+      "q": "old dams"
+    },
+    {
+      "id": "b056",
+      "type": "negative",
+      "q": "bridges in poor condition"
+    },
+    {
+      "id": "b057",
+      "type": "topical",
+      "q": "wildfire danger"
+    },
+    {
+      "id": "b058",
+      "type": "known-item",
+      "q": "everglades national park"
+    },
+    {
+      "id": "b059",
+      "type": "known-item",
+      "q": "san miguel chapel"
+    },
+    {
+      "id": "b060",
+      "type": "negative",
+      "q": "nursing homes"
+    },
+    {
+      "id": "b061",
+      "type": "attribute",
+      "q": "which dams could flood towns if they broke"
+    },
+    {
+      "id": "b062",
+      "type": "attribute",
+      "q": "seasonally flooded forested wetlands"
+    },
+    {
+      "id": "b063",
+      "type": "negative",
+      "q": "earthquake fault lines"
+    },
+    {
+      "id": "b064",
+      "type": "topical",
+      "q": "public land to hike"
+    },
+    {
+      "id": "b065",
+      "type": "topical",
+      "q": "public schools"
+    },
+    {
+      "id": "b066",
+      "type": "known-item",
+      "q": "navajo nation"
+    },
+    {
+      "id": "b067",
+      "type": "attribute",
+      "q": "zone ae with base flood elevation"
+    },
+    {
+      "id": "b068",
+      "type": "attribute",
+      "q": "dams in poor condition"
+    },
+    {
+      "id": "b069",
+      "type": "place",
+      "q": "impaired waters puget sound"
+    },
+    {
+      "id": "b070",
+      "type": "negative",
+      "q": "home prices in galveston"
+    },
+    {
+      "id": "b071",
+      "type": "negative",
+      "q": "ships in the harbor"
+    },
+    {
+      "id": "b072",
+      "type": "known-item",
+      "q": "columbus alternative high school"
+    },
+    {
+      "id": "b073",
+      "type": "topical",
+      "q": "indian resevations"
+    },
+    {
+      "id": "b074",
+      "type": "attribute",
+      "q": "high priority munitions response sites"
+    },
+    {
+      "id": "b075",
+      "type": "place",
+      "q": "chesapeke bay wetlands"
+    },
+    {
+      "id": "b076",
+      "type": "place",
+      "q": "hospitals in kansas city"
+    },
+    {
+      "id": "b077",
+      "type": "attribute",
+      "q": "defense sites with no cleanup projects"
+    },
+    {
+      "id": "b078",
+      "type": "attribute",
+      "q": "large quantity hazardous waste generators"
+    },
+    {
+      "id": "b079",
+      "type": "place",
+      "q": "historic places in charleston sc"
+    },
+    {
+      "id": "b080",
+      "type": "negative",
+      "q": "property lines for my lot"
+    },
+    {
+      "id": "b081",
+      "type": "place",
+      "q": "open space near boulder colorado"
+    },
+    {
+      "id": "b082",
+      "type": "place",
+      "q": "dams in the flint hills"
+    },
+    {
+      "id": "b083",
+      "type": "topical",
+      "q": "marshes and swamps"
+    },
+    {
+      "id": "b084",
+      "type": "place",
+      "q": "dams near pittsburgh"
+    },
+    {
+      "id": "b085",
+      "type": "known-item",
+      "q": "conemaugh dam"
+    },
+    {
+      "id": "b086",
+      "type": "negative",
+      "q": "private schools near me"
+    },
+    {
+      "id": "b087",
+      "type": "negative",
+      "q": "river flood forecast this weekend"
+    },
+    {
+      "id": "b088",
+      "type": "topical",
+      "q": "old military bases"
+    },
+    {
+      "id": "b089",
+      "type": "place",
+      "q": "superfund sites in new jersey"
+    },
+    {
+      "id": "b090",
+      "type": "negative",
+      "q": "tribal casinos"
+    },
+    {
+      "id": "b091",
+      "type": "known-item",
+      "q": "gowanus canal superfund"
+    },
+    {
+      "id": "b092",
+      "type": "known-item",
+      "q": "benefis hospital great falls"
+    },
+    {
+      "id": "b093",
+      "type": "topical",
+      "q": "contaminated land cleanup grants"
+    },
+    {
+      "id": "b094",
+      "type": "known-item",
+      "q": "folsom dam"
+    },
+    {
+      "id": "b095",
+      "type": "attribute",
+      "q": "schools with over 1000 students"
+    },
+    {
+      "id": "b096",
+      "type": "topical",
+      "q": "is my house in a flood zone"
+    },
+    {
+      "id": "b097",
+      "type": "attribute",
+      "q": "towns in the top 5 percent for wildfire risk"
+    },
+    {
+      "id": "b098",
+      "type": "known-item",
+      "q": "upmc presbyterian"
+    },
+    {
+      "id": "b099",
+      "type": "topical",
+      "q": "old bombing ranges"
+    },
+    {
+      "id": "b100",
+      "type": "known-item",
+      "q": "grass valley wildfire risk"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "ZONE_DISTRICT": "D-CV",
+    "ZONE_DESCRIPTION": "Downtown - Civic  (D-CV)",
+    "ZONE_DIST_TYPE": "Commercial Mixed Use",
+    "NBHD_CONTEXT": "DOWNTOWN",
+    "ZCODE_VERSION": 2010,
+    "OVERLAY_DISTRICT": null,
+    "WAIVERS": null,
+    "CONDITIONS": null,
+    "PUD_NUM": null,
+    "ORD_NUM": 333,
+    "ORD_YEAR": 2010,
+    "HEIGHT_STORIES": null,
+    "ADU": "No",
+    "NOTES": null
+   }
+  }
+ ]
+}

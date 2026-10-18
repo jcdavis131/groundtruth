@@ -1,0 +1,69 @@
+{
+ "adapter": "wi-statewide",
+ "capturedAt": "2026-09-26T15:37:42.179Z",
+ "point": [
+  -89.3842,
+  43.0747
+ ],
+ "county": {
+  "geoid": "55025",
+  "name": "Dane County",
+  "basename": "Dane",
+  "state": "55"
+ },
+ "rows": [
+  {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -89.384215,
+       43.073168
+      ],
+      [
+       -89.386272,
+       43.074737
+      ],
+      [
+       -89.384136,
+       43.076247
+      ],
+      [
+       -89.382071,
+       43.074673
+      ],
+      [
+       -89.384215,
+       43.073168
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "STATEID": "025070924205010",
+    "PARCELID": "070924205010",
+    "TAXPARCELID": null,
+    "TAXROLLYEAR": "2025",
+    "OWNERNME1": "STATE OF WISCONSIN",
+    "OWNERNME2": null,
+    "PSTLADRESS": "17 W MAIN ST STE 119, MADISON WI  53703",
+    "SITEADRESS": "2 E MAIN ST",
+    "PLACENAME": "CITY OF MADISON",
+    "ZIPCODE": "53703",
+    "CNTASSDVALUE": 0,
+    "LNDVALUE": 0,
+    "IMPVALUE": 0,
+    "ESTFMKVALUE": 0,
+    "PROPCLASS": "2",
+    "AUXCLASS": null,
+    "ASSDACRES": 11.7,
+    "DEEDACRES": 11.7,
+    "GISACRES": null,
+    "CONAME": "DANE",
+    "LOADDATE": "3/09/2026",
+    "PARCELSRC": "DANE"
+   }
+  }
+ ]
+}

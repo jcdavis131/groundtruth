@@ -1,0 +1,3224 @@
+{
+ "Abbott Park": {
+  "state": "Delaware",
+  "zip": "19958",
+  "lat": 38.7712608,
+  "lon": -75.1387607,
+  "resolved_name": "Abbott Park"
+ },
+ "Abingdon": {
+  "state": "Virginia",
+  "zip": "24210",
+  "lat": 36.7104018,
+  "lon": -81.975249,
+  "resolved_name": "Abingdon"
+ },
+ "Ada": {
+  "state": "Oklahoma",
+  "zip": "74820",
+  "lat": 34.7743383,
+  "lon": -96.6783651,
+  "resolved_name": "Ada"
+ },
+ "Akron": {
+  "state": "Ohio",
+  "zip": "44308",
+  "lat": 41.083064,
+  "lon": -81.518485,
+  "resolved_name": "Akron"
+ },
+ "Allentown": {
+  "state": "Pennsylvania",
+  "zip": "18102",
+  "lat": 40.6022552,
+  "lon": -75.4716115,
+  "resolved_name": "Allentown"
+ },
+ "Alpharetta": {
+  "state": "Georgia",
+  "zip": "30009",
+  "lat": 34.0755962,
+  "lon": -84.2945964,
+  "resolved_name": "Alpharetta"
+ },
+ "Altoona": {
+  "state": "Pennsylvania",
+  "zip": "16601",
+  "lat": 40.5193586,
+  "lon": -78.3968299,
+  "resolved_name": "Altoona"
+ },
+ "Ankeny": {
+  "state": "Iowa",
+  "zip": "50023",
+  "lat": 41.7320796,
+  "lon": -93.605092,
+  "resolved_name": "Ankeny"
+ },
+ "Ann Arbor": {
+  "state": "Michigan",
+  "zip": "48104",
+  "lat": 42.2813722,
+  "lon": -83.7484616,
+  "resolved_name": "Ann Arbor"
+ },
+ "Antioch": {
+  "state": "California",
+  "zip": "94509",
+  "lat": 38.0093296,
+  "lon": -121.8106925,
+  "resolved_name": "Antioch"
+ },
+ "Arcadia": {
+  "state": "California",
+  "zip": "91066",
+  "lat": 34.1362075,
+  "lon": -118.0401497,
+  "resolved_name": "Arcadia"
+ },
+ "Arlington": {
+  "state": "Texas",
+  "zip": "76004",
+  "lat": 32.7355816,
+  "lon": -97.1071186,
+  "resolved_name": "Arlington"
+ },
+ "Armonk": {
+  "state": "New York",
+  "zip": "10504",
+  "lat": 41.1264847,
+  "lon": -73.7139777,
+  "resolved_name": "Armonk"
+ },
+ "Atlanta": {
+  "state": "Georgia",
+  "zip": "30303",
+  "lat": 33.7544657,
+  "lon": -84.3898151,
+  "resolved_name": "Atlanta"
+ },
+ "Auburn Hills": {
+  "state": "Michigan",
+  "zip": "48326",
+  "lat": 42.6875323,
+  "lon": -83.2341028,
+  "resolved_name": "Auburn Hills"
+ },
+ "Aurora": {
+  "state": "Illinois",
+  "zip": "60505",
+  "lat": 41.7571701,
+  "lon": -88.3147539,
+  "resolved_name": "Aurora"
+ },
+ "Austin": {
+  "state": "Texas",
+  "zip": "78701",
+  "lat": 30.2711286,
+  "lon": -97.7436995,
+  "resolved_name": "Austin"
+ },
+ "Baltimore": {
+  "state": "Maryland",
+  "zip": "21202",
+  "lat": 39.2908816,
+  "lon": -76.610759,
+  "resolved_name": "Baltimore"
+ },
+ "Bayport": {
+  "state": "Minnesota",
+  "zip": "55003",
+  "lat": 45.0212648,
+  "lon": -92.7813238,
+  "resolved_name": "Bayport"
+ },
+ "Beaverton": {
+  "state": "Oregon",
+  "zip": "97005",
+  "lat": 45.4871723,
+  "lon": -122.80378,
+  "resolved_name": "Beaverton"
+ },
+ "Belle Vernon": {
+  "state": "Pennsylvania",
+  "zip": "15432",
+  "lat": 40.1250725,
+  "lon": -79.8664356,
+  "resolved_name": "Belle Vernon"
+ },
+ "Bellevue": {
+  "state": "Washington",
+  "zip": "98009",
+  "lat": 47.6144219,
+  "lon": -122.192337,
+  "resolved_name": "Bellevue"
+ },
+ "Beloit": {
+  "state": "Wisconsin",
+  "zip": "53511",
+  "lat": 42.5083272,
+  "lon": -89.031784,
+  "resolved_name": "Beloit"
+ },
+ "Benton Harbor": {
+  "state": "Michigan",
+  "zip": "49022",
+  "lat": 42.1167065,
+  "lon": -86.4541894,
+  "resolved_name": "Benton Harbor"
+ },
+ "Bentonville": {
+  "state": "Arkansas",
+  "zip": "72712",
+  "lat": 36.3728608,
+  "lon": -94.208787,
+  "resolved_name": "Bentonville"
+ },
+ "Berwyn": {
+  "state": "Illinois",
+  "zip": "60402",
+  "lat": 41.8505874,
+  "lon": -87.7936685,
+  "resolved_name": "Berwyn"
+ },
+ "Bethesda": {
+  "state": "Maryland",
+  "zip": "20814",
+  "lat": 38.9846816,
+  "lon": -77.0942447,
+  "resolved_name": "Bethesda"
+ },
+ "Bethpage": {
+  "state": "New York",
+  "zip": "11714",
+  "lat": 40.749517,
+  "lon": -73.485536,
+  "resolved_name": "Bethpage"
+ },
+ "Beverly Hills": {
+  "state": "California",
+  "zip": "90210",
+  "lat": 34.0696501,
+  "lon": -118.3963062,
+  "resolved_name": "Beverly Hills"
+ },
+ "Birmingham": {
+  "state": "Alabama",
+  "zip": "35203",
+  "lat": 33.5206824,
+  "lon": -86.8024326,
+  "resolved_name": "Birmingham"
+ },
+ "Bloomfield": {
+  "state": "Iowa",
+  "zip": "52537",
+  "lat": 40.7511569,
+  "lon": -92.4145672,
+  "resolved_name": "Bloomfield"
+ },
+ "Bloomfield Hills": {
+  "state": "Michigan",
+  "zip": "48304",
+  "lat": 42.583645,
+  "lon": -83.2454883,
+  "resolved_name": "Bloomfield Hills"
+ },
+ "Boca Raton": {
+  "state": "Florida",
+  "zip": "33432",
+  "lat": 26.3586885,
+  "lon": -80.0830984,
+  "resolved_name": "Boca Raton"
+ },
+ "Boise": {
+  "state": "Idaho",
+  "zip": "83720",
+  "lat": 43.6166163,
+  "lon": -116.200886,
+  "resolved_name": "Boise"
+ },
+ "Bolingbrook": {
+  "state": "Illinois",
+  "zip": "60440",
+  "lat": 41.7003302,
+  "lon": -88.0717708,
+  "resolved_name": "Bolingbrook"
+ },
+ "Boston": {
+  "state": "Massachusetts",
+  "zip": "02102",
+  "lat": 42.3588336,
+  "lon": -71.0578303,
+  "resolved_name": "Boston"
+ },
+ "Bowling Green": {
+  "state": "Kentucky",
+  "zip": "42101",
+  "lat": 36.9929203,
+  "lon": -86.4428677,
+  "resolved_name": "Bowling Green"
+ },
+ "Bozeman": {
+  "state": "Montana",
+  "zip": "59715",
+  "lat": 45.6794293,
+  "lon": -111.044047,
+  "resolved_name": "Bozeman"
+ },
+ "Brentwood": {
+  "state": "California",
+  "zip": "94513",
+  "lat": 37.9317766,
+  "lon": -121.696026,
+  "resolved_name": "Brentwood"
+ },
+ "Brownsville": {
+  "state": "Texas",
+  "zip": "78520",
+  "lat": 25.9024289,
+  "lon": -97.4981698,
+  "resolved_name": "Brownsville"
+ },
+ "Bryn Mawr": {
+  "state": "Pennsylvania",
+  "zip": "19010",
+  "lat": 40.0219856,
+  "lon": -75.3193876,
+  "resolved_name": "Bryn Mawr"
+ },
+ "Buffalo": {
+  "state": "New York",
+  "zip": "14202",
+  "lat": 42.8864163,
+  "lon": -78.8781493,
+  "resolved_name": "Buffalo"
+ },
+ "Burbank": {
+  "state": "California",
+  "zip": "91502",
+  "lat": 34.1812089,
+  "lon": -118.307201,
+  "resolved_name": "Burbank"
+ },
+ "Burlington": {
+  "state": "Vermont",
+  "zip": "05401",
+  "lat": 44.4761601,
+  "lon": -73.212906,
+  "resolved_name": "Burlington"
+ },
+ "Calabasas": {
+  "state": "California",
+  "zip": "91302",
+  "lat": 34.1446643,
+  "lon": -118.644097,
+  "resolved_name": "Calabasas"
+ },
+ "Cambridge": {
+  "state": "Massachusetts",
+  "zip": "02139",
+  "lat": 42.3656347,
+  "lon": -71.1040018,
+  "resolved_name": "Cambridge"
+ },
+ "Camden": {
+  "state": "New Jersey",
+  "zip": "08103",
+  "lat": 39.9440874,
+  "lon": -75.1191932,
+  "resolved_name": "Camden"
+ },
+ "Camp Hill": {
+  "state": "Alabama",
+  "zip": "36850",
+  "lat": 32.8004059,
+  "lon": -85.6535659,
+  "resolved_name": "Camp Hill"
+ },
+ "Canonsburg": {
+  "state": "Pennsylvania",
+  "zip": "15317",
+  "lat": 40.2588173,
+  "lon": -80.1867206,
+  "resolved_name": "Canonsburg"
+ },
+ "Carrollton": {
+  "state": "Texas",
+  "zip": "75006",
+  "lat": 32.9515472,
+  "lon": -96.9034244,
+  "resolved_name": "Carrollton"
+ },
+ "Cary": {
+  "state": "North Carolina",
+  "zip": "27511",
+  "lat": 35.7873617,
+  "lon": -78.7811623,
+  "resolved_name": "Cary"
+ },
+ "Centennial": {
+  "state": "Colorado",
+  "zip": "80114",
+  "lat": 39.579155,
+  "lon": -104.8769227,
+  "resolved_name": "Centennial"
+ },
+ "Chandler": {
+  "state": "Arizona",
+  "zip": "85225",
+  "lat": 33.3062031,
+  "lon": -111.841185,
+  "resolved_name": "Chandler"
+ },
+ "Charlotte": {
+  "state": "North Carolina",
+  "zip": "28202",
+  "lat": 35.2272086,
+  "lon": -80.8430827,
+  "resolved_name": "Charlotte"
+ },
+ "Chattanooga": {
+  "state": "Tennessee",
+  "zip": "37402",
+  "lat": 35.0457219,
+  "lon": -85.3094883,
+  "resolved_name": "Chattanooga"
+ },
+ "Chesapeake": {
+  "state": "Virginia",
+  "zip": "23322",
+  "lat": 36.7168315,
+  "lon": -76.2494453,
+  "resolved_name": "Chesapeake"
+ },
+ "Chesterfield": {
+  "state": "Missouri",
+  "zip": "63017",
+  "lat": 38.6581764,
+  "lon": -90.5680617,
+  "resolved_name": "Chesterfield"
+ },
+ "Chicago": {
+  "state": "Illinois",
+  "zip": "60604",
+  "lat": 41.8755616,
+  "lon": -87.6244212,
+  "resolved_name": "Chicago"
+ },
+ "Cincinnati": {
+  "state": "Ohio",
+  "zip": "45210",
+  "lat": 39.1012809,
+  "lon": -84.5127405,
+  "resolved_name": "Cincinnati"
+ },
+ "Clayton": {
+  "state": "Missouri",
+  "zip": "63105",
+  "lat": 38.6504352,
+  "lon": -90.3362473,
+  "resolved_name": "Clayton"
+ },
+ "Cleveland": {
+  "state": "Ohio",
+  "zip": "44114",
+  "lat": 41.4996574,
+  "lon": -81.6936772,
+  "resolved_name": "Cleveland"
+ },
+ "Collierville": {
+  "state": "Tennessee",
+  "zip": "38017",
+  "lat": 35.042036,
+  "lon": -89.6645266,
+  "resolved_name": "Collierville"
+ },
+ "Colorado Springs": {
+  "state": "Colorado",
+  "zip": "80903",
+  "lat": 38.8339578,
+  "lon": -104.825348,
+  "resolved_name": "Colorado Springs"
+ },
+ "Columbia": {
+  "state": "South Carolina",
+  "zip": "29201",
+  "lat": 34.000754,
+  "lon": -81.0352313,
+  "resolved_name": "Columbia"
+ },
+ "Columbus": {
+  "state": "Ohio",
+  "zip": "43215",
+  "lat": 39.9622601,
+  "lon": -83.0007065,
+  "resolved_name": "Columbus"
+ },
+ "Concord": {
+  "state": "New Hampshire",
+  "zip": "03301",
+  "lat": 43.207178,
+  "lon": -71.537476,
+  "resolved_name": "Concord"
+ },
+ "Conshohocken": {
+  "state": "Pennsylvania",
+  "zip": "19428",
+  "lat": 40.0738835,
+  "lon": -75.30625,
+  "resolved_name": "Conshohocken"
+ },
+ "Conyers": {
+  "state": "Georgia",
+  "zip": "30012",
+  "lat": 33.6676103,
+  "lon": -84.0176904,
+  "resolved_name": "Conyers"
+ },
+ "Coral Gables": {
+  "state": "Florida",
+  "zip": "33146",
+  "lat": 25.7331105,
+  "lon": -80.2585107,
+  "resolved_name": "Coral Gables"
+ },
+ "Coraopolis": {
+  "state": "Pennsylvania",
+  "zip": "15108",
+  "lat": 40.5175351,
+  "lon": -80.1643232,
+  "resolved_name": "Coraopolis"
+ },
+ "Corning": {
+  "state": "New York",
+  "zip": "14830",
+  "lat": 42.1435257,
+  "lon": -77.0543408,
+  "resolved_name": "City of Corning"
+ },
+ "Corona": {
+  "state": "California",
+  "zip": "92879",
+  "lat": 33.8752945,
+  "lon": -117.566444,
+  "resolved_name": "Corona"
+ },
+ "Cupertino": {
+  "state": "California",
+  "zip": "95014",
+  "lat": 37.3228934,
+  "lon": -122.0322895,
+  "resolved_name": "Cupertino"
+ },
+ "Dallas": {
+  "state": "Texas",
+  "zip": "75242",
+  "lat": 32.7762719,
+  "lon": -96.7968559,
+  "resolved_name": "Dallas"
+ },
+ "Davidson": {
+  "state": "North Carolina",
+  "zip": "28036",
+  "lat": 35.4992614,
+  "lon": -80.8485218,
+  "resolved_name": "Davidson"
+ },
+ "Davie": {
+  "state": "Florida",
+  "zip": "33314",
+  "lat": 26.0628665,
+  "lon": -80.2331038,
+  "resolved_name": "Davie"
+ },
+ "Daytona Beach": {
+  "state": "Florida",
+  "zip": "32114",
+  "lat": 29.2108147,
+  "lon": -81.0228331,
+  "resolved_name": "Daytona Beach"
+ },
+ "Dearborn": {
+  "state": "Michigan",
+  "zip": "48126",
+  "lat": 42.3222599,
+  "lon": -83.1763145,
+  "resolved_name": "Dearborn"
+ },
+ "Deerfield": {
+  "state": "Illinois",
+  "zip": "60015",
+  "lat": 42.1711365,
+  "lon": -87.8445119,
+  "resolved_name": "Deerfield"
+ },
+ "Deerfield Beach": {
+  "state": "Florida",
+  "zip": "33073",
+  "lat": 26.318342,
+  "lon": -80.0996306,
+  "resolved_name": "Deerfield Beach"
+ },
+ "Denver": {
+  "state": "Colorado",
+  "zip": "80203",
+  "lat": 39.7392364,
+  "lon": -104.984862,
+  "resolved_name": "Denver"
+ },
+ "Des Moines": {
+  "state": "Iowa",
+  "zip": "50309",
+  "lat": 41.5868654,
+  "lon": -93.6249494,
+  "resolved_name": "Des Moines"
+ },
+ "Detroit": {
+  "state": "Michigan",
+  "zip": "48226",
+  "lat": 42.3315509,
+  "lon": -83.0466403,
+  "resolved_name": "Detroit"
+ },
+ "Downers Grove": {
+  "state": "Illinois",
+  "zip": "60516",
+  "lat": 41.7936822,
+  "lon": -88.0102281,
+  "resolved_name": "Downers Grove"
+ },
+ "Dublin": {
+  "state": "Ohio",
+  "zip": "43017",
+  "lat": 40.0996009,
+  "lon": -83.1135563,
+  "resolved_name": "Dublin"
+ },
+ "Dublin, Ireland; San Francisco": {
+  "error": "not found"
+ },
+ "Duluth": {
+  "state": "Minnesota",
+  "zip": "55802",
+  "lat": 46.7838287,
+  "lon": -92.1052679,
+  "resolved_name": "Duluth"
+ },
+ "Durham": {
+  "state": "North Carolina",
+  "zip": "27701",
+  "lat": 35.996653,
+  "lon": -78.9018053,
+  "resolved_name": "Durham"
+ },
+ "Eau Claire": {
+  "state": "Wisconsin",
+  "zip": "54701",
+  "lat": 44.811349,
+  "lon": -91.4984941,
+  "resolved_name": "Eau Claire"
+ },
+ "Eden Prairie": {
+  "state": "Minnesota",
+  "zip": "55347",
+  "lat": 44.8546856,
+  "lon": -93.470786,
+  "resolved_name": "Eden Prairie"
+ },
+ "Eighty Four": {
+  "state": "Pennsylvania",
+  "zip": "15330",
+  "lat": 40.1827171,
+  "lon": -80.1331455,
+  "resolved_name": "Eighty Four"
+ },
+ "El Dorado": {
+  "state": "Arkansas",
+  "zip": "71730",
+  "lat": 33.2115087,
+  "lon": -92.6650144,
+  "resolved_name": "El Dorado"
+ },
+ "Englewood": {
+  "state": "New Jersey",
+  "zip": "07670",
+  "lat": 40.8929329,
+  "lon": -73.9726508,
+  "resolved_name": "Englewood"
+ },
+ "Erie": {
+  "state": "Pennsylvania",
+  "zip": "16501",
+  "lat": 42.1294712,
+  "lon": -80.0852695,
+  "resolved_name": "Erie"
+ },
+ "Estero": {
+  "state": "Florida",
+  "zip": "33928",
+  "lat": 26.4381474,
+  "lon": -81.8067537,
+  "resolved_name": "Estero"
+ },
+ "Evansville": {
+  "state": "Indiana",
+  "zip": "47708",
+  "lat": 37.970495,
+  "lon": -87.5715641,
+  "resolved_name": "Evansville"
+ },
+ "Evendale": {
+  "state": "Ohio",
+  "zip": "45241",
+  "lat": 39.2561691,
+  "lon": -84.417997,
+  "resolved_name": "Evendale"
+ },
+ "Everett": {
+  "state": "Washington",
+  "zip": "98120",
+  "lat": 47.9793437,
+  "lon": -122.2127011,
+  "resolved_name": "Everett"
+ },
+ "Ewing": {
+  "state": "Illinois",
+  "zip": "62836",
+  "lat": 38.0886603,
+  "lon": -88.852287,
+  "resolved_name": "Ewing"
+ },
+ "Exton": {
+  "state": "Pennsylvania",
+  "zip": "19341",
+  "lat": 40.0289955,
+  "lon": -75.6207651,
+  "resolved_name": "Exton"
+ },
+ "Fairfield": {
+  "state": "California",
+  "zip": "94533",
+  "lat": 38.2493581,
+  "lon": -122.039966,
+  "resolved_name": "Fairfield"
+ },
+ "Fairmont": {
+  "state": "West Virginia",
+  "zip": "26554",
+  "lat": 39.484898,
+  "lon": -80.1426539,
+  "resolved_name": "Fairmont"
+ },
+ "Falls Church": {
+  "state": "Virginia",
+  "zip": "22046",
+  "lat": 38.882334,
+  "lon": -77.1710914,
+  "resolved_name": "Falls Church"
+ },
+ "Farmington": {
+  "state": "Minnesota",
+  "zip": "55024",
+  "lat": 44.6402434,
+  "lon": -93.1435497,
+  "resolved_name": "Farmington"
+ },
+ "Findlay": {
+  "state": "Ohio",
+  "zip": "45840",
+  "lat": 41.0413873,
+  "lon": -83.6503982,
+  "resolved_name": "Findlay"
+ },
+ "Fort Lauderdale": {
+  "state": "Florida",
+  "zip": "33301",
+  "lat": 26.1223084,
+  "lon": -80.1433786,
+  "resolved_name": "Fort Lauderdale"
+ },
+ "Fort Washington": {
+  "state": "Maryland",
+  "zip": "20744",
+  "lat": 38.7254674,
+  "lon": -76.9900251,
+  "resolved_name": "Fort Washington"
+ },
+ "Fort Wayne": {
+  "state": "Indiana",
+  "zip": "46802",
+  "lat": 41.0799898,
+  "lon": -85.1386015,
+  "resolved_name": "Fort Wayne"
+ },
+ "Fort Worth": {
+  "state": "Texas",
+  "zip": "76102",
+  "lat": 32.753177,
+  "lon": -97.3327459,
+  "resolved_name": "Fort Worth"
+ },
+ "Foster City": {
+  "state": "California",
+  "zip": "94405",
+  "lat": 37.5600336,
+  "lon": -122.2688522,
+  "resolved_name": "Foster City"
+ },
+ "Fountain Valley": {
+  "state": "California",
+  "zip": "92708",
+  "lat": 33.7038145,
+  "lon": -117.9627349,
+  "resolved_name": "Fountain Valley"
+ },
+ "Foxborough": {
+  "state": "Massachusetts",
+  "zip": "02035",
+  "lat": 42.0653768,
+  "lon": -71.2478308,
+  "resolved_name": "Foxborough"
+ },
+ "Framingham": {
+  "state": "Massachusetts",
+  "zip": "01702",
+  "lat": 42.2773177,
+  "lon": -71.4165905,
+  "resolved_name": "Framingham"
+ },
+ "Franklin Lakes": {
+  "state": "New Jersey",
+  "zip": "07417",
+  "lat": 41.0167639,
+  "lon": -74.2057012,
+  "resolved_name": "Franklin Lakes"
+ },
+ "Fremont": {
+  "state": "California",
+  "zip": "94536",
+  "lat": 37.5482697,
+  "lon": -121.988571,
+  "resolved_name": "Fremont"
+ },
+ "Gainesville": {
+  "state": "Florida",
+  "zip": "32601",
+  "lat": 29.6519684,
+  "lon": -82.3249846,
+  "resolved_name": "Gainesville"
+ },
+ "Germantown": {
+  "state": "Maryland",
+  "zip": "20874",
+  "lat": 39.181334,
+  "lon": -77.266647,
+  "resolved_name": "Germantown"
+ },
+ "Givatayim": {
+  "error": "not found"
+ },
+ "Glen Allen": {
+  "state": "Alabama",
+  "zip": "35559",
+  "lat": 33.9147418,
+  "lon": -87.7400804,
+  "resolved_name": "Glen Allen"
+ },
+ "Glendale": {
+  "state": "California",
+  "zip": "91206",
+  "lat": 34.1469416,
+  "lon": -118.2478471,
+  "resolved_name": "Glendale"
+ },
+ "Glenview": {
+  "state": "Illinois",
+  "zip": "60025",
+  "lat": 42.0700662,
+  "lon": -87.8114044,
+  "resolved_name": "Glenview"
+ },
+ "Golden": {
+  "state": "Colorado",
+  "zip": "80401",
+  "lat": 39.7546349,
+  "lon": -105.22058,
+  "resolved_name": "Golden"
+ },
+ "Goleta": {
+  "state": "California",
+  "zip": "93117",
+  "lat": 34.4358295,
+  "lon": -119.8276389,
+  "resolved_name": "Goleta"
+ },
+ "Goodlettsville": {
+  "state": "Tennessee",
+  "zip": "37072",
+  "lat": 36.3231067,
+  "lon": -86.7133302,
+  "resolved_name": "Goodlettsville"
+ },
+ "Grand Rapids": {
+  "state": "Michigan",
+  "zip": "49503",
+  "lat": 42.9632425,
+  "lon": -85.6678639,
+  "resolved_name": "Grand Rapids"
+ },
+ "Greeley": {
+  "state": "Colorado",
+  "zip": "80631",
+  "lat": 40.4233142,
+  "lon": -104.7091322,
+  "resolved_name": "Greeley"
+ },
+ "Green Bay": {
+  "state": "Wisconsin",
+  "zip": "54305",
+  "lat": 44.5126379,
+  "lon": -88.0125794,
+  "resolved_name": "Green Bay"
+ },
+ "Greenwich": {
+  "state": "Connecticut",
+  "zip": "06830",
+  "lat": 41.0264862,
+  "lon": -73.6284598,
+  "resolved_name": "Greenwich"
+ },
+ "Gulfport": {
+  "state": "Mississippi",
+  "zip": "39501",
+  "lat": 30.3674198,
+  "lon": -89.0928155,
+  "resolved_name": "Gulfport"
+ },
+ "Hannover": {
+  "state": "North Dakota",
+  "zip": null,
+  "lat": 47.1113877,
+  "lon": -101.42654,
+  "resolved_name": "Hannover"
+ },
+ "Hanover": {
+  "state": "New Hampshire",
+  "zip": "03755",
+  "lat": 43.7023545,
+  "lon": -72.2892164,
+  "resolved_name": "Hanover"
+ },
+ "Harrisburg": {
+  "state": "Pennsylvania",
+  "zip": "17120",
+  "lat": 40.2663107,
+  "lon": -76.8861122,
+  "resolved_name": "Harrisburg"
+ },
+ "Hartford": {
+  "state": "Connecticut",
+  "zip": "06103",
+  "lat": 41.7661621,
+  "lon": -72.6732726,
+  "resolved_name": "Hartford"
+ },
+ "Hawthorne": {
+  "state": "California",
+  "zip": "90250",
+  "lat": 33.9128272,
+  "lon": -118.3426122,
+  "resolved_name": "Hawthorne"
+ },
+ "Hercules": {
+  "state": "California",
+  "zip": "94547",
+  "lat": 38.0171441,
+  "lon": -122.2885808,
+  "resolved_name": "Hercules"
+ },
+ "Herndon": {
+  "state": "Virginia",
+  "zip": "20170",
+  "lat": 38.9695316,
+  "lon": -77.3859479,
+  "resolved_name": "Herndon"
+ },
+ "Alaska": {
+  "state": "Indiana",
+  "zip": "47456",
+  "lat": 39.4703246,
+  "lon": -86.6413912,
+  "resolved_name": "Alaska"
+ },
+ "Amherst": {
+  "state": "Massachusetts",
+  "zip": "01004",
+  "lat": 42.3731948,
+  "lon": -72.5198761,
+  "resolved_name": "Amherst"
+ },
+ "Andover": {
+  "state": "Massachusetts",
+  "zip": "01810",
+  "lat": 42.65717,
+  "lon": -71.1408776,
+  "resolved_name": "Andover"
+ },
+ "Arkansas": {
+  "error": "not found"
+ },
+ "Baton Rouge": {
+  "state": "Louisiana",
+  "zip": "70801",
+  "lat": 30.4494155,
+  "lon": -91.1869659,
+  "resolved_name": "Baton Rouge"
+ },
+ "Boulder County": {
+  "error": "not found"
+ },
+ "Bridgeton": {
+  "state": "Missouri",
+  "zip": "63044",
+  "lat": 38.7566055,
+  "lon": -90.42352,
+  "resolved_name": "Bridgeton"
+ },
+ "Bridgewater Township": {
+  "state": "Michigan",
+  "zip": "48158",
+  "lat": 42.1244875,
+  "lon": -83.9482498,
+  "resolved_name": "Bridgewater Township"
+ },
+ "Brooklyn": {
+  "state": "New York",
+  "zip": "11226",
+  "lat": 40.6526006,
+  "lon": -73.9497211,
+  "resolved_name": "Brooklyn"
+ },
+ "Broomfield": {
+  "state": "Colorado",
+  "zip": "80020",
+  "lat": 39.9403995,
+  "lon": -105.05208,
+  "resolved_name": "Broomfield"
+ },
+ "Bushwick": {
+  "state": "New York",
+  "zip": "11237",
+  "lat": 40.6942696,
+  "lon": -73.9187482,
+  "resolved_name": "Bushwick"
+ },
+ "California": {
+  "state": "Missouri",
+  "zip": "65018",
+  "lat": 38.628683,
+  "lon": -92.5659635,
+  "resolved_name": "California"
+ },
+ "Camarillo": {
+  "state": "California",
+  "zip": "93010",
+  "lat": 34.2176371,
+  "lon": -119.0383541,
+  "resolved_name": "Camarillo"
+ },
+ "Carolina": {
+  "state": "Alabama",
+  "zip": "36420",
+  "lat": 31.2407285,
+  "lon": -86.5277351,
+  "resolved_name": "Carolina"
+ },
+ "Carpinteria": {
+  "state": "California",
+  "zip": "93013",
+  "lat": 34.3988838,
+  "lon": -119.5184564,
+  "resolved_name": "Carpinteria"
+ },
+ "Catherine's Gate": {
+  "error": "not found"
+ },
+ "Cedar Park": {
+  "state": "Texas",
+  "zip": "78613",
+  "lat": 30.5217116,
+  "lon": -97.827833,
+  "resolved_name": "Cedar Park"
+ },
+ "Center Valley": {
+  "state": "Pennsylvania",
+  "zip": "18034",
+  "lat": 40.5292,
+  "lon": -75.3939572,
+  "resolved_name": "Center Valley"
+ },
+ "Chanhassen": {
+  "state": "Minnesota",
+  "zip": "55317",
+  "lat": 44.8618403,
+  "lon": -93.5307207,
+  "resolved_name": "Chanhassen"
+ },
+ "Charleston": {
+  "state": "South Carolina",
+  "zip": "29424",
+  "lat": 32.7884363,
+  "lon": -79.9399309,
+  "resolved_name": "Charleston"
+ },
+ "Claremont": {
+  "state": "California",
+  "zip": "91711",
+  "lat": 34.0966764,
+  "lon": -117.7197785,
+  "resolved_name": "Claremont"
+ },
+ "Colorado": {
+  "error": "not found"
+ },
+ "Connecticut": {
+  "error": "not found"
+ },
+ "Cortez": {
+  "state": "Colorado",
+  "zip": "81321",
+  "lat": 37.3494528,
+  "lon": -108.584073,
+  "resolved_name": "Cortez"
+ },
+ "Covington": {
+  "state": "Kentucky",
+  "zip": "41011",
+  "lat": 39.0831712,
+  "lon": -84.5107548,
+  "resolved_name": "Covington"
+ },
+ "Cranford": {
+  "state": "New Jersey",
+  "zip": "07016",
+  "lat": 40.656539,
+  "lon": -74.3035794,
+  "resolved_name": "Cranford"
+ },
+ "Cumberland": {
+  "state": "Maryland",
+  "zip": "21502",
+  "lat": 39.6526498,
+  "lon": -78.762383,
+  "resolved_name": "Cumberland"
+ },
+ "Dania Beach": {
+  "state": "Florida",
+  "zip": "33004",
+  "lat": 26.0524224,
+  "lon": -80.143929,
+  "resolved_name": "Dania Beach"
+ },
+ "Delaware": {
+  "state": "Ohio",
+  "zip": "43015",
+  "lat": 40.2986724,
+  "lon": -83.067965,
+  "resolved_name": "Delaware"
+ },
+ "El Segundo": {
+  "state": "California",
+  "zip": "90245",
+  "lat": 33.917028,
+  "lon": -118.4156337,
+  "resolved_name": "El Segundo"
+ },
+ "Emeryville": {
+  "state": "California",
+  "zip": "94608",
+  "lat": 37.8314089,
+  "lon": -122.2865266,
+  "resolved_name": "Emeryville"
+ },
+ "Eugene": {
+  "state": "Oregon",
+  "zip": "97401",
+  "lat": 44.0505054,
+  "lon": -123.0950506,
+  "resolved_name": "Eugene"
+ },
+ "Fairfax": {
+  "state": "Virginia",
+  "zip": "22030",
+  "lat": 38.8462236,
+  "lon": -77.3063733,
+  "resolved_name": "Fairfax"
+ },
+ "Farmington Hills": {
+  "state": "Michigan",
+  "zip": "48334",
+  "lat": 42.4853125,
+  "lon": -83.3771553,
+  "resolved_name": "Farmington Hills"
+ },
+ "Fenton": {
+  "state": "Missouri",
+  "zip": "63026",
+  "lat": 38.5131989,
+  "lon": -90.4400578,
+  "resolved_name": "Fenton"
+ },
+ "Fishers": {
+  "state": "Indiana",
+  "zip": "46038",
+  "lat": 39.9555928,
+  "lon": -86.0138729,
+  "resolved_name": "Fishers"
+ },
+ "Florida": {
+  "state": "New York",
+  "zip": "12010",
+  "lat": 42.8904161,
+  "lon": -74.196582,
+  "resolved_name": "Town of Florida"
+ },
+ "Frisco": {
+  "state": "California",
+  "zip": "94108",
+  "lat": 37.7879363,
+  "lon": -122.4075201,
+  "resolved_name": "San Francisco"
+ },
+ "Gardena": {
+  "state": "California",
+  "zip": "90247",
+  "lat": 33.8815601,
+  "lon": -118.2935879,
+  "resolved_name": "Gardena"
+ },
+ "Georgia (U.S. state)": {
+  "error": "not found"
+ },
+ "Greenfield": {
+  "state": "Massachusetts",
+  "zip": "01301",
+  "lat": 42.5876342,
+  "lon": -72.6002068,
+  "resolved_name": "Greenfield"
+ },
+ "Greensboro": {
+  "state": "North Carolina",
+  "zip": "27401",
+  "lat": 36.0726355,
+  "lon": -79.7919754,
+  "resolved_name": "Greensboro"
+ },
+ "Greenville (town)": {
+  "state": "New York",
+  "zip": "12771",
+  "lat": 41.3606496,
+  "lon": -74.6165503,
+  "resolved_name": "Town of Greenville"
+ },
+ "Guaynabo": {
+  "state": "Puerto Rico",
+  "zip": "00969",
+  "lat": 18.3578671,
+  "lon": -66.1120141,
+  "resolved_name": "Guaynabo"
+ },
+ "Hawaii": {
+  "error": "not found"
+ },
+ "Hershey": {
+  "state": "Pennsylvania",
+  "zip": "17036",
+  "lat": 40.2854881,
+  "lon": -76.6506001,
+  "resolved_name": "Hershey"
+ },
+ "Hickory": {
+  "state": "North Carolina",
+  "zip": "28601",
+  "lat": 35.7333312,
+  "lon": -81.3442915,
+  "resolved_name": "Hickory"
+ },
+ "Hicksville": {
+  "state": "New York",
+  "zip": "11801",
+  "lat": 40.7681926,
+  "lon": -73.5238207,
+  "resolved_name": "Hicksville"
+ },
+ "Highlands Ranch": {
+  "state": "Colorado",
+  "zip": "80129",
+  "lat": 39.548359,
+  "lon": -105.0004504,
+  "resolved_name": "Highlands Ranch"
+ },
+ "Hiram": {
+  "state": "Maine",
+  "zip": "04041",
+  "lat": 43.8787168,
+  "lon": -70.8031838,
+  "resolved_name": "Hiram"
+ },
+ "Hoboken": {
+  "state": "New Jersey",
+  "zip": "07030",
+  "lat": 40.7433066,
+  "lon": -74.0323752,
+  "resolved_name": "Hoboken"
+ },
+ "Hollister": {
+  "state": "California",
+  "zip": "95023",
+  "lat": 36.8524545,
+  "lon": -121.4016021,
+  "resolved_name": "Hollister"
+ },
+ "Hollywood": {
+  "state": "California",
+  "zip": "90028",
+  "lat": 34.0980031,
+  "lon": -118.329523,
+  "resolved_name": "Hollywood"
+ },
+ "Honolulu": {
+  "state": "Hawaii",
+  "zip": "96843",
+  "lat": 21.304547,
+  "lon": -157.855676,
+  "resolved_name": "Honolulu"
+ },
+ "Houston": {
+  "state": "Texas",
+  "zip": "77002",
+  "lat": 29.7589382,
+  "lon": -95.3676974,
+  "resolved_name": "Houston"
+ },
+ "Huntsville": {
+  "state": "Alabama",
+  "zip": "35801",
+  "lat": 34.729847,
+  "lon": -86.5859011,
+  "resolved_name": "Huntsville"
+ },
+ "Indiana": {
+  "state": "Pennsylvania",
+  "zip": "15701",
+  "lat": 40.6229748,
+  "lon": -79.1546786,
+  "resolved_name": "Indiana"
+ },
+ "Indianapolis": {
+  "state": "Indiana",
+  "zip": "46282",
+  "lat": 39.7683331,
+  "lon": -86.1583502,
+  "resolved_name": "Indianapolis"
+ },
+ "Ireland": {
+  "state": "Indiana",
+  "zip": "47546",
+  "lat": 38.4147739,
+  "lon": -86.9994455,
+  "resolved_name": "Ireland"
+ },
+ "Irvine": {
+  "state": "California",
+  "zip": "92606",
+  "lat": 33.6856969,
+  "lon": -117.825981,
+  "resolved_name": "Irvine"
+ },
+ "Irving": {
+  "state": "Texas",
+  "zip": "75061",
+  "lat": 32.8295183,
+  "lon": -96.9442177,
+  "resolved_name": "Irving"
+ },
+ "Issaquah": {
+  "state": "Washington",
+  "zip": "98129",
+  "lat": 47.5348778,
+  "lon": -122.043297,
+  "resolved_name": "Issaquah"
+ },
+ "Jackson": {
+  "state": "Mississippi",
+  "zip": "39201",
+  "lat": 32.2998686,
+  "lon": -90.1830408,
+  "resolved_name": "Jackson"
+ },
+ "Jacksonville": {
+  "state": "Florida",
+  "zip": "32202",
+  "lat": 30.3262247,
+  "lon": -81.6579179,
+  "resolved_name": "Jacksonville"
+ },
+ "Jefferson City": {
+  "state": "Missouri",
+  "zip": "65102",
+  "lat": 38.577359,
+  "lon": -92.1724265,
+  "resolved_name": "Jefferson City"
+ },
+ "Jericho": {
+  "state": "New York",
+  "zip": "11753",
+  "lat": 40.7920441,
+  "lon": -73.5398476,
+  "resolved_name": "Jericho"
+ },
+ "Jersey City": {
+  "state": "New Jersey",
+  "zip": "07302",
+  "lat": 40.7215682,
+  "lon": -74.047455,
+  "resolved_name": "Jersey City"
+ },
+ "Juno Beach": {
+  "state": "Florida",
+  "zip": "33408",
+  "lat": 26.8815475,
+  "lon": -80.0539253,
+  "resolved_name": "Juno Beach"
+ },
+ "Kansas City": {
+  "state": "Missouri",
+  "zip": "64106",
+  "lat": 39.100105,
+  "lon": -94.5781416,
+  "resolved_name": "Kansas City"
+ },
+ "Keasbey": {
+  "state": "New Jersey",
+  "zip": "08832",
+  "lat": 40.5167718,
+  "lon": -74.3051471,
+  "resolved_name": "Keasbey"
+ },
+ "Keene": {
+  "state": "New Hampshire",
+  "zip": "03435",
+  "lat": 42.933597,
+  "lon": -72.2784264,
+  "resolved_name": "Keene"
+ },
+ "Kenosha": {
+  "state": "Wisconsin",
+  "zip": "53140",
+  "lat": 42.5846773,
+  "lon": -87.8212263,
+  "resolved_name": "Kenosha"
+ },
+ "King of Prussia": {
+  "state": "Pennsylvania",
+  "zip": "19406",
+  "lat": 40.0851221,
+  "lon": -75.3888122,
+  "resolved_name": "King of Prussia"
+ },
+ "Kingsport": {
+  "state": "Tennessee",
+  "zip": "37660",
+  "lat": 36.550238,
+  "lon": -82.5594293,
+  "resolved_name": "Kingsport"
+ },
+ "Kirkland": {
+  "state": "Washington",
+  "zip": "98033",
+  "lat": 47.6765382,
+  "lon": -122.2070775,
+  "resolved_name": "Kirkland"
+ },
+ "Knoxville": {
+  "state": "Tennessee",
+  "zip": "37902",
+  "lat": 35.9603948,
+  "lon": -83.9210261,
+  "resolved_name": "Knoxville"
+ },
+ "Kohler": {
+  "state": "Wisconsin",
+  "zip": "53044",
+  "lat": 43.7391616,
+  "lon": -87.7817541,
+  "resolved_name": "Kohler"
+ },
+ "Kokomo": {
+  "state": "Indiana",
+  "zip": "46901",
+  "lat": 40.4864444,
+  "lon": -86.1336351,
+  "resolved_name": "Kokomo"
+ },
+ "La Jolla": {
+  "state": "California",
+  "zip": "92037",
+  "lat": 32.8401623,
+  "lon": -117.2740777,
+  "resolved_name": "La Jolla"
+ },
+ "La Mirada": {
+  "state": "California",
+  "zip": "90638",
+  "lat": 33.9060971,
+  "lon": -118.0107092,
+  "resolved_name": "La Mirada"
+ },
+ "Lake Forest": {
+  "state": "Illinois",
+  "zip": "60045",
+  "lat": 42.2586461,
+  "lon": -87.8407055,
+  "resolved_name": "Lake Forest"
+ },
+ "Lake Mary": {
+  "state": "Florida",
+  "zip": "32795",
+  "lat": 28.7562749,
+  "lon": -81.322093,
+  "resolved_name": "Lake Mary"
+ },
+ "Lake Success": {
+  "state": "New York",
+  "zip": "11020",
+  "lat": 40.7706572,
+  "lon": -73.7176312,
+  "resolved_name": "Village of Lake Success"
+ },
+ "Lakeland": {
+  "state": "Florida",
+  "zip": "33801",
+  "lat": 28.0394654,
+  "lon": -81.9498042,
+  "resolved_name": "Lakeland"
+ },
+ "Lancaster": {
+  "state": "Pennsylvania",
+  "zip": "17504",
+  "lat": 40.0379958,
+  "lon": -76.3056707,
+  "resolved_name": "Lancaster"
+ },
+ "Lansing": {
+  "state": "Michigan",
+  "zip": "48906",
+  "lat": 42.7338254,
+  "lon": -84.5546295,
+  "resolved_name": "Lansing"
+ },
+ "Las Vegas": {
+  "state": "Nevada",
+  "zip": "89101",
+  "lat": 36.1674263,
+  "lon": -115.1484131,
+  "resolved_name": "Las Vegas"
+ },
+ "Latrobe": {
+  "state": "Pennsylvania",
+  "zip": "15650",
+  "lat": 40.317287,
+  "lon": -79.3840301,
+  "resolved_name": "Latrobe"
+ },
+ "Laurel": {
+  "state": "Mississippi",
+  "zip": "39440",
+  "lat": 31.6940509,
+  "lon": -89.1306124,
+  "resolved_name": "Laurel"
+ },
+ "Lawrenceburg": {
+  "state": "Kentucky",
+  "zip": "40342",
+  "lat": 38.0371378,
+  "lon": -84.8962551,
+  "resolved_name": "Lawrenceburg"
+ },
+ "Leawood": {
+  "state": "Kansas",
+  "zip": "66206",
+  "lat": 38.966673,
+  "lon": -94.6169012,
+  "resolved_name": "Leawood"
+ },
+ "Lehi": {
+  "state": "Utah",
+  "zip": "84043",
+  "lat": 40.3881114,
+  "lon": -111.8486019,
+  "resolved_name": "Lehi"
+ },
+ "Lexington": {
+  "state": "Kentucky",
+  "zip": "40507",
+  "lat": 38.0464066,
+  "lon": -84.4970393,
+  "resolved_name": "Lexington"
+ },
+ "Lisle": {
+  "state": "Illinois",
+  "zip": "60532",
+  "lat": 41.801159,
+  "lon": -88.0747687,
+  "resolved_name": "Lisle"
+ },
+ "Little Rock": {
+  "state": "Arkansas",
+  "zip": "72201",
+  "lat": 34.7465071,
+  "lon": -92.2896267,
+  "resolved_name": "Little Rock"
+ },
+ "Livermore": {
+  "state": "California",
+  "zip": "94550",
+  "lat": 37.6820583,
+  "lon": -121.768053,
+  "resolved_name": "Livermore"
+ },
+ "Livonia": {
+  "state": "Michigan",
+  "zip": "48150",
+  "lat": 42.36837,
+  "lon": -83.3527097,
+  "resolved_name": "Livonia"
+ },
+ "London": {
+  "state": "Kentucky",
+  "zip": "40741",
+  "lat": 37.1283343,
+  "lon": -84.0835576,
+  "resolved_name": "London"
+ },
+ "Long Beach": {
+  "state": "California",
+  "zip": "90803",
+  "lat": 33.7690164,
+  "lon": -118.191604,
+  "resolved_name": "Long Beach"
+ },
+ "Long Island City": {
+  "state": "New York",
+  "zip": "11101",
+  "lat": 40.7455316,
+  "lon": -73.9484995,
+  "resolved_name": "Long Island City"
+ },
+ "Los Angeles": {
+  "state": "California",
+  "zip": "90012",
+  "lat": 34.0536909,
+  "lon": -118.242766,
+  "resolved_name": "Los Angeles"
+ },
+ "Los Gatos": {
+  "state": "California",
+  "zip": "95030",
+  "lat": 37.226611,
+  "lon": -121.9746797,
+  "resolved_name": "Los Gatos"
+ },
+ "Louisville": {
+  "state": "Kentucky",
+  "zip": "40202",
+  "lat": 38.2542376,
+  "lon": -85.759407,
+  "resolved_name": "Louisville"
+ },
+ "Lowell": {
+  "state": "Massachusetts",
+  "zip": "01825",
+  "lat": 42.6414437,
+  "lon": -71.3085329,
+  "resolved_name": "Lowell"
+ },
+ "Lower East Side": {
+  "state": "New York",
+  "zip": "10002",
+  "lat": 40.7159357,
+  "lon": -73.9868057,
+  "resolved_name": "Lower East Side"
+ },
+ "Lufkin": {
+  "state": "Texas",
+  "zip": "75901",
+  "lat": 31.3386242,
+  "lon": -94.7288558,
+  "resolved_name": "Lufkin"
+ },
+ "Lynnfield": {
+  "state": "Massachusetts",
+  "zip": "01940",
+  "lat": 42.5389836,
+  "lon": -71.0481084,
+  "resolved_name": "Lynnfield"
+ },
+ "Madison": {
+  "state": "Wisconsin",
+  "zip": "53788",
+  "lat": 43.07469,
+  "lon": -89.3841663,
+  "resolved_name": "Madison"
+ },
+ "Maitland": {
+  "state": "Florida",
+  "zip": "32751",
+  "lat": 28.6275253,
+  "lon": -81.3656419,
+  "resolved_name": "Maitland"
+ },
+ "Malta": {
+  "state": "New York",
+  "zip": "12151",
+  "lat": 42.9711708,
+  "lon": -73.792926,
+  "resolved_name": "Town of Malta"
+ },
+ "Malvern": {
+  "state": "Iowa",
+  "zip": "51551",
+  "lat": 41.0024095,
+  "lon": -95.5851939,
+  "resolved_name": "Malvern"
+ },
+ "Manhattan": {
+  "state": "New York",
+  "zip": "10036",
+  "lat": 40.7579554,
+  "lon": -73.9855319,
+  "resolved_name": "Manhattan"
+ },
+ "Manhattan Beach": {
+  "state": "California",
+  "zip": "90266",
+  "lat": 33.8872777,
+  "lon": -118.4104324,
+  "resolved_name": "Manhattan Beach"
+ },
+ "Maplewood": {
+  "state": "Minnesota",
+  "zip": "55109",
+  "lat": 45.0082216,
+  "lon": -93.0456985,
+  "resolved_name": "Maplewood"
+ },
+ "Marlborough": {
+  "state": "Massachusetts",
+  "zip": "01752",
+  "lat": 42.3468589,
+  "lon": -71.5525188,
+  "resolved_name": "Marlborough"
+ },
+ "Maryland Heights": {
+  "state": "Missouri",
+  "zip": "63043",
+  "lat": 38.7150511,
+  "lon": -90.435999,
+  "resolved_name": "Maryland Heights"
+ },
+ "Mason": {
+  "state": "Texas",
+  "zip": "76856",
+  "lat": 30.7484761,
+  "lon": -99.2319324,
+  "resolved_name": "Mason"
+ },
+ "Massachusetts": {
+  "error": "not found"
+ },
+ "Mayfield Heights": {
+  "state": "Ohio",
+  "zip": "44124",
+  "lat": 41.5192189,
+  "lon": -81.457896,
+  "resolved_name": "Mayfield Heights"
+ },
+ "Mayfield Village": {
+  "state": "New York",
+  "zip": "12117",
+  "lat": 43.1044135,
+  "lon": -74.2647847,
+  "resolved_name": "Village of Mayfield"
+ },
+ "McKinney": {
+  "state": "Texas",
+  "zip": "75069",
+  "lat": 33.1976496,
+  "lon": -96.6154471,
+  "resolved_name": "McKinney"
+ },
+ "McLean": {
+  "state": "Virginia",
+  "zip": "22101",
+  "lat": 38.9342888,
+  "lon": -77.1776327,
+  "resolved_name": "McLean"
+ },
+ "Medford": {
+  "state": "Massachusetts",
+  "zip": "02155",
+  "lat": 42.4184296,
+  "lon": -71.1061639,
+  "resolved_name": "Medford"
+ },
+ "Medina": {
+  "state": "Ohio",
+  "zip": "44256",
+  "lat": 41.1383878,
+  "lon": -81.8637474,
+  "resolved_name": "Medina"
+ },
+ "Melbourne": {
+  "state": "Florida",
+  "zip": "32901",
+  "lat": 28.0785034,
+  "lon": -80.6077908,
+  "resolved_name": "Melbourne"
+ },
+ "Memphis": {
+  "state": "Tennessee",
+  "zip": "38103",
+  "lat": 35.146026,
+  "lon": -90.0517786,
+  "resolved_name": "Memphis"
+ },
+ "Menlo Park": {
+  "state": "California",
+  "zip": "94025",
+  "lat": 37.4519671,
+  "lon": -122.177992,
+  "resolved_name": "Menlo Park"
+ },
+ "Menomonee Falls": {
+  "state": "Wisconsin",
+  "zip": "53051",
+  "lat": 43.1790768,
+  "lon": -88.1170784,
+  "resolved_name": "Menomonee Falls"
+ },
+ "Mentor": {
+  "state": "Ohio",
+  "zip": "44060",
+  "lat": 41.6664781,
+  "lon": -81.3399769,
+  "resolved_name": "Mentor"
+ },
+ "Merrillville": {
+  "state": "Indiana",
+  "zip": "46410",
+  "lat": 41.4828144,
+  "lon": -87.3328139,
+  "resolved_name": "Merrillville"
+ },
+ "Miami": {
+  "state": "Florida",
+  "zip": "33130",
+  "lat": 25.7741566,
+  "lon": -80.1935973,
+  "resolved_name": "Miami"
+ },
+ "Miami Beach": {
+  "state": "Florida",
+  "zip": "33139",
+  "lat": 25.7929198,
+  "lon": -80.1353006,
+  "resolved_name": "Miami Beach"
+ },
+ "Michigan": {
+  "error": "not found"
+ },
+ "Midland": {
+  "state": "Texas",
+  "zip": "79701",
+  "lat": 31.9973662,
+  "lon": -102.077948,
+  "resolved_name": "Midland"
+ },
+ "Midtown Manhattan": {
+  "error": "not found"
+ },
+ "Milford": {
+  "state": "Connecticut",
+  "zip": "06460",
+  "lat": 41.2222218,
+  "lon": -73.0570603,
+  "resolved_name": "Milford"
+ },
+ "Milpitas": {
+  "state": "California",
+  "zip": "95035",
+  "lat": 37.4332273,
+  "lon": -121.8989248,
+  "resolved_name": "Milpitas"
+ },
+ "Milwaukee": {
+  "state": "Wisconsin",
+  "zip": "53202",
+  "lat": 43.0386475,
+  "lon": -87.9090751,
+  "resolved_name": "Milwaukee"
+ },
+ "Minneapolis": {
+  "state": "Minnesota",
+  "zip": "55415",
+  "lat": 44.9772995,
+  "lon": -93.2654692,
+  "resolved_name": "Minneapolis"
+ },
+ "Minnesota": {
+  "error": "not found"
+ },
+ "Mississippi": {
+  "error": "not found"
+ },
+ "Missouri": {
+  "error": "not found"
+ },
+ "Modesto": {
+  "state": "California",
+  "zip": "95354",
+  "lat": 37.6393419,
+  "lon": -120.9968892,
+  "resolved_name": "Modesto"
+ },
+ "Moline": {
+  "state": "Illinois",
+  "zip": "61265",
+  "lat": 41.5066112,
+  "lon": -90.5149988,
+  "resolved_name": "Moline"
+ },
+ "Monroe": {
+  "state": "Louisiana",
+  "zip": "71201",
+  "lat": 32.5025471,
+  "lon": -92.116219,
+  "resolved_name": "Monroe"
+ },
+ "Montana": {
+  "state": "New Jersey",
+  "zip": "08865",
+  "lat": 40.7650986,
+  "lon": -75.0673959,
+  "resolved_name": "Montana"
+ },
+ "Mooresville": {
+  "state": "North Carolina",
+  "zip": "28115",
+  "lat": 35.5848596,
+  "lon": -80.8100724,
+  "resolved_name": "Mooresville"
+ },
+ "Mountain View": {
+  "state": "California",
+  "zip": "94039",
+  "lat": 37.3893889,
+  "lon": -122.0832101,
+  "resolved_name": "Mountain View"
+ },
+ "Mt. Sterling": {
+  "state": "Kentucky",
+  "zip": "40353",
+  "lat": 38.0561079,
+  "lon": -83.9431961,
+  "resolved_name": "Mount Sterling"
+ },
+ "Munich": {
+  "state": "North Dakota",
+  "zip": "58352",
+  "lat": 48.669174,
+  "lon": -98.832631,
+  "resolved_name": "Munich"
+ },
+ "Murfreesboro": {
+  "state": "Tennessee",
+  "zip": "37130",
+  "lat": 35.8460396,
+  "lon": -86.3921096,
+  "resolved_name": "Murfreesboro"
+ },
+ "Naples": {
+  "state": "Florida",
+  "zip": "34102",
+  "lat": 26.1421976,
+  "lon": -81.7942944,
+  "resolved_name": "Naples"
+ },
+ "Nashua": {
+  "state": "New Hampshire",
+  "zip": "03064",
+  "lat": 42.7656251,
+  "lon": -71.4677032,
+  "resolved_name": "Nashua"
+ },
+ "Nashville": {
+  "state": "Tennessee",
+  "zip": "37201",
+  "lat": 36.1622767,
+  "lon": -86.7742984,
+  "resolved_name": "Nashville"
+ },
+ "Needham": {
+  "state": "Massachusetts",
+  "zip": "02492",
+  "lat": 42.2802645,
+  "lon": -71.2360624,
+  "resolved_name": "Needham"
+ },
+ "Nevada": {
+  "state": "Iowa",
+  "zip": "50201",
+  "lat": 42.0227653,
+  "lon": -93.4524342,
+  "resolved_name": "Nevada"
+ },
+ "New Berlin": {
+  "state": "Texas",
+  "zip": "78155",
+  "lat": 29.4641219,
+  "lon": -98.1011187,
+  "resolved_name": "New Berlin"
+ },
+ "New Bremen": {
+  "state": "New York",
+  "zip": "13367",
+  "lat": 43.8366712,
+  "lon": -75.4399004,
+  "resolved_name": "Town of New Bremen"
+ },
+ "New Britain": {
+  "state": "Connecticut",
+  "zip": "06051",
+  "lat": 41.6611881,
+  "lon": -72.7795594,
+  "resolved_name": "New Britain"
+ },
+ "New Brunswick": {
+  "state": "New Jersey",
+  "zip": "08901",
+  "lat": 40.4936119,
+  "lon": -74.4436416,
+  "resolved_name": "New Brunswick"
+ },
+ "New Hampshire": {
+  "state": "Ohio",
+  "zip": "45870",
+  "lat": 40.5561607,
+  "lon": -83.952719,
+  "resolved_name": "New Hampshire"
+ },
+ "New Jersey": {
+  "error": "not found"
+ },
+ "New Orleans": {
+  "state": "Louisiana",
+  "zip": "70170",
+  "lat": 29.9561422,
+  "lon": -90.0733934,
+  "resolved_name": "New Orleans"
+ },
+ "New York": {
+  "state": "New York",
+  "zip": "10000",
+  "lat": 40.7127281,
+  "lon": -74.0060152,
+  "resolved_name": "New York"
+ },
+ "New York Times Building": {
+  "error": "not found"
+ },
+ "Newark": {
+  "state": "New Jersey",
+  "zip": "07102",
+  "lat": 40.735657,
+  "lon": -74.1723667,
+  "resolved_name": "Newark"
+ },
+ "Newport Beach": {
+  "state": "California",
+  "zip": "92663",
+  "lat": 33.6170092,
+  "lon": -117.9294401,
+  "resolved_name": "Newport Beach"
+ },
+ "Newport News": {
+  "state": "Virginia",
+  "zip": "23607",
+  "lat": 36.9775016,
+  "lon": -76.42977,
+  "resolved_name": "Newport News"
+ },
+ "Newton": {
+  "state": "Massachusetts",
+  "zip": "02459",
+  "lat": 42.3300435,
+  "lon": -71.194862,
+  "resolved_name": "Newton"
+ },
+ "North Carolina": {
+  "error": "not found"
+ },
+ "North Chicago": {
+  "state": "Illinois",
+  "zip": "60064",
+  "lat": 42.327724,
+  "lon": -87.8394189,
+  "resolved_name": "North Chicago"
+ },
+ "North Reading": {
+  "state": "Massachusetts",
+  "zip": "01864",
+  "lat": 42.5750939,
+  "lon": -71.0786653,
+  "resolved_name": "North Reading"
+ },
+ "Northbrook": {
+  "state": "Illinois",
+  "zip": "60062",
+  "lat": 42.128704,
+  "lon": -87.8265089,
+  "resolved_name": "Northbrook"
+ },
+ "Norwalk": {
+  "state": "Connecticut",
+  "zip": "06851",
+  "lat": 41.1175966,
+  "lon": -73.4078968,
+  "resolved_name": "Norwalk"
+ },
+ "Oakland": {
+  "state": "California",
+  "zip": "94612",
+  "lat": 37.8044557,
+  "lon": -122.271356,
+  "resolved_name": "Oakland"
+ },
+ "Ohio": {
+  "state": "Illinois",
+  "zip": "61349",
+  "lat": 41.5575349,
+  "lon": -89.4609276,
+  "resolved_name": "Ohio"
+ },
+ "Oklahoma": {
+  "state": "Pennsylvania",
+  "zip": "15629",
+  "lat": 40.5814403,
+  "lon": -79.5740244,
+  "resolved_name": "Oklahoma"
+ },
+ "Oklahoma City": {
+  "state": "Oklahoma",
+  "zip": "73106",
+  "lat": 35.4729886,
+  "lon": -97.5170536,
+  "resolved_name": "Oklahoma City"
+ },
+ "Omaha": {
+  "state": "Nebraska",
+  "zip": "68179",
+  "lat": 41.2587459,
+  "lon": -95.9383758,
+  "resolved_name": "Omaha"
+ },
+ "Orlando": {
+  "state": "Florida",
+  "zip": "32801",
+  "lat": 28.5421218,
+  "lon": -81.379045,
+  "resolved_name": "Orlando"
+ },
+ "Orrville": {
+  "state": "Ohio",
+  "zip": "44667",
+  "lat": 40.8436664,
+  "lon": -81.7640212,
+  "resolved_name": "Orrville"
+ },
+ "Oshkosh": {
+  "state": "Wisconsin",
+  "zip": "54901",
+  "lat": 44.0206919,
+  "lon": -88.5408574,
+  "resolved_name": "Oshkosh"
+ },
+ "Overland Park": {
+  "state": "Kansas",
+  "zip": "66212",
+  "lat": 38.9742502,
+  "lon": -94.6851702,
+  "resolved_name": "Overland Park"
+ },
+ "Oxford": {
+  "state": "Mississippi",
+  "zip": "38655",
+  "lat": 34.3663773,
+  "lon": -89.5187664,
+  "resolved_name": "Oxford"
+ },
+ "Palm Beach Gardens": {
+  "state": "Florida",
+  "zip": "33418",
+  "lat": 26.8233946,
+  "lon": -80.1386547,
+  "resolved_name": "Palm Beach Gardens"
+ },
+ "Palo Alto": {
+  "state": "California",
+  "zip": "94301",
+  "lat": 37.4443293,
+  "lon": -122.1598465,
+  "resolved_name": "Palo Alto"
+ },
+ "Park Ridge": {
+  "state": "Illinois",
+  "zip": "60068",
+  "lat": 42.0112329,
+  "lon": -87.8406031,
+  "resolved_name": "Park Ridge"
+ },
+ "Parsippany": {
+  "state": "New Jersey",
+  "zip": "07054",
+  "lat": 40.8578772,
+  "lon": -74.4259866,
+  "resolved_name": "Parsippany"
+ },
+ "Pasadena": {
+  "state": "California",
+  "zip": "91129",
+  "lat": 34.1476507,
+  "lon": -118.144155,
+  "resolved_name": "Pasadena"
+ },
+ "Pawtucket": {
+  "state": "Rhode Island",
+  "zip": "02860",
+  "lat": 41.8789531,
+  "lon": -71.3821203,
+  "resolved_name": "Pawtucket"
+ },
+ "Pennsylvania": {
+  "error": "not found"
+ },
+ "Philadelphia": {
+  "state": "Pennsylvania",
+  "zip": "19107",
+  "lat": 39.9527237,
+  "lon": -75.1635262,
+  "resolved_name": "Philadelphia"
+ },
+ "Phoenix": {
+  "state": "Arizona",
+  "zip": "85004",
+  "lat": 33.4484367,
+  "lon": -112.074141,
+  "resolved_name": "Phoenix"
+ },
+ "Pittsburgh": {
+  "state": "Pennsylvania",
+  "zip": "15222",
+  "lat": 40.4406968,
+  "lon": -80.0025666,
+  "resolved_name": "Pittsburgh"
+ },
+ "Plano": {
+  "state": "Texas",
+  "zip": "75075",
+  "lat": 33.0136764,
+  "lon": -96.6925096,
+  "resolved_name": "Plano"
+ },
+ "Plantation": {
+  "state": "Florida",
+  "zip": "33317",
+  "lat": 26.1275862,
+  "lon": -80.2331036,
+  "resolved_name": "Plantation"
+ },
+ "Pleasant Prairie": {
+  "state": "Wisconsin",
+  "zip": "53158",
+  "lat": 42.5269718,
+  "lon": -87.8544568,
+  "resolved_name": "Pleasant Prairie"
+ },
+ "Pleasanton": {
+  "state": "California",
+  "zip": "94566",
+  "lat": 37.6624312,
+  "lon": -121.8746789,
+  "resolved_name": "Pleasanton"
+ },
+ "Plymouth": {
+  "state": "Massachusetts",
+  "zip": "02360",
+  "lat": 41.9583799,
+  "lon": -70.6673851,
+  "resolved_name": "Plymouth"
+ },
+ "Ponce": {
+  "state": "Puerto Rico",
+  "zip": "00717",
+  "lat": 18.011564,
+  "lon": -66.613958,
+  "resolved_name": "Ponce"
+ },
+ "Port Morris": {
+  "state": "New Jersey",
+  "zip": "07850",
+  "lat": 40.9050987,
+  "lon": -74.6848844,
+  "resolved_name": "Port Morris"
+ },
+ "Portage": {
+  "state": "Michigan",
+  "zip": "49002",
+  "lat": 42.2011538,
+  "lon": -85.5800022,
+  "resolved_name": "Portage"
+ },
+ "Portland": {
+  "state": "Oregon",
+  "zip": "97204",
+  "lat": 45.5202471,
+  "lon": -122.674194,
+  "resolved_name": "Portland"
+ },
+ "Portsmouth": {
+  "state": "Virginia",
+  "zip": "23709",
+  "lat": 36.8320081,
+  "lon": -76.297699,
+  "resolved_name": "Portsmouth"
+ },
+ "Princeton": {
+  "state": "New Jersey",
+  "zip": "08542",
+  "lat": 40.3496953,
+  "lon": -74.6597376,
+  "resolved_name": "Princeton"
+ },
+ "Providence": {
+  "state": "Rhode Island",
+  "zip": "02903",
+  "lat": 41.8239891,
+  "lon": -71.4128343,
+  "resolved_name": "Providence"
+ },
+ "Purchase": {
+  "state": "New York",
+  "zip": "10577",
+  "lat": 41.0405953,
+  "lon": -73.7144803,
+  "resolved_name": "Purchase"
+ },
+ "Racine": {
+  "state": "Wisconsin",
+  "zip": "53401",
+  "lat": 42.7313756,
+  "lon": -87.7834769,
+  "resolved_name": "Racine"
+ },
+ "Radnor": {
+  "state": "Pennsylvania",
+  "zip": "19087",
+  "lat": 40.0463001,
+  "lon": -75.3595487,
+  "resolved_name": "Radnor"
+ },
+ "Rahway": {
+  "state": "New Jersey",
+  "zip": "07065",
+  "lat": 40.6081591,
+  "lon": -74.2776468,
+  "resolved_name": "Rahway"
+ },
+ "Raleigh": {
+  "state": "North Carolina",
+  "zip": "27601",
+  "lat": 35.7803977,
+  "lon": -78.6390989,
+  "resolved_name": "Raleigh"
+ },
+ "Redford": {
+  "state": "New York",
+  "zip": "12978",
+  "lat": 44.6083776,
+  "lon": -73.8043096,
+  "resolved_name": "Redford"
+ },
+ "Redmond": {
+  "state": "Washington",
+  "zip": "98052",
+  "lat": 47.6694141,
+  "lon": -122.1238767,
+  "resolved_name": "Redmond"
+ },
+ "Redwood City": {
+  "state": "California",
+  "zip": "94063",
+  "lat": 37.4863239,
+  "lon": -122.232523,
+  "resolved_name": "Redwood City"
+ },
+ "Reno": {
+  "state": "Nevada",
+  "zip": "89501",
+  "lat": 39.5261788,
+  "lon": -119.812658,
+  "resolved_name": "Reno"
+ },
+ "Reston": {
+  "state": "Virginia",
+  "zip": "20190",
+  "lat": 38.9587514,
+  "lon": -77.3585955,
+  "resolved_name": "Reston"
+ },
+ "Reynoldsburg": {
+  "state": "Ohio",
+  "zip": "43068",
+  "lat": 39.9547861,
+  "lon": -82.8121191,
+  "resolved_name": "Reynoldsburg"
+ },
+ "Richardson": {
+  "state": "Texas",
+  "zip": "75081",
+  "lat": 32.9481789,
+  "lon": -96.7297206,
+  "resolved_name": "Richardson"
+ },
+ "Richfield": {
+  "state": "Minnesota",
+  "zip": "55423",
+  "lat": 44.8766431,
+  "lon": -93.2877877,
+  "resolved_name": "Richfield"
+ },
+ "Richmond": {
+  "state": "Virginia",
+  "zip": "23298",
+  "lat": 37.5385087,
+  "lon": -77.43428,
+  "resolved_name": "Richmond"
+ },
+ "Riverwoods": {
+  "state": "Illinois",
+  "zip": "60015",
+  "lat": 42.1676068,
+  "lon": -87.8970986,
+  "resolved_name": "Riverwoods"
+ },
+ "Rochester": {
+  "state": "New York",
+  "zip": "14614",
+  "lat": 43.157285,
+  "lon": -77.615214,
+  "resolved_name": "City of Rochester"
+ },
+ "Rolling Meadows": {
+  "state": "Illinois",
+  "zip": "60008",
+  "lat": 42.0841936,
+  "lon": -88.0131275,
+  "resolved_name": "Rolling Meadows"
+ },
+ "Roseland": {
+  "state": "Kansas",
+  "zip": "66773",
+  "lat": 37.2811683,
+  "lon": -94.8505165,
+  "resolved_name": "Roseland"
+ },
+ "Rosemead": {
+  "state": "California",
+  "zip": "91770",
+  "lat": 34.0808629,
+  "lon": -118.073219,
+  "resolved_name": "Rosemead"
+ },
+ "Rosemont": {
+  "state": "Illinois",
+  "zip": "60018",
+  "lat": 41.9941334,
+  "lon": -87.8756737,
+  "resolved_name": "Rosemont"
+ },
+ "Round Rock": {
+  "state": "Texas",
+  "zip": "78664",
+  "lat": 30.5085915,
+  "lon": -97.6788056,
+  "resolved_name": "Round Rock"
+ },
+ "Salisbury": {
+  "state": "North Carolina",
+  "zip": "28144",
+  "lat": 35.6709727,
+  "lon": -80.4742261,
+  "resolved_name": "Salisbury"
+ },
+ "Salt Lake City": {
+  "state": "Utah",
+  "zip": "84111",
+  "lat": 40.7596198,
+  "lon": -111.886797,
+  "resolved_name": "Salt Lake City"
+ },
+ "San Antonio": {
+  "state": "Texas",
+  "zip": "78205",
+  "lat": 29.4246002,
+  "lon": -98.4951405,
+  "resolved_name": "San Antonio"
+ },
+ "San Bernardino": {
+  "state": "California",
+  "zip": "92401",
+  "lat": 34.1081621,
+  "lon": -117.28946,
+  "resolved_name": "San Bernardino"
+ },
+ "San Carlos": {
+  "state": "California",
+  "zip": "94070",
+  "lat": 37.504936,
+  "lon": -122.261823,
+  "resolved_name": "San Carlos"
+ },
+ "San Diego": {
+  "state": "California",
+  "zip": "92101",
+  "lat": 32.7157062,
+  "lon": -117.1638284,
+  "resolved_name": "San Diego"
+ },
+ "San Francisco": {
+  "state": "California",
+  "zip": "94108",
+  "lat": 37.7879363,
+  "lon": -122.4075201,
+  "resolved_name": "San Francisco"
+ },
+ "San Jose": {
+  "state": "California",
+  "zip": "95113",
+  "lat": 37.3361663,
+  "lon": -121.890591,
+  "resolved_name": "San Jose"
+ },
+ "San Juan": {
+  "state": "Texas",
+  "zip": "78589",
+  "lat": 26.1892409,
+  "lon": -98.1552872,
+  "resolved_name": "San Juan"
+ },
+ "San Luis Obispo": {
+  "state": "California",
+  "zip": "93410",
+  "lat": 35.2827525,
+  "lon": -120.659615,
+  "resolved_name": "San Luis Obispo"
+ },
+ "San Mateo": {
+  "state": "California",
+  "zip": "94401",
+  "lat": 37.5629997,
+  "lon": -122.3253265,
+  "resolved_name": "San Mateo"
+ },
+ "San Ramon": {
+  "state": "California",
+  "zip": "94583",
+  "lat": 37.7648021,
+  "lon": -121.9544387,
+  "resolved_name": "San Ramon"
+ },
+ "Santa Ana": {
+  "state": "California",
+  "zip": "92702",
+  "lat": 33.7494951,
+  "lon": -117.873221,
+  "resolved_name": "Santa Ana"
+ },
+ "Santa Clara": {
+  "state": "California",
+  "zip": "95015",
+  "lat": 37.3541132,
+  "lon": -121.955174,
+  "resolved_name": "Santa Clara"
+ },
+ "Santa Monica": {
+  "state": "California",
+  "zip": "90401",
+  "lat": 34.0194704,
+  "lon": -118.491227,
+  "resolved_name": "Santa Monica"
+ },
+ "Santa Rosa": {
+  "state": "California",
+  "zip": "95402",
+  "lat": 38.4404925,
+  "lon": -122.7141049,
+  "resolved_name": "Santa Rosa"
+ },
+ "Sarasota": {
+  "state": "Florida",
+  "zip": "34237",
+  "lat": 27.3365805,
+  "lon": -82.5308545,
+  "resolved_name": "Sarasota"
+ },
+ "Savannah": {
+  "state": "Georgia",
+  "zip": "31401",
+  "lat": 32.0790074,
+  "lon": -81.0921335,
+  "resolved_name": "Savannah"
+ },
+ "Schenectady": {
+  "state": "New York",
+  "zip": "12305",
+  "lat": 42.8142432,
+  "lon": -73.9395687,
+  "resolved_name": "City of Schenectady"
+ },
+ "Scottsdale": {
+  "state": "Arizona",
+  "zip": "85251",
+  "lat": 33.4942189,
+  "lon": -111.926018,
+  "resolved_name": "Scottsdale"
+ },
+ "Scranton": {
+  "state": "Pennsylvania",
+  "zip": "18503",
+  "lat": 41.4086874,
+  "lon": -75.6621294,
+  "resolved_name": "Scranton"
+ },
+ "Seattle": {
+  "state": "Washington",
+  "zip": "98104",
+  "lat": 47.6038321,
+  "lon": -122.330062,
+  "resolved_name": "Seattle"
+ },
+ "Secaucus": {
+  "state": "New Jersey",
+  "zip": "07094",
+  "lat": 40.7899291,
+  "lon": -74.0566735,
+  "resolved_name": "Secaucus"
+ },
+ "Seffner": {
+  "state": "Florida",
+  "zip": "34584",
+  "lat": 27.9836329,
+  "lon": -82.2756468,
+  "resolved_name": "Seffner"
+ },
+ "Seguin": {
+  "state": "Texas",
+  "zip": "78155",
+  "lat": 29.5688411,
+  "lon": -97.9647269,
+  "resolved_name": "Seguin"
+ },
+ "Seymour": {
+  "state": "Texas",
+  "zip": "76380",
+  "lat": 33.5942438,
+  "lon": -99.2603073,
+  "resolved_name": "Seymour"
+ },
+ "Shelton": {
+  "state": "Connecticut",
+  "zip": "06483",
+  "lat": 41.3546999,
+  "lon": -73.1383092,
+  "resolved_name": "Shelton"
+ },
+ "Siloam Springs": {
+  "state": "Arkansas",
+  "zip": "72761",
+  "lat": 36.1866289,
+  "lon": -94.5413695,
+  "resolved_name": "Siloam Springs"
+ },
+ "Silver Spring": {
+  "state": "Maryland",
+  "zip": "20012",
+  "lat": 38.9959461,
+  "lon": -77.0276231,
+  "resolved_name": "Silver Spring"
+ },
+ "Singapore": {
+  "state": "Michigan",
+  "zip": "49453",
+  "lat": 42.6778969,
+  "lon": -86.2063916,
+  "resolved_name": "Singapore"
+ },
+ "Sioux City": {
+  "state": "Iowa",
+  "zip": "51101",
+  "lat": 42.4966815,
+  "lon": -96.4058782,
+  "resolved_name": "Sioux City"
+ },
+ "Sioux Falls": {
+  "state": "South Dakota",
+  "zip": "57104",
+  "lat": 43.5476008,
+  "lon": -96.7293629,
+  "resolved_name": "Sioux Falls"
+ },
+ "Smithfield": {
+  "state": "North Carolina",
+  "zip": "27577",
+  "lat": 35.5111996,
+  "lon": -78.346102,
+  "resolved_name": "Smithfield"
+ },
+ "Somerset": {
+  "state": "Kentucky",
+  "zip": "42503",
+  "lat": 37.0920222,
+  "lon": -84.6041084,
+  "resolved_name": "Somerset"
+ },
+ "Somerville": {
+  "state": "Massachusetts",
+  "zip": "02143",
+  "lat": 42.3875968,
+  "lon": -71.0994968,
+  "resolved_name": "Somerville"
+ },
+ "South Burlington": {
+  "state": "Vermont",
+  "zip": "05403",
+  "lat": 44.4642957,
+  "lon": -73.176273,
+  "resolved_name": "South Burlington"
+ },
+ "Southfield": {
+  "state": "Michigan",
+  "zip": "48075",
+  "lat": 42.4733689,
+  "lon": -83.2218731,
+  "resolved_name": "Southfield"
+ },
+ "Southport": {
+  "state": "North Carolina",
+  "zip": "28461",
+  "lat": 33.921563,
+  "lon": -78.0202677,
+  "resolved_name": "Southport"
+ },
+ "Spring": {
+  "state": "Texas",
+  "zip": "77373",
+  "lat": 30.0795707,
+  "lon": -95.4187924,
+  "resolved_name": "Spring"
+ },
+ "Springdale": {
+  "state": "Arkansas",
+  "zip": "72764",
+  "lat": 36.1867442,
+  "lon": -94.1288142,
+  "resolved_name": "Springdale"
+ },
+ "Springfield": {
+  "state": "Illinois",
+  "zip": "62701",
+  "lat": 39.7990175,
+  "lon": -89.6439575,
+  "resolved_name": "Springfield"
+ },
+ "St Louis": {
+  "state": "Missouri",
+  "zip": "63101",
+  "lat": 38.6254063,
+  "lon": -90.190009,
+  "resolved_name": "Saint Louis"
+ },
+ "St Paul": {
+  "state": "Minnesota",
+  "zip": "55101",
+  "lat": 44.9497487,
+  "lon": -93.0931028,
+  "resolved_name": "Saint Paul"
+ },
+ "St. Louis": {
+  "state": "Missouri",
+  "zip": "63101",
+  "lat": 38.6254063,
+  "lon": -90.190009,
+  "resolved_name": "Saint Louis"
+ },
+ "St. Paul": {
+  "state": "Minnesota",
+  "zip": "55101",
+  "lat": 44.9497487,
+  "lon": -93.0931028,
+  "resolved_name": "Saint Paul"
+ },
+ "St. Petersburg": {
+  "state": "Florida",
+  "zip": "33701",
+  "lat": 27.7712264,
+  "lon": -82.6340259,
+  "resolved_name": "Saint Petersburg"
+ },
+ "Stamford": {
+  "state": "Connecticut",
+  "zip": "06902",
+  "lat": 41.0534302,
+  "lon": -73.5387341,
+  "resolved_name": "Stamford"
+ },
+ "Stanford Research Park": {
+  "error": "not found"
+ },
+ "Summit": {
+  "state": "Illinois",
+  "zip": "60501",
+  "lat": 41.7880876,
+  "lon": -87.810334,
+  "resolved_name": "Summit"
+ },
+ "Sunnyvale": {
+  "state": "California",
+  "zip": "94087",
+  "lat": 37.3688301,
+  "lon": -122.036349,
+  "resolved_name": "Sunnyvale"
+ },
+ "Tacoma": {
+  "state": "Washington",
+  "zip": "98402",
+  "lat": 47.2455013,
+  "lon": -122.438329,
+  "resolved_name": "Tacoma"
+ },
+ "Tampa": {
+  "state": "Florida",
+  "zip": "33602",
+  "lat": 27.9449854,
+  "lon": -82.4583107,
+  "resolved_name": "Tampa"
+ },
+ "Tarrytown": {
+  "state": "New York",
+  "zip": "10591",
+  "lat": 41.0762077,
+  "lon": -73.8587461,
+  "resolved_name": "Village of Tarrytown"
+ },
+ "Teaneck": {
+  "state": "New Jersey",
+  "zip": "07666",
+  "lat": 40.8860164,
+  "lon": -74.0072568,
+  "resolved_name": "Teaneck Township"
+ },
+ "Tel Aviv": {
+  "error": "not found"
+ },
+ "Tempe": {
+  "state": "Arizona",
+  "zip": "85281",
+  "lat": 33.4255117,
+  "lon": -111.940016,
+  "resolved_name": "Tempe"
+ },
+ "Tennessee": {
+  "state": "Illinois",
+  "zip": "62326",
+  "lat": 40.4124541,
+  "lon": -90.8368406,
+  "resolved_name": "Tennessee"
+ },
+ "Tewksbury": {
+  "state": "Massachusetts",
+  "zip": "01876",
+  "lat": 42.6106479,
+  "lon": -71.2342248,
+  "resolved_name": "Tewksbury"
+ },
+ "Texas": {
+  "state": "Wisconsin",
+  "zip": "54403",
+  "lat": 45.0255941,
+  "lon": -89.6204713,
+  "resolved_name": "Town of Texas"
+ },
+ "The Woodlands": {
+  "state": "Texas",
+  "zip": "77381",
+  "lat": 30.1734194,
+  "lon": -95.504686,
+  "resolved_name": "The Woodlands"
+ },
+ "Thief River Falls": {
+  "state": "Minnesota",
+  "zip": "56701",
+  "lat": 48.1172301,
+  "lon": -96.1770667,
+  "resolved_name": "Thief River Falls"
+ },
+ "Thomasville": {
+  "state": "North Carolina",
+  "zip": "27360",
+  "lat": 35.8831786,
+  "lon": -80.081817,
+  "resolved_name": "Thomasville"
+ },
+ "Thousand Oaks": {
+  "state": "California",
+  "zip": "91362",
+  "lat": 34.1705609,
+  "lon": -118.8375937,
+  "resolved_name": "Thousand Oaks"
+ },
+ "Tigard": {
+  "state": "Oregon",
+  "zip": "97223",
+  "lat": 45.4307473,
+  "lon": -122.771933,
+  "resolved_name": "Tigard"
+ },
+ "Toledo": {
+  "state": "Ohio",
+  "zip": "43604",
+  "lat": 41.6529143,
+  "lon": -83.5378173,
+  "resolved_name": "Toledo"
+ },
+ "Tulare": {
+  "state": "California",
+  "zip": "93274",
+  "lat": 36.2077351,
+  "lon": -119.3473421,
+  "resolved_name": "Tulare"
+ },
+ "Tulsa": {
+  "state": "Oklahoma",
+  "zip": "74103",
+  "lat": 36.1563122,
+  "lon": -95.9927516,
+  "resolved_name": "Tulsa"
+ },
+ "Tupelo": {
+  "state": "Mississippi",
+  "zip": "38801",
+  "lat": 34.2576067,
+  "lon": -88.7033859,
+  "resolved_name": "Tupelo"
+ },
+ "Tusayan": {
+  "state": "Arizona",
+  "zip": "86023",
+  "lat": 35.9735954,
+  "lon": -112.126556,
+  "resolved_name": "Tusayan"
+ },
+ "Tyler": {
+  "state": "Texas",
+  "zip": "75702",
+  "lat": 32.3512601,
+  "lon": -95.3010624,
+  "resolved_name": "Tyler"
+ },
+ "Tysons": {
+  "state": "Virginia",
+  "zip": "22103",
+  "lat": 38.918592,
+  "lon": -77.2314723,
+  "resolved_name": "Tysons"
+ },
+ "United States": {
+  "error": "not found"
+ },
+ "Urbana": {
+  "state": "Illinois",
+  "zip": "61801",
+  "lat": 40.1117174,
+  "lon": -88.207301,
+  "resolved_name": "Urbana"
+ },
+ "Utah": {
+  "state": "Indiana",
+  "zip": "47001",
+  "lat": 39.0608911,
+  "lon": -84.8980069,
+  "resolved_name": "Utah"
+ },
+ "Utqia\u0121vik": {
+  "state": "Alaska",
+  "zip": "99723",
+  "lat": 71.2905366,
+  "lon": -156.78844,
+  "resolved_name": "Utqia\u0121vik"
+ },
+ "Vancouver": {
+  "state": "Washington",
+  "zip": "98666",
+  "lat": 45.6306954,
+  "lon": -122.6744557,
+  "resolved_name": "Vancouver"
+ },
+ "Vaughan": {
+  "state": "Indiana",
+  "zip": "47712",
+  "lat": 37.9014313,
+  "lon": -87.6302941,
+  "resolved_name": "Vaughan"
+ },
+ "Ventura": {
+  "state": "California",
+  "zip": "93001",
+  "lat": 34.2783355,
+  "lon": -119.293174,
+  "resolved_name": "Ventura"
+ },
+ "Vernon Hills": {
+  "state": "Illinois",
+  "zip": "60061",
+  "lat": 42.2373152,
+  "lon": -87.9649487,
+  "resolved_name": "Vernon Hills"
+ },
+ "Verona": {
+  "state": "Michigan",
+  "zip": "48413",
+  "lat": 43.8058478,
+  "lon": -82.8810508,
+  "resolved_name": "Verona"
+ },
+ "Vienna": {
+  "state": "Virginia",
+  "zip": "22180",
+  "lat": 38.9013729,
+  "lon": -77.2651762,
+  "resolved_name": "Vienna"
+ },
+ "Virginia": {
+  "state": "Minnesota",
+  "zip": "55792",
+  "lat": 47.52326,
+  "lon": -92.536571,
+  "resolved_name": "Virginia"
+ },
+ "Wall Township": {
+  "state": "New Jersey",
+  "zip": "07719",
+  "lat": 40.1743052,
+  "lon": -74.0902219,
+  "resolved_name": "Wall Township"
+ },
+ "Wallingford": {
+  "state": "Connecticut",
+  "zip": "06492",
+  "lat": 41.4564233,
+  "lon": -72.8239356,
+  "resolved_name": "Wallingford"
+ },
+ "Waltham": {
+  "state": "Massachusetts",
+  "zip": "02454",
+  "lat": 42.3762385,
+  "lon": -71.2355644,
+  "resolved_name": "Waltham"
+ },
+ "Warsaw": {
+  "state": "Indiana",
+  "zip": "46580",
+  "lat": 41.2381017,
+  "lon": -85.8530544,
+  "resolved_name": "Warsaw"
+ },
+ "Washington": {
+  "state": "District of Columbia",
+  "zip": "20500",
+  "lat": 38.8950982,
+  "lon": -77.0363849,
+  "resolved_name": "Washington"
+ },
+ "Wawa": {
+  "state": "Pennsylvania",
+  "zip": "19017",
+  "lat": 39.9018803,
+  "lon": -75.4594965,
+  "resolved_name": "Wawa"
+ },
+ "West Des Moines": {
+  "state": "Iowa",
+  "zip": "50265",
+  "lat": 41.5644476,
+  "lon": -93.7594059,
+  "resolved_name": "West Des Moines"
+ },
+ "West Lafayette": {
+  "state": "Indiana",
+  "zip": "46906",
+  "lat": 40.4258686,
+  "lon": -86.9080655,
+  "resolved_name": "West Lafayette"
+ },
+ "West Palm Beach": {
+  "state": "Florida",
+  "zip": "33401",
+  "lat": 26.715364,
+  "lon": -80.0532942,
+  "resolved_name": "West Palm Beach"
+ },
+ "West Sacramento": {
+  "state": "California",
+  "zip": "95691",
+  "lat": 38.5804609,
+  "lon": -121.530234,
+  "resolved_name": "West Sacramento"
+ },
+ "Westbrook": {
+  "state": "Maine",
+  "zip": "04092",
+  "lat": 43.6763036,
+  "lon": -70.3663874,
+  "resolved_name": "Westbrook"
+ },
+ "Westerville": {
+  "state": "Ohio",
+  "zip": "43081",
+  "lat": 40.126139,
+  "lon": -82.9295287,
+  "resolved_name": "Westerville"
+ },
+ "Westhampton Beach": {
+  "state": "New York",
+  "zip": "11978",
+  "lat": 40.8101459,
+  "lon": -72.6413756,
+  "resolved_name": "Village of Westhampton Beach"
+ },
+ "Westlake": {
+  "state": "Texas",
+  "zip": "76262",
+  "lat": 32.991226,
+  "lon": -97.1943701,
+  "resolved_name": "Westlake"
+ },
+ "Westminster": {
+  "state": "Colorado",
+  "zip": "80030",
+  "lat": 39.8366528,
+  "lon": -105.0372046,
+  "resolved_name": "Westminster"
+ },
+ "Wichita": {
+  "state": "Kansas",
+  "zip": "67219",
+  "lat": 37.6922361,
+  "lon": -97.3375448,
+  "resolved_name": "Wichita"
+ },
+ "Wicomico County": {
+  "error": "not found"
+ },
+ "Wildwood": {
+  "state": "Missouri",
+  "zip": "63040",
+  "lat": 38.5806948,
+  "lon": -90.6314374,
+  "resolved_name": "Wildwood"
+ },
+ "Willow Grove": {
+  "state": "Pennsylvania",
+  "zip": "19090",
+  "lat": 40.1439985,
+  "lon": -75.1157286,
+  "resolved_name": "Willow Grove"
+ },
+ "Wilmington": {
+  "state": "Delaware",
+  "zip": "19801",
+  "lat": 39.7459468,
+  "lon": -75.546589,
+  "resolved_name": "Wilmington"
+ },
+ "Windsor": {
+  "state": "California",
+  "zip": "95492",
+  "lat": 38.5471327,
+  "lon": -122.8163802,
+  "resolved_name": "Windsor"
+ },
+ "Winona": {
+  "state": "Minnesota",
+  "zip": "55987",
+  "lat": 44.0500054,
+  "lon": -91.6392294,
+  "resolved_name": "Winona"
+ },
+ "Winston-Salem": {
+  "state": "North Carolina",
+  "zip": "27101",
+  "lat": 36.0998131,
+  "lon": -80.2440518,
+  "resolved_name": "Winston-Salem"
+ },
+ "Winter Haven": {
+  "state": "Florida",
+  "zip": "33880",
+  "lat": 28.0222435,
+  "lon": -81.7328568,
+  "resolved_name": "Winter Haven"
+ },
+ "Wisconsin": {
+  "error": "not found"
+ },
+ "Woburn": {
+  "state": "Massachusetts",
+  "zip": "01801",
+  "lat": 42.4792618,
+  "lon": -71.1522766,
+  "resolved_name": "Woburn"
+ },
+ "Woonsocket": {
+  "state": "Rhode Island",
+  "zip": "02895",
+  "lat": 42.0028761,
+  "lon": -71.5147839,
+  "resolved_name": "Woonsocket"
+ },
+ "Wyoming": {
+  "state": "Michigan",
+  "zip": "49519",
+  "lat": 42.9132581,
+  "lon": -85.7057035,
+  "resolved_name": "Wyoming"
+ },
+ "Wyomissing": {
+  "state": "Pennsylvania",
+  "zip": "19610",
+  "lat": 40.329537,
+  "lon": -75.9652117,
+  "resolved_name": "Wyomissing"
+ }
+}

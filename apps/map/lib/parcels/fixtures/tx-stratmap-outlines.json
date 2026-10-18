@@ -1,0 +1,5033 @@
+{
+ "adapter": "tx-stratmap",
+ "capturedAt": "2026-09-26T15:37:58.692Z",
+ "bbox": [
+  -98.488,
+  29.424,
+  -98.484,
+  29.428
+ ],
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485967,
+       29.427946
+      ],
+      [
+       -98.486168,
+       29.427775
+      ],
+      [
+       -98.486272,
+       29.427864
+      ],
+      [
+       -98.486071,
+       29.428038
+      ],
+      [
+       -98.485967,
+       29.427946
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:1337084",
+    "layer": "parcels",
+    "name": "Parcel 1337084",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "1337084",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "1337084",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.484505,
+       29.428182
+      ],
+      [
+       -98.485179,
+       29.427592
+      ],
+      [
+       -98.485861,
+       29.428199
+      ],
+      [
+       -98.485186,
+       29.428782
+      ],
+      [
+       -98.484505,
+       29.428182
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104216",
+    "layer": "parcels",
+    "name": "Parcel 104216",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104216",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104216",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.484381,
+       29.427196
+      ],
+      [
+       -98.484432,
+       29.427161
+      ],
+      [
+       -98.4849,
+       29.427559
+      ],
+      [
+       -98.484846,
+       29.427607
+      ],
+      [
+       -98.484381,
+       29.427196
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104215",
+    "layer": "parcels",
+    "name": "Parcel 104215",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104215",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104215",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.484327,
+       29.427143
+      ],
+      [
+       -98.484846,
+       29.427607
+      ],
+      [
+       -98.484359,
+       29.428036
+      ],
+      [
+       -98.48369,
+       29.427444
+      ],
+      [
+       -98.483934,
+       29.427304
+      ],
+      [
+       -98.484209,
+       29.427179
+      ],
+      [
+       -98.484327,
+       29.427143
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104214",
+    "layer": "parcels",
+    "name": "Parcel 104214",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104214",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104214",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485615,
+       29.427635
+      ],
+      [
+       -98.485835,
+       29.427444
+      ],
+      [
+       -98.485953,
+       29.427529
+      ],
+      [
+       -98.485723,
+       29.427731
+      ],
+      [
+       -98.485615,
+       29.427635
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104207",
+    "layer": "parcels",
+    "name": "Parcel 104207",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104207",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104207",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485843,
+       29.427837
+      ],
+      [
+       -98.485723,
+       29.427731
+      ],
+      [
+       -98.485953,
+       29.427529
+      ],
+      [
+       -98.486088,
+       29.427612
+      ],
+      [
+       -98.486463,
+       29.427619
+      ],
+      [
+       -98.486505,
+       29.427658
+      ],
+      [
+       -98.486272,
+       29.427864
+      ],
+      [
+       -98.486168,
+       29.427775
+      ],
+      [
+       -98.485967,
+       29.427946
+      ],
+      [
+       -98.485843,
+       29.427837
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:1295686",
+    "layer": "parcels",
+    "name": "Parcel 1295686",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "1295686",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "1295686",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485504,
+       29.427537
+      ],
+      [
+       -98.485719,
+       29.427339
+      ],
+      [
+       -98.485835,
+       29.427444
+      ],
+      [
+       -98.485615,
+       29.427635
+      ],
+      [
+       -98.485504,
+       29.427537
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104209",
+    "layer": "parcels",
+    "name": "Parcel 104209",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104209",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104209",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485393,
+       29.427432
+      ],
+      [
+       -98.485608,
+       29.427238
+      ],
+      [
+       -98.485719,
+       29.427339
+      ],
+      [
+       -98.485504,
+       29.427537
+      ],
+      [
+       -98.485393,
+       29.427432
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104211",
+    "layer": "parcels",
+    "name": "Parcel 104211",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104211",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104211",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.488288,
+       29.427337
+      ],
+      [
+       -98.488288,
+       29.427489
+      ],
+      [
+       -98.487754,
+       29.427487
+      ],
+      [
+       -98.487816,
+       29.427324
+      ],
+      [
+       -98.488288,
+       29.427324
+      ],
+      [
+       -98.488288,
+       29.427337
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104118",
+    "layer": "parcels",
+    "name": "Parcel 104118",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104118",
+     "use": "F3,F3",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104118",
+     "use": "F3,F3"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.488444,
+       29.427789
+      ],
+      [
+       -98.487984,
+       29.427788
+      ],
+      [
+       -98.487985,
+       29.427636
+      ],
+      [
+       -98.488443,
+       29.427638
+      ],
+      [
+       -98.488444,
+       29.427789
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104127",
+    "layer": "parcels",
+    "name": "Parcel 104127",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104127",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104127",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487641,
+       29.427834
+      ],
+      [
+       -98.487718,
+       29.427626
+      ],
+      [
+       -98.487929,
+       29.427626
+      ],
+      [
+       -98.487923,
+       29.427912
+      ],
+      [
+       -98.487641,
+       29.427834
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104136",
+    "layer": "parcels",
+    "name": "Parcel 104136",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104136",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104136",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487079,
+       29.427818
+      ],
+      [
+       -98.487149,
+       29.427633
+      ],
+      [
+       -98.48728,
+       29.427635
+      ],
+      [
+       -98.48721,
+       29.427854
+      ],
+      [
+       -98.487079,
+       29.427818
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104148",
+    "layer": "parcels",
+    "name": "Parcel 104148",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104148",
+     "use": "B2,B2",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104148",
+     "use": "B2,B2"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.486676,
+       29.427789
+      ],
+      [
+       -98.486859,
+       29.427631
+      ],
+      [
+       -98.487104,
+       29.427634
+      ],
+      [
+       -98.486962,
+       29.428045
+      ],
+      [
+       -98.486676,
+       29.427789
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104154",
+    "layer": "parcels",
+    "name": "Parcel 104154",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104154",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104154",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.48728,
+       29.427635
+      ],
+      [
+       -98.487483,
+       29.42764
+      ],
+      [
+       -98.487356,
+       29.428005
+      ],
+      [
+       -98.487045,
+       29.427909
+      ],
+      [
+       -98.487079,
+       29.427818
+      ],
+      [
+       -98.48721,
+       29.427854
+      ],
+      [
+       -98.48728,
+       29.427635
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104149",
+    "layer": "parcels",
+    "name": "Parcel 104149",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104149",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104149",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.486676,
+       29.427789
+      ],
+      [
+       -98.486962,
+       29.428045
+      ],
+      [
+       -98.486921,
+       29.428141
+      ],
+      [
+       -98.486591,
+       29.427864
+      ],
+      [
+       -98.486676,
+       29.427789
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104151",
+    "layer": "parcels",
+    "name": "Parcel 104151",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104151",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104151",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.486458,
+       29.428402
+      ],
+      [
+       -98.486572,
+       29.428302
+      ],
+      [
+       -98.486314,
+       29.428074
+      ],
+      [
+       -98.48651,
+       29.427894
+      ],
+      [
+       -98.486886,
+       29.428217
+      ],
+      [
+       -98.486563,
+       29.428494
+      ],
+      [
+       -98.486458,
+       29.428402
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104156",
+    "layer": "parcels",
+    "name": "Parcel 104156",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104156",
+     "use": "B2",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104156",
+     "use": "B2"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487307,
+       29.428135
+      ],
+      [
+       -98.48724,
+       29.428311
+      ],
+      [
+       -98.486926,
+       29.42819
+      ],
+      [
+       -98.487045,
+       29.427909
+      ],
+      [
+       -98.487356,
+       29.428005
+      ],
+      [
+       -98.487307,
+       29.428135
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104152",
+    "layer": "parcels",
+    "name": "Parcel 104152",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104152",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104152",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.488442,
+       29.427966
+      ],
+      [
+       -98.488442,
+       29.428237
+      ],
+      [
+       -98.487983,
+       29.428234
+      ],
+      [
+       -98.487983,
+       29.427966
+      ],
+      [
+       -98.488442,
+       29.427966
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104125",
+    "layer": "parcels",
+    "name": "Parcel 104125",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104125",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104125",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487581,
+       29.428012
+      ],
+      [
+       -98.487641,
+       29.427834
+      ],
+      [
+       -98.487923,
+       29.427912
+      ],
+      [
+       -98.48794,
+       29.428105
+      ],
+      [
+       -98.487581,
+       29.428012
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104135",
+    "layer": "parcels",
+    "name": "Parcel 104135",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104135",
+     "use": "F3",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104135",
+     "use": "F3"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.488444,
+       29.427789
+      ],
+      [
+       -98.488442,
+       29.427966
+      ],
+      [
+       -98.487983,
+       29.427966
+      ],
+      [
+       -98.487984,
+       29.427788
+      ],
+      [
+       -98.488444,
+       29.427789
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104126",
+    "layer": "parcels",
+    "name": "Parcel 104126",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104126",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104126",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487762,
+       29.426979
+      ],
+      [
+       -98.487376,
+       29.426981
+      ],
+      [
+       -98.487367,
+       29.426604
+      ],
+      [
+       -98.487899,
+       29.42659
+      ],
+      [
+       -98.487762,
+       29.426979
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104167",
+    "layer": "parcels",
+    "name": "Parcel 104167",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104167",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104167",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487063,
+       29.426988
+      ],
+      [
+       -98.486823,
+       29.426962
+      ],
+      [
+       -98.486884,
+       29.426611
+      ],
+      [
+       -98.487046,
+       29.426613
+      ],
+      [
+       -98.487063,
+       29.426988
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104160",
+    "layer": "parcels",
+    "name": "Parcel 104160",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104160",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104160",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487046,
+       29.426613
+      ],
+      [
+       -98.487129,
+       29.42661
+      ],
+      [
+       -98.487146,
+       29.426987
+      ],
+      [
+       -98.487063,
+       29.426988
+      ],
+      [
+       -98.487046,
+       29.426613
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104161",
+    "layer": "parcels",
+    "name": "Parcel 104161",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104161",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104161",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487129,
+       29.42661
+      ],
+      [
+       -98.48721,
+       29.426608
+      ],
+      [
+       -98.487228,
+       29.426984
+      ],
+      [
+       -98.487146,
+       29.426987
+      ],
+      [
+       -98.487129,
+       29.42661
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104162",
+    "layer": "parcels",
+    "name": "Parcel 104162",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104162",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104162",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.48721,
+       29.426608
+      ],
+      [
+       -98.487289,
+       29.426606
+      ],
+      [
+       -98.4873,
+       29.426983
+      ],
+      [
+       -98.487228,
+       29.426984
+      ],
+      [
+       -98.48721,
+       29.426608
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104163",
+    "layer": "parcels",
+    "name": "Parcel 104163",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104163",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104163",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487289,
+       29.426606
+      ],
+      [
+       -98.487367,
+       29.426604
+      ],
+      [
+       -98.487376,
+       29.426981
+      ],
+      [
+       -98.4873,
+       29.426983
+      ],
+      [
+       -98.487289,
+       29.426606
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104164",
+    "layer": "parcels",
+    "name": "Parcel 104164",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104164",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104164",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.488121,
+       29.426587
+      ],
+      [
+       -98.488278,
+       29.426583
+      ],
+      [
+       -98.488291,
+       29.426997
+      ],
+      [
+       -98.487967,
+       29.426998
+      ],
+      [
+       -98.488121,
+       29.426587
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104122",
+    "layer": "parcels",
+    "name": "Parcel 104122",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104122",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104122",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.488288,
+       29.427076
+      ],
+      [
+       -98.488288,
+       29.427189
+      ],
+      [
+       -98.48787,
+       29.42719
+      ],
+      [
+       -98.487917,
+       29.427073
+      ],
+      [
+       -98.488288,
+       29.427076
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104120",
+    "layer": "parcels",
+    "name": "Parcel 104120",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104120",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104120",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.488288,
+       29.427189
+      ],
+      [
+       -98.488288,
+       29.427324
+      ],
+      [
+       -98.487816,
+       29.427324
+      ],
+      [
+       -98.48787,
+       29.42719
+      ],
+      [
+       -98.488288,
+       29.427189
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104119",
+    "layer": "parcels",
+    "name": "Parcel 104119",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104119",
+     "use": "F3",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104119",
+     "use": "F3"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487192,
+       29.42748
+      ],
+      [
+       -98.487269,
+       29.427069
+      ],
+      [
+       -98.487288,
+       29.427055
+      ],
+      [
+       -98.487769,
+       29.427044
+      ],
+      [
+       -98.487605,
+       29.427481
+      ],
+      [
+       -98.487192,
+       29.42748
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104158",
+    "layer": "parcels",
+    "name": "Parcel 104158",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104158",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104158",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.486739,
+       29.427465
+      ],
+      [
+       -98.486828,
+       29.427011
+      ],
+      [
+       -98.487205,
+       29.427058
+      ],
+      [
+       -98.487288,
+       29.427055
+      ],
+      [
+       -98.487269,
+       29.427069
+      ],
+      [
+       -98.487192,
+       29.42748
+      ],
+      [
+       -98.486739,
+       29.427465
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104159",
+    "layer": "parcels",
+    "name": "Parcel 104159",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104159",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104159",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.486553,
+       29.427455
+      ],
+      [
+       -98.486551,
+       29.427467
+      ],
+      [
+       -98.486216,
+       29.427461
+      ],
+      [
+       -98.486124,
+       29.427445
+      ],
+      [
+       -98.486207,
+       29.427107
+      ],
+      [
+       -98.486145,
+       29.427092
+      ],
+      [
+       -98.486069,
+       29.427419
+      ],
+      [
+       -98.485984,
+       29.427359
+      ],
+      [
+       -98.485712,
+       29.427111
+      ],
+      [
+       -98.486319,
+       29.426582
+      ],
+      [
+       -98.486704,
+       29.426641
+      ],
+      [
+       -98.486553,
+       29.427455
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104206",
+    "layer": "parcels",
+    "name": "Parcel 104206",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104206",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104206"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485273,
+       29.426624
+      ],
+      [
+       -98.485533,
+       29.42678
+      ],
+      [
+       -98.485661,
+       29.426891
+      ],
+      [
+       -98.485563,
+       29.426979
+      ],
+      [
+       -98.485212,
+       29.426666
+      ],
+      [
+       -98.485273,
+       29.426624
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104192",
+    "layer": "parcels",
+    "name": "Parcel 104192",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104192",
+     "use": "F3",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104192",
+     "use": "F3"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485224,
+       29.426898
+      ],
+      [
+       -98.485157,
+       29.426701
+      ],
+      [
+       -98.485212,
+       29.426666
+      ],
+      [
+       -98.485563,
+       29.426979
+      ],
+      [
+       -98.485439,
+       29.427092
+      ],
+      [
+       -98.485224,
+       29.426898
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104200",
+    "layer": "parcels",
+    "name": "Parcel 104200",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104200",
+     "use": "F3",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104200",
+     "use": "F3"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485224,
+       29.426898
+      ],
+      [
+       -98.485439,
+       29.427092
+      ],
+      [
+       -98.485368,
+       29.427144
+      ],
+      [
+       -98.485312,
+       29.42713
+      ],
+      [
+       -98.485224,
+       29.426898
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104195",
+    "layer": "parcels",
+    "name": "Parcel 104195",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104195",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104195",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.484775,
+       29.42691
+      ],
+      [
+       -98.48475,
+       29.426862
+      ],
+      [
+       -98.484929,
+       29.426826
+      ],
+      [
+       -98.484908,
+       29.426795
+      ],
+      [
+       -98.484951,
+       29.426784
+      ],
+      [
+       -98.485142,
+       29.427347
+      ],
+      [
+       -98.485045,
+       29.42743
+      ],
+      [
+       -98.484571,
+       29.427016
+      ],
+      [
+       -98.484775,
+       29.42691
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104198",
+    "layer": "parcels",
+    "name": "Parcel 104198",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104198",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104198",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.484671,
+       29.427364
+      ],
+      [
+       -98.484407,
+       29.427139
+      ],
+      [
+       -98.4844,
+       29.4271
+      ],
+      [
+       -98.484571,
+       29.427016
+      ],
+      [
+       -98.485045,
+       29.42743
+      ],
+      [
+       -98.4849,
+       29.427559
+      ],
+      [
+       -98.484671,
+       29.427364
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104213",
+    "layer": "parcels",
+    "name": "Parcel 104213",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104213",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104213",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.484251,
+       29.426986
+      ],
+      [
+       -98.484307,
+       29.427126
+      ],
+      [
+       -98.484327,
+       29.427143
+      ],
+      [
+       -98.484209,
+       29.427179
+      ],
+      [
+       -98.483934,
+       29.427304
+      ],
+      [
+       -98.48369,
+       29.427444
+      ],
+      [
+       -98.484251,
+       29.426986
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:105536",
+    "layer": "parcels",
+    "name": "Parcel 105536",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "105536",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "105536",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.48407,
+       29.426603
+      ],
+      [
+       -98.484251,
+       29.426986
+      ],
+      [
+       -98.48369,
+       29.427444
+      ],
+      [
+       -98.483487,
+       29.427257
+      ],
+      [
+       -98.483467,
+       29.427139
+      ],
+      [
+       -98.483486,
+       29.42706
+      ],
+      [
+       -98.48353,
+       29.42699
+      ],
+      [
+       -98.48407,
+       29.426603
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:105538",
+    "layer": "parcels",
+    "name": "Parcel 105538",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "105538",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "105538",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.483716,
+       29.425993
+      ],
+      [
+       -98.484026,
+       29.426035
+      ],
+      [
+       -98.483994,
+       29.426213
+      ],
+      [
+       -98.483763,
+       29.426388
+      ],
+      [
+       -98.483915,
+       29.426548
+      ],
+      [
+       -98.483515,
+       29.426841
+      ],
+      [
+       -98.483471,
+       29.426848
+      ],
+      [
+       -98.48344,
+       29.42682
+      ],
+      [
+       -98.483246,
+       29.425966
+      ],
+      [
+       -98.483283,
+       29.425937
+      ],
+      [
+       -98.483716,
+       29.425993
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:1136836",
+    "layer": "parcels",
+    "name": "Parcel 1136836",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "1136836",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "1136836",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.484026,
+       29.426035
+      ],
+      [
+       -98.48439,
+       29.426114
+      ],
+      [
+       -98.483915,
+       29.426548
+      ],
+      [
+       -98.483763,
+       29.426388
+      ],
+      [
+       -98.483994,
+       29.426213
+      ],
+      [
+       -98.484026,
+       29.426035
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:105548",
+    "layer": "parcels",
+    "name": "Parcel 105548",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "105548",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "105548",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.484489,
+       29.426227
+      ],
+      [
+       -98.484736,
+       29.426448
+      ],
+      [
+       -98.484592,
+       29.426572
+      ],
+      [
+       -98.484336,
+       29.426355
+      ],
+      [
+       -98.484489,
+       29.426227
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:105539",
+    "layer": "parcels",
+    "name": "Parcel 105539",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "105539",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "105539",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.484489,
+       29.426227
+      ],
+      [
+       -98.484531,
+       29.426195
+      ],
+      [
+       -98.484561,
+       29.426198
+      ],
+      [
+       -98.48468,
+       29.426284
+      ],
+      [
+       -98.484796,
+       29.426397
+      ],
+      [
+       -98.484736,
+       29.426448
+      ],
+      [
+       -98.484489,
+       29.426227
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:105545",
+    "layer": "parcels",
+    "name": "Parcel 105545",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "105545",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "105545",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485112,
+       29.426587
+      ],
+      [
+       -98.485028,
+       29.426375
+      ],
+      [
+       -98.485066,
+       29.426309
+      ],
+      [
+       -98.48513,
+       29.426287
+      ],
+      [
+       -98.485385,
+       29.426353
+      ],
+      [
+       -98.485326,
+       29.426523
+      ],
+      [
+       -98.485258,
+       29.426567
+      ],
+      [
+       -98.485241,
+       29.426602
+      ],
+      [
+       -98.485172,
+       29.426633
+      ],
+      [
+       -98.485112,
+       29.426587
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:105543",
+    "layer": "parcels",
+    "name": "Parcel 105543",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "105543",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "105543"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.484877,
+       29.426568
+      ],
+      [
+       -98.484795,
+       29.426496
+      ],
+      [
+       -98.48484,
+       29.426459
+      ],
+      [
+       -98.484877,
+       29.426568
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:105546",
+    "layer": "parcels",
+    "name": "Parcel 105546",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "105546",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "105546"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.484757,
+       29.426911
+      ],
+      [
+       -98.484651,
+       29.426982
+      ],
+      [
+       -98.4844,
+       29.4271
+      ],
+      [
+       -98.484132,
+       29.42653
+      ],
+      [
+       -98.484336,
+       29.426355
+      ],
+      [
+       -98.484592,
+       29.426572
+      ],
+      [
+       -98.484736,
+       29.426448
+      ],
+      [
+       -98.484795,
+       29.426496
+      ],
+      [
+       -98.484635,
+       29.426641
+      ],
+      [
+       -98.484775,
+       29.426911
+      ],
+      [
+       -98.484757,
+       29.426911
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:105540",
+    "layer": "parcels",
+    "name": "Parcel 105540",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "105540",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "105540",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.48475,
+       29.426862
+      ],
+      [
+       -98.484635,
+       29.426641
+      ],
+      [
+       -98.484795,
+       29.426496
+      ],
+      [
+       -98.484877,
+       29.426568
+      ],
+      [
+       -98.484951,
+       29.426784
+      ],
+      [
+       -98.484908,
+       29.426795
+      ],
+      [
+       -98.484929,
+       29.426826
+      ],
+      [
+       -98.48475,
+       29.426862
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:105542",
+    "layer": "parcels",
+    "name": "Parcel 105542",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "105542",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "105542",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485172,
+       29.426633
+      ],
+      [
+       -98.485241,
+       29.426602
+      ],
+      [
+       -98.485273,
+       29.426624
+      ],
+      [
+       -98.485157,
+       29.426701
+      ],
+      [
+       -98.485112,
+       29.426587
+      ],
+      [
+       -98.485172,
+       29.426633
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104193",
+    "layer": "parcels",
+    "name": "Parcel 104193",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104193",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104193"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485555,
+       29.426535
+      ],
+      [
+       -98.485627,
+       29.426413
+      ],
+      [
+       -98.486075,
+       29.426519
+      ],
+      [
+       -98.485782,
+       29.426778
+      ],
+      [
+       -98.485545,
+       29.426585
+      ],
+      [
+       -98.485555,
+       29.426535
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104189",
+    "layer": "parcels",
+    "name": "Parcel 104189",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104189",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104189",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485274,
+       29.426588
+      ],
+      [
+       -98.485295,
+       29.426604
+      ],
+      [
+       -98.485376,
+       29.426543
+      ],
+      [
+       -98.485545,
+       29.426585
+      ],
+      [
+       -98.485782,
+       29.426778
+      ],
+      [
+       -98.485661,
+       29.426891
+      ],
+      [
+       -98.485533,
+       29.42678
+      ],
+      [
+       -98.485241,
+       29.426602
+      ],
+      [
+       -98.485258,
+       29.426567
+      ],
+      [
+       -98.485274,
+       29.426588
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104190",
+    "layer": "parcels",
+    "name": "Parcel 104190",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104190",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104190",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485274,
+       29.426588
+      ],
+      [
+       -98.485258,
+       29.426567
+      ],
+      [
+       -98.485326,
+       29.426523
+      ],
+      [
+       -98.485385,
+       29.426353
+      ],
+      [
+       -98.485558,
+       29.426395
+      ],
+      [
+       -98.485486,
+       29.426517
+      ],
+      [
+       -98.485555,
+       29.426535
+      ],
+      [
+       -98.485545,
+       29.426585
+      ],
+      [
+       -98.485376,
+       29.426543
+      ],
+      [
+       -98.485295,
+       29.426604
+      ],
+      [
+       -98.485274,
+       29.426588
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104186",
+    "layer": "parcels",
+    "name": "Parcel 104186",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104186",
+     "use": "F3,F3",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104186",
+     "use": "F3,F3"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485558,
+       29.426395
+      ],
+      [
+       -98.485627,
+       29.426413
+      ],
+      [
+       -98.485555,
+       29.426535
+      ],
+      [
+       -98.485486,
+       29.426517
+      ],
+      [
+       -98.485558,
+       29.426395
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104187",
+    "layer": "parcels",
+    "name": "Parcel 104187",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104187",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104187",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.483865,
+       29.425822
+      ],
+      [
+       -98.484015,
+       29.425016
+      ],
+      [
+       -98.483884,
+       29.424997
+      ],
+      [
+       -98.483906,
+       29.424838
+      ],
+      [
+       -98.485307,
+       29.425042
+      ],
+      [
+       -98.485266,
+       29.425271
+      ],
+      [
+       -98.484612,
+       29.425919
+      ],
+      [
+       -98.484562,
+       29.425926
+      ],
+      [
+       -98.483865,
+       29.425822
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:1033158",
+    "layer": "parcels",
+    "name": "Parcel 1033158",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "1033158",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "1033158",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485605,
+       29.425145
+      ],
+      [
+       -98.485712,
+       29.42512
+      ],
+      [
+       -98.486394,
+       29.42523
+      ],
+      [
+       -98.486441,
+       29.425262
+      ],
+      [
+       -98.486467,
+       29.425512
+      ],
+      [
+       -98.486553,
+       29.425722
+      ],
+      [
+       -98.486563,
+       29.42578
+      ],
+      [
+       -98.486407,
+       29.426412
+      ],
+      [
+       -98.485826,
+       29.426312
+      ],
+      [
+       -98.485557,
+       29.426218
+      ],
+      [
+       -98.485316,
+       29.426168
+      ],
+      [
+       -98.484967,
+       29.426173
+      ],
+      [
+       -98.484874,
+       29.426139
+      ],
+      [
+       -98.484748,
+       29.426044
+      ],
+      [
+       -98.484734,
+       29.426
+      ],
+      [
+       -98.484819,
+       29.425908
+      ],
+      [
+       -98.485344,
+       29.425382
+      ],
+      [
+       -98.485605,
+       29.425145
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101328",
+    "layer": "parcels",
+    "name": "Parcel 101328",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101328",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101328",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.48781,
+       29.425494
+      ],
+      [
+       -98.487388,
+       29.425571
+      ],
+      [
+       -98.487387,
+       29.425553
+      ],
+      [
+       -98.487109,
+       29.425534
+      ],
+      [
+       -98.487126,
+       29.425428
+      ],
+      [
+       -98.4878,
+       29.425378
+      ],
+      [
+       -98.48781,
+       29.425494
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104185",
+    "layer": "parcels",
+    "name": "Parcel 104185",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104185",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104185",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487155,
+       29.425238
+      ],
+      [
+       -98.487785,
+       29.425202
+      ],
+      [
+       -98.4878,
+       29.425378
+      ],
+      [
+       -98.487126,
+       29.425428
+      ],
+      [
+       -98.487155,
+       29.425238
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104182",
+    "layer": "parcels",
+    "name": "Parcel 104182",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104182",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104182",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.48803,
+       29.426028
+      ],
+      [
+       -98.487985,
+       29.425205
+      ],
+      [
+       -98.488416,
+       29.425157
+      ],
+      [
+       -98.488451,
+       29.425581
+      ],
+      [
+       -98.488549,
+       29.425568
+      ],
+      [
+       -98.48857,
+       29.425603
+      ],
+      [
+       -98.48858,
+       29.425705
+      ],
+      [
+       -98.488605,
+       29.425704
+      ],
+      [
+       -98.488599,
+       29.425976
+      ],
+      [
+       -98.488071,
+       29.426056
+      ],
+      [
+       -98.488044,
+       29.42605
+      ],
+      [
+       -98.48803,
+       29.426028
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104063",
+    "layer": "parcels",
+    "name": "Parcel 104063",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104063",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104063",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487317,
+       29.425713
+      ],
+      [
+       -98.487331,
+       29.425788
+      ],
+      [
+       -98.487075,
+       29.42576
+      ],
+      [
+       -98.487084,
+       29.425699
+      ],
+      [
+       -98.487317,
+       29.425713
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104177",
+    "layer": "parcels",
+    "name": "Parcel 104177",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104177",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104177",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487092,
+       29.425649
+      ],
+      [
+       -98.487324,
+       29.425661
+      ],
+      [
+       -98.487317,
+       29.425713
+      ],
+      [
+       -98.487084,
+       29.425699
+      ],
+      [
+       -98.487092,
+       29.425649
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104178",
+    "layer": "parcels",
+    "name": "Parcel 104178",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104178",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104178"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487821,
+       29.42562
+      ],
+      [
+       -98.487315,
+       29.425725
+      ],
+      [
+       -98.487324,
+       29.425661
+      ],
+      [
+       -98.487092,
+       29.425649
+      ],
+      [
+       -98.487109,
+       29.425534
+      ],
+      [
+       -98.487387,
+       29.425553
+      ],
+      [
+       -98.487388,
+       29.425571
+      ],
+      [
+       -98.48781,
+       29.425494
+      ],
+      [
+       -98.487821,
+       29.42562
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104179",
+    "layer": "parcels",
+    "name": "Parcel 104179",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104179",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104179"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.48672,
+       29.426463
+      ],
+      [
+       -98.486697,
+       29.426491
+      ],
+      [
+       -98.486657,
+       29.426499
+      ],
+      [
+       -98.48657,
+       29.426475
+      ],
+      [
+       -98.486544,
+       29.426433
+      ],
+      [
+       -98.486646,
+       29.425959
+      ],
+      [
+       -98.486679,
+       29.425917
+      ],
+      [
+       -98.486739,
+       29.42591
+      ],
+      [
+       -98.486779,
+       29.425702
+      ],
+      [
+       -98.486633,
+       29.425671
+      ],
+      [
+       -98.486561,
+       29.425554
+      ],
+      [
+       -98.48654,
+       29.425459
+      ],
+      [
+       -98.486546,
+       29.425347
+      ],
+      [
+       -98.486573,
+       29.425268
+      ],
+      [
+       -98.48662,
+       29.425245
+      ],
+      [
+       -98.486857,
+       29.425258
+      ],
+      [
+       -98.486899,
+       29.4253
+      ],
+      [
+       -98.48672,
+       29.426463
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:-1030",
+    "layer": "parcels",
+    "name": "Parcel -1030",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "-1030",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "-1030"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487255,
+       29.425852
+      ],
+      [
+       -98.487064,
+       29.42583
+      ],
+      [
+       -98.487075,
+       29.42576
+      ],
+      [
+       -98.487331,
+       29.425788
+      ],
+      [
+       -98.487327,
+       29.425813
+      ],
+      [
+       -98.487408,
+       29.425823
+      ],
+      [
+       -98.487392,
+       29.425914
+      ],
+      [
+       -98.487247,
+       29.4259
+      ],
+      [
+       -98.487255,
+       29.425852
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104175",
+    "layer": "parcels",
+    "name": "Parcel 104175",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104175",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104175"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487301,
+       29.425907
+      ],
+      [
+       -98.487392,
+       29.425914
+      ],
+      [
+       -98.487394,
+       29.426044
+      ],
+      [
+       -98.48737,
+       29.426051
+      ],
+      [
+       -98.48738,
+       29.426075
+      ],
+      [
+       -98.487259,
+       29.426117
+      ],
+      [
+       -98.487249,
+       29.426189
+      ],
+      [
+       -98.487012,
+       29.426158
+      ],
+      [
+       -98.487064,
+       29.42583
+      ],
+      [
+       -98.487255,
+       29.425852
+      ],
+      [
+       -98.487247,
+       29.4259
+      ],
+      [
+       -98.487301,
+       29.425907
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:1058820",
+    "layer": "parcels",
+    "name": "Parcel 1058820",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "1058820",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "1058820",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487324,
+       29.426102
+      ],
+      [
+       -98.487288,
+       29.42632
+      ],
+      [
+       -98.487294,
+       29.426454
+      ],
+      [
+       -98.486964,
+       29.426462
+      ],
+      [
+       -98.487012,
+       29.426158
+      ],
+      [
+       -98.487249,
+       29.426189
+      ],
+      [
+       -98.487259,
+       29.426117
+      ],
+      [
+       -98.487324,
+       29.426102
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104170",
+    "layer": "parcels",
+    "name": "Parcel 104170",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104170",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104170",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.48738,
+       29.426075
+      ],
+      [
+       -98.4874,
+       29.426069
+      ],
+      [
+       -98.487409,
+       29.426453
+      ],
+      [
+       -98.487294,
+       29.426454
+      ],
+      [
+       -98.487288,
+       29.42632
+      ],
+      [
+       -98.487325,
+       29.426092
+      ],
+      [
+       -98.48738,
+       29.426075
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104169",
+    "layer": "parcels",
+    "name": "Parcel 104169",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104169",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104169"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487446,
+       29.425778
+      ],
+      [
+       -98.487445,
+       29.425751
+      ],
+      [
+       -98.487831,
+       29.425734
+      ],
+      [
+       -98.487892,
+       29.426442
+      ],
+      [
+       -98.487484,
+       29.426451
+      ],
+      [
+       -98.487446,
+       29.425778
+      ]
+     ],
+     [
+      [
+       -98.487659,
+       29.426123
+      ],
+      [
+       -98.487674,
+       29.426108
+      ],
+      [
+       -98.487658,
+       29.426096
+      ],
+      [
+       -98.487643,
+       29.42611
+      ],
+      [
+       -98.487659,
+       29.426123
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104183",
+    "layer": "parcels",
+    "name": "Parcel 104183",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104183",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104183",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487659,
+       29.426123
+      ],
+      [
+       -98.487643,
+       29.42611
+      ],
+      [
+       -98.487658,
+       29.426096
+      ],
+      [
+       -98.487674,
+       29.426108
+      ],
+      [
+       -98.487659,
+       29.426123
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104184",
+    "layer": "parcels",
+    "name": "Parcel 104184",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104184",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104184",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.48739,
+       29.425922
+      ],
+      [
+       -98.487408,
+       29.425823
+      ],
+      [
+       -98.487327,
+       29.425813
+      ],
+      [
+       -98.487315,
+       29.425725
+      ],
+      [
+       -98.487821,
+       29.42562
+      ],
+      [
+       -98.487831,
+       29.425734
+      ],
+      [
+       -98.487445,
+       29.425751
+      ],
+      [
+       -98.487484,
+       29.426451
+      ],
+      [
+       -98.487409,
+       29.426453
+      ],
+      [
+       -98.4874,
+       29.426069
+      ],
+      [
+       -98.487383,
+       29.42608
+      ],
+      [
+       -98.48737,
+       29.426051
+      ],
+      [
+       -98.487394,
+       29.426044
+      ],
+      [
+       -98.48739,
+       29.425922
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:104171",
+    "layer": "parcels",
+    "name": "Parcel 104171",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "104171",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "104171"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.48312,
+       29.424008
+      ],
+      [
+       -98.48338,
+       29.422889
+      ],
+      [
+       -98.48342,
+       29.422857
+      ],
+      [
+       -98.484648,
+       29.423143
+      ],
+      [
+       -98.484616,
+       29.423246
+      ],
+      [
+       -98.484569,
+       29.423235
+      ],
+      [
+       -98.48454,
+       29.423339
+      ],
+      [
+       -98.484552,
+       29.423343
+      ],
+      [
+       -98.484542,
+       29.423381
+      ],
+      [
+       -98.484608,
+       29.423397
+      ],
+      [
+       -98.484586,
+       29.42344
+      ],
+      [
+       -98.484594,
+       29.423453
+      ],
+      [
+       -98.484523,
+       29.423433
+      ],
+      [
+       -98.484456,
+       29.423615
+      ],
+      [
+       -98.484504,
+       29.423625
+      ],
+      [
+       -98.484513,
+       29.42364
+      ],
+      [
+       -98.484469,
+       29.423808
+      ],
+      [
+       -98.484514,
+       29.423819
+      ],
+      [
+       -98.484508,
+       29.423854
+      ],
+      [
+       -98.484558,
+       29.423865
+      ],
+      [
+       -98.484562,
+       29.423897
+      ],
+      [
+       -98.484644,
+       29.423926
+      ],
+      [
+       -98.484673,
+       29.423924
+      ],
+      [
+       -98.484706,
+       29.423896
+      ],
+      [
+       -98.48476,
+       29.423906
+      ],
+      [
+       -98.484829,
+       29.423679
+      ],
+      [
+       -98.484779,
+       29.423667
+      ],
+      [
+       -98.484827,
+       29.423502
+      ],
+      [
+       -98.484765,
+       29.423486
+      ],
+      [
+       -98.48478,
+       29.423434
+      ],
+      [
+       -98.484798,
+       29.423427
+      ],
+      [
+       -98.484843,
+       29.423269
+      ],
+      [
+       -98.484889,
+       29.423275
+      ],
+      [
+       -98.484911,
+       29.423205
+      ],
+      [
+       -98.486085,
+       29.423478
+      ],
+      [
+       -98.486037,
+       29.423842
+      ],
+      [
+       -98.486279,
+       29.423897
+      ],
+      [
+       -98.486528,
+       29.423921
+      ],
+      [
+       -98.486577,
+       29.423543
+      ],
+      [
+       -98.487191,
+       29.423676
+      ],
+      [
+       -98.486956,
+       29.424476
+      ],
+      [
+       -98.485727,
+       29.424151
+      ],
+      [
+       -98.485701,
+       29.424246
+      ],
+      [
+       -98.485565,
+       29.424212
+      ],
+      [
+       -98.485549,
+       29.424364
+      ],
+      [
+       -98.485475,
+       29.424353
+      ],
+      [
+       -98.48547,
+       29.424382
+      ],
+      [
+       -98.485374,
+       29.424369
+      ],
+      [
+       -98.485294,
+       29.424878
+      ],
+      [
+       -98.483091,
+       29.424579
+      ],
+      [
+       -98.483053,
+       29.424541
+      ],
+      [
+       -98.483059,
+       29.424375
+      ],
+      [
+       -98.48312,
+       29.424008
+      ]
+     ],
+     [
+      [
+       -98.484277,
+       29.423732
+      ],
+      [
+       -98.484297,
+       29.423739
+      ],
+      [
+       -98.484306,
+       29.423723
+      ],
+      [
+       -98.484286,
+       29.423714
+      ],
+      [
+       -98.484277,
+       29.423732
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:1278518",
+    "layer": "parcels",
+    "name": "Parcel 1278518",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "1278518",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "1278518",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487696,
+       29.423991
+      ],
+      [
+       -98.4877,
+       29.424069
+      ],
+      [
+       -98.487315,
+       29.424036
+      ],
+      [
+       -98.487328,
+       29.423963
+      ],
+      [
+       -98.487696,
+       29.423991
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101645",
+    "layer": "parcels",
+    "name": "Parcel 101645",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101645",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101645",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487315,
+       29.424036
+      ],
+      [
+       -98.4877,
+       29.424069
+      ],
+      [
+       -98.487714,
+       29.424287
+      ],
+      [
+       -98.487278,
+       29.424285
+      ],
+      [
+       -98.487315,
+       29.424036
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101643",
+    "layer": "parcels",
+    "name": "Parcel 101643",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101643",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101643",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487717,
+       29.424345
+      ],
+      [
+       -98.487269,
+       29.424358
+      ],
+      [
+       -98.487278,
+       29.424285
+      ],
+      [
+       -98.487714,
+       29.424287
+      ],
+      [
+       -98.487717,
+       29.424345
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101642",
+    "layer": "parcels",
+    "name": "Parcel 101642",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101642",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101642",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487721,
+       29.424415
+      ],
+      [
+       -98.487441,
+       29.424471
+      ],
+      [
+       -98.487256,
+       29.424467
+      ],
+      [
+       -98.487269,
+       29.424358
+      ],
+      [
+       -98.487717,
+       29.424345
+      ],
+      [
+       -98.487721,
+       29.424415
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101641",
+    "layer": "parcels",
+    "name": "Parcel 101641",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101641",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101641",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487734,
+       29.424573
+      ],
+      [
+       -98.487226,
+       29.424654
+      ],
+      [
+       -98.487256,
+       29.424467
+      ],
+      [
+       -98.487441,
+       29.424471
+      ],
+      [
+       -98.487721,
+       29.424415
+      ],
+      [
+       -98.487734,
+       29.424573
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101640",
+    "layer": "parcels",
+    "name": "Parcel 101640",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101640",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101640",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487296,
+       29.424842
+      ],
+      [
+       -98.487196,
+       29.42484
+      ],
+      [
+       -98.487205,
+       29.424781
+      ],
+      [
+       -98.487751,
+       29.424711
+      ],
+      [
+       -98.487756,
+       29.424756
+      ],
+      [
+       -98.487296,
+       29.424842
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101637",
+    "layer": "parcels",
+    "name": "Parcel 101637",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101637",
+     "use": "F3",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101637",
+     "use": "F3"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487313,
+       29.424774
+      ],
+      [
+       -98.487205,
+       29.424781
+      ],
+      [
+       -98.487214,
+       29.424725
+      ],
+      [
+       -98.487744,
+       29.424657
+      ],
+      [
+       -98.487751,
+       29.424711
+      ],
+      [
+       -98.487313,
+       29.424774
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101638",
+    "layer": "parcels",
+    "name": "Parcel 101638",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101638",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101638",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487304,
+       29.424719
+      ],
+      [
+       -98.487214,
+       29.424725
+      ],
+      [
+       -98.487226,
+       29.424654
+      ],
+      [
+       -98.487734,
+       29.424573
+      ],
+      [
+       -98.487744,
+       29.424657
+      ],
+      [
+       -98.487304,
+       29.424719
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101639",
+    "layer": "parcels",
+    "name": "Parcel 101639",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101639",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101639",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.488229,
+       29.424573
+      ],
+      [
+       -98.488262,
+       29.42468
+      ],
+      [
+       -98.487945,
+       29.424713
+      ],
+      [
+       -98.487924,
+       29.424621
+      ],
+      [
+       -98.488229,
+       29.424573
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:110132",
+    "layer": "parcels",
+    "name": "Parcel 110132",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "110132",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "110132"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.488262,
+       29.42468
+      ],
+      [
+       -98.488298,
+       29.424756
+      ],
+      [
+       -98.487961,
+       29.424793
+      ],
+      [
+       -98.487945,
+       29.424713
+      ],
+      [
+       -98.488262,
+       29.42468
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:110127",
+    "layer": "parcels",
+    "name": "Parcel 110127",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "110127",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "110127",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.488336,
+       29.424857
+      ],
+      [
+       -98.488229,
+       29.424573
+      ],
+      [
+       -98.487954,
+       29.424158
+      ],
+      [
+       -98.48788,
+       29.42401
+      ],
+      [
+       -98.487914,
+       29.423867
+      ],
+      [
+       -98.488129,
+       29.423912
+      ],
+      [
+       -98.488115,
+       29.423931
+      ],
+      [
+       -98.488121,
+       29.423958
+      ],
+      [
+       -98.488148,
+       29.423972
+      ],
+      [
+       -98.488351,
+       29.424281
+      ],
+      [
+       -98.488357,
+       29.424267
+      ],
+      [
+       -98.488474,
+       29.424437
+      ],
+      [
+       -98.488547,
+       29.42464
+      ],
+      [
+       -98.488565,
+       29.424654
+      ],
+      [
+       -98.488672,
+       29.425008
+      ],
+      [
+       -98.488433,
+       29.425035
+      ],
+      [
+       -98.488336,
+       29.424857
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:-1023",
+    "layer": "parcels",
+    "name": "Parcel -1023",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "-1023",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "-1023"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487924,
+       29.424621
+      ],
+      [
+       -98.487888,
+       29.424332
+      ],
+      [
+       -98.48788,
+       29.42401
+      ],
+      [
+       -98.487954,
+       29.424158
+      ],
+      [
+       -98.488229,
+       29.424573
+      ],
+      [
+       -98.487924,
+       29.424621
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:1191662",
+    "layer": "parcels",
+    "name": "Parcel 1191662",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "1191662",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "1191662",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.488336,
+       29.424857
+      ],
+      [
+       -98.488433,
+       29.425035
+      ],
+      [
+       -98.487999,
+       29.425077
+      ],
+      [
+       -98.487978,
+       29.424915
+      ],
+      [
+       -98.488336,
+       29.424857
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:110125",
+    "layer": "parcels",
+    "name": "Parcel 110125",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "110125",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "110125",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487978,
+       29.424915
+      ],
+      [
+       -98.487961,
+       29.424793
+      ],
+      [
+       -98.488298,
+       29.424756
+      ],
+      [
+       -98.488336,
+       29.424857
+      ],
+      [
+       -98.487978,
+       29.424915
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:110128",
+    "layer": "parcels",
+    "name": "Parcel 110128",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "110128",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "110128",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487569,
+       29.424867
+      ],
+      [
+       -98.487766,
+       29.424834
+      ],
+      [
+       -98.487821,
+       29.42484
+      ],
+      [
+       -98.487852,
+       29.425095
+      ],
+      [
+       -98.487568,
+       29.425102
+      ],
+      [
+       -98.487569,
+       29.424867
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101646",
+    "layer": "parcels",
+    "name": "Parcel 101646",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101646",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101646",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487756,
+       29.424756
+      ],
+      [
+       -98.487766,
+       29.424834
+      ],
+      [
+       -98.487569,
+       29.424867
+      ],
+      [
+       -98.48757,
+       29.424989
+      ],
+      [
+       -98.487168,
+       29.425012
+      ],
+      [
+       -98.487196,
+       29.42484
+      ],
+      [
+       -98.487296,
+       29.424842
+      ],
+      [
+       -98.487756,
+       29.424756
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101636",
+    "layer": "parcels",
+    "name": "Parcel 101636",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101636",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101636",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.487168,
+       29.425012
+      ],
+      [
+       -98.48757,
+       29.424989
+      ],
+      [
+       -98.487568,
+       29.425102
+      ],
+      [
+       -98.487151,
+       29.42512
+      ],
+      [
+       -98.487168,
+       29.425012
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101635",
+    "layer": "parcels",
+    "name": "Parcel 101635",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101635",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101635",
+     "use": "F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.485294,
+       29.424878
+      ],
+      [
+       -98.485374,
+       29.424369
+      ],
+      [
+       -98.48547,
+       29.424382
+      ],
+      [
+       -98.485475,
+       29.424353
+      ],
+      [
+       -98.485549,
+       29.424364
+      ],
+      [
+       -98.485565,
+       29.424212
+      ],
+      [
+       -98.486611,
+       29.424487
+      ],
+      [
+       -98.48641,
+       29.425053
+      ],
+      [
+       -98.485453,
+       29.424921
+      ],
+      [
+       -98.485456,
+       29.424898
+      ],
+      [
+       -98.485294,
+       29.424878
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101630",
+    "layer": "parcels",
+    "name": "Parcel 101630",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101630",
+     "use": "F1,F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101630",
+     "use": "F1,F1"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -98.483805,
+       29.425426
+      ],
+      [
+       -98.483884,
+       29.424997
+      ],
+      [
+       -98.484015,
+       29.425016
+      ],
+      [
+       -98.483935,
+       29.425445
+      ],
+      [
+       -98.483805,
+       29.425426
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:tx-stratmap:101897",
+    "layer": "parcels",
+    "name": "Parcel 101897",
+    "kind": "outline",
+    "source": "TxGIO StratMap Land Parcels",
+    "details": {
+     "parcel id": "101897",
+     "use": "F1",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "tx-stratmap",
+     "parcelId": "101897",
+     "use": "F1"
+    }
+   }
+  }
+ ],
+ "truncated": false
+}

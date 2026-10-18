@@ -1,0 +1,105 @@
+{
+ "type": "FeatureCollection",
+ "dataUpdatedTime": "2026-09-26T16:00:50Z",
+ "features": [
+  {
+   "type": "Feature",
+   "id": "C01503",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     23.99616,
+     60.05374,
+     0.0
+    ]
+   },
+   "properties": {
+    "id": "C01503",
+    "name": "kt51_Inkoo",
+    "collectionStatus": "GATHERING",
+    "dataUpdatedTime": "2026-09-26T15:25:45Z",
+    "presets": [
+     {
+      "id": "C0150301",
+      "inCollection": true
+     },
+     {
+      "id": "C0150302",
+      "inCollection": true
+     },
+     {
+      "id": "C0150309",
+      "inCollection": true
+     }
+    ],
+    "state": null
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "C01504",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     24.235601,
+     60.536727,
+     0.0
+    ]
+   },
+   "properties": {
+    "id": "C01504",
+    "name": "vt2_Karkkila_Korpi",
+    "collectionStatus": "GATHERING",
+    "dataUpdatedTime": "2026-09-26T15:27:18Z",
+    "presets": [
+     {
+      "id": "C0150401",
+      "inCollection": true
+     },
+     {
+      "id": "C0150402",
+      "inCollection": true
+     },
+     {
+      "id": "C0150409",
+      "inCollection": true
+     }
+    ],
+    "state": null
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "C01505",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     23.303264,
+     60.061798,
+     0.0
+    ]
+   },
+   "properties": {
+    "id": "C01505",
+    "name": "kt52_Raasepori_Tenhola",
+    "collectionStatus": "GATHERING",
+    "dataUpdatedTime": "2026-09-26T15:28:12Z",
+    "presets": [
+     {
+      "id": "C0150501",
+      "inCollection": true
+     },
+     {
+      "id": "C0150502",
+      "inCollection": true
+     },
+     {
+      "id": "C0150509",
+      "inCollection": true
+     }
+    ],
+    "state": null
+   }
+  }
+ ]
+}

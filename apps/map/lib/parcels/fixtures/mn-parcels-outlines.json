@@ -1,0 +1,1808 @@
+{
+ "adapter": "mn-parcels",
+ "capturedAt": "2026-09-26T15:37:58.993Z",
+ "bbox": [
+  -93.268,
+  44.976,
+  -93.264,
+  44.979
+ ],
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.264089,
+       44.977248
+      ],
+      [
+       -93.264308,
+       44.977341
+      ],
+      [
+       -93.264965,
+       44.976564
+      ],
+      [
+       -93.263868,
+       44.976098
+      ],
+      [
+       -93.263212,
+       44.976875
+      ],
+      [
+       -93.264089,
+       44.977248
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2602924220352",
+    "layer": "parcels",
+    "name": "Parcel 2602924220352",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2602924220352",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2602924220352"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.265941,
+       44.978633
+      ],
+      [
+       -93.265942,
+       44.978632
+      ],
+      [
+       -93.26594,
+       44.978631
+      ],
+      [
+       -93.265941,
+       44.978633
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330684",
+    "layer": "parcels",
+    "name": "Parcel 2302924330684",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330684",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330684"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.265339,
+       44.979091
+      ],
+      [
+       -93.265559,
+       44.979184
+      ],
+      [
+       -93.265867,
+       44.978819
+      ],
+      [
+       -93.265781,
+       44.978782
+      ],
+      [
+       -93.2658,
+       44.978759
+      ],
+      [
+       -93.265714,
+       44.978722
+      ],
+      [
+       -93.265428,
+       44.979061
+      ],
+      [
+       -93.265382,
+       44.979041
+      ],
+      [
+       -93.265339,
+       44.979091
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330006",
+    "layer": "parcels",
+    "name": "Parcel 2302924330006",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330006",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330006"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.266154,
+       44.978125
+      ],
+      [
+       -93.266227,
+       44.978156
+      ],
+      [
+       -93.266539,
+       44.977787
+      ],
+      [
+       -93.266246,
+       44.977663
+      ],
+      [
+       -93.265935,
+       44.978032
+      ],
+      [
+       -93.266154,
+       44.978125
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330016",
+    "layer": "parcels",
+    "name": "Parcel 2302924330016",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330016",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330016"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.26764,
+       44.978203
+      ],
+      [
+       -93.268224,
+       44.978452
+      ],
+      [
+       -93.268536,
+       44.978081
+      ],
+      [
+       -93.267952,
+       44.977833
+      ],
+      [
+       -93.26764,
+       44.978203
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2202924440101",
+    "layer": "parcels",
+    "name": "Parcel 2202924440101",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2202924440101",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2202924440101"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.263978,
+       44.978512
+      ],
+      [
+       -93.264061,
+       44.978548
+      ],
+      [
+       -93.264389,
+       44.978159
+      ],
+      [
+       -93.264087,
+       44.978031
+      ],
+      [
+       -93.263759,
+       44.978419
+      ],
+      [
+       -93.263978,
+       44.978512
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330035",
+    "layer": "parcels",
+    "name": "Parcel 2302924330035",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330035",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330035"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.268441,
+       44.976473
+      ],
+      [
+       -93.26866,
+       44.976566
+      ],
+      [
+       -93.269002,
+       44.976161
+      ],
+      [
+       -93.268235,
+       44.975835
+      ],
+      [
+       -93.268549,
+       44.975462
+      ],
+      [
+       -93.26822,
+       44.975322
+      ],
+      [
+       -93.267564,
+       44.9761
+      ],
+      [
+       -93.268441,
+       44.976473
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2702924110127",
+    "layer": "parcels",
+    "name": "Parcel 2702924110127",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2702924110127",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2702924110127"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.267626,
+       44.977439
+      ],
+      [
+       -93.267845,
+       44.977532
+      ],
+      [
+       -93.268502,
+       44.976754
+      ],
+      [
+       -93.267405,
+       44.976289
+      ],
+      [
+       -93.266749,
+       44.977067
+      ],
+      [
+       -93.267626,
+       44.977439
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2702924110084",
+    "layer": "parcels",
+    "name": "Parcel 2702924110084",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2702924110084",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2702924110084"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.266227,
+       44.978156
+      ],
+      [
+       -93.266373,
+       44.978218
+      ],
+      [
+       -93.266685,
+       44.977849
+      ],
+      [
+       -93.266539,
+       44.977787
+      ],
+      [
+       -93.266227,
+       44.978156
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330015",
+    "layer": "parcels",
+    "name": "Parcel 2302924330015",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330015",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330015"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.267248,
+       44.977534
+      ],
+      [
+       -93.266935,
+       44.977905
+      ],
+      [
+       -93.267374,
+       44.978091
+      ],
+      [
+       -93.267687,
+       44.977721
+      ],
+      [
+       -93.267248,
+       44.977534
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330904",
+    "layer": "parcels",
+    "name": "Parcel 2302924330904",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330904",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330904"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.267248,
+       44.977534
+      ],
+      [
+       -93.266935,
+       44.977905
+      ],
+      [
+       -93.267374,
+       44.978091
+      ],
+      [
+       -93.267687,
+       44.977721
+      ],
+      [
+       -93.267248,
+       44.977534
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330905",
+    "layer": "parcels",
+    "name": "Parcel 2302924330905",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330905",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330905"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.266513,
+       44.978278
+      ],
+      [
+       -93.267031,
+       44.978498
+      ],
+      [
+       -93.267342,
+       44.978129
+      ],
+      [
+       -93.266685,
+       44.977849
+      ],
+      [
+       -93.266373,
+       44.978218
+      ],
+      [
+       -93.266513,
+       44.978278
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330775",
+    "layer": "parcels",
+    "name": "Parcel 2302924330775",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330775",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330775"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.264466,
+       44.976096
+      ],
+      [
+       -93.264685,
+       44.976189
+      ],
+      [
+       -93.265341,
+       44.975412
+      ],
+      [
+       -93.264683,
+       44.975132
+      ],
+      [
+       -93.264027,
+       44.97591
+      ],
+      [
+       -93.264466,
+       44.976096
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2602924220026",
+    "layer": "parcels",
+    "name": "Parcel 2602924220026",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2602924220026",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2602924220026"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        -93.266265,
+        44.976861
+       ],
+       [
+        -93.266484,
+        44.976954
+       ],
+       [
+        -93.26657,
+        44.976851
+       ],
+       [
+        -93.266603,
+        44.976866
+       ],
+       [
+        -93.267042,
+        44.976345
+       ],
+       [
+        -93.267009,
+        44.976331
+       ],
+       [
+        -93.26714,
+        44.976176
+       ],
+       [
+        -93.266046,
+        44.975711
+       ],
+       [
+        -93.265914,
+        44.975866
+       ],
+       [
+        -93.265874,
+        44.975849
+       ],
+       [
+        -93.265443,
+        44.97636
+       ],
+       [
+        -93.265483,
+        44.976377
+       ],
+       [
+        -93.265389,
+        44.976488
+       ],
+       [
+        -93.266265,
+        44.976861
+       ]
+      ]
+     ],
+     [
+      [
+       [
+        -93.266533,
+        44.975134
+       ],
+       [
+        -93.266204,
+        44.975523
+       ],
+       [
+        -93.267299,
+        44.975988
+       ],
+       [
+        -93.267955,
+        44.97521
+       ],
+       [
+        -93.266861,
+        44.974745
+       ],
+       [
+        -93.266533,
+        44.975134
+       ]
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2602924220080",
+    "layer": "parcels",
+    "name": "Parcel 2602924220080",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2602924220080",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2602924220080"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.264636,
+       44.978792
+      ],
+      [
+       -93.264855,
+       44.978885
+      ],
+      [
+       -93.265511,
+       44.978108
+      ],
+      [
+       -93.264415,
+       44.977642
+      ],
+      [
+       -93.264087,
+       44.978031
+      ],
+      [
+       -93.264389,
+       44.978159
+      ],
+      [
+       -93.264061,
+       44.978548
+      ],
+      [
+       -93.264636,
+       44.978792
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330876",
+    "layer": "parcels",
+    "name": "Parcel 2302924330876",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330876",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330876"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.267248,
+       44.977534
+      ],
+      [
+       -93.266935,
+       44.977905
+      ],
+      [
+       -93.267374,
+       44.978091
+      ],
+      [
+       -93.267687,
+       44.977721
+      ],
+      [
+       -93.267248,
+       44.977534
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330903",
+    "layer": "parcels",
+    "name": "Parcel 2302924330903",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330903",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330903"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.266482,
+       44.979576
+      ],
+      [
+       -93.266921,
+       44.979763
+      ],
+      [
+       -93.267577,
+       44.978985
+      ],
+      [
+       -93.267138,
+       44.978799
+      ],
+      [
+       -93.266482,
+       44.979576
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330012",
+    "layer": "parcels",
+    "name": "Parcel 2302924330012",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330012",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330012"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.267516,
+       44.978704
+      ],
+      [
+       -93.267626,
+       44.97875
+      ],
+      [
+       -93.267937,
+       44.978381
+      ],
+      [
+       -93.267608,
+       44.978241
+      ],
+      [
+       -93.267296,
+       44.97861
+      ],
+      [
+       -93.267516,
+       44.978704
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2202924440030",
+    "layer": "parcels",
+    "name": "Parcel 2202924440030",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2202924440030",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2202924440030"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.266278,
+       44.977625
+      ],
+      [
+       -93.266935,
+       44.977905
+      ],
+      [
+       -93.267248,
+       44.977534
+      ],
+      [
+       -93.26659,
+       44.977255
+      ],
+      [
+       -93.266278,
+       44.977625
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330879",
+    "layer": "parcels",
+    "name": "Parcel 2302924330879",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330879",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330879"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.26512,
+       44.978998
+      ],
+      [
+       -93.265339,
+       44.979091
+      ],
+      [
+       -93.265382,
+       44.979041
+      ],
+      [
+       -93.265428,
+       44.979061
+      ],
+      [
+       -93.265714,
+       44.978722
+      ],
+      [
+       -93.2658,
+       44.978759
+      ],
+      [
+       -93.265994,
+       44.978529
+      ],
+      [
+       -93.265915,
+       44.978495
+      ],
+      [
+       -93.266049,
+       44.978336
+      ],
+      [
+       -93.265776,
+       44.97822
+      ],
+      [
+       -93.26512,
+       44.978998
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330051",
+    "layer": "parcels",
+    "name": "Parcel 2302924330051",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330051",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330051"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.263731,
+       44.979158
+      ],
+      [
+       -93.26395,
+       44.979251
+      ],
+      [
+       -93.264258,
+       44.978887
+      ],
+      [
+       -93.264039,
+       44.978794
+      ],
+      [
+       -93.263731,
+       44.979158
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330027",
+    "layer": "parcels",
+    "name": "Parcel 2302924330027",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330027",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330027"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.266126,
+       44.978865
+      ],
+      [
+       -93.266564,
+       44.979051
+      ],
+      [
+       -93.266738,
+       44.978845
+      ],
+      [
+       -93.26608,
+       44.978566
+      ],
+      [
+       -93.265907,
+       44.978772
+      ],
+      [
+       -93.266126,
+       44.978865
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330010",
+    "layer": "parcels",
+    "name": "Parcel 2302924330010",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330010",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330010"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.267626,
+       44.97875
+      ],
+      [
+       -93.267872,
+       44.978855
+      ],
+      [
+       -93.268183,
+       44.978485
+      ],
+      [
+       -93.267937,
+       44.978381
+      ],
+      [
+       -93.267626,
+       44.97875
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2202924440029",
+    "layer": "parcels",
+    "name": "Parcel 2202924440029",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2202924440029",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2202924440029"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.265012,
+       44.97764
+      ],
+      [
+       -93.265122,
+       44.977687
+      ],
+      [
+       -93.265778,
+       44.976909
+      ],
+      [
+       -93.26523,
+       44.976677
+      ],
+      [
+       -93.264574,
+       44.977454
+      ],
+      [
+       -93.265012,
+       44.97764
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330044",
+    "layer": "parcels",
+    "name": "Parcel 2302924330044",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330044",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330044"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.265559,
+       44.979184
+      ],
+      [
+       -93.265652,
+       44.979224
+      ],
+      [
+       -93.26596,
+       44.978858
+      ],
+      [
+       -93.265867,
+       44.978819
+      ],
+      [
+       -93.265559,
+       44.979184
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330008",
+    "layer": "parcels",
+    "name": "Parcel 2302924330008",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330008",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330008"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.266278,
+       44.977625
+      ],
+      [
+       -93.266935,
+       44.977905
+      ],
+      [
+       -93.267248,
+       44.977534
+      ],
+      [
+       -93.26659,
+       44.977255
+      ],
+      [
+       -93.266278,
+       44.977625
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330906",
+    "layer": "parcels",
+    "name": "Parcel 2302924330906",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330906",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330906"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.263512,
+       44.979065
+      ],
+      [
+       -93.263731,
+       44.979158
+      ],
+      [
+       -93.264039,
+       44.978794
+      ],
+      [
+       -93.263965,
+       44.978763
+      ],
+      [
+       -93.263797,
+       44.978963
+      ],
+      [
+       -93.263431,
+       44.978807
+      ],
+      [
+       -93.263292,
+       44.978972
+      ],
+      [
+       -93.263512,
+       44.979065
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330028",
+    "layer": "parcels",
+    "name": "Parcel 2302924330028",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330028",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330028"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.26545,
+       44.977826
+      ],
+      [
+       -93.265669,
+       44.977919
+      ],
+      [
+       -93.266325,
+       44.977142
+      ],
+      [
+       -93.265778,
+       44.976909
+      ],
+      [
+       -93.265122,
+       44.977687
+      ],
+      [
+       -93.26545,
+       44.977826
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330043",
+    "layer": "parcels",
+    "name": "Parcel 2302924330043",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330043",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330043"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.264904,
+       44.976283
+      ],
+      [
+       -93.265124,
+       44.976376
+      ],
+      [
+       -93.26578,
+       44.975598
+      ],
+      [
+       -93.265341,
+       44.975412
+      ],
+      [
+       -93.264685,
+       44.976189
+      ],
+      [
+       -93.264904,
+       44.976283
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2602924220353",
+    "layer": "parcels",
+    "name": "Parcel 2602924220353",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2602924220353",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2602924220353"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.263618,
+       44.977806
+      ],
+      [
+       -93.263837,
+       44.977899
+      ],
+      [
+       -93.26415,
+       44.977529
+      ],
+      [
+       -93.263492,
+       44.97725
+      ],
+      [
+       -93.26318,
+       44.97762
+      ],
+      [
+       -93.263618,
+       44.977806
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330037",
+    "layer": "parcels",
+    "name": "Parcel 2302924330037",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330037",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330037"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.267921,
+       44.978876
+      ],
+      [
+       -93.268394,
+       44.979077
+      ],
+      [
+       -93.268704,
+       44.978709
+      ],
+      [
+       -93.268183,
+       44.978485
+      ],
+      [
+       -93.267872,
+       44.978855
+      ],
+      [
+       -93.267921,
+       44.978876
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2202924440028",
+    "layer": "parcels",
+    "name": "Parcel 2202924440028",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2202924440028",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2202924440028"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        -93.26608,
+        44.978566
+       ],
+       [
+        -93.266738,
+        44.978845
+       ],
+       [
+        -93.266872,
+        44.978686
+       ],
+       [
+        -93.266215,
+        44.978407
+       ],
+       [
+        -93.26608,
+        44.978566
+       ]
+      ]
+     ],
+     [
+      [
+       [
+        -93.265915,
+        44.978495
+       ],
+       [
+        -93.266002,
+        44.978532
+       ],
+       [
+        -93.266136,
+        44.978373
+       ],
+       [
+        -93.266049,
+        44.978336
+       ],
+       [
+        -93.265915,
+        44.978495
+       ]
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330685",
+    "layer": "parcels",
+    "name": "Parcel 2302924330685",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330685",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330685"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.264171,
+       44.979064
+      ],
+      [
+       -93.264564,
+       44.979231
+      ],
+      [
+       -93.264697,
+       44.979074
+      ],
+      [
+       -93.264304,
+       44.978907
+      ],
+      [
+       -93.264171,
+       44.979064
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330025",
+    "layer": "parcels",
+    "name": "Parcel 2302924330025",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330025",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330025"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.265997,
+       44.979371
+      ],
+      [
+       -93.266217,
+       44.979464
+      ],
+      [
+       -93.266525,
+       44.979098
+      ],
+      [
+       -93.26596,
+       44.978858
+      ],
+      [
+       -93.265652,
+       44.979224
+      ],
+      [
+       -93.265997,
+       44.979371
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2302924330009",
+    "layer": "parcels",
+    "name": "Parcel 2302924330009",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2302924330009",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2302924330009"
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.266921,
+       44.979763
+      ],
+      [
+       -93.267579,
+       44.980042
+      ],
+      [
+       -93.268235,
+       44.979265
+      ],
+      [
+       -93.267577,
+       44.978985
+      ],
+      [
+       -93.266921,
+       44.979763
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "parcel:mn-parcels:2202924440027",
+    "layer": "parcels",
+    "name": "Parcel 2202924440027",
+    "kind": "outline",
+    "source": "Minnesota Parcels, Open Data",
+    "details": {
+     "parcel id": "2202924440027",
+     "what this is": "a parcel outline; click inside it for the record its source publishes"
+    },
+    "extra": {
+     "adapter": "mn-parcels",
+     "parcelId": "2202924440027"
+    }
+   }
+  }
+ ],
+ "truncated": false
+}

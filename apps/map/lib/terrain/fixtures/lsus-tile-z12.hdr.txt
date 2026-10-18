@@ -1,0 +1,19 @@
+HTTP/2 200 
+content-type: application/octet-stream
+content-length: 2267
+date: Sat, 17 Oct 2026 20:52:25 GMT
+cache-control: no-transform, max-age=3600, s-maxage=3600
+access-control-allow-origin: https://eye.jcamd.com
+x-xss-protection: 1; mode=block
+x-content-type-options: nosniff
+x-powered-by: ArcGIS-Online-Hosted-Services
+strict-transport-security: max-age=63072000
+x-arcgis-instance-id: i-01343d005bcbecff4
+etag: "45bf7a920547a044d59d23d298407739"
+last-modified: Fri, 06 Sep 2024 21:40:48 GMT
+vary: Origin,Accept-Encoding,Authorization,X-Esri-Authorization
+x-cache: Miss from cloudfront
+via: 1.1 dbf64cf447eef75d893e3715b4ae26ca.cloudfront.net (CloudFront)
+x-amz-cf-pop: IAH50-P5
+x-amz-cf-id: AjfcgjVFmdaVMptQGoZTH8llCZ0yu0lSvh_cU_b1ZVpBslFEKiY6Lg==
+

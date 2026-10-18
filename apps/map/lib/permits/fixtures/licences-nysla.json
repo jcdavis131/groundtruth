@@ -1,0 +1,418 @@
+[
+ {
+  "licensepermitid": "0340-21-118220",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0340",
+  "description": "Restaurant",
+  "legalname": "CHIPOTLE MEXICAN GRILL OF COLORADO LLC",
+  "dba": "CHIPOTLE MEXICAN GRILL #1321",
+  "actualaddressofpremises": "501 7TH AVE",
+  "additionaladdressinformation": "W 37TH & W 38TH",
+  "city": "NEW YORK",
+  "zipcode": "10018",
+  "originalissuedate": "2025-11-06T00:00:00.000",
+  "lastissuedate": "2025-11-06T00:00:00.000",
+  "effectivedate": "2025-11-06T00:00:00.000",
+  "expirationdate": "2027-10-31T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.98902,
+    40.75312
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0240-25-114131",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0240",
+  "description": "Restaurant",
+  "legalname": "Papi's Guys LLC",
+  "dba": "Papi, Pasta & Pizza",
+  "actualaddressofpremises": "485 Fashion Ave",
+  "city": "New York",
+  "zipcode": "10018",
+  "originalissuedate": "2025-06-16T00:00:00.000",
+  "lastissuedate": "2025-06-16T00:00:00.000",
+  "effectivedate": "2025-06-16T00:00:00.000",
+  "expirationdate": "2027-05-31T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.98951,
+    40.75246
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0082-23-142375",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0082",
+  "description": "Drug Store",
+  "legalname": "CVS ALBANY LLC",
+  "dba": "CVS/PHARMACY #11217",
+  "actualaddressofpremises": "500 7TH AVE",
+  "city": "NEW YORK",
+  "zipcode": "10018",
+  "originalissuedate": "2024-06-30T00:00:00.000",
+  "lastissuedate": "2024-06-30T00:00:00.000",
+  "effectivedate": "2024-06-30T00:00:00.000",
+  "expirationdate": "2027-06-30T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.98908,
+    40.75305
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0240-22-102775",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0240",
+  "description": "Restaurant",
+  "legalname": "AA BC BAKERY CAFE CORP",
+  "dba": "BREAD FACTORY CAFE",
+  "actualaddressofpremises": "470 472 7TH AVE",
+  "city": "NEW YORK",
+  "zipcode": "10018",
+  "originalissuedate": "2026-03-13T00:00:00.000",
+  "lastissuedate": "2026-03-13T00:00:00.000",
+  "effectivedate": "2026-04-01T00:00:00.000",
+  "expirationdate": "2028-03-31T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.98986,
+    40.75198
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0340-22-104259",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0340",
+  "description": "Restaurant",
+  "legalname": "SEBASTIAN'S PIZZERIA INC",
+  "dba": "LAZZARA'S PIZZA CAFE & RESTAURANT",
+  "actualaddressofpremises": "221 W 38TH STREET",
+  "city": "NEW YORK",
+  "zipcode": "10018",
+  "originalissuedate": "2026-07-02T00:00:00.000",
+  "lastissuedate": "2026-07-02T00:00:00.000",
+  "effectivedate": "2026-07-02T00:00:00.000",
+  "expirationdate": "2028-06-30T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.98963,
+    40.75388
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0101-24-134003",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0101",
+  "description": "Off Premises Caterer Establishment",
+  "legalname": "SPECTRUM OF CREATIONS INC.",
+  "dba": "Food Trends",
+  "actualaddressofpremises": "231 W 39th St",
+  "additionaladdressinformation": "(Store #1-6)",
+  "city": "New York",
+  "zipcode": "10018",
+  "originalissuedate": "2024-10-25T00:00:00.000",
+  "lastissuedate": "2024-10-25T00:00:00.000",
+  "effectivedate": "2024-10-25T00:00:00.000",
+  "expirationdate": "2027-09-30T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.98977,
+    40.75475
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0423-23-133564",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0423",
+  "description": "Additional Bar",
+  "legalname": "485 ROOFTOP LLC & SEVENTH AVENUE HOSPITALITY LLC",
+  "dba": "EAST WING BAR - BEER WINE CIDER LIQUOR",
+  "actualaddressofpremises": "485 7TH AVE",
+  "additionaladdressinformation": "17TH FLOOR",
+  "city": "NEW YORK",
+  "zipcode": "10018",
+  "originalissuedate": "2025-08-22T00:00:00.000",
+  "lastissuedate": "2025-08-22T00:00:00.000",
+  "effectivedate": "2025-09-01T00:00:00.000",
+  "expirationdate": "2027-08-31T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.9895,
+    40.75247
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0423-23-133599",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0423",
+  "description": "Additional Bar",
+  "legalname": "485 SEVENTH AVE ASSOC LLC & SEVENTH AVE HOSP LLC",
+  "dba": "BEER WINE CIDER LIQUOR",
+  "actualaddressofpremises": "485 7TH AVE",
+  "city": "NEW YORK",
+  "zipcode": "10018",
+  "originalissuedate": "2025-08-26T00:00:00.000",
+  "lastissuedate": "2025-08-26T00:00:00.000",
+  "effectivedate": "2025-09-01T00:00:00.000",
+  "expirationdate": "2027-08-31T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.9895,
+    40.75247
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0423-23-133538",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0423",
+  "description": "Additional Bar",
+  "legalname": "485 ROOFTOP LLC & SEVENTH AVENUE HOSPITALITY LLC",
+  "dba": "WEST WING BAR - BEER WINE CIDER LIQUOR",
+  "actualaddressofpremises": "485 7TH AVE",
+  "additionaladdressinformation": "17TH FLOOR",
+  "city": "NEW YORK",
+  "zipcode": "10018",
+  "originalissuedate": "2025-08-22T00:00:00.000",
+  "lastissuedate": "2025-08-22T00:00:00.000",
+  "effectivedate": "2025-09-01T00:00:00.000",
+  "expirationdate": "2027-08-31T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.9895,
+    40.75247
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0081-21-112387",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0081",
+  "description": "Grocery Store",
+  "legalname": "171 MADISON AVENUE RETAIL INC",
+  "dba": "7 ELEVEN STORE 35057",
+  "actualaddressofpremises": "171 MADISON AVE",
+  "city": "NEW YORK",
+  "zipcode": "10016",
+  "originalissuedate": "2024-04-01T00:00:00.000",
+  "lastissuedate": "2024-04-01T00:00:00.000",
+  "effectivedate": "2024-04-01T00:00:00.000",
+  "expirationdate": "2027-03-31T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.98333,
+    40.74725
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0100-23-124635",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0100",
+  "description": "Liquor Store",
+  "legalname": "PARK 34 LIQUOR STORE INC",
+  "dba": "1936 WINE & SPIRITS",
+  "actualaddressofpremises": "65 E 34TH ST",
+  "additionaladdressinformation": "AKA 10 PARK AVE",
+  "city": "NEW YORK",
+  "zipcode": "10016",
+  "originalissuedate": "2026-02-23T00:00:00.000",
+  "lastissuedate": "2026-02-23T00:00:00.000",
+  "effectivedate": "2026-04-01T00:00:00.000",
+  "expirationdate": "2029-03-31T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.98199,
+    40.74735
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0267-26-138351",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0267",
+  "description": "Food & Beverage Business",
+  "legalname": "Aromati LLC",
+  "dba": "Aromati Cafe and Wine Bar",
+  "actualaddressofpremises": "103 E 34th St",
+  "city": "New York",
+  "zipcode": "10016",
+  "originalissuedate": "2026-03-24T00:00:00.000",
+  "lastissuedate": "2026-03-24T00:00:00.000",
+  "effectivedate": "2026-03-24T00:00:00.000",
+  "expirationdate": "2028-02-29T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.98092,
+    40.74689
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0240-23-142445",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0240",
+  "description": "Restaurant",
+  "legalname": "FRANCHIA CAFE LLC",
+  "dba": "FRANCHIA CAFE",
+  "actualaddressofpremises": "12 PARK AVE",
+  "city": "NEW YORK",
+  "zipcode": "10016",
+  "originalissuedate": "2025-01-29T00:00:00.000",
+  "lastissuedate": "2025-01-29T00:00:00.000",
+  "effectivedate": "2025-03-01T00:00:00.000",
+  "expirationdate": "2027-02-28T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.98117,
+    40.74747
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0240-23-139806",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0240",
+  "description": "Restaurant",
+  "legalname": "HAMACHI 34 INC",
+  "dba": "HAMACHI SUSHI",
+  "actualaddressofpremises": "56 E 34TH ST",
+  "city": "NEW YORK",
+  "zipcode": "10016",
+  "originalissuedate": "2025-06-03T00:00:00.000",
+  "lastissuedate": "2025-06-03T00:00:00.000",
+  "effectivedate": "2025-08-01T00:00:00.000",
+  "expirationdate": "2027-07-31T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.9821,
+    40.7474
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0100-22-116157",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0100",
+  "description": "Liquor Store",
+  "legalname": "BARRELMORE WINE & SPIRITS INC",
+  "actualaddressofpremises": "488 7TH AVE",
+  "city": "NEW YORK",
+  "zipcode": "10018",
+  "originalissuedate": "2025-07-24T00:00:00.000",
+  "lastissuedate": "2025-07-24T00:00:00.000",
+  "effectivedate": "2025-09-01T00:00:00.000",
+  "expirationdate": "2028-08-31T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.98951,
+    40.75246
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0343-23-121828",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0343",
+  "description": "Hotel",
+  "legalname": "485 SEVENTH AVE ASSOC LLC & SEVENTH AVE HOSP LLC",
+  "actualaddressofpremises": "485 7TH AVE",
+  "city": "NEW YORK",
+  "zipcode": "10018",
+  "originalissuedate": "2025-08-26T00:00:00.000",
+  "lastissuedate": "2025-08-26T00:00:00.000",
+  "effectivedate": "2025-09-01T00:00:00.000",
+  "expirationdate": "2027-08-31T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.9895,
+    40.75247
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0009-24-138646",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0009",
+  "description": "Wholesale Liquor",
+  "legalname": "Dassai Trading Inc",
+  "actualaddressofpremises": "501 5th Ave",
+  "additionaladdressinformation": "Rm 1801",
+  "city": "New York",
+  "zipcode": "10017",
+  "originalissuedate": "2026-05-28T00:00:00.000",
+  "lastissuedate": "2026-05-28T00:00:00.000",
+  "effectivedate": "2024-12-10T00:00:00.000",
+  "expirationdate": "2027-11-30T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.98101,
+    40.7533
+   ]
+  }
+ },
+ {
+  "licensepermitid": "0081-26-143365",
+  "premisescounty": "New York",
+  "type": "1",
+  "class": "0081",
+  "description": "Grocery Store",
+  "legalname": "Sakura Mini Market No.2 Corp.",
+  "actualaddressofpremises": "2 Park Ave Frnt 1",
+  "city": "New York",
+  "zipcode": "10016",
+  "originalissuedate": "2026-05-18T00:00:00.000",
+  "lastissuedate": "2026-05-18T00:00:00.000",
+  "effectivedate": "2026-05-18T00:00:00.000",
+  "expirationdate": "2029-04-30T00:00:00.000",
+  "georeference": {
+   "type": "Point",
+   "coordinates": [
+    -73.98213,
+    40.74611
+   ]
+  }
+ }
+]

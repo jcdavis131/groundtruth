@@ -1,0 +1,14 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "GEOID": "3651000",
+    "NAME": "New York city",
+    "BASENAME": "New York"
+   }
+  }
+ ]
+}
