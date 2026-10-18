@@ -19,6 +19,8 @@ A project lives here only if it serves one of these jobs.
 - No search or embedding of private individuals.
 - Large data, caches and model weights don't go in git.
 
+The record and snapshot format these rules apply to is in [data/SCHEMA.md](data/SCHEMA.md).
+
 ## Status
 
 Just created (2026-10-18). Projects move in one at a time, each cut over only after its live checks pass on the new home. The old repos are archived after their cutover.

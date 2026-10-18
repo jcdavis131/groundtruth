@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "manifest/1",
+  "snapshotId": "nces-public-schools.austin-downtown.2026-10-18",
+  "collection": "nces-public-schools",
+  "region": {
+    "id": "austin-downtown",
+    "name": "Downtown Austin, Texas (small test box)",
+    "bbox": [
+      -97.75,
+      30.26,
+      -97.73,
+      30.28
+    ],
+    "rule": "point-in-bbox",
+    "definition": "Point records whose longitude and latitude fall inside the box, edges included; the publisher's count uses the same box."
+  },
+  "createdAt": "2026-10-18T22:35:03Z",
+  "builder": {
+    "name": "groundtruth data/schema/fixtures/build-fixtures.mjs",
+    "version": "0.1.0",
+    "gitSha": "c11bdaf33f8b8e9e4624ebf40c277f01f17d32e9",
+    "repo": "github.com/jcdavis131/groundtruth"
+  },
+  "recordSchemaVersion": "record/1",
+  "sources": [
+    {
+      "sourceId": "nces-edge-public",
+      "licence": "US federal (public domain); credit: U.S. Department of Education, National Center for Education Statistics, EDGE / Common Core of Data, school year 2024-25"
+    }
+  ],
+  "requests": [
+    {
+      "purpose": "records",
+      "url": "https://eye.jcamd.com/api/civic?op=schools&bbox=-97.75,30.26,-97.73,30.28",
+      "status": 200,
+      "retrievedAt": "2026-10-18T22:35:04.043Z",
+      "bytes": 23160,
+      "sha256": "c71400e3fd3542363854f9ff7b99ff6ac2accd7a8a40daf7415326546b830ef4"
+    },
+    {
+      "purpose": "count",
+      "url": "https://nces.ed.gov/opengis/rest/services/K12_School_Locations/EDGE_ADMINDATA_PUBLICSCH_2425/MapServer/1/query?where=1%3D1&geometry=-97.75%2C30.26%2C-97.73%2C30.28&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&returnCountOnly=true&f=json",
+      "status": 200,
+      "retrievedAt": "2026-10-18T22:35:04.208Z",
+      "bytes": 11,
+      "sha256": "57413ce83ee1d989e384dfd3a82c6e2d9052a23c4204706bd2d7df11aa4c2d7c"
+    }
+  ],
+  "recordCount": 2,
+  "publisherCount": {
+    "value": 2,
+    "method": "ArcGIS REST query on the publisher's layer: where 1=1, the region box as an esriGeometryEnvelope (inSR 4326, intersects), returnCountOnly=true",
+    "url": "https://nces.ed.gov/opengis/rest/services/K12_School_Locations/EDGE_ADMINDATA_PUBLICSCH_2425/MapServer/1/query?where=1%3D1&geometry=-97.75%2C30.26%2C-97.73%2C30.28&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&returnCountOnly=true&f=json",
+    "countedAt": "2026-10-18T22:35:04Z"
+  },
+  "files": [
+    {
+      "path": "records.jsonl",
+      "format": "jsonl",
+      "sha256": "63a41d87490d19cdc2d676a37c193d90a6be4e7b398cfbd20b465cb56bec6c5e",
+      "bytes": 4405,
+      "records": 2
+    }
+  ]
+}
