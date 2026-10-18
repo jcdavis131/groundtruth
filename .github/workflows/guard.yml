@@ -1,0 +1,30 @@
+# The README's rules as a check on every pull request and push to master:
+# no big files or weights, no .env, LF only, no token-shaped strings, no
+# internal machine paths. Plain Node, no install, a few seconds. It binds a
+# merge once "guard" is a required check in branch protection.
+name: guard
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: guard self-test
+        run: node scripts/guard.test.mjs
+      - name: guard
+        run: node scripts/guard.mjs
