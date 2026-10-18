@@ -34,6 +34,7 @@ const flags = (out, kind, file) => new RegExp(`^${kind}\\s+${esc(file)}(\\s|$)`,
 // Clean, with look-alikes that are not violations.
 const clean = repo({
   "README.md": "# fine\nall LF\ndisk-usage task-runner sk-learn ~/repo %USERPROFILE%\\repo\n",
+  "routes.js": 'get("/c/users/42"); get("/u/users/:id"); fetch("https://example.com/r/' + 'Users/top");\n',
   ".env.example": "KEY=\n",
 });
 const r0 = run(clean);
@@ -67,6 +68,9 @@ const bad = repo({
   "lower.md": "at c:" + "\\users\\someone\\x\n",
   "bash.md": "cd /c/" + "Users/someone/x\n",
   "capbash.md": "cd /C/" + "Users/someone/x\n",
+  "wsl.md": "cd /mnt/c/" + "Users/someone/x\n",
+  "cyg.md": "cd /cygdrive/c/" + "Users/someone/x\n",
+  "after-route.md": 'get("/c/users/42"); cd /c/' + "Users/someone/x\n",
 });
 const r1 = run(bad);
 check(r1.status === 1, "a repo with violations fails");
@@ -78,7 +82,7 @@ for (const [kind, file] of [
   ["secret", "live.md"], ["secret", "slack.md"], ["secret", "goog.md"], ["secret", "pk.md"], ["secret", "enc.md"],
   ["secret", "pgp.md"], ["secret", "bin.dat"],
   ["path", "home.md"], ["path", "fwd.md"], ["path", "fileurl.md"], ["path", "lower.md"], ["path", "bash.md"],
-  ["path", "capbash.md"],
+  ["path", "capbash.md"], ["path", "after-route.md"], ["path", "wsl.md"], ["path", "cyg.md"],
 ])
   check(flags(r1.stdout, kind, file), `flags ${kind} in ${file}`);
 
