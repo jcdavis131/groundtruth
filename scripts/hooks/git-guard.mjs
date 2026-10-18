@@ -19,9 +19,16 @@
 //   stash     creating a stash (bare stash, stash push, stash save, stash -u ...) without a -m message, or
 //             with a message an existing stash already has. Agents share a repo's stash list, so each
 //             stash needs a tag that names it.
-// It finds git after && || ; | & and newlines, inside ( ), $( ) and backticks, behind sudo/env/command/
-// xargs/wsl, inside bash -c, sh -c, eval, cmd /c, pwsh/powershell -Command and -EncodedCommand, and iex.
-// It skips git's global options (-C dir, -c k=v, --git-dir ...) and follows -C and cd for the lookups.
+// Long options count when cut to a prefix, the way git reads them (--har is --hard, --mirr is --mirror,
+// --del --forc is --delete --force), and -- ends the options.
+// It finds git after && || ; | & and newlines, inside ( ), $( ) and backticks, behind wrappers whose options
+// take values (sudo -u root, timeout 60, nice -n 5, env -u FOO, stdbuf, strace, xargs, wsl, watch, su -c,
+// env -S), inside bash -c, sh -c, eval, cmd /c, pwsh/powershell -Command and -EncodedCommand, and iex.
+// It decodes bash $'...' escapes ($'\x2df' is -f) and reads PowerShell curly quotes as plain ones.
+// It skips git's global options (-C dir, -c k=v, --git-dir ...) and follows -C, --git-dir, GIT_DIR and cd
+// for the lookups. It never runs config the command brings: a push carrying -c push.*, remote.*, branch.*
+// or include.*, or GIT_CONFIG* in its environment, is blocked. An alias (git pf) is read from the command's
+// own -c alias.* or the repo's config and checked as what it expands to.
 // Quoted text that is only an argument (a commit message, an echo) is not a command and isn't checked.
 //
 // Fails closed: input that isn't JSON, a git command it can't parse (an open quote, an unknown option before
@@ -29,9 +36,11 @@
 // A tool other than Bash/PowerShell, and a command with no git in it, pass untouched, so a wide matcher
 // can't wedge every tool call if the input shape changes.
 //
-// Not covered: git aliases (git pf), push.default=matching or remote.<name>.push refspecs, commands built
-// at run time from variables (blocked when the subcommand or a push option is a variable, missed when the
-// whole command is), and git run from a script file. It is a guardrail against mistakes, not a sandbox.
+// Not covered: push.default=matching or remote.<name>.push refspecs set in the repo's own config; anything
+// an earlier command in the same line changes before git runs (git config alias.x ... && git x, git
+// checkout master && git push), since the lookups read the repo as it is now; commands built at run time
+// from variables (blocked when the subcommand or a push option is a variable, missed when the whole command
+// is); Start-Process; and git run from a script file. It is a guardrail against mistakes, not a sandbox.
 //
 // Idea from mattpocock/skills (MIT, (c) 2026 Matt Pocock), misc/git-guardrails-claude-code at 49dd158.
 // No code copied. That script reads its input with jq, so it fails open where jq isn't installed, and it
@@ -124,8 +133,30 @@ function lex(src, ps, start = 0, inSub = false) {
       } else i++;
       continue;
     }
-    if (!ps && c === "$" && (src[i + 1] === "'" || src[i + 1] === '"')) {
-      i++; // bash $'...' and $"...": the $ goes, the quote stays (escapes in $'...' are read as plain text)
+    if (!ps && c === "$" && src[i + 1] === "'") {
+      // bash $'...': decode the escapes the way bash does, so $'\x2df' is -f
+      startWord();
+      let j = i + 2;
+      for (;;) {
+        if (j >= n) throw new LexError("an open $' quote");
+        if (src[j] === "'") break;
+        if (src[j] === "\\") {
+          const [s, len] = ansiEscape(src, j + 1);
+          word.text += s;
+          j += 1 + len;
+        } else word.text += src[j++];
+      }
+      i = j + 1;
+      continue;
+    }
+    if (!ps && c === "$" && src[i + 1] === '"') {
+      i++; // bash $"...": the $ goes, the quote stays
+      continue;
+    }
+    if (ps && c === "@" && !word && /[A-Za-z_?]/.test(src[i + 1] ?? "")) {
+      startWord().dyn = true; // PowerShell splatting: @args expands to words the guard can't see
+      word.text += c;
+      i++;
       continue;
     }
     if (ps && src.startsWith("<#", i)) {
@@ -296,6 +327,33 @@ function lex(src, ps, start = 0, inSub = false) {
   return { segs, subs, end: n };
 }
 
+// ansiEscape(src, p) -> [decoded text, characters used] for the escape whose letter is at src[p], inside a
+// bash $'...' string.
+const SIMPLE_ESCAPES = { a: "\x07", b: "\b", e: "\x1b", E: "\x1b", f: "\f", n: "\n", r: "\r", t: "\t", v: "\v", "\\": "\\", "'": "'", '"': '"', "?": "?" };
+function ansiEscape(src, p) {
+  const e = src[p];
+  if (e === undefined) return ["\\", 0];
+  if (e in SIMPLE_ESCAPES) return [SIMPLE_ESCAPES[e], 1];
+  const digits = (re, max) => {
+    let k = 0;
+    while (k < max && re.test(src[p + 1 + k] ?? "")) k++;
+    return src.slice(p + 1, p + 1 + k);
+  };
+  if (e === "x" || e === "u" || e === "U") {
+    const h = digits(/[0-9A-Fa-f]/, e === "x" ? 2 : e === "u" ? 4 : 8);
+    if (!h) return ["\\" + e, 1];
+    const cp = parseInt(h, 16);
+    return [cp <= 0x10ffff ? String.fromCodePoint(cp) : "", 1 + h.length];
+  }
+  if (/[0-7]/.test(e)) {
+    let k = 1;
+    while (k < 3 && /[0-7]/.test(src[p + k] ?? "")) k++;
+    return [String.fromCharCode(parseInt(src.slice(p, p + k), 8) & 0xff), k];
+  }
+  if (e === "c" && src[p + 1] !== undefined) return [String.fromCharCode(src.charCodeAt(p + 1) & 0x1f), 2];
+  return ["\\" + e, 1];
+}
+
 // ---------- lookups ----------
 // Read-only git queries against the repo the command would run in. Only -C, --git-dir and --work-tree are
 // forwarded; -c is dropped so the hook never runs config the command supplied.
@@ -345,8 +403,42 @@ const GLOBAL_FLAGS = new Set([
   "--man-path", "--info-path", "--version", "-v", "--help", "-h",
 ]);
 
-function checkGit(args, ctx) {
+// git takes any unique prefix of a subcommand's long option: --har is --hard, --mirr is --mirror. The guard
+// doesn't work out which prefixes are unique. Any cut of three or more characters counts as the option, so
+// an ambiguous cut, which git refuses to run, is blocked too. (git's own global options take no prefixes.)
+const isLong = (t, full) => t.length >= 3 && full.startsWith(t.split("=")[0]);
+
+// Subcommands git ships. git never lets an alias shadow one of these, so only other names are looked up.
+const BUILTINS = new Set(
+  ("add am annotate apply archive backfill bisect blame branch bugreport bundle cat-file check-attr check-ignore " +
+    "check-mailmap check-ref-format checkout checkout-index cherry cherry-pick citool clean clone column commit " +
+    "commit-graph commit-tree config count-objects credential daemon describe diagnose diff diff-files diff-index " +
+    "diff-tree difftool fast-export fast-import fetch fetch-pack filter-branch fmt-merge-msg for-each-ref " +
+    "for-each-repo format-patch fsck gc get-tar-commit-id grep gui hash-object help hook index-pack init instaweb " +
+    "interpret-trailers log ls-files ls-remote ls-tree mailinfo mailsplit maintenance merge merge-base merge-file " +
+    "merge-index merge-tree mergetool mktag mktree multi-pack-index mv name-rev notes pack-objects pack-refs patch-id " +
+    "prune prune-packed pull push range-diff read-tree rebase receive-pack reflog refs remote repack replace replay " +
+    "request-pull rerere reset restore rev-list rev-parse revert rm send-email send-pack shortlog show show-branch " +
+    "show-index show-ref sparse-checkout stage stash status stripspace submodule switch symbolic-ref tag " +
+    "unpack-file unpack-objects update-index update-ref update-server-info upload-archive upload-pack var " +
+    "verify-commit verify-pack verify-tag version whatchanged worktree write-tree").split(" "),
+);
+const GUARDED = new Set(["push", "reset", "clean", "branch", "stash"]);
+// Config a push reads to pick where it goes, and environment that swaps in other config or another repo.
+const PUSH_CONFIG = /^(?:push|remote|branch|include|includeif)\./i;
+const CONFIG_ENV = /^GIT_CONFIG/;
+
+// checkGit(args after "git", ctx, env set for this command) -> a reason string to block, or null.
+function checkGit(args, ctx, env = {}, depth = 0) {
+  if (depth > MAX_DEPTH) return "git aliases nest too deeply for the guard to check";
   const g = { dir: ctx.cwd, forward: [] };
+  const allEnv = { ...ctx.env, ...env };
+  for (const [k, flag] of [["GIT_DIR", "--git-dir"], ["GIT_WORK_TREE", "--work-tree"]]) {
+    const v = allEnv[k];
+    if (v) v.dyn ? (g.dir = null) : g.forward.push(flag, v.text);
+  }
+  const configEnv = Object.keys(allEnv).filter((k) => CONFIG_ENV.test(k) || k === "GIT_COMMON_DIR");
+  const cfg = []; // {key, value} from -c and --config-env; key null when it comes from a variable
   let i = 0;
   while (i < args.length && args[i].text.startsWith("-")) {
     const a = args[i];
@@ -358,9 +450,11 @@ function checkGit(args, ctx) {
       if (!v) return `git ${t} has no value`;
       if (t === "-C") g.dir = v.dyn ? null : resolveDir(g.dir, v.text);
       else if (t === "--git-dir" || t === "--work-tree") v.dyn ? (g.dir = null) : g.forward.push(t, v.text);
+      else if (t === "-c" || t === "--config-env") cfg.push(configPair(v, t === "--config-env"));
       i += 2;
     } else if (t.includes("=") && (GLOBAL_WITH_VALUE.has(name) || name === "--exec-path" || name === "--list-cmds")) {
       if (name === "--git-dir" || name === "--work-tree") g.forward.push(t);
+      if (name === "--config-env") cfg.push(configPair({ text: t.slice(t.indexOf("=") + 1), dyn: false }, true));
       i++;
     } else if (GLOBAL_FLAGS.has(t)) i++;
     else return `git ${t} before the subcommand isn't an option this guard knows`;
@@ -369,9 +463,14 @@ function checkGit(args, ctx) {
   if (!sub) return null;
   if (sub.dyn) return "the git subcommand comes from a variable, so the guard can't tell what runs";
   const rest = args.slice(i + 1);
+  if (GUARDED.has(sub.text) && configEnv.length && (sub.text === "push" || allEnv.GIT_COMMON_DIR))
+    return `git ${sub.text} with ${configEnv[0]} set: that swaps in config or refs the guard can't read`;
   switch (sub.text) {
-    case "push":
+    case "push": {
+      const c = cfg.find((p) => p.key === null || PUSH_CONFIG.test(p.key));
+      if (c) return `git -c ${c.key ?? "(from a variable)"} on a push can change where it goes, and the guard won't run config the command brings. Drop the -c`;
       return checkPush(rest, g);
+    }
     case "reset":
       return checkReset(rest, g);
     case "clean":
@@ -380,9 +479,50 @@ function checkGit(args, ctx) {
       return checkBranch(rest, g);
     case "stash":
       return checkStash(rest, g);
-    default:
-      return null;
   }
+  if (BUILTINS.has(sub.text)) return null;
+  return checkAlias(sub.text, args.slice(0, i), rest, g, cfg, configEnv, ctx, env, depth);
+}
+
+// configPair(word after -c or --config-env) -> {key, value}. git lowercases the section and the variable name.
+function configPair(v, fromEnv) {
+  if (v.dyn) return { key: null, value: null };
+  const eq = v.text.indexOf("=");
+  const key = (eq < 0 ? v.text : v.text.slice(0, eq)).toLowerCase();
+  return { key, value: fromEnv ? null : eq < 0 ? "true" : v.text.slice(eq + 1) };
+}
+
+// A subcommand git doesn't ship may be an alias. Read it (from the command's own -c first, then the repo's
+// config, without running anything) and check what it expands to.
+function checkAlias(name, globals, rest, g, cfg, configEnv, ctx, env, depth) {
+  const want = `alias.${name.toLowerCase()}`;
+  if (cfg.some((p) => p.key === null)) return `git ${name} may be an alias set by a -c from a variable, so the guard can't tell what runs`;
+  const own = cfg.filter((p) => p.key === want).pop();
+  let value;
+  if (own) {
+    if (own.value === null) return `git ${name} is an alias the command reads from the environment, so the guard can't tell what runs`;
+    value = own.value;
+  } else {
+    if (configEnv.length) return `git ${name} may be an alias set through ${configEnv[0]}, so the guard can't tell what runs`;
+    const r = gitq(g, ["config", "--get", want]);
+    if (r.unknown || (!r.ok && r.status !== 1)) return `git ${name} may be an alias, and the guard can't read the repo's config to check`;
+    if (!r.ok) return null; // not an alias: git runs git-<name> from PATH or fails
+    value = r.out;
+  }
+  if (value.startsWith("!")) {
+    const tail = rest.map((a) => (a.dyn ? a.text : `'${a.text.replace(/'/g, `'\\''`)}'`)).join(" ");
+    const r = scanText(`${value.slice(1)} ${tail}`, false, { ...ctx, cwd: g.dir }, depth + 1);
+    return r ? `alias git ${name}: ${r}` : null;
+  }
+  let words;
+  try {
+    words = lex(value, false).segs.flat();
+  } catch (e) {
+    if (e instanceof LexError) return `git ${name} is an alias the guard can't parse (${e.message})`;
+    throw e;
+  }
+  const r = checkGit([...globals, ...words, ...rest], ctx, env, depth + 1);
+  return r ? `alias git ${name} (${value}): ${r}` : null;
 }
 
 function checkPush(rest, g) {
@@ -400,12 +540,12 @@ function checkPush(rest, g) {
     if (a.dyn) return "a push argument comes from a variable, so the guard can't tell whether it forces or where it goes";
     if (!ended && t.startsWith("-") && t.length > 1) {
       const name = t.split("=")[0];
-      if (name.startsWith("--force")) return FORCE;
-      if (name === "--mirror") return "push --mirror overwrites every ref on the remote, master/main included";
-      if (name === "--all" || name === "--branches") return "push --all pushes every branch, master/main included";
-      if (name === "--tags") tags = true;
       if (name.startsWith("--")) {
-        if (!t.includes("=") && ["--repo", "--receive-pack", "--exec", "--push-option"].includes(name)) i++;
+        if (name.startsWith("--force") || isLong(name, "--force")) return FORCE;
+        if (isLong(name, "--mirror")) return "push --mirror overwrites every ref on the remote, master/main included";
+        if (isLong(name, "--all") || isLong(name, "--branches")) return "push --all pushes every branch, master/main included";
+        if (isLong(name, "--tags")) tags = true;
+        if (!t.includes("=") && ["--repo", "--receive-pack", "--exec", "--push-option"].some((o) => isLong(name, o))) i++;
         continue;
       }
       for (let k = 1; k < t.length; k++) {
@@ -458,7 +598,9 @@ function checkCurrentPush(g, how) {
 }
 
 function checkReset(rest, g) {
-  if (!rest.some((a) => a.text === "--hard" || a.dyn)) return null;
+  const end = rest.findIndex((a) => a.text === "--" && !a.dyn);
+  const opts = end < 0 ? rest : rest.slice(0, end); // after --, every word is a path
+  if (!opts.some((a) => a.dyn || (a.text.startsWith("--") && isLong(a.text, "--hard")))) return null;
   const b = currentBranch(g);
   if (b.error) return "reset --hard: the guard can't tell which branch this is, so it can't rule out a shared one";
   if (b.name === null) return null; // detached HEAD
@@ -469,26 +611,49 @@ function checkReset(rest, g) {
 }
 
 function checkClean(rest) {
-  for (const a of rest) {
+  // A dry run is the only clean allowed. The last -n/--no-dry-run wins, the way git reads them, and the
+  // word after -e/--exclude is a pattern, not an option.
+  let dry = false;
+  for (let i = 0; i < rest.length; i++) {
+    const a = rest[i];
     const t = a.text;
     if (t === "--") break;
-    if (t === "-n" || t === "--dry-run" || (/^-[a-zA-Z]+$/.test(t) && /^-[^e]*n/.test(t))) return null;
     if (a.dyn) return "a clean option comes from a variable, so the guard can't tell whether it deletes";
+    if (t.startsWith("--")) {
+      if (isLong(t, "--dry-run")) dry = true;
+      else if (isLong(t, "--no-dry-run")) dry = false;
+      else if (!t.includes("=") && isLong(t, "--exclude")) i++;
+    } else if (/^-[a-zA-Z]+$/.test(t)) {
+      for (let k = 1; k < t.length; k++) {
+        if (t[k] === "n") dry = true;
+        if (t[k] === "e") {
+          if (k === t.length - 1) i++;
+          break;
+        }
+      }
+    }
   }
+  if (dry) return null;
   return "git clean deletes untracked files for good, and other agents' work may be among them. Run git clean -n to see what it would remove";
 }
 
 function checkBranch(rest, g) {
   let D = false, d = false, f = false, remote = false;
+  let ended = false;
   const names = [];
   for (const a of rest) {
     const t = a.text;
-    if (t.startsWith("--")) {
-      if (t === "--delete") d = true;
-      else if (t === "--force") f = true;
-      else if (t === "--remotes") remote = true;
+    if (!ended && t === "--") {
+      ended = true;
+      continue;
+    }
+    if (ended) names.push(a);
+    else if (a.dyn) return "a branch argument comes from a variable and could be -D, so the guard can't tell whether it force-deletes. Put a name from a variable after --";
+    else if (t.startsWith("--")) {
+      if (isLong(t, "--delete")) d = true;
+      else if (isLong(t, "--force")) f = true;
+      else if (isLong(t, "--remotes")) remote = true;
     } else if (t.startsWith("-") && t.length > 1) {
-      if (a.dyn) return "a branch option comes from a variable, so the guard can't tell whether it force-deletes";
       for (const ch of t.slice(1)) {
         if (ch === "D") D = true;
         else if (ch === "d") d = true;
@@ -520,8 +685,8 @@ function checkStash(rest, g) {
     const a = args[i];
     const t = a.text;
     if (t === "--") break;
-    if (t === "--message" || t.startsWith("--message=")) {
-      msg = t.includes("=") ? { text: t.slice(10), dyn: a.dyn } : args[++i] ?? null;
+    if (t.startsWith("--") && isLong(t, "--message")) {
+      msg = t.includes("=") ? { text: t.slice(t.indexOf("=") + 1), dyn: a.dyn } : args[++i] ?? null;
       continue;
     }
     if (/^-[a-zA-Z]+$/.test(t) && t.includes("m")) {
@@ -544,8 +709,19 @@ function checkStash(rest, g) {
 }
 
 // ---------- commands ----------
-const PREFIXES = new Set(["sudo", "env", "command", "builtin", "exec", "nohup", "time", "nice", "xargs", "wsl", "!", "{", "}", "if", "then", "else", "elif", "do", "while", "until", "&", "."]);
+// Shell words that come before a command and take no arguments of their own.
+const KEYWORDS = new Set(["!", "{", "}", "if", "then", "else", "elif", "do", "while", "until", "&", "."]);
+// Commands that run another command given as their later words. Their options can take values (timeout 60,
+// nice -n 5, sudo -u root), so the guard doesn't try to find where the command starts: it checks the rest
+// of the words from every place git (or a shell, an eval, another wrapper, a variable) could start.
+const WRAPPERS = new Set([
+  "sudo", "doas", "env", "command", "builtin", "exec", "nohup", "time", "nice", "ionice", "chrt", "taskset", "setsid",
+  "flock", "timeout", "stdbuf", "strace", "ltrace", "unbuffer", "runuser", "xargs", "wsl", "watch", "su", "script",
+]);
 const SHELLS = new Set(["bash", "sh", "zsh", "dash", "ksh", "cmd", "pwsh", "powershell"]);
+// Wrappers that also run a string through sh: watch 'git push -f', su -c '...', script -c '...'.
+const STRING_RUNNERS = new Set(["watch", "su", "script"]);
+const ASSIGN = /^([A-Za-z_][A-Za-z0-9_]*)=([\s\S]*)$/;
 const EVALS = new Set(["eval", "iex", "invoke-expression"]);
 const CDS = new Set(["cd", "pushd", "chdir", "set-location", "sl", "push-location"]);
 
@@ -565,19 +741,28 @@ function changeDir(args, ctx) {
   else ctx.cwd = resolveDir(ctx.cwd, target.text);
 }
 
-function checkSegment(words, ctx, depth) {
+// env records an assignment word (FOO=1) into a {name: {text, dyn}} map.
+const assign = (env, w) => {
+  const m = ASSIGN.exec(w.text);
+  if (m) env[m[1]] = { text: m[2], dyn: w.dyn };
+  return !!m;
+};
+
+function checkSegment(words, ctx, depth, env = {}, brace = false) {
   let k = 0;
-  let brace = false; // a { block opened in this segment, so a trailing } closes it
+  env = { ...env };
+  // brace: a { block opened in this segment, so a trailing } closes it
   while (k < words.length) {
     const t = words[k].text;
     if (t.startsWith("{")) brace = true;
-    if (!words[k].dyn && /^[A-Za-z_][A-Za-z0-9_]*=/.test(t)) k++; // FOO=1 git ...
-    else if (PREFIXES.has(cmdName(t)) || t === "{") {
-      k++;
-      while (k < words.length && /^-/.test(words[k].text)) k++;
-    } else break;
+    if (assign(env, words[k])) k++; // FOO=1 git ...
+    else if (KEYWORDS.has(cmdName(t)) || t === "{") k++;
+    else break;
   }
-  if (k >= words.length) return null;
+  if (k >= words.length) {
+    Object.assign(ctx.env, env); // FOO=1 on its own: a later git in this command may see it
+    return null;
+  }
   const head = words[k];
   const name = cmdName(head.text);
   let args = words.slice(k + 1);
@@ -587,6 +772,47 @@ function checkSegment(words, ctx, depth) {
     else if (last.text.endsWith("}")) args = [...args.slice(0, -1), { ...last, text: last.text.slice(0, -1) }];
   }
   if (CDS.has(name)) return changeDir(args, ctx), null;
+  if (name === "export" || name === "declare" || name === "typeset") {
+    for (const a of args) assign(ctx.env, a);
+    return null;
+  }
+  const psEnv = /^\$env:([A-Za-z_][A-Za-z0-9_]*)(?:=([\s\S]*))?$/i.exec(head.text);
+  if (psEnv) {
+    // PowerShell $env:GIT_DIR = 'x' sets it for every later command.
+    const value = psEnv[2] !== undefined ? psEnv[2] : args.filter((a) => a.text !== "=").map((a) => a.text).join(" ");
+    ctx.env[psEnv[1].toUpperCase()] = { text: value, dyn: true };
+    return null;
+  }
+  if (WRAPPERS.has(name)) {
+    if (STRING_RUNNERS.has(name)) {
+      for (const a of args) {
+        const r = scanText(a.text, false, ctx, depth + 1);
+        if (r) return r;
+      }
+    }
+    const wenv = { ...env };
+    for (let j = 0; j < args.length; j++) {
+      const w = args[j];
+      if (assign(wenv, w)) continue; // env FOO=1 git ..., sudo FOO=1 git ...
+      if (name === "env") {
+        // env -S 'git push -f' splits the string into a command
+        const m = /^(?:-S|--split-string=?)([\s\S]*)$/.exec(w.text);
+        if (m) {
+          const s = m[1] || (/^--split-string$|^-S$/.test(w.text) ? args[j + 1]?.text ?? "" : "");
+          const r = scanText(s, false, ctx, depth + 1);
+          if (r) return r;
+        }
+      }
+      const cn = cmdName(w.text);
+      if (w.dyn || cn === "git" || SHELLS.has(cn) || EVALS.has(cn) || WRAPPERS.has(cn)) {
+        const rest = args.slice(j);
+        rest.bodies = words.bodies;
+        const r = checkSegment(rest, ctx, depth, wenv); // a closing } was already taken off
+        if (r) return r;
+      }
+    }
+    return null;
+  }
   if (SHELLS.has(name)) {
     const inPs = name === "pwsh" || name === "powershell";
     for (let i = 0; i < args.length; i++) {
@@ -614,10 +840,10 @@ function checkSegment(words, ctx, depth) {
     return null;
   }
   if (EVALS.has(name)) return scanText(args.map((a) => a.text).join(" "), name !== "eval", ctx, depth + 1);
-  if (name === "git") return checkGit(args, ctx);
+  if (name === "git") return checkGit(args, ctx, env);
   if (head.dyn) {
     // $GIT push -f: the command name is unknown, so check it as git and block only what git would.
-    const r = checkGit(args, ctx);
+    const r = checkGit(args, ctx, env);
     if (r && /^(?:push|reset|clean|branch|stash)$/.test(args.find((a) => !a.text.startsWith("-"))?.text ?? "")) return r;
   }
   return null;
@@ -635,10 +861,14 @@ function scanLexed(lx, ctx, depth) {
   return null;
 }
 
-// Loose on purpose: g"i"t and g\it are git once the shell removes the quotes.
-const gitShaped = (s) => /g["'`\\]*i["'`\\]*t|pwsh|powershell/i.test(s);
+// Loose on purpose: g"i"t and g\it are git once the shell removes the quotes, and a $'...' with an escape
+// in it can spell anything ($'\x67it').
+const gitShaped = (s) => /g["'`\\]*i["'`\\]*t|pwsh|powershell|\$'[^']*\\/i.test(s);
+// PowerShell reads curly quotes as plain ones: git push origin x ‘--force’ is a force push.
+const psQuotes = (s) => s.replace(/[‘’‚‛]/g, "'").replace(/[“”„]/g, '"');
 
 function scanText(src, ps, ctx, depth) {
+  if (ps) src = psQuotes(src);
   if (!gitShaped(src)) return null;
   if (depth > MAX_DEPTH) return "the command nests shells too deeply for the guard to check";
   let lx;
@@ -653,7 +883,7 @@ function scanText(src, ps, ctx, depth) {
 
 // checkCommand(command, ps, cwd) -> a reason string to block, or null to allow.
 export function checkCommand(command, ps = false, cwd = null) {
-  const ctx = { cwd: typeof cwd === "string" && cwd ? path.resolve(cwd) : null };
+  const ctx = { cwd: typeof cwd === "string" && cwd ? path.resolve(cwd) : null, env: {} };
   return scanText(command, ps, ctx, 0);
 }
 

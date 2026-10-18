@@ -40,6 +40,15 @@ git(M, "config", "branch.tracked.remote", "origin");
 git(M, "config", "branch.tracked.merge", "refs/heads/tracked");
 writeFileSync(path.join(M, "a.txt"), "changed\n");
 git(M, "stash", "push", "-q", "-m", "dup-tag");
+for (const [name, value] of [
+  ["pf", "push --force"],
+  ["sh", "!git push -f origin feature"],
+  ["pm", "push origin HEAD:master"],
+  ["st", "status"],
+  ["lg", "log --oneline"],
+  ["pfe", "push origin feature"],
+])
+  git(M, "config", `alias.${name}`, value);
 git(M, "worktree", "add", "-q", F, "feature");
 git(M, "worktree", "add", "-q", T, "tracked");
 const fwd = (p) => p.replace(/\\/g, "/");
@@ -189,6 +198,80 @@ const CASES = [
   ["deny", "P", "git stash", "F"],
   ["deny", "P", "git reset --hard", "M"],
   ["deny", "P", "git push", "M"],
+  // long options cut to a unique prefix, which git accepts
+  ["deny", "B", "git reset --har HEAD~1", "M"],
+  ["deny", "B", "git reset --ha", "M"],
+  ["deny", "B", "git push --mirr origin", "F"],
+  ["deny", "B", "git push --al origin", "F"],
+  ["deny", "B", "git push --bra origin", "F"],
+  ["deny", "B", "git push --forc origin feature", "F"],
+  ["deny", "B", "git push --for origin feature", "F"],
+  ["deny", "B", "git push --force-w origin feature", "F"],
+  ["deny", "B", "git push --rep=origin --forc feature", "F"],
+  ["deny", "B", "git push --recei git-receive-pack origin", "M"],
+  ["deny", "B", "git branch --del --forc unmerged", "M"],
+  ["deny", "B", "git branch --de --force unmerged", "M"],
+  ["deny", "B", "git branch -fd unmerged", "M"],
+  ["deny", "B", "git branch -D -- unmerged", "M"],
+  ["deny", "B", "git clean --forc -d", "F"],
+  ["deny", "B", "git clean -e -n -f", "F"],
+  ["deny", "B", "git clean --exclude -n -f", "F"],
+  ["deny", "B", "git clean -n --no-dry-run -f", "F"],
+  ["deny", "P", "git reset --har", "M"],
+  ["deny", "P", "git push --mirr origin", "F"],
+  // -- ends the options
+  ["deny", "B", "git push -- origin +feature", "F"],
+  ["deny", "B", "git push origin -- master", "F"],
+  ["deny", "B", "git -- push -f", "F"],
+  // wrappers whose options take a value
+  ["deny", "B", "timeout 60 git push --force origin feature", "F"],
+  ["deny", "B", "timeout -s KILL 60 git push -f origin feature", "F"],
+  ["deny", "B", "nice -n 5 git push -f origin feature", "F"],
+  ["deny", "B", "env -u FOO git push -f origin feature", "F"],
+  ["deny", "B", "env -S 'git push -f origin feature'", "F"],
+  ["deny", "B", "sudo -u root git push -f origin feature", "F"],
+  ["deny", "B", "stdbuf -o0 git clean -fdx", "F"],
+  ["deny", "B", "strace -f -o /dev/null git push -f origin feature", "F"],
+  ["deny", "B", "ionice -c 3 nice -n 19 git reset --hard", "M"],
+  ["deny", "B", "nohup timeout 5 sudo -E git push --force", "F"],
+  ["deny", "B", "watch -n 5 'git push -f origin feature'", "F"],
+  ["deny", "B", "su -c 'git push -f origin feature' root", "F"],
+  ["deny", "B", "xargs -n 1 git push -f origin < list", "F"],
+  ["deny", "B", "timeout $T git push -f", "F"],
+  ["deny", "P", "timeout 5 git push -f origin x", "F"],
+  // bash $'...' escapes
+  ["deny", "B", "git push origin feature $'\\x2df'", "F"],
+  ["deny", "B", "git push origin feature $'\\055\\055force'", "F"],
+  ["deny", "B", "git push origin feature $'\\u002df'", "F"],
+  ["deny", "B", "git push origin $'HEAD:mas\\x74er'", "F"],
+  ["deny", "B", "git reset $'--\\x68ard'", "M"],
+  ["deny", "B", "$'\\x67it' push -f origin feature", "F"],
+  ["deny", "B", "git push origin feature $'-\\146'", "F"],
+  // config the command brings with it
+  ["deny", "B", "git -c push.default=upstream push", "F"],
+  ["deny", "B", "git -c Push.Default=upstream push origin", "F"],
+  ["deny", "B", "git -c remote.origin.push=HEAD:master push", "F"],
+  ["deny", "B", "git -c include.path=/tmp/x push", "F"],
+  ["deny", "B", "git --config-env=push.default=MODE push", "F"],
+  ["deny", "B", "git -c $KEY push origin feature", "F"],
+  ["deny", "B", "GIT_CONFIG_PARAMETERS=\"'push.default'='upstream'\" git push", "F"],
+  ["deny", "B", "GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=push.default GIT_CONFIG_VALUE_0=upstream git push", "F"],
+  ["deny", "B", "env GIT_CONFIG_GLOBAL=/tmp/cfg git push", "F"],
+  ["deny", "B", `GIT_DIR='${fwd(M)}/.git' git push`, "F"],
+  ["deny", "B", `env GIT_DIR='${fwd(M)}/.git' git reset --hard`, "F"],
+  ["deny", "B", "GIT_DIR=$D git push", "F"],
+  // aliases
+  ["deny", "B", "git pf origin feature", "F"],
+  ["deny", "B", "git sh", "F"],
+  ["deny", "B", "git pm", "F"],
+  ["deny", "B", "git -c alias.p='push -f' p origin feature", "F"],
+  ["deny", "B", "git -c 'alias.x=!git push --force' x", "F"],
+  ["deny", "B", "git -c alias.y='reset --hard' y", "M"],
+  ["deny", "B", "git no-such-command", "none"],
+  // PowerShell quoting
+  ["deny", "P", "git push origin feature ‘--force’", "F"],
+  ["deny", "P", "git push origin “HEAD:master”", "F"],
+  ["deny", "P", "git push @flags origin feature", "F"],
 
   // allowed: feature-branch pushes
   ["allow", "B", "git push origin feature", "F"],
@@ -251,6 +334,28 @@ const CASES = [
   ["allow", "P", "git branch -D merged", "M"],
   ["allow", "P", "git reset --hard", "F"],
   ["allow", "P", `pwsh -EncodedCommand ${b64("git status")}`, "F"],
+  // allowed: prefixes that aren't the dangerous option, and wrappers around safe git
+  ["allow", "B", "git push --fol origin feature", "F"],
+  ["allow", "B", "git push --no-force-with-lease origin feature", "F"],
+  ["allow", "B", "git push --rep=origin feature", "F"],
+  ["allow", "B", "git push --dry origin feature", "F"],
+  ["allow", "B", "git clean --dry -d", "F"],
+  ["allow", "B", "git clean -e build -n", "F"],
+  ["allow", "B", "git branch --del merged", "M"],
+  ["allow", "B", "git reset --soft HEAD~1 -- a.txt", "M"],
+  ["allow", "B", "git -c core.quotepath=off push origin feature", "F"],
+  ["allow", "B", "timeout 60 git status", "F"],
+  ["allow", "B", "nice -n 5 git push origin feature", "F"],
+  ["allow", "B", "GIT_TRACE=1 git push origin feature", "F"],
+  ["allow", "B", `GIT_DIR='${fwd(M)}/.git' git status`, "F"],
+  ["allow", "B", `GIT_DIR='${fwd(M)}/.git' git push origin feature`, "F"],
+  ["allow", "B", "echo $'git push \\x2df'", "F"],
+  ["allow", "B", "git st", "F"],
+  ["allow", "B", "git lg -5", "F"],
+  ["allow", "B", "git pfe", "F"],
+  ["allow", "B", "git -c alias.p='push' p origin feature", "F"],
+  ["allow", "P", "timeout 5 git status", "F"],
+  ["allow", "P", "git commit -m ‘no --force here’", "F"],
 ];
 
 let failed = 0;
@@ -272,6 +377,8 @@ const payload = (tool_name, tool_input, cwd = F) => JSON.stringify({ session_id:
 const HOOK_CASES = [
   [2, "Bash force push", payload("Bash", { command: "git push --force" })],
   [0, "Bash feature-branch push", payload("Bash", { command: "git push origin feature" })],
+  [2, "Bash force push behind timeout 60", payload("Bash", { command: "timeout 60 git push --force origin feature" })],
+  [2, "Bash push behind -c push.default=upstream", payload("Bash", { command: "git -c push.default=upstream push" })],
   [2, "PowerShell push to master", payload("PowerShell", { command: "git push origin HEAD:master" })],
   [0, "PowerShell feature-branch push", payload("PowerShell", { command: "git push -u origin feature" })],
   [0, "Bash without git", payload("Bash", { command: "ls -la" })],
