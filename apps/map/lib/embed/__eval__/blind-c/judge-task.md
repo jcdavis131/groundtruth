@@ -13,7 +13,7 @@ Read only `pool.jsonl` in this folder. Each line is one pair:
 - `query` is what someone typed.
 - `text` is the record's whole indexed string, as `field: value; field: value`. It is all the search engine knows about the record. It starts with `collection:` and `agency:` (the same for every record of a collection), then for hospitals, public schools, most dams and most protected areas the record's own `name:`, then its place (city, county, state where present), then its other fields. It carries no ID.
 
-**Do not open** any file other than `pool.jsonl` and this task: not `../pool-map.json`, not `../writer/`, not `../../PREREG.md`, nothing elsewhere under `C:\Users\jcdav\writeups\`, and no `gods-eye-view*` folder. Those hold which system found each pair, the ranks and the scores. Judge only from the query and the text. If you have already seen any of those files, stop and tell the parent; your grades cannot be used.
+**Do not open** any file other than `pool.jsonl` and this task: not `../pool-map.json`, not `../writer/`, not `../../PREREG.md`, nothing elsewhere under `C:\Users\<name>\writeups\`, and no `gods-eye-view*` folder. Those hold which system found each pair, the ranks and the scores. Judge only from the query and the text. If you have already seen any of those files, stop and tell the parent; your grades cannot be used.
 
 The collection and agency words are on every record of a collection, so a query that names a collection ("brownfields", "toxic release inventory") matches all of its records by kind; then apply the other rules (place, conditions) as written.
 

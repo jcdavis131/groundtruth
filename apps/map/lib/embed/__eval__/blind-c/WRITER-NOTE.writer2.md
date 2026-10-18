@@ -2,8 +2,8 @@
 
 ## Files read
 
-- `C:\Users\jcdav\writeups\panel-2026-10-18b\gate\blind-c\writer2\WRITER-PROMPT.md` (the task)
-- `C:\Users\jcdav\writeups\panel-2026-10-18b\gate\blind-c\writer2\CORPUS-DESCRIPTION.md` (sha256 checked: `3bd39548c5a37a5695a2ebbac776e834098de7a842df68311ef0736b6aab8d6a`, matches)
+- `C:\Users\<name>\writeups\panel-2026-10-18b\gate\blind-c\writer2\WRITER-PROMPT.md` (the task)
+- `C:\Users\<name>\writeups\panel-2026-10-18b\gate\blind-c\writer2\CORPUS-DESCRIPTION.md` (sha256 checked: `3bd39548c5a37a5695a2ebbac776e834098de7a842df68311ef0736b6aab8d6a`, matches)
 
 Nothing else was opened. No search was run, no site or API was visited, and the `writer\` folder was not opened.
 

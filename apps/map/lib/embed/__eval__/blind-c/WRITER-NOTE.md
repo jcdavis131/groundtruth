@@ -2,8 +2,8 @@
 
 ## Files read
 
-- `C:\Users\jcdav\writeups\panel-2026-10-18b\gate\blind-c\writer\WRITER-PROMPT.md` (the task)
-- `C:\Users\jcdav\writeups\panel-2026-10-18b\gate\blind-c\writer\CORPUS-DESCRIPTION.md` (sha256 checked: 3bd39548c5a37a5695a2ebbac776e834098de7a842df68311ef0736b6aab8d6a, matches)
+- `C:\Users\<name>\writeups\panel-2026-10-18b\gate\blind-c\writer\WRITER-PROMPT.md` (the task)
+- `C:\Users\<name>\writeups\panel-2026-10-18b\gate\blind-c\writer\CORPUS-DESCRIPTION.md` (sha256 checked: 3bd39548c5a37a5695a2ebbac776e834098de7a842df68311ef0736b6aab8d6a, matches)
 
 Nothing else was opened. No search was run and no site or API was visited. Context I was shown besides those two files: the orchestrator's task text (pointing to WRITER-PROMPT.md) and the user's auto-memory index that the harness attaches to every session. That index names some eye PR history (for example a blind search eval, BM25-gated hybrid) but holds no record text, query text or scores, and I did not use it to choose queries.
 
