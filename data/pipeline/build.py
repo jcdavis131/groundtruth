@@ -107,8 +107,11 @@ def fetch_tiles(fx: Fetcher, cfg: dict, cells: list[tuple[int, int, int, int]]):
             total += len(kids)
             log(f"  split truncated tile {list(box)} into {len(kids)}")
             continue
+        # Keep only what a record needs from the envelope: holding every parsed tile answer ran the box out of RAM.
+        slim = {"provenance": [env["provenance"][0]]}
         for f in env["data"]["features"]:
-            out.append((f, env))
+            out.append((f, slim))
+        del env
         if asked % 50 == 0:
             rate = (time.monotonic() - t0) / asked
             log(f"  {asked}/{total} tiles, {len(out)} features so far, {fx.network} from the network, ~{(total - asked) * rate / 60:.0f} min left")
