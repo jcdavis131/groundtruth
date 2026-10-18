@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.vercel/
+.venv/
+__pycache__/
+*.pyc
+.env*
+!.env.example
+data/raw/
+*.parquet
+*.pt
+*.safetensors
+*.npz
+*.pkl
+.DS_Store
