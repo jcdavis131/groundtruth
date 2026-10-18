@@ -347,6 +347,61 @@ const CASES = [
   ["deny", "B", "git submodule foreach 'git push -f'", "F"],
   ["deny", "B", "git bisect run git push -f origin feature", "F"],
 
+  // Round 6 (fail5b): the six bypasses, each confirmed with a real dry run that pushed to master.
+  ["deny", "P", "start git -ArgumentList 'push','-f','origin','feature'", "F"],
+  ["deny", "P", "start git -ArgumentList 'push','--dry-run','origin','feature:master' -Wait -NoNewWindow", "F"],
+  ["deny", "B", "echo 'git push -f origin feature' | source /dev/stdin", "F"],
+  ["deny", "B", "echo 'git push -f origin feature' | . /dev/stdin", "F"],
+  ["deny", "B", "echo 'git push -f origin feature' | xargs -I{} bash -c {}", "F"],
+  ["deny", "B", "git push origin 'refs/heads/*:refs/heads/*'", "M"],
+  ["deny", "B", 'git push origin "refs/heads/*"', "M"],
+  ["deny", "P", "& (Get-Command git) push --dry-run origin feature:master", "F"],
+  ["deny", "B", "shopt -s expand_aliases\nalias g='git push -f origin feature'\ng", "F"],
+  // Round 6: the same rule, other shapes of it
+  ["deny", "P", "Start-Process git -ArgumentList 'push','-f'", "F"],
+  ["deny", "P", "saps git 'push -f'", "F"],
+  ["deny", "B", "start git push -f origin feature", "F"],
+  ["deny", "B", "alias g='git push -f origin feature'", "F"],
+  ["deny", "B", "echo 'git push -f origin feature' > /dev/null; source ./push.sh", "F"],
+  ["deny", "B", "echo 'git push -f origin feature' | parallel", "F"],
+  ["deny", "B", "echo 'git push -f origin feature' | python3 -c 'import os,sys; os.system(sys.stdin.read())'", "F"],
+  ["deny", "B", "echo 'git push -f origin feature' | while read l; do $l; done", "F"],
+  ["deny", "P", "'git push -f origin feature' | % { & $_ }", "F"],
+  ["deny", "P", "'git push -f origin feature' | ForEach-Object { iex $_ }", "F"],
+  ["deny", "P", "$g = 'git'; & $g push -f origin feature", "F"],
+  ["deny", "P", "& $g push -f origin feature; git status", "F"],
+  ["deny", "P", "git status & git push -f origin feature", "F"],
+  ["deny", "P", ". (Get-Command git) push -f origin feature", "F"],
+  ["deny", "P", "[void](git push -f origin feature)", "F"],
+  ["deny", "B", "git push origin 'feature:refs/heads/*'", "F"],
+  ["deny", "B", "git push origin '*'", "F"],
+  ["deny", "B", "git pu?h -f origin feature", "F"],
+  ["deny", "B", "git branch -D unmerg*", "M"],
+  ["deny", "B", "cat <<EOF\n$(git push -f origin feature)\nEOF", "F"],
+  ["deny", "B", "cat <<EOF\n`git push -f origin feature`\nEOF", "F"],
+  ["deny", "B", "cmd /c g^it push -f origin feature", "F"],
+  ["deny", "B", "ssh localhost 'git push -f origin feature'", "F"],
+  ["deny", "B", "git config alias.pf '!git push -f origin feature'", "F"],
+  ["deny", "B", "git config core.sshCommand 'git push -f origin master; ssh'", "F"],
+  ["deny", "B", "git log | sort -S 1 --compress-program=bash", "F"],
+  ["deny", "B", "git log | rg --pre bash x", "F"],
+  ["deny", "B", "git log | less", "F"],
+  ["deny", "B", "git status; X='git push -f origin feature'; $X", "F"],
+  ["deny", "B", "env git push -f origin feature", "F"],
+  ["deny", "B", "bash -c 'git status'", "F"],
+  ["deny", "P", `pwsh -EncodedCommand ${b64("git status")}`, "F"],
+  ["deny", "P", `pwsh -EncodedCommand ${b64("git push -f origin feature")}`, "F"],
+  ["deny", "B", "git log $(git merge-base HEAD master)..HEAD", "F"],
+  ["deny", "B", "(git status)", "F"],
+  ["deny", "B", "{ git status; }", "F"],
+  ["deny", "B", "timeout --frob 5 git push origin feature", "F"],
+  ["deny", "B", "exec git push -f origin feature", "F"],
+  ["deny", "B", "git status && sudo -n true", "F"],
+  ["deny", "P", 'Write-Output @"\n$(git push -f origin feature)\n"@', "F"],
+  ["deny", "P", "Set-Alias g git; g push -f origin feature", "F"],
+  ["deny", "B", "git status && $(echo git) push -f origin feature", "F"],
+  ["deny", "B", "git status | bash", "F"],
+
   // allowed: feature-branch pushes
   ["allow", "B", "git push origin feature", "F"],
   ["allow", "B", "git push -u origin feature", "F"],
@@ -399,7 +454,6 @@ const CASES = [
   ["allow", "B", "git stash list", "F"],
   ["allow", "B", "git stash show -p stash@{0}", "F"],
   ["allow", "B", "git stash pop stash@{0}", "F"],
-  ["allow", "B", "bash -c 'git status'", "F"],
   ["allow", "P", "git push origin feature", "F"],
   ["allow", "P", "git status; git log -1", "F"],
   ["allow", "P", 'git commit -m "no git push --force here"', "F"],
@@ -407,7 +461,6 @@ const CASES = [
   ["allow", "P", "git stash push -m fresh-tag", "F"],
   ["allow", "P", "git branch -D merged", "M"],
   ["allow", "P", "git reset --hard", "F"],
-  ["allow", "P", `pwsh -EncodedCommand ${b64("git status")}`, "F"],
   // allowed: prefixes that aren't the dangerous option, and wrappers around safe git
   ["allow", "B", "git push --fol origin feature", "F"],
   ["allow", "B", "git push --no-force-with-lease origin feature", "F"],
@@ -509,6 +562,19 @@ const SAFE = [
   ["P", 'Write-Output "git push is guarded"', "F"],
   ["P", "Get-ChildItem | ForEach-Object { $_.Name }; git status", "F"],
   ["P", "git log -1 | Select-Object -First 1", "F"],
+  // round 6: the structural rule must leave these alone
+  ["B", "command -v git && type git", "F"],
+  ["B", "git add src/*.js", "F"],
+  ["B", "git log -5 | tee /tmp/log.txt", "F"],
+  ["B", "time git status", "F"],
+  ["B", "nice -n 5 git status", "F"],
+  ["B", 'git log --since="$(date +%F)" -3', "F"],
+  ["B", "git commit -m \"$(cat <<'EOF'\nfix: never git push --force to master\nEOF\n)\"", "F"],
+  ["B", "git status | grep -c modified", "F"],
+  ["P", "git diff | ForEach-Object { Write-Output $_ }", "F"],
+  ["P", "if (Test-Path .git) { Write-Output ok }; git status", "F"],
+  ["P", "$files = git diff --name-only; git add $files", "F"],
+  ["P", "git log -3 | Out-String", "F"],
 ];
 
 let failed = 0;
@@ -529,7 +595,7 @@ for (const [tool, cmd, dir] of SAFE) {
   if (why) safeDenied++;
   check(!why, `safe  ${tool} ${dir.padEnd(4)} ${show(cmd)}${why ? `  (denied: ${why})` : ""}`);
 }
-check(SAFE.length >= 40, `the false-positive table has at least 40 rows (${SAFE.length})`);
+check(SAFE.length >= 74, `the false-positive table has at least 74 rows (${SAFE.length})`);
 
 // The hook end to end: stdin JSON in, exit code and stderr out.
 const run = (input) => spawnSync(process.execPath, [hook], { input, encoding: "utf8" });
@@ -561,7 +627,15 @@ const HOOK_CASES = [
   [2, "Bash pipe into bash", payload("Bash", { command: "echo 'git push -f origin feature' | bash" })],
   [2, "Bash here-string into bash", payload("Bash", { command: "bash <<< 'git push -f origin feature'" })],
   [2, "Bash coproc", payload("Bash", { command: "coproc git push -f origin feature" })],
-  [0, "Bash plain && chain", payload("Bash", { command: 'git add -A && git commit -m "no force push to master" && git push origin feature' })],
+  [2, "PowerShell start (Start-Process alias) git", payload("PowerShell", { command: "start git -ArgumentList 'push','-f','origin','feature'" })],
+  [2, "Bash pipe into source /dev/stdin", payload("Bash", { command: "echo 'git push -f origin feature' | source /dev/stdin" })],
+  [2, "Bash pipe into . /dev/stdin", payload("Bash", { command: "echo 'git push -f origin feature' | . /dev/stdin" })],
+  [2, "Bash pipe into xargs bash -c", payload("Bash", { command: "echo 'git push -f origin feature' | xargs -I{} bash -c {}" })],
+  [2, "Bash quoted wildcard refspec", payload("Bash", { command: "git push origin 'refs/heads/*:refs/heads/*'" })],
+  [2, "PowerShell & (Get-Command git)", payload("PowerShell", { command: "& (Get-Command git) push --dry-run origin feature:master" })],
+  [2, "Bash alias holding git", payload("Bash", { command: "shopt -s expand_aliases\nalias g='git push -f origin feature'\ng" })],
+  [0, "Bash commit with a heredoc message", payload("Bash", { command: "git commit -m \"$(cat <<'EOF'\nno git push --force\nEOF\n)\"" })],
+  [0, "Bash plain && chain",payload("Bash", { command: 'git add -A && git commit -m "no force push to master" && git push origin feature' })],
 ];
 for (const [code, name, input] of HOOK_CASES) {
   const r = run(input);
