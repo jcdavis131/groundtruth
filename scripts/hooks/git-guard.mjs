@@ -124,6 +124,17 @@ function lex(src, ps, start = 0, inSub = false) {
       } else i++;
       continue;
     }
+    if (!ps && c === "$" && (src[i + 1] === "'" || src[i + 1] === '"')) {
+      i++; // bash $'...' and $"...": the $ goes, the quote stays (escapes in $'...' are read as plain text)
+      continue;
+    }
+    if (ps && src.startsWith("<#", i)) {
+      const close = src.indexOf("#>", i + 2);
+      if (close < 0) throw new LexError("an open <# comment");
+      endWord();
+      i = close + 2;
+      continue;
+    }
     if (c === "'") {
       startWord();
       let j = i + 1;
@@ -237,6 +248,7 @@ function lex(src, ps, start = 0, inSub = false) {
       continue;
     }
     if (c === "(") {
+      if (skipNext && !word) skipNext = false; // <(cmd) and >(cmd) are process substitution, not a file
       endSeg();
       depth++;
       i++;
@@ -426,7 +438,7 @@ function checkPush(rest, g) {
       if (hit) return hit;
       continue;
     }
-    dst = dst.replace(/^refs\/heads\//, "");
+    dst = dst.replace(/^(?:refs\/)?heads\//, "");
     if (PROTECTED.test(dst)) return `a push to ${dst} goes straight to the default branch. Push a feature branch and open a PR`;
   }
   return null;
