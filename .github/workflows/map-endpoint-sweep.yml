@@ -1,0 +1,55 @@
+# Weekly check that the ArcGIS services and map-tile templates the map app
+# hard-codes still answer (apps/map/scripts/endpoint-sweep.mjs). It covers
+# those two kinds only, including ones built on a string constant
+# (`${WFIGS}/...`); the JSON APIs and file downloads are not probed. It reads
+# the checked-out source, so a new layer is covered the week it merges.
+# Read-only and keyless: it needs no secrets and writes nothing, so its token
+# is read-only too.
+#
+# The run fails only on an upstream that is newly failing: a dead, unreachable
+# or wrong-content answer (DEAD, ERR or ODD) on both tries 20 s apart, not
+# listed in apps/map/scripts/endpoint-sweep.known.json. GitHub emails a failed
+# scheduled run to the repository owner. The table, and what was not probed
+# and why, are in the run's summary either way.
+name: map-endpoint-sweep
+
+on:
+  schedule:
+    # Mondays 14:41 UTC, off the top of the hour.
+    - cron: "41 14 * * 1"
+  workflow_dispatch:
+  # Also when the sweep itself changes, so a pull request shows a real run.
+  pull_request:
+    paths:
+      - "apps/map/scripts/endpoint-sweep*"
+      - ".github/workflows/map-endpoint-sweep.yml"
+
+permissions:
+  contents: read
+
+# One group per trigger and ref, so a pull request run never cancels the
+# weekly one.
+concurrency:
+  group: map-endpoint-sweep-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: apps/map
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Plain Node, no dependencies: the script uses only node: built-ins and fetch.
+      - run: node scripts/endpoint-sweep.mjs

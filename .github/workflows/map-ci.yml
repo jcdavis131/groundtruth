@@ -1,0 +1,96 @@
+# The map app's checks (apps/map, imported from gods-eye-view), run on every
+# pull request and push to master that touches apps/map: the collections
+# freeze check first (plain Node, no install, a second), then tsc --noEmit,
+# vitest and eslint on the files the pull request changed. Every step runs in
+# apps/map, the same as it did at eye's repo root.
+#
+# Install is npm ci --ignore-scripts, then only the half of postinstall the
+# tests read: scripts/patch-knockout-csp.mjs, which security-headers.test.ts
+# checks. scripts/copy-cesium.mjs fills public/cesium for the browser and no
+# test needs it.
+#
+# The freeze check (apps/map/scripts/freeze-check.mjs) fails while
+# apps/map/FREEZE.json's date has not passed and lib/catalog/collections.ts
+# holds more collections than its cap. It binds a merge only once the check
+# is marked required in branch protection. Read-only: it needs no secrets and
+# writes nothing.
+name: map-ci
+
+on:
+  pull_request:
+    paths:
+      - "apps/map/**"
+      - ".github/workflows/map-ci.yml"
+  push:
+    branches: [master]
+    paths:
+      - "apps/map/**"
+      - ".github/workflows/map-ci.yml"
+
+permissions:
+  contents: read
+
+# One run per ref; a new push to a pull request cancels its older run, a push
+# to master never cancels.
+concurrency:
+  group: map-ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    working-directory: apps/map
+
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: node scripts/freeze-check.mjs
+
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Enough history to diff a pull request against its base for eslint.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/map/package-lock.json
+
+      - run: npm ci --ignore-scripts
+
+      - run: node scripts/patch-knockout-csp.mjs
+
+      - name: tsc
+        run: npx tsc --noEmit
+
+      - name: vitest
+        run: npx vitest run
+
+      # Changed files only: the app has a lint script but no record of a clean
+      # full run, so this holds new code to it without failing on old code.
+      # --relative keeps the paths relative to apps/map, where eslint runs.
+      - name: eslint (changed files)
+        if: github.event_name == 'pull_request'
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          files=$(git diff --relative --name-only --diff-filter=ACMR "$BASE" HEAD -- '*.ts' '*.tsx' '*.js' '*.jsx' '*.mjs' | grep -v '^public/' || true)
+          if [ -z "$files" ]; then echo "No changed source files to lint."; exit 0; fi
+          echo "$files"
+          echo "$files" | xargs npx eslint
