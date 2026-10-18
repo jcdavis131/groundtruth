@@ -1,0 +1,22 @@
+{
+ "Table": [
+  [
+   "mukey",
+   "musym",
+   "muname",
+   "farmlndcl",
+   "areasymbol",
+   "areaname",
+   "saverest"
+  ],
+  [
+   "390459",
+   "DmC",
+   "Duval loamy fine sand, 0 to 5 percent slopes",
+   "Prime farmland if irrigated",
+   "TX029",
+   "Bexar County, Texas",
+   "9/4/2025 2:58:52 PM"
+  ]
+ ]
+}

@@ -1,0 +1,92 @@
+{
+ "adapter": "ca-la",
+ "capturedAt": "2026-09-26T15:37:40.346Z",
+ "point": [
+  -118.2427,
+  34.0537
+ ],
+ "county": {
+  "geoid": "06037",
+  "name": "Los Angeles County",
+  "basename": "Los Angeles",
+  "state": "06"
+ },
+ "rows": [
+  {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -118.24253,
+       34.054722
+      ],
+      [
+       -118.242572,
+       34.054734
+      ],
+      [
+       -118.242604,
+       34.054718
+      ],
+      [
+       -118.244202,
+       34.052999
+      ],
+      [
+       -118.244203,
+       34.052973
+      ],
+      [
+       -118.244187,
+       34.052952
+      ],
+      [
+       -118.243435,
+       34.052459
+      ],
+      [
+       -118.243402,
+       34.052454
+      ],
+      [
+       -118.243372,
+       34.052467
+      ],
+      [
+       -118.241838,
+       34.054107
+      ],
+      [
+       -118.241836,
+       34.054131
+      ],
+      [
+       -118.241849,
+       34.054151
+      ],
+      [
+       -118.24253,
+       34.054722
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "AIN": "5161005906",
+    "APN": "5161-005-906",
+    "SitusFullAddress": "200 N SPRING ST LOS ANGELES CA 90012",
+    "UseCode": "8821",
+    "UseType": "Government",
+    "UseDescription": "Government Parcel",
+    "YearBuilt1": null,
+    "Roll_Year": null,
+    "Roll_LandValue": null,
+    "Roll_ImpValue": null,
+    "Roll_RealEstateExemp": null,
+    "LegalDescription": "L A CO ASSESSOR MAP NO 94 LOT    7",
+    "TaxRateArea": "00211"
+   }
+  }
+ ]
+}

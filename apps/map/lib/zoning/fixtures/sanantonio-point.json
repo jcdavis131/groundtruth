@@ -1,0 +1,22 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "Zoning": "D",
+    "ZoningDetail": "D",
+    "Base": "D",
+    "BaseDescription": "Downtown District (Sec. 35-310.11)",
+    "SpecDistrict": null,
+    "SpecDistrictDescription": null,
+    "SpecCondition": null,
+    "SpecConditionDetail": null,
+    "CaseNo": " ",
+    "OrdinanceKey": null,
+    "ModifiedDate": 1479220176000
+   }
+  }
+ ]
+}

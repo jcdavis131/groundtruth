@@ -1,0 +1,156 @@
+{
+ "Legend": [
+  {
+   "layerName": "NLCD_2021_Land_Cover_L48",
+   "title": "NLCD_2021_Land_Cover_L48",
+   "rules": [
+    {
+     "symbolizers": [
+      {
+       "Raster": {
+        "colormap": {
+         "entries": [
+          {
+           "label": "0",
+           "quantity": "0",
+           "color": "#000000",
+           "opacity": "0.0"
+          },
+          {
+           "label": "Open Water (11)",
+           "quantity": "11",
+           "color": "#476BA0",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Perennial Ice/Snow/ (12)",
+           "quantity": "12",
+           "color": "#D1DDF9",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Developed, Open Space (21)",
+           "quantity": "21",
+           "color": "#DDC9C9",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Developed, Low Intensity (22)",
+           "quantity": "22",
+           "color": "#D89382",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Developed, Medium Intensity (23)",
+           "quantity": "23",
+           "color": "#ED0000",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Developed, High Intensity (24)",
+           "quantity": "24",
+           "color": "#AA0000",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Barren Land (Rock/Sand/Clay) (31)",
+           "quantity": "31",
+           "color": "#B2ADA3",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Unconsolidated Shore (32)",
+           "quantity": "32",
+           "color": "#F9F9F9",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Deciduous Forest (41)",
+           "quantity": "41",
+           "color": "#68AA63",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Evergreen Forest (42)",
+           "quantity": "42",
+           "color": "#1C6330",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Mixed Forest (43)",
+           "quantity": "43",
+           "color": "#B5C98E",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Dwarf Scrub(AK only) (51)",
+           "quantity": "51",
+           "color": "#B0973D",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Shrub/Scrub (52)",
+           "quantity": "52",
+           "color": "#CCBA7C",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Grasslands/Herbaceous (71)",
+           "quantity": "71",
+           "color": "#E2E2C1",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Sedge/Herbaceous(AK only) (72)",
+           "quantity": "72",
+           "color": "#D1D182",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Lichens (Ak only) (73)",
+           "quantity": "73",
+           "color": "#99C246",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Moss (AK only) (74)",
+           "quantity": "74",
+           "color": "#82BA9E",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Pasture/Hay (81)",
+           "quantity": "81",
+           "color": "#DBD83D",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Cultivated Crops (82)",
+           "quantity": "82",
+           "color": "#AA7028",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Woody Wetlands (90)",
+           "quantity": "90",
+           "color": "#BAD8EA",
+           "opacity": "1.0"
+          },
+          {
+           "label": "Emergent Herbaceous Wetlands (95)",
+           "quantity": "95",
+           "color": "#70A3BA",
+           "opacity": "1.0"
+          }
+         ],
+         "type": "values"
+        },
+        "opacity": "1.0"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,52 @@
+{
+  "source": "sec-form345",
+  "sourceUrl": "https://www.sec.gov/data-research/sec-markets-data/insider-transactions-data-sets",
+  "license": "public domain (SEC Insider Transactions Data Sets)",
+  "note": "Hand-written test fixture in the shape of lib/people/data/insiders.json. Every CIK in it (9000001-9100003) is above EDGAR's assigned range, so none resolves to a filer, and every name is a removal marker. Issuer 0009100003 also files as an owner of 0009100001, the business-to-business case.",
+  "quarters": ["2024q3", "2024q4", "2025q1", "2025q2", "2025q3", "2025q4", "2026q1", "2026q2"],
+  "window": "period",
+  "periodFrom": "2024-07-01",
+  "periodTo": "2026-06-30",
+  "pulled": null,
+  "columnsRead": {
+    "SUBMISSION": ["ACCESSION_NUMBER", "FILING_DATE", "PERIOD_OF_REPORT", "DATE_OF_ORIG_SUB", "DOCUMENT_TYPE", "ISSUERCIK", "NOT_SUBJECT_SEC16"],
+    "REPORTINGOWNER": ["ACCESSION_NUMBER", "RPTOWNERCIK", "RPTOWNERNAME", "RPTOWNER_RELATIONSHIP", "RPTOWNER_TITLE", "RPTOWNER_TXT"]
+  },
+  "tablesOpened": ["REPORTINGOWNER.tsv", "SUBMISSION.tsv"],
+  "notRead": "owner addresses, signatures, footnotes, remarks, FILE_NUMBER, AFF10B5ONE, transactions and holdings",
+  "row": ["ownerCik", "name", "class", "roles", "title", "titleInFiling", "firstFiled", "lastFiled", "lastPeriod", "nssFiled", "lastForm", "lastAccession", "otherText"],
+  "classes": { "i": "individual", "e": "entity", "v": "vehicle", "b": "business" },
+  "roleBits": { "director": 1, "officer": 2, "ten-percent-owner": 4, "other": 8 },
+  "otherPhrases": ["Member of a Group", "Member of 10% owner group", "Trustee", "Former 10% Owner", "Portfolio Manager", "Chairman of the Board", "Other (see filing)"],
+  "counts": {
+    "issuers": 3,
+    "edges": 11,
+    "persons": 6,
+    "entities": 1,
+    "vehicles": 1,
+    "businesses": 1,
+    "titleInFiling": 1,
+    "nssFiled": 1,
+    "otherText": 1,
+    "dropped": { "emptyRelationship": 0 }
+  },
+  "issuers": {
+    "0009100001": [
+      [9000001, "[removed from this fixture: an officer and director]", "i", 3, "Chief Executive Officer", 0, "2024-08-02", "2026-05-04", "2026-05-01", null, "4", "0009000001-26-000003"],
+      [9000002, "[removed from this fixture: a director]", "i", 1, null, 0, "2024-09-10", "2026-03-12", "2026-03-10", null, "4", "0009000002-26-000001"],
+      [9000003, "[removed from this fixture: an individual 10% owner]", "i", 4, null, 0, "2025-01-15", "2025-01-15", "2025-01-13", null, "3", "0009000003-25-000001"],
+      [9000004, "[removed from this fixture: an owner whose relationship is other]", "i", 8, null, 0, "2025-06-02", "2025-11-20", "2025-11-18", null, "4", "0009000004-25-000002", "Member of a Group"],
+      [9000005, "[removed from this fixture: an entity owner]", "e", 4, null, 0, "2024-07-15", "2026-06-15", "2026-06-11", null, "4", "0009000005-26-000004"],
+      [9000006, null, "v", 4, null, 0, "2025-02-03", "2025-08-05", "2025-08-01", null, "4", "0009000006-25-000002"],
+      [9000007, "[removed from this fixture: an officer whose title is in the remarks]", "i", 2, null, 1, "2025-03-03", "2026-02-20", "2026-02-18", "2026-02-20", "4/A", "0009000007-26-000002"],
+      [9100003, "[removed from this fixture: a listed company that files as an owner]", "b", 4, null, 0, "2024-10-01", "2026-02-02", "2026-01-29", null, "4", "0009100003-26-000001"]
+    ],
+    "0009100002": [
+      [9000001, "[removed from this fixture: an officer and director]", "i", 1, null, 0, "2025-05-20", "2026-05-20", "2026-05-18", null, "4", "0009000001-26-000004"],
+      [9000008, "[removed from this fixture: an officer]", "i", 2, "Chief Financial Officer", 0, "2024-11-12", "2026-04-01", "2026-03-30", null, "4", "0009000008-26-000001"]
+    ],
+    "0009100003": [
+      [9000002, "[removed from this fixture: a director]", "i", 1, null, 0, "2025-04-01", "2025-12-01", "2025-11-28", null, "5", "0009000002-25-000002"]
+    ]
+  }
+}

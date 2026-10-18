@@ -1,0 +1,29 @@
+{
+  "model": "multitower_v0",
+  "asof": "2026-09-22",
+  "horizon_days": 7,
+  "forecast_for": "2026-09-29",
+  "tasks": {
+    "gas_fwd7": {
+      "value": 4.0862,
+      "unit": "$/gal"
+    },
+    "gas_up7": {
+      "p_up": 0.468
+    },
+    "quake_fwd7": {
+      "value": 67.3789,
+      "unit": "events/day"
+    },
+    "wti_fwd7": {
+      "value": 98.5097,
+      "unit": "$/bbl"
+    }
+  },
+  "provenance": {
+    "frame": "multitower_daily.csv",
+    "weights": "weights_final.npz",
+    "built_at": "2026-10-06T03:26:34Z"
+  },
+  "disclaimer": "Research forecasts from a v0 model. Not advice."
+}

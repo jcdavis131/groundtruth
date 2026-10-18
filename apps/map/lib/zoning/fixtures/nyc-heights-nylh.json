@@ -1,0 +1,13 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "LHLBL": "LH-1",
+    "LHNAME": "Limited Height District"
+   }
+  }
+ ]
+}

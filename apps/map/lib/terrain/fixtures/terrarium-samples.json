@@ -1,0 +1,149 @@
+{
+ "note": "AWS Terrain Tiles (terrarium) pixels decoded from the PNGs, and USGS EPQS at the same lon/lat, captured 2026-09-26",
+ "points": [
+  {
+   "name": "Brackenridge Park",
+   "lon": -98.4718,
+   "lat": 29.461,
+   "z": 12,
+   "tile": "12/927/1696",
+   "px": 156,
+   "py": 248,
+   "rgb": [
+    128,
+    205,
+    122
+   ],
+   "epqsMetres": 205.13999939,
+   "epqsResolutionM": 1,
+   "tileSources": "ned13/imgn30w099_13.tif"
+  },
+  {
+   "name": "downtown",
+   "lon": -98.4936,
+   "lat": 29.4241,
+   "z": 12,
+   "tile": "12/927/1697",
+   "px": 92,
+   "py": 115,
+   "rgb": [
+    128,
+    198,
+    19
+   ],
+   "epqsMetres": 197.864013672,
+   "epqsResolutionM": 1,
+   "tileSources": "ned13/imgn30w099_13.tif"
+  },
+  {
+   "name": "Government Canyon",
+   "lon": -98.7556,
+   "lat": 29.5737,
+   "z": 12,
+   "tile": "12/924/1695",
+   "px": 97,
+   "py": 127,
+   "rgb": [
+    129,
+    107,
+    81
+   ],
+   "epqsMetres": 364.228973389,
+   "epqsResolutionM": 1,
+   "tileSources": "ned13/imgn30w099_13.tif"
+  },
+  {
+   "name": "Mitchell Lake",
+   "lon": -98.43,
+   "lat": 29.28,
+   "z": 12,
+   "tile": "12/928/1699",
+   "px": 21,
+   "py": 85,
+   "rgb": [
+    128,
+    152,
+    219
+   ],
+   "epqsMetres": 153.410995483,
+   "epqsResolutionM": 1,
+   "tileSources": "ned13/imgn30w099_13.tif"
+  },
+  {
+   "name": "Brackenridge Park",
+   "lon": -98.4718,
+   "lat": 29.461,
+   "z": 15,
+   "tile": "15/7420/13575",
+   "px": 224,
+   "py": 195,
+   "rgb": [
+    128,
+    205,
+    33
+   ],
+   "epqsMetres": 205.13999939,
+   "epqsResolutionM": 1,
+   "tileSources": "ned13/imgn30w099_13.tif"
+  },
+  {
+   "name": "downtown",
+   "lon": -98.4936,
+   "lat": 29.4241,
+   "z": 15,
+   "tile": "15/7418/13579",
+   "px": 228,
+   "py": 158,
+   "rgb": [
+    128,
+    197,
+    205
+   ],
+   "epqsMetres": 197.864013672,
+   "epqsResolutionM": 1,
+   "tileSources": "ned13/imgn30w099_13.tif"
+  },
+  {
+   "name": "Government Canyon",
+   "lon": -98.7556,
+   "lat": 29.5737,
+   "z": 15,
+   "tile": "15/7395/13563",
+   "px": 11,
+   "py": 249,
+   "rgb": [
+    129,
+    110,
+    24
+   ],
+   "epqsMetres": 364.228973389,
+   "epqsResolutionM": 1,
+   "tileSources": "ned13/imgn30w099_13.tif"
+  },
+  {
+   "name": "Mitchell Lake",
+   "lon": -98.43,
+   "lat": 29.28,
+   "z": 15,
+   "tile": "15/7424/13594",
+   "px": 174,
+   "py": 170,
+   "rgb": [
+    128,
+    152,
+    204
+   ],
+   "epqsMetres": 153.410995483,
+   "epqsResolutionM": 1,
+   "tileSources": "ned13/imgn30w099_13.tif"
+  }
+ ],
+ "crop": {
+  "tile": "15/7420/13575",
+  "x0": 216,
+  "y0": 188,
+  "w": 16,
+  "h": 16,
+  "rgbBase64": "gMz8gM0GgM0NgM0YgM0ngM00gM08gM06gM0ugM0bgM0FgMzxgMzkgMzggMzngMzwgM0HgM0TgM0agM0igM0tgM05gM1CgM1EgM0+gM0ygM0lgM0ZgM0SgM0UgM0fgM0tgM0UgM0fgM0jgM0lgM0ngM0rgM0vgM0wgM0ugM0qgM0mgM0jgM0jgM0sgM09gM1RgM0egM0lgM0ngM0kgM0hgM0egM0egM0fgM0fgM0fgM0ggM0jgM0ogM01gM1JgM1ggM0igM0kgM0kgM0igM0fgM0dgM0cgM0dgM0dgM0egM0fgM0jgM0rgM05gM1NgM1jgM0jgM0igM0hgM0ggM0ggM0ggM0ggM0ggM0ggM0fgM0ggM0kgM0wgM0/gM1RgM1kgM0jgM0hgM0ggM0ggM0hgM0igM0igM0igM0hgM0ggM0ggM0ngM03gM1JgM1agM1pgM0igM0hgM0hgM0hgM0igM0igM0igM0igM0hgM0ggM0igM0tgM1BgM1VgM1lgM1wgM0hgM0hgM0hgM0hgM0igM0igM0igM0hgM0hgM0igM0ogM01gM1KgM1egM1sgM1ygM0hgM0hgM0igM0igM0igM0hgM0hgM0ggM0ggM0kgM0tgM08gM1PgM1fgM1pgM1sgM0hgM0hgM0hgM0igM0igM0hgM0hgM0ggM0hgM0mgM0wgM09gM1KgM1VgM1cgM1bgM0hgM0hgM0hgM0hgM0hgM0hgM0hgM0ggM0hgM0lgM0ugM03gM0+gM1DgM1GgM1FgM0hgM0hgM0hgM0hgM0hgM0hgM0hgM0hgM0hgM0jgM0ngM0rgM0tgM0vgM0wgM0vgM0igM0igM0igM0igM0igM0hgM0hgM0hgM0hgM0igM0igM0igM0igM0igM0igM0igM0igM0jgM0jgM0jgM0igM0igM0hgM0hgM0hgM0hgM0hgM0hgM0ggM0ggM0fgM0fgM0hgM0hgM0igM0igM0igM0igM0igM0hgM0hgM0hgM0hgM0hgM0hgM0hgM0ggM0g"
+ }
+}

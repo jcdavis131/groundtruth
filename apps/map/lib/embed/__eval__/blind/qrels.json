@@ -1,0 +1,11193 @@
+{
+ "note": "Adjudicated qrels for the blind search eval: lower of rater A and rater B. grade applies to every docId.",
+ "rule": "lower",
+ "shas": {
+  "pool.jsonl": "c8122c7d1b8fa68686deaffb03d436398bb95d6f998fce2dd91019a2e107e8be",
+  "pool-map.json": "5139057994ed29b225757068091303904d91d1c81555736c1cfa85f870beb3a2",
+  "judge-task.md": "9afd08c75a5c96da9b547bd7195cdd351831fbf7197a09d2b5be0f029467d384",
+  "queries.blind.json": "af4f319e4830945b46a550e4d9e5b17061803591660f264d43b6f07cbf526a27",
+  "judgments.a.jsonl": "adb4ee88b808c30a84fa4c458511f56b2e43bc2c842f21cde6c2ed67f8040ff8",
+  "judgments.b.jsonl": "74ab2251feeb12e79ffa9df7d439738602f20325d1ecf99d2796c1ca7a063deb"
+ },
+ "pairs": {
+  "p0001": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0002": {
+   "queryId": "b023",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0003": {
+   "queryId": "b063",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0004": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0005": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0006": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0007": {
+   "queryId": "b003",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0008": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0009": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0010": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0011": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0012": {
+   "queryId": "b046",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0013": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0014": {
+   "queryId": "b003",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0015": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0016": {
+   "queryId": "b085",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0017": {
+   "queryId": "b023",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0018": {
+   "queryId": "b054",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0019": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0020": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0021": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0022": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0023": {
+   "queryId": "b003",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0024": {
+   "queryId": "b093",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0025": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0026": {
+   "queryId": "b073",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0027": {
+   "queryId": "b050",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0028": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0029": {
+   "queryId": "b040",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0030": {
+   "queryId": "b080",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0031": {
+   "queryId": "b030",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0032": {
+   "queryId": "b074",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0033": {
+   "queryId": "b077",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0034": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0035": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0036": {
+   "queryId": "b071",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0037": {
+   "queryId": "b097",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0038": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0039": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0040": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0041": {
+   "queryId": "b046",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0042": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0043": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0044": {
+   "queryId": "b022",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0045": {
+   "queryId": "b063",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0046": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0047": {
+   "queryId": "b097",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0048": {
+   "queryId": "b009",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0049": {
+   "queryId": "b005",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0050": {
+   "queryId": "b034",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0051": {
+   "queryId": "b066",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0052": {
+   "queryId": "b025",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0053": {
+   "queryId": "b003",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0054": {
+   "queryId": "b067",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0055": {
+   "queryId": "b059",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0056": {
+   "queryId": "b031",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0057": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0058": {
+   "queryId": "b051",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0059": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0060": {
+   "queryId": "b061",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0061": {
+   "queryId": "b026",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0062": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0063": {
+   "queryId": "b099",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0064": {
+   "queryId": "b099",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0065": {
+   "queryId": "b007",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0066": {
+   "queryId": "b081",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0067": {
+   "queryId": "b076",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0068": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0069": {
+   "queryId": "b006",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0070": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0071": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0072": {
+   "queryId": "b001",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0073": {
+   "queryId": "b039",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0074": {
+   "queryId": "b076",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0075": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0076": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0077": {
+   "queryId": "b026",
+   "a": 1,
+   "b": 2,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0078": {
+   "queryId": "b067",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0079": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0080": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0081": {
+   "queryId": "b035",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0082": {
+   "queryId": "b028",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0083": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0084": {
+   "queryId": "b024",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0085": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0086": {
+   "queryId": "b046",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0087": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0088": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0089": {
+   "queryId": "b093",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0090": {
+   "queryId": "b083",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0091": {
+   "queryId": "b030",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0092": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0093": {
+   "queryId": "b089",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0094": {
+   "queryId": "b037",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0095": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0096": {
+   "queryId": "b100",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0097": {
+   "queryId": "b069",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0098": {
+   "queryId": "b041",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0099": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0100": {
+   "queryId": "b025",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0101": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0102": {
+   "queryId": "b071",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0103": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0104": {
+   "queryId": "b007",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0105": {
+   "queryId": "b085",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0106": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0107": {
+   "queryId": "b044",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0108": {
+   "queryId": "b037",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0109": {
+   "queryId": "b003",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0110": {
+   "queryId": "b042",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0111": {
+   "queryId": "b090",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0112": {
+   "queryId": "b061",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0113": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0114": {
+   "queryId": "b025",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0115": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0116": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0117": {
+   "queryId": "b074",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0118": {
+   "queryId": "b061",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0119": {
+   "queryId": "b100",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0120": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0121": {
+   "queryId": "b050",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0122": {
+   "queryId": "b077",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0123": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0124": {
+   "queryId": "b025",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0125": {
+   "queryId": "b067",
+   "a": 1,
+   "b": 2,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0126": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0127": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0128": {
+   "queryId": "b008",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0129": {
+   "queryId": "b038",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0130": {
+   "queryId": "b007",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0131": {
+   "queryId": "b054",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0132": {
+   "queryId": "b097",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0133": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0134": {
+   "queryId": "b083",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0135": {
+   "queryId": "b044",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0136": {
+   "queryId": "b056",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0137": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0138": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0139": {
+   "queryId": "b040",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0140": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0141": {
+   "queryId": "b083",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0142": {
+   "queryId": "b068",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0143": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0144": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0145": {
+   "queryId": "b054",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0146": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0147": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0148": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0149": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0150": {
+   "queryId": "b008",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0151": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0152": {
+   "queryId": "b073",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0153": {
+   "queryId": "b081",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0154": {
+   "queryId": "b019",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0155": {
+   "queryId": "b001",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0156": {
+   "queryId": "b019",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0157": {
+   "queryId": "b028",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0158": {
+   "queryId": "b020",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0159": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0160": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0161": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0162": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0163": {
+   "queryId": "b013",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0164": {
+   "queryId": "b046",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0165": {
+   "queryId": "b082",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0166": {
+   "queryId": "b074",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0167": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0168": {
+   "queryId": "b001",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0169": {
+   "queryId": "b069",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0170": {
+   "queryId": "b089",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0171": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0172": {
+   "queryId": "b074",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0173": {
+   "queryId": "b013",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0174": {
+   "queryId": "b009",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0175": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0176": {
+   "queryId": "b024",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0177": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0178": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0179": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0180": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0181": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0182": {
+   "queryId": "b064",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0183": {
+   "queryId": "b046",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0184": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0185": {
+   "queryId": "b082",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0186": {
+   "queryId": "b051",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0187": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0188": {
+   "queryId": "b036",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0189": {
+   "queryId": "b077",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0190": {
+   "queryId": "b068",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0191": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0192": {
+   "queryId": "b061",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0193": {
+   "queryId": "b059",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0194": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0195": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0196": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0197": {
+   "queryId": "b072",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0198": {
+   "queryId": "b052",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0199": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0200": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0201": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0202": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0203": {
+   "queryId": "b067",
+   "a": 1,
+   "b": 2,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0204": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0205": {
+   "queryId": "b025",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0206": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0207": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0208": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0209": {
+   "queryId": "b063",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0210": {
+   "queryId": "b100",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0211": {
+   "queryId": "b085",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0212": {
+   "queryId": "b006",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0213": {
+   "queryId": "b069",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0214": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0215": {
+   "queryId": "b009",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0216": {
+   "queryId": "b046",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0217": {
+   "queryId": "b074",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0218": {
+   "queryId": "b036",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0219": {
+   "queryId": "b083",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0220": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0221": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0222": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0223": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0224": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0225": {
+   "queryId": "b081",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0226": {
+   "queryId": "b097",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0227": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0228": {
+   "queryId": "b051",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0229": {
+   "queryId": "b009",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0230": {
+   "queryId": "b062",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0231": {
+   "queryId": "b042",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0232": {
+   "queryId": "b046",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0233": {
+   "queryId": "b035",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0234": {
+   "queryId": "b059",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0235": {
+   "queryId": "b025",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0236": {
+   "queryId": "b077",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0237": {
+   "queryId": "b001",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0238": {
+   "queryId": "b084",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0239": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0240": {
+   "queryId": "b053",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0241": {
+   "queryId": "b077",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0242": {
+   "queryId": "b075",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0243": {
+   "queryId": "b076",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0244": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0245": {
+   "queryId": "b071",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0246": {
+   "queryId": "b023",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0247": {
+   "queryId": "b076",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0248": {
+   "queryId": "b003",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0249": {
+   "queryId": "b038",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0250": {
+   "queryId": "b080",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0251": {
+   "queryId": "b093",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0252": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0253": {
+   "queryId": "b086",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0254": {
+   "queryId": "b047",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0255": {
+   "queryId": "b089",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0256": {
+   "queryId": "b034",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0257": {
+   "queryId": "b099",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0258": {
+   "queryId": "b024",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0259": {
+   "queryId": "b081",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0260": {
+   "queryId": "b072",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0261": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0262": {
+   "queryId": "b050",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0263": {
+   "queryId": "b024",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0264": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0265": {
+   "queryId": "b097",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0266": {
+   "queryId": "b005",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0267": {
+   "queryId": "b005",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0268": {
+   "queryId": "b100",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0269": {
+   "queryId": "b025",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0270": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0271": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0272": {
+   "queryId": "b085",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0273": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0274": {
+   "queryId": "b060",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0275": {
+   "queryId": "b077",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0276": {
+   "queryId": "b061",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0277": {
+   "queryId": "b013",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0278": {
+   "queryId": "b026",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0279": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0280": {
+   "queryId": "b059",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0281": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0282": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0283": {
+   "queryId": "b024",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0284": {
+   "queryId": "b098",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0285": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0286": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0287": {
+   "queryId": "b030",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0288": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0289": {
+   "queryId": "b034",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0290": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0291": {
+   "queryId": "b034",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0292": {
+   "queryId": "b040",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0293": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0294": {
+   "queryId": "b053",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0295": {
+   "queryId": "b097",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0296": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0297": {
+   "queryId": "b036",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0298": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0299": {
+   "queryId": "b100",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0300": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0301": {
+   "queryId": "b100",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0302": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0303": {
+   "queryId": "b041",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0304": {
+   "queryId": "b038",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0305": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0306": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0307": {
+   "queryId": "b036",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0308": {
+   "queryId": "b061",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0309": {
+   "queryId": "b024",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0310": {
+   "queryId": "b072",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0311": {
+   "queryId": "b003",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0312": {
+   "queryId": "b062",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0313": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0314": {
+   "queryId": "b027",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0315": {
+   "queryId": "b047",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0316": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0317": {
+   "queryId": "b076",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0318": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0319": {
+   "queryId": "b059",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0320": {
+   "queryId": "b001",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0321": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0322": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0323": {
+   "queryId": "b074",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0324": {
+   "queryId": "b036",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0325": {
+   "queryId": "b039",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0326": {
+   "queryId": "b005",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0327": {
+   "queryId": "b076",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0328": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0329": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0330": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0331": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0332": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0333": {
+   "queryId": "b037",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0334": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0335": {
+   "queryId": "b039",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0336": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0337": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0338": {
+   "queryId": "b022",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0339": {
+   "queryId": "b070",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0340": {
+   "queryId": "b071",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0341": {
+   "queryId": "b030",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0342": {
+   "queryId": "b077",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0343": {
+   "queryId": "b082",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0344": {
+   "queryId": "b038",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0345": {
+   "queryId": "b006",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0346": {
+   "queryId": "b018",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0347": {
+   "queryId": "b013",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0348": {
+   "queryId": "b008",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0349": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0350": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0351": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0352": {
+   "queryId": "b026",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0353": {
+   "queryId": "b047",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0354": {
+   "queryId": "b066",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0355": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0356": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0357": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0358": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0359": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0360": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0361": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0362": {
+   "queryId": "b072",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0363": {
+   "queryId": "b047",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0364": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0365": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0366": {
+   "queryId": "b042",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0367": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0368": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0369": {
+   "queryId": "b001",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0370": {
+   "queryId": "b066",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0371": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0372": {
+   "queryId": "b052",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0373": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0374": {
+   "queryId": "b026",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0375": {
+   "queryId": "b038",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0376": {
+   "queryId": "b031",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0377": {
+   "queryId": "b067",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0378": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0379": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0380": {
+   "queryId": "b016",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0381": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0382": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0383": {
+   "queryId": "b069",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0384": {
+   "queryId": "b086",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0385": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0386": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0387": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0388": {
+   "queryId": "b076",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0389": {
+   "queryId": "b031",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0390": {
+   "queryId": "b037",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0391": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0392": {
+   "queryId": "b039",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0393": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0394": {
+   "queryId": "b077",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0395": {
+   "queryId": "b038",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0396": {
+   "queryId": "b038",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0397": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0398": {
+   "queryId": "b098",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0399": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0400": {
+   "queryId": "b035",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0401": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0402": {
+   "queryId": "b071",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0403": {
+   "queryId": "b062",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0404": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0405": {
+   "queryId": "b090",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0406": {
+   "queryId": "b056",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0407": {
+   "queryId": "b090",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0408": {
+   "queryId": "b037",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0409": {
+   "queryId": "b003",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0410": {
+   "queryId": "b023",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0411": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0412": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0413": {
+   "queryId": "b050",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0414": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0415": {
+   "queryId": "b046",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0416": {
+   "queryId": "b063",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0417": {
+   "queryId": "b061",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0418": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0419": {
+   "queryId": "b003",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0420": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0421": {
+   "queryId": "b028",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0422": {
+   "queryId": "b072",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0423": {
+   "queryId": "b007",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0424": {
+   "queryId": "b024",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0425": {
+   "queryId": "b007",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0426": {
+   "queryId": "b077",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0427": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0428": {
+   "queryId": "b056",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0429": {
+   "queryId": "b099",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0430": {
+   "queryId": "b023",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0431": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0432": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0433": {
+   "queryId": "b034",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0434": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0435": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0436": {
+   "queryId": "b031",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0437": {
+   "queryId": "b066",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0438": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0439": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0440": {
+   "queryId": "b003",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0441": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0442": {
+   "queryId": "b040",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0443": {
+   "queryId": "b025",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0444": {
+   "queryId": "b003",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0445": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0446": {
+   "queryId": "b040",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0447": {
+   "queryId": "b064",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0448": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0449": {
+   "queryId": "b042",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0450": {
+   "queryId": "b060",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0451": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0452": {
+   "queryId": "b023",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0453": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0454": {
+   "queryId": "b054",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0455": {
+   "queryId": "b064",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0456": {
+   "queryId": "b053",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0457": {
+   "queryId": "b044",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0458": {
+   "queryId": "b071",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0459": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0460": {
+   "queryId": "b008",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0461": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0462": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0463": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0464": {
+   "queryId": "b005",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0465": {
+   "queryId": "b041",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0466": {
+   "queryId": "b056",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0467": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0468": {
+   "queryId": "b100",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0469": {
+   "queryId": "b074",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0470": {
+   "queryId": "b082",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0471": {
+   "queryId": "b019",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0472": {
+   "queryId": "b077",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0473": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0474": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0475": {
+   "queryId": "b073",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0476": {
+   "queryId": "b053",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0477": {
+   "queryId": "b038",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0478": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0479": {
+   "queryId": "b060",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0480": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0481": {
+   "queryId": "b074",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0482": {
+   "queryId": "b077",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0483": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0484": {
+   "queryId": "b070",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0485": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0486": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0487": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0488": {
+   "queryId": "b067",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0489": {
+   "queryId": "b061",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0490": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0491": {
+   "queryId": "b060",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0492": {
+   "queryId": "b039",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0493": {
+   "queryId": "b060",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0494": {
+   "queryId": "b074",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0495": {
+   "queryId": "b093",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0496": {
+   "queryId": "b030",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0497": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0498": {
+   "queryId": "b076",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0499": {
+   "queryId": "b022",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0500": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0501": {
+   "queryId": "b015",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0502": {
+   "queryId": "b085",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0503": {
+   "queryId": "b023",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0504": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0505": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0506": {
+   "queryId": "b020",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0507": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0508": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0509": {
+   "queryId": "b062",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0510": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0511": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0512": {
+   "queryId": "b019",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0513": {
+   "queryId": "b077",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0514": {
+   "queryId": "b034",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0515": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0516": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0517": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0518": {
+   "queryId": "b033",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0519": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0520": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0521": {
+   "queryId": "b082",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0522": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0523": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0524": {
+   "queryId": "b068",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0525": {
+   "queryId": "b072",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0526": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0527": {
+   "queryId": "b090",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0528": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0529": {
+   "queryId": "b056",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0530": {
+   "queryId": "b080",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0531": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0532": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0533": {
+   "queryId": "b017",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0534": {
+   "queryId": "b090",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0535": {
+   "queryId": "b025",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0536": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0537": {
+   "queryId": "b035",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0538": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0539": {
+   "queryId": "b042",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0540": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0541": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0542": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0543": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0544": {
+   "queryId": "b038",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0545": {
+   "queryId": "b038",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0546": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0547": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0548": {
+   "queryId": "b100",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0549": {
+   "queryId": "b042",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0550": {
+   "queryId": "b041",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0551": {
+   "queryId": "b073",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0552": {
+   "queryId": "b069",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0553": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0554": {
+   "queryId": "b039",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0555": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0556": {
+   "queryId": "b018",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0557": {
+   "queryId": "b053",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0558": {
+   "queryId": "b046",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0559": {
+   "queryId": "b047",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0560": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0561": {
+   "queryId": "b016",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0562": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0563": {
+   "queryId": "b093",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0564": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0565": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0566": {
+   "queryId": "b042",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0567": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0568": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0569": {
+   "queryId": "b017",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0570": {
+   "queryId": "b064",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0571": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0572": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0573": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0574": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0575": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0576": {
+   "queryId": "b061",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0577": {
+   "queryId": "b034",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0578": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0579": {
+   "queryId": "b085",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0580": {
+   "queryId": "b025",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0581": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0582": {
+   "queryId": "b006",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0583": {
+   "queryId": "b080",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0584": {
+   "queryId": "b009",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0585": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0586": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0587": {
+   "queryId": "b042",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0588": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0589": {
+   "queryId": "b035",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0590": {
+   "queryId": "b093",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0591": {
+   "queryId": "b056",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0592": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0593": {
+   "queryId": "b051",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0594": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0595": {
+   "queryId": "b076",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0596": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0597": {
+   "queryId": "b046",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0598": {
+   "queryId": "b077",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0599": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0600": {
+   "queryId": "b072",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0601": {
+   "queryId": "b020",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0602": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0603": {
+   "queryId": "b059",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0604": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0605": {
+   "queryId": "b034",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0606": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0607": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0608": {
+   "queryId": "b028",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0609": {
+   "queryId": "b100",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0610": {
+   "queryId": "b098",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0611": {
+   "queryId": "b051",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0612": {
+   "queryId": "b033",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0613": {
+   "queryId": "b072",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0614": {
+   "queryId": "b052",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0615": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0616": {
+   "queryId": "b067",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0617": {
+   "queryId": "b073",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0618": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0619": {
+   "queryId": "b073",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0620": {
+   "queryId": "b024",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0621": {
+   "queryId": "b085",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0622": {
+   "queryId": "b099",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0623": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0624": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0625": {
+   "queryId": "b068",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0626": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0627": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0628": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0629": {
+   "queryId": "b063",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0630": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0631": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0632": {
+   "queryId": "b066",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0633": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0634": {
+   "queryId": "b077",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0635": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0636": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0637": {
+   "queryId": "b009",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0638": {
+   "queryId": "b034",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0639": {
+   "queryId": "b023",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0640": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0641": {
+   "queryId": "b030",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0642": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0643": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0644": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0645": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0646": {
+   "queryId": "b093",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0647": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0648": {
+   "queryId": "b060",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0649": {
+   "queryId": "b003",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0650": {
+   "queryId": "b069",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0651": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0652": {
+   "queryId": "b061",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0653": {
+   "queryId": "b077",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0654": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0655": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0656": {
+   "queryId": "b003",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0657": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0658": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0659": {
+   "queryId": "b005",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0660": {
+   "queryId": "b022",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0661": {
+   "queryId": "b013",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0662": {
+   "queryId": "b073",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0663": {
+   "queryId": "b040",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0664": {
+   "queryId": "b053",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0665": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0666": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0667": {
+   "queryId": "b031",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0668": {
+   "queryId": "b019",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0669": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0670": {
+   "queryId": "b061",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0671": {
+   "queryId": "b060",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0672": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0673": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0674": {
+   "queryId": "b044",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0675": {
+   "queryId": "b031",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0676": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0677": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0678": {
+   "queryId": "b086",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0679": {
+   "queryId": "b052",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0680": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0681": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0682": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0683": {
+   "queryId": "b013",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0684": {
+   "queryId": "b038",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0685": {
+   "queryId": "b093",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0686": {
+   "queryId": "b085",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0687": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0688": {
+   "queryId": "b047",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0689": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0690": {
+   "queryId": "b082",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0691": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0692": {
+   "queryId": "b025",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0693": {
+   "queryId": "b077",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0694": {
+   "queryId": "b066",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0695": {
+   "queryId": "b014",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0696": {
+   "queryId": "b024",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0697": {
+   "queryId": "b085",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0698": {
+   "queryId": "b085",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0699": {
+   "queryId": "b018",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0700": {
+   "queryId": "b031",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0701": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0702": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0703": {
+   "queryId": "b061",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0704": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0705": {
+   "queryId": "b093",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0706": {
+   "queryId": "b050",
+   "a": 1,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0707": {
+   "queryId": "b026",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0708": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0709": {
+   "queryId": "b100",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0710": {
+   "queryId": "b061",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0711": {
+   "queryId": "b052",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0712": {
+   "queryId": "b013",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0713": {
+   "queryId": "b063",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0714": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0715": {
+   "queryId": "b073",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0716": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0717": {
+   "queryId": "b089",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0718": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0719": {
+   "queryId": "b023",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0720": {
+   "queryId": "b077",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0721": {
+   "queryId": "b044",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0722": {
+   "queryId": "b019",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0723": {
+   "queryId": "b037",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0724": {
+   "queryId": "b056",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0725": {
+   "queryId": "b020",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0726": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0727": {
+   "queryId": "b009",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0728": {
+   "queryId": "b038",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0729": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0730": {
+   "queryId": "b013",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0731": {
+   "queryId": "b005",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0732": {
+   "queryId": "b050",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0733": {
+   "queryId": "b082",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0734": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0735": {
+   "queryId": "b016",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0736": {
+   "queryId": "b064",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0737": {
+   "queryId": "b100",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0738": {
+   "queryId": "b082",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0739": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0740": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0741": {
+   "queryId": "b082",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0742": {
+   "queryId": "b025",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0743": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0744": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0745": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0746": {
+   "queryId": "b070",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0747": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0748": {
+   "queryId": "b016",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0749": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0750": {
+   "queryId": "b015",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0751": {
+   "queryId": "b052",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0752": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0753": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0754": {
+   "queryId": "b031",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0755": {
+   "queryId": "b080",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0756": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0757": {
+   "queryId": "b067",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0758": {
+   "queryId": "b080",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0759": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0760": {
+   "queryId": "b023",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0761": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0762": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0763": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0764": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0765": {
+   "queryId": "b034",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0766": {
+   "queryId": "b062",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0767": {
+   "queryId": "b006",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0768": {
+   "queryId": "b062",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0769": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0770": {
+   "queryId": "b074",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0771": {
+   "queryId": "b041",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0772": {
+   "queryId": "b074",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0773": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0774": {
+   "queryId": "b024",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0775": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0776": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0777": {
+   "queryId": "b030",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0778": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0779": {
+   "queryId": "b035",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0780": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0781": {
+   "queryId": "b099",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0782": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0783": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0784": {
+   "queryId": "b027",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0785": {
+   "queryId": "b053",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0786": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0787": {
+   "queryId": "b031",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0788": {
+   "queryId": "b053",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0789": {
+   "queryId": "b036",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0790": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0791": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0792": {
+   "queryId": "b003",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0793": {
+   "queryId": "b093",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0794": {
+   "queryId": "b089",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0795": {
+   "queryId": "b016",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0796": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0797": {
+   "queryId": "b005",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0798": {
+   "queryId": "b044",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0799": {
+   "queryId": "b089",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0800": {
+   "queryId": "b009",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0801": {
+   "queryId": "b047",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0802": {
+   "queryId": "b082",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0803": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0804": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0805": {
+   "queryId": "b030",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0806": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0807": {
+   "queryId": "b019",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0808": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0809": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0810": {
+   "queryId": "b097",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0811": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0812": {
+   "queryId": "b024",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0813": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0814": {
+   "queryId": "b053",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0815": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0816": {
+   "queryId": "b022",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0817": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0818": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0819": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0820": {
+   "queryId": "b099",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0821": {
+   "queryId": "b099",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0822": {
+   "queryId": "b089",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0823": {
+   "queryId": "b058",
+   "a": 2,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0824": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0825": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0826": {
+   "queryId": "b064",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0827": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0828": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0829": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0830": {
+   "queryId": "b085",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0831": {
+   "queryId": "b023",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0832": {
+   "queryId": "b080",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0833": {
+   "queryId": "b037",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0834": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0835": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0836": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0837": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0838": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0839": {
+   "queryId": "b008",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0840": {
+   "queryId": "b068",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0841": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0842": {
+   "queryId": "b013",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0843": {
+   "queryId": "b041",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0844": {
+   "queryId": "b061",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0845": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0846": {
+   "queryId": "b074",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0847": {
+   "queryId": "b090",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0848": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0849": {
+   "queryId": "b017",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0850": {
+   "queryId": "b093",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0851": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0852": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0853": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0854": {
+   "queryId": "b038",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0855": {
+   "queryId": "b063",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0856": {
+   "queryId": "b070",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0857": {
+   "queryId": "b099",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0858": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0859": {
+   "queryId": "b085",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0860": {
+   "queryId": "b060",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0861": {
+   "queryId": "b046",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0862": {
+   "queryId": "b070",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0863": {
+   "queryId": "b060",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0864": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0865": {
+   "queryId": "b056",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0866": {
+   "queryId": "b059",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0867": {
+   "queryId": "b038",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0868": {
+   "queryId": "b070",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0869": {
+   "queryId": "b089",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0870": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0871": {
+   "queryId": "b053",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0872": {
+   "queryId": "b031",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0873": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0874": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0875": {
+   "queryId": "b009",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0876": {
+   "queryId": "b028",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0877": {
+   "queryId": "b053",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0878": {
+   "queryId": "b076",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0879": {
+   "queryId": "b054",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0880": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0881": {
+   "queryId": "b062",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0882": {
+   "queryId": "b069",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0883": {
+   "queryId": "b097",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0884": {
+   "queryId": "b020",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0885": {
+   "queryId": "b044",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0886": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0887": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0888": {
+   "queryId": "b066",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0889": {
+   "queryId": "b025",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0890": {
+   "queryId": "b062",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0891": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0892": {
+   "queryId": "b056",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0893": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0894": {
+   "queryId": "b082",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0895": {
+   "queryId": "b020",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0896": {
+   "queryId": "b053",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0897": {
+   "queryId": "b030",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0898": {
+   "queryId": "b083",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0899": {
+   "queryId": "b053",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0900": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0901": {
+   "queryId": "b020",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0902": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0903": {
+   "queryId": "b076",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0904": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0905": {
+   "queryId": "b009",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0906": {
+   "queryId": "b046",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0907": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0908": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0909": {
+   "queryId": "b050",
+   "a": 1,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0910": {
+   "queryId": "b024",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0911": {
+   "queryId": "b072",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0912": {
+   "queryId": "b024",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0913": {
+   "queryId": "b073",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0914": {
+   "queryId": "b003",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0915": {
+   "queryId": "b023",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0916": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0917": {
+   "queryId": "b006",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0918": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0919": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0920": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0921": {
+   "queryId": "b018",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0922": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0923": {
+   "queryId": "b066",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0924": {
+   "queryId": "b009",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0925": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0926": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0927": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0928": {
+   "queryId": "b072",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0929": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0930": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0931": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0932": {
+   "queryId": "b100",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0933": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0934": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0935": {
+   "queryId": "b022",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0936": {
+   "queryId": "b024",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0937": {
+   "queryId": "b007",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0938": {
+   "queryId": "b077",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0939": {
+   "queryId": "b075",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0940": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0941": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0942": {
+   "queryId": "b085",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0943": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0944": {
+   "queryId": "b089",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0945": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0946": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0947": {
+   "queryId": "b062",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0948": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0949": {
+   "queryId": "b053",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0950": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0951": {
+   "queryId": "b003",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0952": {
+   "queryId": "b034",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0953": {
+   "queryId": "b090",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0954": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0955": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0956": {
+   "queryId": "b038",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0957": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0958": {
+   "queryId": "b089",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0959": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0960": {
+   "queryId": "b017",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0961": {
+   "queryId": "b054",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0962": {
+   "queryId": "b039",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0963": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0964": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0965": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0966": {
+   "queryId": "b090",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0967": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0968": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0969": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0970": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0971": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0972": {
+   "queryId": "b089",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0973": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0974": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0975": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0976": {
+   "queryId": "b074",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0977": {
+   "queryId": "b009",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0978": {
+   "queryId": "b073",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0979": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0980": {
+   "queryId": "b017",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0981": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0982": {
+   "queryId": "b084",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0983": {
+   "queryId": "b077",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0984": {
+   "queryId": "b068",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0985": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0986": {
+   "queryId": "b038",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0987": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0988": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0989": {
+   "queryId": "b059",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0990": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0991": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0992": {
+   "queryId": "b042",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0993": {
+   "queryId": "b020",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0994": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p0995": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0996": {
+   "queryId": "b030",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0997": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p0998": {
+   "queryId": "b093",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p0999": {
+   "queryId": "b097",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1000": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1001": {
+   "queryId": "b019",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1002": {
+   "queryId": "b069",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1003": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1004": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1005": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1006": {
+   "queryId": "b093",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1007": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1008": {
+   "queryId": "b032",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1009": {
+   "queryId": "b074",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1010": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1011": {
+   "queryId": "b036",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1012": {
+   "queryId": "b100",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1013": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1014": {
+   "queryId": "b068",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1015": {
+   "queryId": "b030",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1016": {
+   "queryId": "b068",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1017": {
+   "queryId": "b008",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1018": {
+   "queryId": "b051",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1019": {
+   "queryId": "b055",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1020": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1021": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1022": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1023": {
+   "queryId": "b046",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1024": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1025": {
+   "queryId": "b026",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1026": {
+   "queryId": "b083",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1027": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1028": {
+   "queryId": "b082",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1029": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1030": {
+   "queryId": "b094",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1031": {
+   "queryId": "b097",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1032": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1033": {
+   "queryId": "b026",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1034": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1035": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1036": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1037": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1038": {
+   "queryId": "b069",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1039": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1040": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1041": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1042": {
+   "queryId": "b018",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1043": {
+   "queryId": "b066",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1044": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1045": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1046": {
+   "queryId": "b034",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1047": {
+   "queryId": "b036",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1048": {
+   "queryId": "b082",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1049": {
+   "queryId": "b073",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1050": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1051": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1052": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1053": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1054": {
+   "queryId": "b041",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1055": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1056": {
+   "queryId": "b009",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1057": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1058": {
+   "queryId": "b085",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1059": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1060": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1061": {
+   "queryId": "b018",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1062": {
+   "queryId": "b008",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1063": {
+   "queryId": "b098",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1064": {
+   "queryId": "b054",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1065": {
+   "queryId": "b077",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1066": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1067": {
+   "queryId": "b036",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1068": {
+   "queryId": "b005",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1069": {
+   "queryId": "b074",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1070": {
+   "queryId": "b080",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1071": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1072": {
+   "queryId": "b061",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1073": {
+   "queryId": "b008",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1074": {
+   "queryId": "b006",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1075": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1076": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1077": {
+   "queryId": "b098",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1078": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1079": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1080": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1081": {
+   "queryId": "b067",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1082": {
+   "queryId": "b056",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1083": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1084": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1085": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1086": {
+   "queryId": "b031",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1087": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1088": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1089": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1090": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1091": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1092": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1093": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1094": {
+   "queryId": "b044",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1095": {
+   "queryId": "b084",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1096": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1097": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1098": {
+   "queryId": "b005",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1099": {
+   "queryId": "b003",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1100": {
+   "queryId": "b024",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1101": {
+   "queryId": "b098",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1102": {
+   "queryId": "b046",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1103": {
+   "queryId": "b062",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1104": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1105": {
+   "queryId": "b074",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1106": {
+   "queryId": "b059",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1107": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1108": {
+   "queryId": "b041",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1109": {
+   "queryId": "b073",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1110": {
+   "queryId": "b056",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1111": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1112": {
+   "queryId": "b073",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1113": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1114": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1115": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1116": {
+   "queryId": "b068",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1117": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1118": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1119": {
+   "queryId": "b036",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1120": {
+   "queryId": "b035",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1121": {
+   "queryId": "b061",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1122": {
+   "queryId": "b023",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1123": {
+   "queryId": "b038",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1124": {
+   "queryId": "b025",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1125": {
+   "queryId": "b046",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1126": {
+   "queryId": "b062",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1127": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1128": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1129": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1130": {
+   "queryId": "b056",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1131": {
+   "queryId": "b038",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1132": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1133": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1134": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1135": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1136": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1137": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1138": {
+   "queryId": "b030",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1139": {
+   "queryId": "b024",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1140": {
+   "queryId": "b059",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1141": {
+   "queryId": "b016",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1142": {
+   "queryId": "b097",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1143": {
+   "queryId": "b009",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1144": {
+   "queryId": "b059",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1145": {
+   "queryId": "b068",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1146": {
+   "queryId": "b073",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1147": {
+   "queryId": "b013",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1148": {
+   "queryId": "b074",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1149": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1150": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1151": {
+   "queryId": "b080",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1152": {
+   "queryId": "b040",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1153": {
+   "queryId": "b055",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1154": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1155": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1156": {
+   "queryId": "b082",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1157": {
+   "queryId": "b034",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1158": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1159": {
+   "queryId": "b030",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1160": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1161": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1162": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1163": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1164": {
+   "queryId": "b052",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1165": {
+   "queryId": "b009",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1166": {
+   "queryId": "b067",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1167": {
+   "queryId": "b023",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1168": {
+   "queryId": "b059",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1169": {
+   "queryId": "b083",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1170": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1171": {
+   "queryId": "b024",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1172": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1173": {
+   "queryId": "b070",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1174": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1175": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1176": {
+   "queryId": "b076",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1177": {
+   "queryId": "b001",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1178": {
+   "queryId": "b038",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1179": {
+   "queryId": "b063",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1180": {
+   "queryId": "b093",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1181": {
+   "queryId": "b074",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1182": {
+   "queryId": "b056",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1183": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1184": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1185": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1186": {
+   "queryId": "b076",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1187": {
+   "queryId": "b055",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1188": {
+   "queryId": "b098",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1189": {
+   "queryId": "b044",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1190": {
+   "queryId": "b044",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1191": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1192": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1193": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1194": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1195": {
+   "queryId": "b018",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1196": {
+   "queryId": "b053",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1197": {
+   "queryId": "b016",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1198": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1199": {
+   "queryId": "b099",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1200": {
+   "queryId": "b053",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1201": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1202": {
+   "queryId": "b024",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1203": {
+   "queryId": "b082",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1204": {
+   "queryId": "b081",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1205": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1206": {
+   "queryId": "b061",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1207": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1208": {
+   "queryId": "b072",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1209": {
+   "queryId": "b061",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1210": {
+   "queryId": "b025",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1211": {
+   "queryId": "b093",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1212": {
+   "queryId": "b090",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1213": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1214": {
+   "queryId": "b036",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1215": {
+   "queryId": "b068",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1216": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1217": {
+   "queryId": "b061",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1218": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1219": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1220": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1221": {
+   "queryId": "b074",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1222": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1223": {
+   "queryId": "b023",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1224": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1225": {
+   "queryId": "b069",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1226": {
+   "queryId": "b053",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1227": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1228": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1229": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1230": {
+   "queryId": "b018",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1231": {
+   "queryId": "b072",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1232": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1233": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1234": {
+   "queryId": "b054",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1235": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1236": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1237": {
+   "queryId": "b100",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1238": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1239": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1240": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1241": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1242": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1243": {
+   "queryId": "b085",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1244": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1245": {
+   "queryId": "b100",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1246": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1247": {
+   "queryId": "b098",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1248": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1249": {
+   "queryId": "b064",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1250": {
+   "queryId": "b035",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1251": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1252": {
+   "queryId": "b055",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1253": {
+   "queryId": "b035",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1254": {
+   "queryId": "b017",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1255": {
+   "queryId": "b003",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1256": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1257": {
+   "queryId": "b005",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1258": {
+   "queryId": "b036",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1259": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1260": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1261": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1262": {
+   "queryId": "b059",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1263": {
+   "queryId": "b097",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1264": {
+   "queryId": "b003",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1265": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1266": {
+   "queryId": "b069",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1267": {
+   "queryId": "b020",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1268": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1269": {
+   "queryId": "b071",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1270": {
+   "queryId": "b085",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1271": {
+   "queryId": "b082",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1272": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1273": {
+   "queryId": "b061",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1274": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1275": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1276": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1277": {
+   "queryId": "b097",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1278": {
+   "queryId": "b022",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1279": {
+   "queryId": "b038",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1280": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1281": {
+   "queryId": "b098",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1282": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1283": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1284": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1285": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1286": {
+   "queryId": "b022",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1287": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1288": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1289": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1290": {
+   "queryId": "b071",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1291": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1292": {
+   "queryId": "b020",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1293": {
+   "queryId": "b072",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1294": {
+   "queryId": "b039",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1295": {
+   "queryId": "b050",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1296": {
+   "queryId": "b034",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1297": {
+   "queryId": "b037",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1298": {
+   "queryId": "b081",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1299": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1300": {
+   "queryId": "b005",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1301": {
+   "queryId": "b041",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1302": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1303": {
+   "queryId": "b009",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1304": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1305": {
+   "queryId": "b071",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1306": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1307": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1308": {
+   "queryId": "b022",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1309": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1310": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1311": {
+   "queryId": "b063",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1312": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1313": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1314": {
+   "queryId": "b089",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1315": {
+   "queryId": "b097",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1316": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1317": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1318": {
+   "queryId": "b076",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1319": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1320": {
+   "queryId": "b093",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1321": {
+   "queryId": "b034",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1322": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1323": {
+   "queryId": "b056",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1324": {
+   "queryId": "b052",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1325": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1326": {
+   "queryId": "b023",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1327": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1328": {
+   "queryId": "b085",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1329": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1330": {
+   "queryId": "b019",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1331": {
+   "queryId": "b068",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1332": {
+   "queryId": "b016",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1333": {
+   "queryId": "b098",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1334": {
+   "queryId": "b017",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1335": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1336": {
+   "queryId": "b003",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1337": {
+   "queryId": "b025",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1338": {
+   "queryId": "b076",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1339": {
+   "queryId": "b071",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1340": {
+   "queryId": "b041",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1341": {
+   "queryId": "b030",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1342": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1343": {
+   "queryId": "b093",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1344": {
+   "queryId": "b076",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1345": {
+   "queryId": "b024",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1346": {
+   "queryId": "b076",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1347": {
+   "queryId": "b076",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1348": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1349": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1350": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1351": {
+   "queryId": "b056",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1352": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1353": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1354": {
+   "queryId": "b045",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1355": {
+   "queryId": "b028",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1356": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1357": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1358": {
+   "queryId": "b031",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1359": {
+   "queryId": "b067",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1360": {
+   "queryId": "b059",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1361": {
+   "queryId": "b068",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1362": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1363": {
+   "queryId": "b008",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1364": {
+   "queryId": "b046",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1365": {
+   "queryId": "b040",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1366": {
+   "queryId": "b009",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1367": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1368": {
+   "queryId": "b082",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1369": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1370": {
+   "queryId": "b070",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1371": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1372": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1373": {
+   "queryId": "b038",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1374": {
+   "queryId": "b070",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1375": {
+   "queryId": "b097",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1376": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1377": {
+   "queryId": "b037",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1378": {
+   "queryId": "b023",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1379": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1380": {
+   "queryId": "b009",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1381": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1382": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1383": {
+   "queryId": "b054",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1384": {
+   "queryId": "b068",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1385": {
+   "queryId": "b052",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1386": {
+   "queryId": "b060",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1387": {
+   "queryId": "b015",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1388": {
+   "queryId": "b006",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1389": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1390": {
+   "queryId": "b055",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1391": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1392": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1393": {
+   "queryId": "b072",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1394": {
+   "queryId": "b094",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1395": {
+   "queryId": "b026",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1396": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1397": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1398": {
+   "queryId": "b090",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1399": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1400": {
+   "queryId": "b053",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1401": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1402": {
+   "queryId": "b055",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1403": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1404": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1405": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1406": {
+   "queryId": "b034",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1407": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1408": {
+   "queryId": "b019",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1409": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1410": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1411": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1412": {
+   "queryId": "b016",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1413": {
+   "queryId": "b081",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1414": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1415": {
+   "queryId": "b047",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1416": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1417": {
+   "queryId": "b009",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1418": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1419": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1420": {
+   "queryId": "b018",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1421": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1422": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1423": {
+   "queryId": "b021",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1424": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1425": {
+   "queryId": "b082",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1426": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1427": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1428": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1429": {
+   "queryId": "b052",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1430": {
+   "queryId": "b089",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1431": {
+   "queryId": "b093",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1432": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1433": {
+   "queryId": "b041",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1434": {
+   "queryId": "b051",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1435": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1436": {
+   "queryId": "b072",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1437": {
+   "queryId": "b006",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1438": {
+   "queryId": "b077",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1439": {
+   "queryId": "b061",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1440": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1441": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1442": {
+   "queryId": "b093",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1443": {
+   "queryId": "b041",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1444": {
+   "queryId": "b001",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1445": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1446": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1447": {
+   "queryId": "b050",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1448": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1449": {
+   "queryId": "b066",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1450": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1451": {
+   "queryId": "b069",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1452": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1453": {
+   "queryId": "b010",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1454": {
+   "queryId": "b056",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1455": {
+   "queryId": "b046",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1456": {
+   "queryId": "b015",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1457": {
+   "queryId": "b046",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1458": {
+   "queryId": "b034",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1459": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1460": {
+   "queryId": "b046",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1461": {
+   "queryId": "b053",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1462": {
+   "queryId": "b086",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1463": {
+   "queryId": "b093",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1464": {
+   "queryId": "b097",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1465": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1466": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1467": {
+   "queryId": "b024",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1468": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1469": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1470": {
+   "queryId": "b053",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1471": {
+   "queryId": "b025",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1472": {
+   "queryId": "b047",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1473": {
+   "queryId": "b050",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1474": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1475": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1476": {
+   "queryId": "b095",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1477": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1478": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1479": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1480": {
+   "queryId": "b043",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1481": {
+   "queryId": "b092",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1482": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1483": {
+   "queryId": "b080",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1484": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1485": {
+   "queryId": "b005",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1486": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1487": {
+   "queryId": "b085",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1488": {
+   "queryId": "b059",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1489": {
+   "queryId": "b007",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1490": {
+   "queryId": "b051",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1491": {
+   "queryId": "b035",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1492": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1493": {
+   "queryId": "b085",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1494": {
+   "queryId": "b076",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1495": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1496": {
+   "queryId": "b093",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1497": {
+   "queryId": "b054",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1498": {
+   "queryId": "b069",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1499": {
+   "queryId": "b076",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1500": {
+   "queryId": "b033",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1501": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1502": {
+   "queryId": "b008",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1503": {
+   "queryId": "b053",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1504": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1505": {
+   "queryId": "b088",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1506": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1507": {
+   "queryId": "b073",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1508": {
+   "queryId": "b016",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1509": {
+   "queryId": "b018",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1510": {
+   "queryId": "b017",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1511": {
+   "queryId": "b027",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1512": {
+   "queryId": "b046",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1513": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1514": {
+   "queryId": "b012",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1515": {
+   "queryId": "b070",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1516": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1517": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1518": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1519": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1520": {
+   "queryId": "b087",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1521": {
+   "queryId": "b077",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1522": {
+   "queryId": "b004",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1523": {
+   "queryId": "b017",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1524": {
+   "queryId": "b042",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1525": {
+   "queryId": "b025",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1526": {
+   "queryId": "b072",
+   "a": 0,
+   "b": 1,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1527": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1528": {
+   "queryId": "b037",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1529": {
+   "queryId": "b004",
+   "a": 1,
+   "b": 2,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1530": {
+   "queryId": "b028",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1531": {
+   "queryId": "b028",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1532": {
+   "queryId": "b083",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1533": {
+   "queryId": "b033",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1534": {
+   "queryId": "b073",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1535": {
+   "queryId": "b096",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1536": {
+   "queryId": "b093",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1537": {
+   "queryId": "b003",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1538": {
+   "queryId": "b032",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1539": {
+   "queryId": "b057",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1540": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1541": {
+   "queryId": "b001",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1542": {
+   "queryId": "b006",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1543": {
+   "queryId": "b028",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1544": {
+   "queryId": "b089",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1545": {
+   "queryId": "b094",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1546": {
+   "queryId": "b085",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1547": {
+   "queryId": "b091",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1548": {
+   "queryId": "b059",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1549": {
+   "queryId": "b083",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1550": {
+   "queryId": "b040",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1551": {
+   "queryId": "b002",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1552": {
+   "queryId": "b074",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1553": {
+   "queryId": "b079",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1554": {
+   "queryId": "b055",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1555": {
+   "queryId": "b023",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1556": {
+   "queryId": "b081",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1557": {
+   "queryId": "b039",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1558": {
+   "queryId": "b005",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1559": {
+   "queryId": "b084",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1560": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1561": {
+   "queryId": "b068",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1562": {
+   "queryId": "b058",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1563": {
+   "queryId": "b069",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1564": {
+   "queryId": "b036",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1565": {
+   "queryId": "b075",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1566": {
+   "queryId": "b049",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1567": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1568": {
+   "queryId": "b093",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1569": {
+   "queryId": "b001",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1570": {
+   "queryId": "b100",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1571": {
+   "queryId": "b065",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1572": {
+   "queryId": "b055",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1573": {
+   "queryId": "b082",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1574": {
+   "queryId": "b003",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1575": {
+   "queryId": "b006",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1576": {
+   "queryId": "b014",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1577": {
+   "queryId": "b083",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1578": {
+   "queryId": "b017",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1579": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1580": {
+   "queryId": "b078",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1581": {
+   "queryId": "b091",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1582": {
+   "queryId": "b029",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1583": {
+   "queryId": "b072",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1584": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1585": {
+   "queryId": "b076",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1586": {
+   "queryId": "b028",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1587": {
+   "queryId": "b063",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1588": {
+   "queryId": "b047",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1589": {
+   "queryId": "b022",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1590": {
+   "queryId": "b040",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1591": {
+   "queryId": "b011",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1592": {
+   "queryId": "b026",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1593": {
+   "queryId": "b025",
+   "a": 1,
+   "b": 1,
+   "grade": 1,
+   "docIds": 1
+  },
+  "p1594": {
+   "queryId": "b041",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1595": {
+   "queryId": "b048",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  },
+  "p1596": {
+   "queryId": "b036",
+   "a": 2,
+   "b": 2,
+   "grade": 2,
+   "docIds": 1
+  },
+  "p1597": {
+   "queryId": "b039",
+   "a": 0,
+   "b": 0,
+   "grade": 0,
+   "docIds": 1
+  }
+ }
+}

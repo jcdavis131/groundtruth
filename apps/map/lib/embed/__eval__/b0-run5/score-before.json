@@ -1,0 +1,194 @@
+{
+ "corpus": "C:/Users/jcdav/writeups/panel-2026-10-18b/b0/run5/records-corpus.run4.json",
+ "docs": 1132,
+ "qplus": 66,
+ "q0": 34,
+ "bm25": {
+  "ndcg": 0.5833,
+  "ndcgCondensed": 0.5833,
+  "P": 0.6059,
+  "R": 0.6556,
+  "empty": 0.0758,
+  "show0": 0.4118,
+  "top8Hits": 560,
+  "unjudgedHits": 0,
+  "unjudgedHitsOnQplus": "0 of 469"
+ },
+ "embed_uncut": {
+  "ndcg": 0.6668,
+  "ndcgCondensed": 0.6668,
+  "P": 0.6269,
+  "R": 0.7391,
+  "empty": 0,
+  "show0": 1,
+  "top8Hits": 800,
+  "unjudgedHits": 0,
+  "unjudgedHitsOnQplus": "0 of 528"
+ },
+ "hybrid": {
+  "ndcg": 0.6994,
+  "ndcgCondensed": 0.6994,
+  "P": 0.6383,
+  "R": 0.7657,
+  "empty": 0,
+  "show0": 1,
+  "top8Hits": 800,
+  "unjudgedHits": 0,
+  "unjudgedHitsOnQplus": "0 of 528"
+ },
+ "q0real": [
+  {
+   "id": "b008",
+   "q": "factories that report chemical releases",
+   "wants": "emef-tri",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 0,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b011",
+   "q": "schools in dodge city kansas",
+   "wants": "nces-public-schools",
+   "bm25Top8FromCollection": 8,
+   "bm25Shown": 8,
+   "firstRank": 1,
+   "firstText": "school level: High; school type: Regular School; charter school: No; virtual school status: Full Virtual; school status: Open; locale: 11-City: Large; lowest grade: 09; highest grade: 12; state: TX"
+  },
+  {
+   "id": "b013",
+   "q": "hazardus waste generators",
+   "wants": "emef-rcra",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 0,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b016",
+   "q": "brownfields in detroit",
+   "wants": "emef-acres",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 0,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b018",
+   "q": "toxic release inventory",
+   "wants": "emef-tri",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 0,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b019",
+   "q": "hazardous waste handlers in ohio",
+   "wants": "emef-rcra",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 0,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b022",
+   "q": "black hills ordnance depot",
+   "wants": "fuds-properties | fuds-mrs",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 0,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b029",
+   "q": "wildfire risk around santa fe",
+   "wants": "wrc-communities",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 8,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b035",
+   "q": "leaking gas station tanks",
+   "wants": "ust-releases-county",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 0,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b042",
+   "q": "prairie potholes north dakota",
+   "wants": "nwi-wetlands",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 1,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b045",
+   "q": "santa fe high school",
+   "wants": "nces-public-schools",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 8,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b052",
+   "q": "love canal",
+   "wants": "emef-sems | npl-boundaries",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 0,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b078",
+   "q": "large quantity hazardous waste generators",
+   "wants": "emef-rcra",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 8,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b088",
+   "q": "old military bases",
+   "wants": "fuds-properties | fuds-mrs",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 8,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b092",
+   "q": "benefis hospital great falls",
+   "wants": "hifld-hospitals",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 8,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b098",
+   "q": "upmc presbyterian",
+   "wants": "hifld-hospitals",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 0,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b099",
+   "q": "old bombing ranges",
+   "wants": "fuds-mrs | fuds-properties",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 0,
+   "firstRank": null,
+   "firstText": null
+  }
+ ]
+}

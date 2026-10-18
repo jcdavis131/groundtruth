@@ -1,0 +1,362 @@
+{
+ "prereg": "writeups/panel-2026-10-18b/gate/PREREG.md",
+ "provenance": {
+  "builtAt": "2026-10-18T20:58:05.741Z",
+  "headCommit": "247972f6f03a35e5aefeca3a8e5e138ed7874ca2",
+  "queries": {
+   "file": "queries.kept.json",
+   "sha256": "d72e709d9741f017648ecb21739aa01a57cf4183828aedef29dd36014c595a0c",
+   "n": 65
+  },
+  "corpus": {
+   "file": "lib/embed/__eval__/records-corpus.json",
+   "sha256": "13bd11c6040f2fd104f6ef51447c1d0ae93077518839bed2c8409260427d79d5",
+   "rows": 1513,
+   "records": 4067,
+   "distinctDocs": 1500,
+   "cards": 18
+  },
+  "depth": 8,
+  "recordTau": 0.5,
+  "bm25": {
+   "k1": 1.2,
+   "b": 0.75
+  },
+  "rrfK": 60,
+  "fusionDepth": 50,
+  "gate": {
+   "config": {
+    "rule": "list",
+    "coverage": "terms",
+    "t": 0.4,
+    "c": 0.6
+   },
+   "file": "lib/embed/gateConfig.ts",
+   "sha256": "14b6f73fff980df099028c5589d54f2a5b870db8911ae8412622d0e2658fffe0",
+   "commit": "af69f6c96cb806f072ad000220004f3505e9df61",
+   "path": "RecordIndex.searchGated over every record of the corpus"
+  },
+  "shipped": "cosine over distinct docs (retrievers.ts embedRanker), top 8, kept where >= RECORD_TAU",
+  "shuffle": {
+   "prng": "mulberry32",
+   "seed": 3610144925,
+   "seedFrom": "first 8 hex of the queries sha256",
+   "order": "sorted by (query id, text) before shuffle"
+  },
+  "pairKey": "(query id, record text); a grade applies to every docId listed for the pair"
+ },
+ "queries": 65,
+ "pairs": 754,
+ "qplus": 48,
+ "q0": 17,
+ "meanGradeCounts": {
+  "0": 262,
+  "1": 330,
+  "2": 150,
+  "0.5": 6,
+  "1.5": 6
+ },
+ "raters": {
+  "kappa": 0.9851,
+  "exactAgreement": 0.9841,
+  "confusion": {
+   "rowsA_colsB": [
+    [
+     262,
+     1,
+     0
+    ],
+    [
+     5,
+     330,
+     0
+    ],
+    [
+     0,
+     6,
+     150
+    ]
+   ]
+  },
+  "a": [
+   263,
+   335,
+   156
+  ],
+  "b": [
+   267,
+   337,
+   150
+  ],
+  "reliable": true
+ },
+ "arms": {
+  "bm25": {
+   "ndcg8": 0.6864,
+   "top1Relevant": 0.7292,
+   "emptyQplus": 0.1042,
+   "showQ0": 0.4706,
+   "nQplus": 48,
+   "nQ0": 17
+  },
+  "hybrid": {
+   "ndcg8": 0.936,
+   "top1Relevant": 0.9792,
+   "emptyQplus": 0,
+   "showQ0": 1,
+   "nQplus": 48,
+   "nQ0": 17
+  },
+  "shipped": {
+   "ndcg8": 0.4629,
+   "top1Relevant": 0.5,
+   "emptyQplus": 0.4792,
+   "showQ0": 0.1765,
+   "nQplus": 48,
+   "nQ0": 17
+  },
+  "gated": {
+   "ndcg8": 0.6892,
+   "top1Relevant": 0.7083,
+   "emptyQplus": 0.2708,
+   "showQ0": 0.2353,
+   "nQplus": 48,
+   "nQ0": 17
+  }
+ },
+ "byType": {
+  "attribute": {
+   "bm25": {
+    "ndcg8": 0.7747,
+    "top1Relevant": 0.8333,
+    "emptyQplus": 0,
+    "showQ0": null,
+    "nQplus": 12,
+    "nQ0": 0
+   },
+   "hybrid": {
+    "ndcg8": 0.9184,
+    "top1Relevant": 1,
+    "emptyQplus": 0,
+    "showQ0": null,
+    "nQplus": 12,
+    "nQ0": 0
+   },
+   "shipped": {
+    "ndcg8": 0.6867,
+    "top1Relevant": 0.75,
+    "emptyQplus": 0.1667,
+    "showQ0": null,
+    "nQplus": 12,
+    "nQ0": 0
+   },
+   "gated": {
+    "ndcg8": 0.8478,
+    "top1Relevant": 0.9167,
+    "emptyQplus": 0.0833,
+    "showQ0": null,
+    "nQplus": 12,
+    "nQ0": 0
+   },
+   "gatedMinusShippedNdcg": 0.1611
+  },
+  "known-item": {
+   "bm25": {
+    "ndcg8": 1,
+    "top1Relevant": 1,
+    "emptyQplus": 0,
+    "showQ0": 0.6667,
+    "nQplus": 6,
+    "nQ0": 3
+   },
+   "hybrid": {
+    "ndcg8": 0.9876,
+    "top1Relevant": 1,
+    "emptyQplus": 0,
+    "showQ0": 1,
+    "nQplus": 6,
+    "nQ0": 3
+   },
+   "shipped": {
+    "ndcg8": 0.4808,
+    "top1Relevant": 0.5,
+    "emptyQplus": 0.5,
+    "showQ0": 0,
+    "nQplus": 6,
+    "nQ0": 3
+   },
+   "gated": {
+    "ndcg8": 0.8209,
+    "top1Relevant": 0.8333,
+    "emptyQplus": 0.1667,
+    "showQ0": 0.3333,
+    "nQplus": 6,
+    "nQ0": 3
+   },
+   "gatedMinusShippedNdcg": 0.3401
+  },
+  "negative": {
+   "bm25": {
+    "ndcg8": 0,
+    "top1Relevant": 0,
+    "emptyQplus": 0.5,
+    "showQ0": 0.4167,
+    "nQplus": 2,
+    "nQ0": 12
+   },
+   "hybrid": {
+    "ndcg8": 0.9151,
+    "top1Relevant": 1,
+    "emptyQplus": 0,
+    "showQ0": 1,
+    "nQplus": 2,
+    "nQ0": 12
+   },
+   "shipped": {
+    "ndcg8": 0.5,
+    "top1Relevant": 0.5,
+    "emptyQplus": 0.5,
+    "showQ0": 0.25,
+    "nQplus": 2,
+    "nQ0": 12
+   },
+   "gated": {
+    "ndcg8": 0.4151,
+    "top1Relevant": 0.5,
+    "emptyQplus": 0.5,
+    "showQ0": 0.25,
+    "nQplus": 2,
+    "nQ0": 12
+   },
+   "gatedMinusShippedNdcg": -0.0849
+  },
+  "place": {
+   "bm25": {
+    "ndcg8": 0.8248,
+    "top1Relevant": 0.8333,
+    "emptyQplus": 0,
+    "showQ0": 0,
+    "nQplus": 18,
+    "nQ0": 1
+   },
+   "hybrid": {
+    "ndcg8": 0.9218,
+    "top1Relevant": 0.9444,
+    "emptyQplus": 0,
+    "showQ0": 1,
+    "nQplus": 18,
+    "nQ0": 1
+   },
+   "shipped": {
+    "ndcg8": 0.4563,
+    "top1Relevant": 0.5,
+    "emptyQplus": 0.5,
+    "showQ0": 0,
+    "nQplus": 18,
+    "nQ0": 1
+   },
+   "gated": {
+    "ndcg8": 0.7372,
+    "top1Relevant": 0.7222,
+    "emptyQplus": 0.2222,
+    "showQ0": 0,
+    "nQplus": 18,
+    "nQ0": 1
+   },
+   "gatedMinusShippedNdcg": 0.2809
+  },
+  "topical": {
+   "bm25": {
+    "ndcg8": 0.2805,
+    "top1Relevant": 0.4,
+    "emptyQplus": 0.4,
+    "showQ0": 1,
+    "nQplus": 10,
+    "nQ0": 1
+   },
+   "hybrid": {
+    "ndcg8": 0.956,
+    "top1Relevant": 1,
+    "emptyQplus": 0,
+    "showQ0": 1,
+    "nQplus": 10,
+    "nQ0": 1
+   },
+   "shipped": {
+    "ndcg8": 0.1883,
+    "top1Relevant": 0.2,
+    "emptyQplus": 0.8,
+    "showQ0": 0,
+    "nQplus": 10,
+    "nQ0": 1
+   },
+   "gated": {
+    "ndcg8": 0.3883,
+    "top1Relevant": 0.4,
+    "emptyQplus": 0.6,
+    "showQ0": 0,
+    "nQplus": 10,
+    "nQ0": 1
+   },
+   "gatedMinusShippedNdcg": 0.2
+  }
+ },
+ "bars": [
+  {
+   "name": "1 nDCG@8 on Q+",
+   "rule": ">= 0.75",
+   "estimate": 0.6892,
+   "ci95": [
+    0.5611,
+    0.8053
+   ],
+   "pass": false
+  },
+  {
+   "name": "2 empty on Q+",
+   "rule": "<= 0.15",
+   "estimate": 0.2708,
+   "ci95": [
+    0.1458,
+    0.3958
+   ],
+   "pass": false
+  },
+  {
+   "name": "3 shows a row on Q0",
+   "rule": "<= 0.25",
+   "estimate": 0.2353,
+   "ci95": [
+    0.0588,
+    0.4706
+   ],
+   "pass": true
+  },
+  {
+   "name": "4 gated - shipped nDCG@8 on Q+, paired",
+   "rule": "CI lower > 0",
+   "estimate": 0.2262,
+   "ci95": [
+    0.1193,
+    0.3403
+   ],
+   "pass": true
+  }
+ ],
+ "verdict": {
+  "allFourPass": false,
+  "failed": [
+   "1 nDCG@8 on Q+",
+   "2 empty on Q+"
+  ],
+  "kappaReliable": true,
+  "text": "FAILED: 1 nDCG@8 on Q+; 2 empty on Q+"
+ },
+ "bootstrap": {
+  "resamples": 10000,
+  "prng": "mulberry32",
+  "seed": 20261018,
+  "reseededPerStatistic": true,
+  "interval": "percentile 2.5/97.5"
+ }
+}

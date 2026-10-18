@@ -1,0 +1,194 @@
+{
+ "corpus": "lib/embed/__eval__/records-corpus.json",
+ "docs": 1500,
+ "qplus": 66,
+ "q0": 34,
+ "bm25": {
+  "ndcg": 0.5673,
+  "ndcgCondensed": 0.6917,
+  "P": 0.5222,
+  "R": 0.5804,
+  "empty": 0.0606,
+  "show0": 0.7059,
+  "top8Hits": 632,
+  "unjudgedHits": 225,
+  "unjudgedHitsOnQplus": "130 of 478"
+ },
+ "embed_uncut": {
+  "ndcg": 0.6568,
+  "ndcgCondensed": 0.79,
+  "P": 0.5511,
+  "R": 0.6793,
+  "empty": 0,
+  "show0": 1,
+  "top8Hits": 800,
+  "unjudgedHits": 301,
+  "unjudgedHitsOnQplus": "157 of 528"
+ },
+ "hybrid": {
+  "ndcg": 0.665,
+  "ndcgCondensed": 0.7895,
+  "P": 0.5492,
+  "R": 0.6696,
+  "empty": 0,
+  "show0": 1,
+  "top8Hits": 800,
+  "unjudgedHits": 283,
+  "unjudgedHitsOnQplus": "134 of 528"
+ },
+ "q0real": [
+  {
+   "id": "b008",
+   "q": "factories that report chemical releases",
+   "wants": "emef-tri",
+   "bm25Top8FromCollection": 1,
+   "bm25Shown": 8,
+   "firstRank": 1,
+   "firstText": "collection: Toxics Release Inventory reporters; agency: EPA; EPA program: TRIS"
+  },
+  {
+   "id": "b011",
+   "q": "schools in dodge city kansas",
+   "wants": "nces-public-schools",
+   "bm25Top8FromCollection": 8,
+   "bm25Shown": 8,
+   "firstRank": 1,
+   "firstText": "collection: Public schools; agency: National Center for Education Statistics (NCES); name: Dodge City Middle School; city: Dodge City; county: Ford County; state: KS; school level: Middle; school type"
+  },
+  {
+   "id": "b013",
+   "q": "hazardus waste generators",
+   "wants": "emef-rcra",
+   "bm25Top8FromCollection": 1,
+   "bm25Shown": 1,
+   "firstRank": 1,
+   "firstText": "collection: RCRA hazardous-waste handlers; agency: EPA RCRAInfo; EPA program: RCRAINFO"
+  },
+  {
+   "id": "b016",
+   "q": "brownfields in detroit",
+   "wants": "emef-acres",
+   "bm25Top8FromCollection": 1,
+   "bm25Shown": 1,
+   "firstRank": 1,
+   "firstText": "collection: Brownfields properties (ACRES); agency: EPA; EPA program: ACRES"
+  },
+  {
+   "id": "b018",
+   "q": "toxic release inventory",
+   "wants": "emef-tri",
+   "bm25Top8FromCollection": 1,
+   "bm25Shown": 8,
+   "firstRank": 1,
+   "firstText": "collection: Toxics Release Inventory reporters; agency: EPA; EPA program: TRIS"
+  },
+  {
+   "id": "b019",
+   "q": "hazardous waste handlers in ohio",
+   "wants": "emef-rcra",
+   "bm25Top8FromCollection": 1,
+   "bm25Shown": 7,
+   "firstRank": 1,
+   "firstText": "collection: RCRA hazardous-waste handlers; agency: EPA RCRAInfo; EPA program: RCRAINFO"
+  },
+  {
+   "id": "b022",
+   "q": "black hills ordnance depot",
+   "wants": "fuds-properties | fuds-mrs",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 6,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b029",
+   "q": "wildfire risk around santa fe",
+   "wants": "wrc-communities",
+   "bm25Top8FromCollection": 8,
+   "bm25Shown": 8,
+   "firstRank": 1,
+   "firstText": "collection: Wildfire risk to communities; agency: USDA Forest Service; state: CO; wildfire risk community, national risk rank: 70 to 90 percentile; wildfire likelihood (burn probability), national ran"
+  },
+  {
+   "id": "b035",
+   "q": "leaking gas station tanks",
+   "wants": "ust-releases-county",
+   "bm25Top8FromCollection": 8,
+   "bm25Shown": 8,
+   "firstRank": 1,
+   "firstText": "collection: Leaking underground storage tank releases by county; agency: EPA UST Finder; county: Matagorda; state: Texas"
+  },
+  {
+   "id": "b042",
+   "q": "prairie potholes north dakota",
+   "wants": "nwi-wetlands",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 8,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b045",
+   "q": "santa fe high school",
+   "wants": "nces-public-schools",
+   "bm25Top8FromCollection": 8,
+   "bm25Shown": 8,
+   "firstRank": 1,
+   "firstText": "collection: Public schools; agency: National Center for Education Statistics (NCES); name: SANTA FE HIGH; city: SANTA FE; county: Santa Fe County; state: NM; school level: High; school type: Regular S"
+  },
+  {
+   "id": "b052",
+   "q": "love canal",
+   "wants": "emef-sems | npl-boundaries",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 0,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b078",
+   "q": "large quantity hazardous waste generators",
+   "wants": "emef-rcra",
+   "bm25Top8FromCollection": 1,
+   "bm25Shown": 8,
+   "firstRank": 1,
+   "firstText": "collection: RCRA hazardous-waste handlers; agency: EPA RCRAInfo; EPA program: RCRAINFO"
+  },
+  {
+   "id": "b088",
+   "q": "old military bases",
+   "wants": "fuds-properties | fuds-mrs",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 8,
+   "firstRank": null,
+   "firstText": null
+  },
+  {
+   "id": "b092",
+   "q": "benefis hospital great falls",
+   "wants": "hifld-hospitals",
+   "bm25Top8FromCollection": 3,
+   "bm25Shown": 8,
+   "firstRank": 1,
+   "firstText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: BENEFIS HEALTH CARE (WEST CAMPUS); city: GREAT FALLS; state: MT; hospital type: GENERAL ACUTE CARE; he"
+  },
+  {
+   "id": "b098",
+   "q": "upmc presbyterian",
+   "wants": "hifld-hospitals",
+   "bm25Top8FromCollection": 8,
+   "bm25Shown": 8,
+   "firstRank": 1,
+   "firstText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: UPMC PRESBYTERIAN SHADYSIDE - TRANSPLANT CENTER; city: PITTSBURGH; state: PA; helipad: yes"
+  },
+  {
+   "id": "b099",
+   "q": "old bombing ranges",
+   "wants": "fuds-mrs | fuds-properties",
+   "bm25Top8FromCollection": 0,
+   "bm25Shown": 4,
+   "firstRank": null,
+   "firstText": null
+  }
+ ]
+}

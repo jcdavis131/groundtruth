@@ -1,0 +1,12 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "ZONEDIST": "C6-4.5"
+   }
+  }
+ ]
+}

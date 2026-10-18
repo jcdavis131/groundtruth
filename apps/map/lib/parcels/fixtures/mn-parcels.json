@@ -1,0 +1,92 @@
+{
+ "adapter": "mn-parcels",
+ "capturedAt": "2026-09-26T15:37:43.454Z",
+ "point": [
+  -93.2654,
+  44.9773
+ ],
+ "county": {
+  "geoid": "27053",
+  "name": "Hennepin County",
+  "basename": "Hennepin",
+  "state": "27"
+ },
+ "rows": [
+  {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -93.265012,
+       44.97764
+      ],
+      [
+       -93.265122,
+       44.977687
+      ],
+      [
+       -93.265778,
+       44.976909
+      ],
+      [
+       -93.26523,
+       44.976677
+      ],
+      [
+       -93.264574,
+       44.977454
+      ],
+      [
+       -93.265012,
+       44.97764
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "county_pin": "2302924330044",
+    "state_pin": "27053-2302924330044",
+    "anumberpre": null,
+    "anumber": 315,
+    "anumbersuf": null,
+    "st_pre_dir": null,
+    "st_pre_typ": null,
+    "st_name": "4th",
+    "st_pos_typ": "Street",
+    "st_pos_dir": "South",
+    "sub_type1": null,
+    "sub_id1": null,
+    "zip": "55415",
+    "ctu_name": "Minneapolis",
+    "co_name": "Hennepin",
+    "plat_name": "Town of Minneapolis",
+    "block": "077",
+    "lot": null,
+    "owner_name": "County of Hennepin",
+    "owner_more": null,
+    "own_add_l1": null,
+    "own_add_l2": null,
+    "own_add_l3": null,
+    "own_add_l4": null,
+    "tax_name": "County of Hennepin",
+    "tax_add_l1": "300 S 6th Street Mc228",
+    "tax_add_l2": "Minneapolis, MN 55487",
+    "tax_add_l3": null,
+    "tax_add_l4": null,
+    "acres_poly": 1.25,
+    "acres_deed": 0,
+    "emv_land": 0,
+    "emv_bldg": 0,
+    "emv_total": 0,
+    "tax_year": 0,
+    "mkt_year": 0,
+    "tax_exempt": "Y",
+    "year_built": 1887,
+    "sale_date": null,
+    "sale_value": 0,
+    "abb_legal": "Sely 1/2 Court House"
+   }
+  }
+ ]
+}

@@ -1,0 +1,414 @@
+{
+ "type": "FeatureCollection",
+ "crs": {
+  "type": "name",
+  "properties": {
+   "name": "EPSG:4326"
+  }
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -122.609647999977,
+     48.4994510000234
+    ]
+   },
+   "properties": {
+    "HUD_ID": "WAA00000117",
+    "PROJECT": "803-28TH ST",
+    "PROJ_ADD": "803 28TH ST",
+    "PROJ_CTY": "ANACORTES",
+    "PROJ_ST": "WA",
+    "PROJ_ZIP": "98221",
+    "N_UNITS": 6,
+    "LI_UNITS": null,
+    "YR_PIS": "8888",
+    "YR_ALLOC": "8888",
+    "NON_PROF": null,
+    "CREDIT": null,
+    "TYPE": null,
+    "TRGT_POP": null,
+    "BOND": null,
+    "DDA": null,
+    "QCT": null,
+    "CURCNTY": "57",
+    "LVL2KX": "R"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -70.7551659998783,
+     41.7734390002284
+    ]
+   },
+   "properties": {
+    "HUD_ID": "MAB20100065",
+    "PROJECT": "VILLAGE AT 815 MAIN ST",
+    "PROJ_ADD": "815 MAIN ST",
+    "PROJ_CTY": "WAREHAM",
+    "PROJ_ST": "MA",
+    "PROJ_ZIP": "2571",
+    "N_UNITS": 49,
+    "LI_UNITS": 49,
+    "YR_PIS": "2010",
+    "YR_ALLOC": "2009",
+    "NON_PROF": "2",
+    "CREDIT": "4",
+    "TYPE": "1",
+    "TRGT_POP": "1",
+    "BOND": null,
+    "DDA": "0",
+    "QCT": "2",
+    "CURCNTY": "23",
+    "LVL2KX": "4"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -73.9530800000519,
+     40.6827659998385
+    ]
+   },
+   "properties": {
+    "HUD_ID": "NYC20030105",
+    "PROJECT": "JEFFERSON CLUSTER (116 JEFFERSON AVE)",
+    "PROJ_ADD": "116 JEFFERSON AVE",
+    "PROJ_CTY": "BROOKLYN",
+    "PROJ_ST": "NY",
+    "PROJ_ZIP": "11216",
+    "N_UNITS": 5,
+    "LI_UNITS": 5,
+    "YR_PIS": "2003",
+    "YR_ALLOC": "2002",
+    "NON_PROF": "2",
+    "CREDIT": null,
+    "TYPE": "2",
+    "TRGT_POP": null,
+    "BOND": "2",
+    "DDA": null,
+    "QCT": "1",
+    "CURCNTY": "47",
+    "LVL2KX": "R"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -73.9848740001392,
+     40.7690890003197
+    ]
+   },
+   "properties": {
+    "HUD_ID": "NYC19979002",
+    "PROJECT": "ONE COLUMBUS PLACE (400 WEST 59TH STREET)",
+    "PROJ_ADD": "400 WEST 59TH STREET",
+    "PROJ_CTY": "NEW YORK",
+    "PROJ_ST": "NY",
+    "PROJ_ZIP": "10019",
+    "N_UNITS": 149,
+    "LI_UNITS": 149,
+    "YR_PIS": "1997",
+    "YR_ALLOC": "1995",
+    "NON_PROF": null,
+    "CREDIT": "1",
+    "TYPE": "1",
+    "TRGT_POP": "2",
+    "BOND": "1",
+    "DDA": null,
+    "QCT": "2",
+    "CURCNTY": "61",
+    "LVL2KX": "R"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -76.1268609999073,
+     43.0468439999201
+    ]
+   },
+   "properties": {
+    "HUD_ID": "NYA19940325",
+    "PROJECT": "WEST SALT SPRINGS 1540 E GENESEE ST",
+    "PROJ_ADD": "1540 E GENESEE ST",
+    "PROJ_CTY": "SYRACUSE",
+    "PROJ_ST": "NY",
+    "PROJ_ZIP": "13210",
+    "N_UNITS": 14,
+    "LI_UNITS": 14,
+    "YR_PIS": "1994",
+    "YR_ALLOC": "1993",
+    "NON_PROF": null,
+    "CREDIT": "2",
+    "TYPE": "2",
+    "TRGT_POP": "1",
+    "BOND": "2",
+    "DDA": null,
+    "QCT": "2",
+    "CURCNTY": "67",
+    "LVL2KX": "R"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -91.169804999802,
+     30.4528710000538
+    ]
+   },
+   "properties": {
+    "HUD_ID": "LAA20130017",
+    "PROJECT": "THE CORONA (FORMERLY 1854 NORTH STREET)",
+    "PROJ_ADD": "1854 NORTH STREET",
+    "PROJ_CTY": "BATON ROUGE",
+    "PROJ_ST": "LA",
+    "PROJ_ZIP": "70802",
+    "N_UNITS": 38,
+    "LI_UNITS": 0,
+    "YR_PIS": "2013",
+    "YR_ALLOC": "2011",
+    "NON_PROF": "2",
+    "CREDIT": null,
+    "TYPE": "2",
+    "TRGT_POP": "2",
+    "BOND": "2",
+    "DDA": "0",
+    "QCT": "1",
+    "CURCNTY": "33",
+    "LVL2KX": "R"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -73.9743789997428,
+     40.6816659998962
+    ]
+   },
+   "properties": {
+    "HUD_ID": "NYC20171047",
+    "PROJECT": "PP 38 SIXTH AVENUE TC RS, LLC",
+    "PROJ_ADD": "38 SIXTH AVENUE",
+    "PROJ_CTY": "BROOKLYN",
+    "PROJ_ST": "NY",
+    "PROJ_ZIP": "11217",
+    "N_UNITS": 303,
+    "LI_UNITS": 91,
+    "YR_PIS": "2017",
+    "YR_ALLOC": "9999",
+    "NON_PROF": "2",
+    "CREDIT": "1",
+    "TYPE": "1",
+    "TRGT_POP": "2",
+    "BOND": null,
+    "DDA": "1",
+    "QCT": "2",
+    "CURCNTY": "47",
+    "LVL2KX": "R"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -117.858152000213,
+     33.6625209999857
+    ]
+   },
+   "properties": {
+    "HUD_ID": "CAA20200065",
+    "PROJECT": "UPTOWN NEWPORT I (NORTH) - 4301 JAMBOREE",
+    "PROJ_ADD": "4301 JAMBOREE ROAD",
+    "PROJ_CTY": "NEWPORT BEACH",
+    "PROJ_ST": "CA",
+    "PROJ_ZIP": "92660",
+    "N_UNITS": 49,
+    "LI_UNITS": 46,
+    "YR_PIS": "2020",
+    "YR_ALLOC": "2017",
+    "NON_PROF": "1",
+    "CREDIT": "1",
+    "TYPE": "1",
+    "TRGT_POP": "2",
+    "BOND": null,
+    "DDA": null,
+    "QCT": "2",
+    "CURCNTY": "59",
+    "LVL2KX": "R"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -73.8983629998519,
+     40.9375240001312
+    ]
+   },
+   "properties": {
+    "HUD_ID": "NYA19940160",
+    "PROJECT": "GFI/ 74 WARBURTON",
+    "PROJ_ADD": "74 WARBURTON AVE",
+    "PROJ_CTY": "YONKERS",
+    "PROJ_ST": "NY",
+    "PROJ_ZIP": "10701",
+    "N_UNITS": 9,
+    "LI_UNITS": 9,
+    "YR_PIS": "1994",
+    "YR_ALLOC": "1992",
+    "NON_PROF": null,
+    "CREDIT": "2",
+    "TYPE": "2",
+    "TRGT_POP": "1",
+    "BOND": "2",
+    "DDA": null,
+    "QCT": "2",
+    "CURCNTY": "119",
+    "LVL2KX": "R"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -79.6889000002147,
+     36.1213000002857
+    ]
+   },
+   "properties": {
+    "HUD_ID": "NCA19919005",
+    "PROJECT": "407 + 409 SYKES AVE",
+    "PROJ_ADD": "407 409 SYKES AVE",
+    "PROJ_CTY": "GREENSBORO",
+    "PROJ_ST": "NC",
+    "PROJ_ZIP": "27405",
+    "N_UNITS": 6,
+    "LI_UNITS": 6,
+    "YR_PIS": "1991",
+    "YR_ALLOC": "1991",
+    "NON_PROF": "2",
+    "CREDIT": "3",
+    "TYPE": "2",
+    "TRGT_POP": "1",
+    "BOND": "2",
+    "DDA": null,
+    "QCT": "2",
+    "CURCNTY": "81",
+    "LVL2KX": "T"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -93.2929759999183,
+     44.3174719996845
+    ]
+   },
+   "properties": {
+    "HUD_ID": "MNA19929002",
+    "PROJECT": "2 RIVERS APARTMENTS (FKA PARK AVE APTS)",
+    "PROJ_ADD": "2426 PARK AVE",
+    "PROJ_CTY": "FARIBAULT",
+    "PROJ_ST": "MN",
+    "PROJ_ZIP": "55021",
+    "N_UNITS": 30,
+    "LI_UNITS": 30,
+    "YR_PIS": "1992",
+    "YR_ALLOC": "1992",
+    "NON_PROF": null,
+    "CREDIT": null,
+    "TYPE": "1",
+    "TRGT_POP": null,
+    "BOND": "2",
+    "DDA": null,
+    "QCT": "2",
+    "CURCNTY": "131",
+    "LVL2KX": "R"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -90.6711770002984,
+     42.5033019997047
+    ]
+   },
+   "properties": {
+    "HUD_ID": "IAA19950010",
+    "PROJECT": "REHABILITATION OF 243-247 W 11TH ST",
+    "PROJ_ADD": "243 W 11TH ST",
+    "PROJ_CTY": "DUBUQUE",
+    "PROJ_ST": "IA",
+    "PROJ_ZIP": "52001",
+    "N_UNITS": 10,
+    "LI_UNITS": 10,
+    "YR_PIS": "1995",
+    "YR_ALLOC": "1995",
+    "NON_PROF": "2",
+    "CREDIT": "2",
+    "TYPE": "2",
+    "TRGT_POP": "1",
+    "BOND": "2",
+    "DDA": null,
+    "QCT": "2",
+    "CURCNTY": "61",
+    "LVL2KX": "R"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -73.924632999644,
+     40.6700770000326
+    ]
+   },
+   "properties": {
+    "HUD_ID": "NYA19940020",
+    "PROJECT": "1610 ASSOC",
+    "PROJ_ADD": "1610 ST JOHNS PL",
+    "PROJ_CTY": "BROOKLYN",
+    "PROJ_ST": "NY",
+    "PROJ_ZIP": "11233",
+    "N_UNITS": 33,
+    "LI_UNITS": 32,
+    "YR_PIS": "1994",
+    "YR_ALLOC": "1992",
+    "NON_PROF": null,
+    "CREDIT": "2",
+    "TYPE": "2",
+    "TRGT_POP": "1",
+    "BOND": "2",
+    "DDA": null,
+    "QCT": "2",
+    "CURCNTY": "47",
+    "LVL2KX": "R"
+   }
+  }
+ ]
+}

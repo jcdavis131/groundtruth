@@ -1,0 +1,7 @@
+# Normalise line endings so Windows and Unix checkouts produce identical diffs.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
+# Embedding weights and vocab are hashed byte for byte (lib/embed/pins.ts): never convert them.
+public/embed/** binary

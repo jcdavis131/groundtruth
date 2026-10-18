@@ -1,0 +1,68 @@
+{
+ "adapter": "az-maricopa",
+ "capturedAt": "2026-09-26T15:37:39.951Z",
+ "point": [
+  -112.074,
+  33.4486
+ ],
+ "county": {
+  "geoid": "04013",
+  "name": "Maricopa County",
+  "basename": "Maricopa",
+  "state": "04"
+ },
+ "rows": [
+  {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -112.073954,
+       33.448392
+      ],
+      [
+       -112.073955,
+       33.448771
+      ],
+      [
+       -112.074939,
+       33.448765
+      ],
+      [
+       -112.074937,
+       33.448387
+      ],
+      [
+       -112.073954,
+       33.448392
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "APN": "11221086",
+    "APN_DASH": "112-21-086",
+    "OWNER_NAME": "PHOENIX CITY OF",
+    "INCAREOF": "",
+    "MAIL_ADDRESS": "2 N CENTRAL AVE PHOENIX AZ USA 85004",
+    "PHYSICAL_ADDRESS": "2 N CENTRAL AVE   PHOENIX  85004",
+    "DEED_NUMBER": "20050904643",
+    "DEED_DATE": 1120089600000,
+    "SALE_DATE": null,
+    "SALE_PRICE": null,
+    "SUBNAME": "1 RENAISSANCE SQUARE",
+    "LOT_NUM": "1",
+    "LAND_SIZE": 41540,
+    "CONST_YEAR": "1986",
+    "FCV_CUR": "  86,794,159",
+    "LPV_CUR": "  86,794,159",
+    "TAX_YR_CUR": "2027",
+    "PUC": "9726",
+    "CITY_ZONING": "CONTACT LOCAL JURISDICTION",
+    "JURISDICTION": "PHOENIX",
+    "STR": "8 1N 3E"
+   }
+  }
+ ]
+}

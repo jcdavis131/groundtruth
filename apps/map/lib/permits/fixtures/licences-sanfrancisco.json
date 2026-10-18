@@ -1,0 +1,379 @@
+[
+ {
+  "certificate_number": "1140961",
+  "uniqueid": "1384626-03-251-1140961",
+  "dba_name": "Khairock Digital Ai Inc.",
+  "ownership_name": "Khairock Digital Ai Inc",
+  "full_business_address": "120 Kearny St Fl 6",
+  "business_zip": "94108",
+  "location_start_date": "2025-01-01T00:00:00.000",
+  "dba_start_date": "2022-09-01T00:00:00.000",
+  "self_reported_naics_code": "541600",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.403465,
+    37.789299
+   ]
+  }
+ },
+ {
+  "certificate_number": "1114916",
+  "uniqueid": "1351280-01-241-1114916",
+  "dba_name": "Astradot Inc",
+  "ownership_name": "Astradot, Inc.",
+  "full_business_address": "415 Mission St Fl 37",
+  "business_zip": "94105",
+  "location_start_date": "2024-01-01T00:00:00.000",
+  "dba_start_date": "2020-06-01T00:00:00.000",
+  "self_reported_naics_code": "513210",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "6",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.397111,
+    37.789938
+   ]
+  }
+ },
+ {
+  "certificate_number": "1068145",
+  "uniqueid": "1321418-01-231-1068145",
+  "dba_name": "[removed from this fixture: a name that may be a person]",
+  "ownership_name": "[removed from this fixture: a name that may be a person]",
+  "full_business_address": "50 California St # 34",
+  "business_zip": "94111",
+  "location_start_date": "2021-05-01T00:00:00.000",
+  "dba_start_date": "2017-04-04T00:00:00.000",
+  "self_reported_naics_code": "541110",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.397363,
+    37.79406
+   ]
+  }
+ },
+ {
+  "certificate_number": "0932735",
+  "uniqueid": "0932735-02-001-0932735",
+  "dba_name": "B E Properties",
+  "ownership_name": "Buena Esperanza Inc",
+  "full_business_address": "582 Market St Ste 1405",
+  "business_zip": "94104",
+  "location_start_date": "2002-01-01T00:00:00.000",
+  "dba_start_date": "1994-01-01T00:00:00.000",
+  "self_reported_naics_code": "531312",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.4016245,
+    37.789533
+   ]
+  }
+ },
+ {
+  "certificate_number": "1036934",
+  "uniqueid": "1408855-01-261-1036934",
+  "dba_name": "Ankrom Moisan Associated Architects, Inc.",
+  "ownership_name": "Ankrom Moisan Assoicated Architects, Inc.",
+  "full_business_address": "115 Sansome St Ste 1005",
+  "business_zip": "94104",
+  "location_start_date": "2024-07-01T00:00:00.000",
+  "dba_start_date": "2016-06-01T00:00:00.000",
+  "self_reported_naics_code": "541310",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.401053,
+    37.791432
+   ]
+  }
+ },
+ {
+  "certificate_number": "1179402",
+  "uniqueid": "1410912-02-261-1179402",
+  "dba_name": "Wg Sports, Inc.",
+  "ownership_name": "Wg Sports, Inc.",
+  "full_business_address": "535 Mission St Fl 14",
+  "business_zip": "94105",
+  "location_start_date": "2026-02-10T00:00:00.000",
+  "dba_start_date": "2026-02-10T00:00:00.000",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "6",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.398119,
+    37.788858
+   ]
+  }
+ },
+ {
+  "certificate_number": "1128221",
+  "uniqueid": "1287563-09-211-1128221",
+  "dba_name": "Sunny Ca International Inc",
+  "ownership_name": "Sunny Ca International Inc",
+  "full_business_address": "595 Market St Ste 1100",
+  "business_zip": "94105",
+  "location_start_date": "2021-09-24T00:00:00.000",
+  "dba_start_date": "2021-09-24T00:00:00.000",
+  "self_reported_naics_code": "236118",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "6",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.4009585,
+    37.789353
+   ]
+  }
+ },
+ {
+  "certificate_number": "0466691",
+  "uniqueid": "1363320-06-241-0466691",
+  "dba_name": "Shen Milsom & Wilke",
+  "ownership_name": "Shen Milsom & Wilke LLC",
+  "full_business_address": "177 Post St Ste 900",
+  "business_zip": "94108",
+  "location_start_date": "2023-02-01T00:00:00.000",
+  "dba_start_date": "2011-01-01T00:00:00.000",
+  "self_reported_naics_code": "541990",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.4047655,
+    37.788498
+   ]
+  }
+ },
+ {
+  "certificate_number": "1176397",
+  "uniqueid": "1404009-11-251-1176397",
+  "dba_name": "[removed from this fixture: a name that may be a person]",
+  "ownership_name": "[removed from this fixture: a name that may be a person]",
+  "full_business_address": "690 Market St Unit 503",
+  "business_zip": "94104",
+  "location_start_date": "2025-11-11T00:00:00.000",
+  "dba_start_date": "2025-11-11T00:00:00.000",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "6",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.403351322,
+    37.787822405
+   ]
+  }
+ },
+ {
+  "certificate_number": "0423478",
+  "uniqueid": "1141215-03-171-0423478",
+  "dba_name": "Leerink Partners LLC",
+  "ownership_name": "Leerink Partners LLC",
+  "full_business_address": "255 California St Fl 12",
+  "business_zip": "94111",
+  "location_start_date": "2015-02-18T00:00:00.000",
+  "dba_start_date": "2007-09-01T00:00:00.000",
+  "self_reported_naics_code": "523150",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.3996805,
+    37.793124
+   ]
+  }
+ },
+ {
+  "certificate_number": "1163323",
+  "uniqueid": "1373272-10-241-1163323",
+  "dba_name": "Pore Over Collective LLC",
+  "ownership_name": "Pore Over Collective LLC",
+  "full_business_address": "548 Market St",
+  "business_zip": "94104",
+  "location_start_date": "2024-10-24T00:00:00.000",
+  "dba_start_date": "2024-10-24T00:00:00.000",
+  "self_reported_naics_code": "339999",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.4007965,
+    37.790064
+   ]
+  }
+ },
+ {
+  "certificate_number": "1128876",
+  "uniqueid": "1333434-05-231-1128876",
+  "dba_name": "Let's Talk About Anything",
+  "ownership_name": "Ltaa Licensed Clinical Social Worker, Pc",
+  "full_business_address": "582 Market St Ste 1401",
+  "business_zip": "94104",
+  "location_start_date": "2023-04-01T00:00:00.000",
+  "dba_start_date": "2021-10-13T00:00:00.000",
+  "self_reported_naics_code": "621330",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.4016245,
+    37.789533
+   ]
+  }
+ },
+ {
+  "certificate_number": "1099975",
+  "uniqueid": "1397902-08-251-1099975",
+  "dba_name": "Sloane Company",
+  "ownership_name": "[removed from this fixture: a name that may be a person]",
+  "full_business_address": "220 Sansome St Ste 1000",
+  "business_zip": "94104",
+  "location_start_date": "2024-06-01T00:00:00.000",
+  "dba_start_date": "2019-03-25T00:00:00.000",
+  "self_reported_naics_code": "423440",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.400873,
+    37.79244
+   ]
+  }
+ },
+ {
+  "certificate_number": "1149314",
+  "uniqueid": "1422504-05-261-1149314",
+  "dba_name": "Genmo, Inc.",
+  "ownership_name": "Genmo, Inc.",
+  "full_business_address": "144 2nd St Fl 4",
+  "business_zip": "94105",
+  "location_start_date": "2024-07-01T00:00:00.000",
+  "dba_start_date": "2023-06-01T00:00:00.000",
+  "self_reported_naics_code": "513210",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "6",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.399226,
+    37.787211
+   ]
+  }
+ },
+ {
+  "certificate_number": "1111699",
+  "uniqueid": "1303910-05-221-1111699",
+  "dba_name": "[removed from this fixture: a name that may be a person]",
+  "ownership_name": "[removed from this fixture: a name that may be a person]",
+  "full_business_address": "220 Montgomery St # 2000",
+  "business_zip": "94104",
+  "location_start_date": "2022-05-02T00:00:00.000",
+  "dba_start_date": "2020-01-10T00:00:00.000",
+  "self_reported_naics_code": "5311",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.402007,
+    37.791324
+   ]
+  }
+ },
+ {
+  "certificate_number": "1127840",
+  "uniqueid": "1361895-05-241-1127840",
+  "dba_name": "Jair Handcrafts",
+  "ownership_name": "[removed from this fixture: a name that may be a person]",
+  "full_business_address": "100 Market St",
+  "business_zip": "94111",
+  "location_start_date": "2024-05-22T00:00:00.000",
+  "dba_start_date": "2021-09-10T00:00:00.000",
+  "self_reported_naics_code": "454390",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.395607812,
+    37.793925747
+   ]
+  }
+ },
+ {
+  "certificate_number": "0460673",
+  "uniqueid": "0460673-01-001-0460673",
+  "dba_name": "[removed from this fixture: a name that may be a person]",
+  "ownership_name": "[removed from this fixture: a name that may be a person]",
+  "full_business_address": "465 California St Fl 9",
+  "business_zip": "94104",
+  "location_start_date": "1952-03-01T00:00:00.000",
+  "dba_start_date": "1952-03-01T00:00:00.000",
+  "self_reported_naics_code": "541611",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.402142,
+    37.792557
+   ]
+  }
+ },
+ {
+  "certificate_number": "1129817",
+  "uniqueid": "1291973-11-211-1129817",
+  "dba_name": "[removed from this fixture: a name that may be a person]",
+  "ownership_name": "[removed from this fixture: a name that may be a person]",
+  "full_business_address": "548 Market St # Pmb690",
+  "business_zip": "94104",
+  "location_start_date": "2021-09-03T00:00:00.000",
+  "dba_start_date": "2021-09-03T00:00:00.000",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.4007965,
+    37.790064
+   ]
+  }
+ },
+ {
+  "certificate_number": "0468982",
+  "uniqueid": "1012104-11-141-0468982",
+  "dba_name": "[removed from this fixture: a name that may be a person]",
+  "ownership_name": "[removed from this fixture: a name that may be a person]",
+  "full_business_address": "601 Montgomery St",
+  "business_zip": "94111",
+  "location_start_date": "2004-06-28T00:00:00.000",
+  "dba_start_date": "2004-06-28T00:00:00.000",
+  "self_reported_naics_code": "522110",
+  "neighborhoods_analysis_boundaries": "Chinatown",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.4035415,
+    37.794843
+   ]
+  }
+ }
+]

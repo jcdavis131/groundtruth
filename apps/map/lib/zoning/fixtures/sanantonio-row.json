@@ -1,0 +1,39 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "Zoning": "UZROW",
+    "ZoningDetail": "UZROW",
+    "Base": "UZROW",
+    "BaseDescription": "Unzoned Right of Way",
+    "SpecDistrict": null,
+    "SpecDistrictDescription": null,
+    "SpecCondition": null,
+    "SpecConditionDetail": null,
+    "CaseNo": "",
+    "OrdinanceKey": null,
+    "ModifiedDate": 1784040495000
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "Zoning": "UZROW",
+    "ZoningDetail": "UZROW",
+    "Base": "UZROW",
+    "BaseDescription": "Unzoned Right of Way",
+    "SpecDistrict": null,
+    "SpecDistrictDescription": null,
+    "SpecCondition": null,
+    "SpecConditionDetail": null,
+    "CaseNo": "",
+    "OrdinanceKey": null,
+    "ModifiedDate": 1752493283000
+   }
+  }
+ ]
+}

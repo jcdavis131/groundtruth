@@ -1,0 +1,600 @@
+[
+ {
+  "permit_number": "202609228446",
+  "permit_type_definition": "otc alterations permit",
+  "description": "1/fl- interior soft demo followed by (n) interior partitions, doors, finishes, mep and (n) accessible restroom photographs provided - interior was completely remodeled c. 1990-2000, no historic features intact in subject interior area",
+  "status": "issued",
+  "filed_date": "2026-09-22T09:21:36.000",
+  "issued_date": "2026-09-25T13:59:16.000",
+  "estimated_cost": "169068.0",
+  "revised_cost": "170000.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "9",
+  "number_of_proposed_stories": "9",
+  "street_number": "417",
+  "street_name": "Montgomery",
+  "street_suffix": "St",
+  "block": "0240",
+  "lot": "002",
+  "zipcode": "94104",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.403230852,
+    37.793383736
+   ]
+  }
+ },
+ {
+  "permit_number": "202609178279",
+  "permit_type_definition": "otc alterations permit",
+  "description": "floor 12-15 interior soft demo. ab-017",
+  "status": "issued",
+  "filed_date": "2026-09-17T00:00:00.000",
+  "issued_date": "2026-09-25T12:52:22.000",
+  "estimated_cost": "120000.0",
+  "revised_cost": "598671.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "20",
+  "number_of_proposed_stories": "20",
+  "street_number": "475",
+  "street_name": "Sansome",
+  "street_suffix": "St",
+  "block": "0228",
+  "lot": "039",
+  "zipcode": "94111",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Chinatown",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.401949644,
+    37.794710133
+   ]
+  }
+ },
+ {
+  "permit_number": "202609178279",
+  "permit_type_definition": "otc alterations permit",
+  "description": "floor 12-15 interior soft demo. ab-017",
+  "status": "issued",
+  "filed_date": "2026-09-17T00:00:00.000",
+  "issued_date": "2026-09-25T12:52:22.000",
+  "estimated_cost": "120000.0",
+  "revised_cost": "598671.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "20",
+  "number_of_proposed_stories": "20",
+  "street_number": "475",
+  "street_name": "Sansome",
+  "street_suffix": "St",
+  "block": "0228",
+  "lot": "038",
+  "zipcode": "94111",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Chinatown",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.401949644,
+    37.794710133
+   ]
+  }
+ },
+ {
+  "permit_number": "202609178277",
+  "permit_type_definition": "otc alterations permit",
+  "description": "floor 20 +21- interior soft demo.",
+  "status": "issued",
+  "filed_date": "2026-09-17T11:30:34.000",
+  "issued_date": "2026-09-25T11:41:01.000",
+  "estimated_cost": "80000.0",
+  "revised_cost": "80000.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "20",
+  "number_of_proposed_stories": "20",
+  "street_number": "475",
+  "street_name": "Sansome",
+  "street_suffix": "St",
+  "block": "0228",
+  "lot": "039",
+  "zipcode": "94111",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Chinatown",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.401949644,
+    37.794710133
+   ]
+  }
+ },
+ {
+  "permit_number": "202609178277",
+  "permit_type_definition": "otc alterations permit",
+  "description": "floor 20 +21- interior soft demo.",
+  "status": "issued",
+  "filed_date": "2026-09-17T11:30:34.000",
+  "issued_date": "2026-09-25T11:41:01.000",
+  "estimated_cost": "80000.0",
+  "revised_cost": "80000.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "20",
+  "number_of_proposed_stories": "20",
+  "street_number": "475",
+  "street_name": "Sansome",
+  "street_suffix": "St",
+  "block": "0228",
+  "lot": "038",
+  "zipcode": "94111",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Chinatown",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.401949644,
+    37.794710133
+   ]
+  }
+ },
+ {
+  "permit_number": "202604068926",
+  "permit_type_definition": "additions alterations or repairs",
+  "description": "2/fl- ti to include non structrual demo and construction of (n) conference center,gym, and lounge.",
+  "status": "issued",
+  "filed_date": "2026-04-29T09:26:43.000",
+  "issued_date": "2026-09-25T10:41:37.000",
+  "estimated_cost": "3790509.0",
+  "revised_cost": "3790509.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "37",
+  "number_of_proposed_stories": "37",
+  "street_number": "50",
+  "street_name": "California",
+  "street_suffix": "St",
+  "block": "0235",
+  "lot": "022",
+  "zipcode": "94111",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.397347693,
+    37.794053197
+   ]
+  }
+ },
+ {
+  "permit_number": "202607315875",
+  "permit_type_definition": "otc alterations permit",
+  "description": "30th fl - revision to pa 202604239936, removal of scope from conference room/yoga room which includes lighting & mechanical",
+  "status": "issued",
+  "filed_date": "2026-07-31T09:12:37.000",
+  "issued_date": "2026-09-24T16:10:20.000",
+  "estimated_cost": "1.0",
+  "revised_cost": "1.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "existing_units": "67.0",
+  "proposed_units": "67.0",
+  "number_of_existing_stories": "56",
+  "number_of_proposed_stories": "56",
+  "street_number": "181",
+  "street_name": "Fremont",
+  "street_suffix": "St",
+  "unit_suffix": "PARCEL A",
+  "block": "3719",
+  "lot": "450",
+  "zipcode": "94105",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "6",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.395345839,
+    37.789592307
+   ]
+  }
+ },
+ {
+  "permit_number": "202609168187",
+  "permit_type_definition": "otc alterations permit",
+  "description": "deferred mechancial + electrical for pa# 202606183556.",
+  "status": "issued",
+  "filed_date": "2026-09-16T09:56:42.000",
+  "issued_date": "2026-09-24T15:33:23.000",
+  "estimated_cost": "339411.0",
+  "revised_cost": "339411.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "6",
+  "number_of_proposed_stories": "6",
+  "street_number": "149",
+  "street_name": "New Montgomery",
+  "street_suffix": "St",
+  "block": "3722",
+  "lot": "007",
+  "zipcode": "94105",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "6",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.399559861,
+    37.786964049
+   ]
+  }
+ },
+ {
+  "permit_number": "202606102959",
+  "permit_type_definition": "sign - erect",
+  "description": "install (1) set of vinyl window graphics.",
+  "status": "issued",
+  "filed_date": "2026-07-28T16:57:18.000",
+  "issued_date": "2026-09-24T14:25:27.000",
+  "estimated_cost": "2000.0",
+  "revised_cost": "2000.0",
+  "existing_use": "office",
+  "number_of_existing_stories": "6",
+  "street_number": "735",
+  "street_name": "Market",
+  "street_suffix": "St",
+  "block": "3706",
+  "lot": "061",
+  "zipcode": "94103",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "6",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.404247047,
+    37.786773134
+   ]
+  }
+ },
+ {
+  "permit_number": "202606102947",
+  "permit_type_definition": "sign - erect",
+  "description": "install (1) illuminated wall sign. \"museum of illusions\", single faced.c",
+  "status": "issued",
+  "filed_date": "2026-07-28T16:59:57.000",
+  "issued_date": "2026-09-24T14:24:17.000",
+  "estimated_cost": "10000.0",
+  "revised_cost": "10000.0",
+  "existing_use": "office",
+  "number_of_existing_stories": "6",
+  "street_number": "735",
+  "street_name": "Market",
+  "street_suffix": "St",
+  "block": "3706",
+  "lot": "061",
+  "zipcode": "94103",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "6",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.404247047,
+    37.786773134
+   ]
+  }
+ },
+ {
+  "permit_number": "202606102946",
+  "permit_type_definition": "sign - erect",
+  "description": "install (1) illuminated projecting blade sign, double faced.",
+  "status": "issued",
+  "filed_date": "2026-07-28T16:54:30.000",
+  "issued_date": "2026-09-24T14:23:01.000",
+  "estimated_cost": "3000.0",
+  "revised_cost": "3000.0",
+  "existing_use": "office",
+  "number_of_existing_stories": "6",
+  "street_number": "735",
+  "street_name": "Market",
+  "street_suffix": "St",
+  "block": "3706",
+  "lot": "061",
+  "zipcode": "94103",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "6",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.404247047,
+    37.786773134
+   ]
+  }
+ },
+ {
+  "permit_number": "202609178254",
+  "permit_type_definition": "otc alterations permit",
+  "description": "existing interior office remodel. scope includes demo and construction of non structural partitions, ceilings, glazing, finishes, electrical, mechanical and plumbing fixtures, new drinking foundation and single user restroom.",
+  "status": "issued",
+  "filed_date": "2026-09-17T08:16:08.000",
+  "issued_date": "2026-09-24T13:47:49.000",
+  "estimated_cost": "3942870.0",
+  "revised_cost": "3942870.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "existing_units": "0.0",
+  "proposed_units": "0.0",
+  "number_of_existing_stories": "37",
+  "number_of_proposed_stories": "37",
+  "street_number": "50",
+  "street_name": "California",
+  "street_suffix": "St",
+  "block": "0235",
+  "lot": "022",
+  "zipcode": "94111",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.397347693,
+    37.794053197
+   ]
+  }
+ },
+ {
+  "permit_number": "202609168175",
+  "permit_type_definition": "otc alterations permit",
+  "description": "14/f: revision to pa#202607225388. provide & install new lighting fixtures & controls per title 24 requirements. provide & install new devices shown on plan. lighting t-24 calculation. provide all electrical requirements. ref pa #202605201633",
+  "status": "issued",
+  "filed_date": "2026-09-16T09:10:43.000",
+  "issued_date": "2026-09-24T13:41:11.000",
+  "estimated_cost": "50000.0",
+  "revised_cost": "150000.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "23",
+  "number_of_proposed_stories": "23",
+  "street_number": "300",
+  "street_name": "Mission",
+  "street_suffix": "St",
+  "block": "3710",
+  "lot": "018",
+  "zipcode": "94105",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "6",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.396126191,
+    37.791166796
+   ]
+  }
+ },
+ {
+  "permit_number": "202608206891",
+  "permit_type_definition": "otc alterations permit",
+  "description": "suit#1350: (e) interior office remodel, scope includes demo & construction of non-structural partitions, ceilings, glazing, finishes, electrical, mechanical, & plumbing fixtures.",
+  "status": "issued",
+  "filed_date": "2026-08-20T08:43:56.000",
+  "issued_date": "2026-09-24T13:19:43.000",
+  "estimated_cost": "859574.0",
+  "revised_cost": "859574.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "37",
+  "number_of_proposed_stories": "37",
+  "street_number": "50",
+  "street_name": "California",
+  "street_suffix": "St",
+  "block": "0235",
+  "lot": "022",
+  "zipcode": "94111",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.397347693,
+    37.794053197
+   ]
+  }
+ },
+ {
+  "permit_number": "202608206959",
+  "permit_type_definition": "otc alterations permit",
+  "description": "15th fl - demo only permit (interior) accessibility per ab-017",
+  "status": "issued",
+  "filed_date": "2026-08-20T15:26:22.000",
+  "issued_date": "2026-09-24T13:01:24.000",
+  "estimated_cost": "30000.0",
+  "revised_cost": "30000.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "38",
+  "number_of_proposed_stories": "38",
+  "street_number": "525",
+  "street_name": "Market",
+  "street_suffix": "St",
+  "block": "3708",
+  "lot": "056",
+  "zipcode": "94105",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "6",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.399325507,
+    37.790631413
+   ]
+  }
+ },
+ {
+  "permit_number": "202608176698",
+  "permit_type_definition": "otc alterations permit",
+  "description": "mechanical revision to pa #202606197885",
+  "status": "issued",
+  "filed_date": "2026-08-17T13:50:06.000",
+  "issued_date": "2026-09-24T10:57:26.000",
+  "estimated_cost": "1.0",
+  "revised_cost": "1.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "22",
+  "number_of_proposed_stories": "22",
+  "street_number": "220",
+  "street_name": "Montgomery",
+  "street_suffix": "St",
+  "block": "0268",
+  "lot": "008",
+  "zipcode": "94104",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.402317143,
+    37.79127393
+   ]
+  }
+ },
+ {
+  "permit_number": "202602266566",
+  "permit_type_definition": "otc alterations permit",
+  "description": "t.i. of cafe in vacant electronic repair store (change of use form office b / 10 to cafe b / 05) at the restoom, remove the automatic door closer & the equipment impeding door operation to improve accessiblity. no changes to heating & ventilation",
+  "status": "issued",
+  "issued_date": "2026-09-23T15:08:31.000",
+  "estimated_cost": "30000.0",
+  "revised_cost": "30000.0",
+  "existing_use": "office",
+  "proposed_use": "food/beverage hndlng",
+  "number_of_existing_stories": "4",
+  "number_of_proposed_stories": "4",
+  "street_number": "9",
+  "street_name": "Kearny",
+  "street_suffix": "St",
+  "block": "0310",
+  "lot": "006",
+  "zipcode": "94108",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.403687551,
+    37.788062309
+   ]
+  }
+ },
+ {
+  "permit_number": "202608066171",
+  "permit_type_definition": "otc alterations permit",
+  "description": "mechanical and electrical work for tenant improvement on the 5th flr. ref#: 202606223612.",
+  "status": "issued",
+  "filed_date": "2026-08-06T10:21:18.000",
+  "issued_date": "2026-09-23T09:29:34.000",
+  "estimated_cost": "175000.0",
+  "revised_cost": "175000.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "6",
+  "number_of_proposed_stories": "6",
+  "street_number": "667",
+  "street_name": "Mission",
+  "street_suffix": "St",
+  "block": "3722",
+  "lot": "368",
+  "zipcode": "94105",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "6",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.401209061,
+    37.786697965
+   ]
+  }
+ },
+ {
+  "permit_number": "202609107907",
+  "permit_type_definition": "otc alterations permit",
+  "description": "mechanical and electrical work for t.i. at suite 1825. ref: 202606223639",
+  "status": "issued",
+  "filed_date": "2026-09-10T11:21:25.000",
+  "issued_date": "2026-09-23T08:48:59.000",
+  "estimated_cost": "82000.0",
+  "revised_cost": "82000.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "32",
+  "number_of_proposed_stories": "32",
+  "street_number": "1",
+  "street_name": "California",
+  "street_suffix": "St",
+  "block": "0264",
+  "lot": "004",
+  "zipcode": "94111",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.397043037,
+    37.793213745
+   ]
+  }
+ },
+ {
+  "permit_number": "202609037667",
+  "permit_type_definition": "otc alterations permit",
+  "description": "9/f #975: commercial interior ti for (e) office tenant space. work includes new non-structural partitions, doors, glazing, interior finishes, ceiling & lighting fixtures, casework, power/data coordination, & accessibility upgrades.",
+  "status": "issued",
+  "filed_date": "2026-09-03T12:33:18.000",
+  "issued_date": "2026-09-23T08:24:07.000",
+  "estimated_cost": "1200000.0",
+  "revised_cost": "1200000.0",
+  "existing_use": "office",
+  "proposed_use": "office",
+  "number_of_existing_stories": "22",
+  "number_of_proposed_stories": "22",
+  "street_number": "220",
+  "street_name": "Montgomery",
+  "street_suffix": "St",
+  "block": "0268",
+  "lot": "008",
+  "zipcode": "94104",
+  "adu": "N",
+  "neighborhoods_analysis_boundaries": "Financial District/South Beach",
+  "supervisor_district": "3",
+  "location": {
+   "type": "Point",
+   "coordinates": [
+    -122.402317143,
+    37.79127393
+   ]
+  }
+ }
+]

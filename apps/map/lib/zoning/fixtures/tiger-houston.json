@@ -1,0 +1,14 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "GEOID": "4835000",
+    "NAME": "Houston city",
+    "BASENAME": "Houston"
+   }
+  }
+ ]
+}

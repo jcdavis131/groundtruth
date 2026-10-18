@@ -1,0 +1,665 @@
+{
+  "scopeKind": "county",
+  "scopeId": "county:48453",
+  "scopeName": "Travis County",
+  "lens": null,
+  "headline": "Travis County: 16 findings, 1 at an alert level, 5 at a watch level and 10 noted",
+  "status": "alert",
+  "findings": [
+    {
+      "id": "dc846c10c9613",
+      "kind": "threshold",
+      "severity": "alert",
+      "metric": "home.yoyPct",
+      "sentence": "Travis County's typical home value is -6.3% against a year earlier, an alert level here: typical home value at least 5 percent below a year ago (arithmetic on Zillow ZHVI, county and metro files; convention chosen for this dashboard, not an official level). It was on the other side of that line in the previous published period.",
+      "arithmetic": [
+        "test: home.yoyPct = -6.3 <= -5"
+      ],
+      "magnitude": 1.2999999999999998,
+      "period": "2026-07-31",
+      "previousPeriod": "2026-06-30",
+      "citation": "arithmetic on Zillow ZHVI, county and metro files; convention chosen for this dashboard, not an official level",
+      "provenance": [
+        {
+          "source": {
+            "id": "zillow-zhvi",
+            "name": "Zillow Home Value Index (ZHVI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "County_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month",
+          "period": "2026-07"
+        }
+      ]
+    },
+    {
+      "id": "0898ac965b9c2",
+      "kind": "threshold",
+      "severity": "watch",
+      "metric": "home.yoyPct",
+      "sentence": "Travis County's typical home value is -6.3% against a year earlier, a watch level here: typical home value below a year ago (arithmetic on Zillow ZHVI, county and metro files; not an official level). It was on the same side of that line in the previous published period.",
+      "arithmetic": [
+        "test: home.yoyPct = -6.3 < 0"
+      ],
+      "magnitude": 6.3,
+      "period": "2026-07-31",
+      "previousPeriod": "2026-06-30",
+      "citation": "arithmetic on Zillow ZHVI, county and metro files; not an official level",
+      "provenance": [
+        {
+          "source": {
+            "id": "zillow-zhvi",
+            "name": "Zillow Home Value Index (ZHVI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "County_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month",
+          "period": "2026-07"
+        }
+      ]
+    },
+    {
+      "id": "76cdc041d182b",
+      "kind": "threshold",
+      "severity": "watch",
+      "metric": "priceToRent",
+      "sentence": "Travis County's price-to-rent ratio of 21.9 ranks 171st of 1,904 US counties, a watch level here: price-to-rent in the top tenth of US counties (position among the counties that published both ZHVI and ZORI this month; not an official level). The previous published period is not in this table, so this is a standing level rather than a change.",
+      "arithmetic": [
+        "test: priceToRent percentile = 92.4 >= 90",
+        "price-to-rent = $452,000 / ($1,720 × 12) = 21.9"
+      ],
+      "magnitude": 2.4000000000000057,
+      "period": "2026-07-31",
+      "previousPeriod": null,
+      "citation": "position among the counties that published both ZHVI and ZORI this month; not an official level",
+      "provenance": [
+        {
+          "source": {
+            "id": "zillow-zhvi",
+            "name": "Zillow Home Value Index (ZHVI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "County_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month",
+          "period": "2026-07"
+        },
+        {
+          "source": {
+            "id": "zillow-zori",
+            "name": "Zillow Observed Rent Index (ZORI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "County_zori_uc_sfrcondo_sm_month",
+          "period": "2026-07"
+        },
+        {
+          "source": {
+            "id": "zillow-zhvi",
+            "name": "Zillow Home Value Index (ZHVI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "estimate",
+          "method": "price-to-rent = $452,000 / ($1,720 × 12) = 21.9",
+          "notes": [
+            "Zillow ZORI is the second input."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dba26cb981937",
+      "kind": "threshold",
+      "severity": "watch",
+      "metric": "home.momPct",
+      "sentence": "Travis County's typical home value is -1.2% against the previous month, a watch level here: typical home value at least 1 percent below the previous month (arithmetic on the Zillow ZHVI month columns; convention chosen for this dashboard, not an official level). It was on the other side of that line in the previous published period.",
+      "arithmetic": [
+        "test: home.momPct = -1.22 <= -1"
+      ],
+      "magnitude": 0.21999999999999997,
+      "period": "2026-07-31",
+      "previousPeriod": "2026-06-30",
+      "citation": "arithmetic on the Zillow ZHVI month columns; convention chosen for this dashboard, not an official level",
+      "provenance": [
+        {
+          "source": {
+            "id": "zillow-zhvi",
+            "name": "Zillow Home Value Index (ZHVI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "County_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month",
+          "period": "2026-07"
+        }
+      ]
+    },
+    {
+      "id": "9150c9401d495",
+      "kind": "rank",
+      "severity": "watch",
+      "metric": "priceToRent",
+      "sentence": "Travis County's price-to-rent ratio of 21.9 scores 92 on the 0-to-100 scale across US counties but 41 across Texas counties, a gap of 51 points.",
+      "arithmetic": [
+        "51 = |92 across US counties - 41 across Texas counties|",
+        "price-to-rent = $452,000 / ($1,720 × 12) = 21.9"
+      ],
+      "magnitude": 51.400000000000006,
+      "period": "2026-07-31",
+      "previousPeriod": null,
+      "citation": "position among the entities that published this metric this period; not an official level",
+      "provenance": [
+        {
+          "source": {
+            "id": "zillow-zhvi",
+            "name": "Zillow Home Value Index (ZHVI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "County_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month",
+          "period": "2026-07"
+        },
+        {
+          "source": {
+            "id": "zillow-zori",
+            "name": "Zillow Observed Rent Index (ZORI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "County_zori_uc_sfrcondo_sm_month",
+          "period": "2026-07"
+        },
+        {
+          "source": {
+            "id": "zillow-zhvi",
+            "name": "Zillow Home Value Index (ZHVI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "estimate",
+          "method": "price-to-rent = $452,000 / ($1,720 × 12) = 21.9",
+          "notes": [
+            "Zillow ZORI is the second input."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a3c8a025ef814",
+      "kind": "release",
+      "severity": "watch",
+      "metric": "home.latest",
+      "sentence": "The next Zillow ZHVI county file covering Travis County is due between 2026-08-15 and 2026-08-20, estimated from the publisher's past release pattern. That window has already passed, so a newer release should exist and the figures here are an older vintage.",
+      "arithmetic": [
+        "window = 2026-08-15 to 2026-08-20, estimated from the publisher's past release pattern"
+      ],
+      "magnitude": 37.5,
+      "period": null,
+      "previousPeriod": null,
+      "citation": "estimated from the publisher's past release pattern; not an announced date",
+      "provenance": [
+        {
+          "source": {
+            "id": "zillow-zhvi",
+            "name": "Zillow Home Value Index (ZHVI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "County_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month",
+          "period": "2026-07"
+        }
+      ]
+    },
+    {
+      "id": "ca27d0f20b65d",
+      "kind": "move",
+      "severity": "note",
+      "metric": "momentum",
+      "sentence": "Travis County's momentum index fell 42.9% from 0.21 in June 2026 to 0.12 in July 2026, on Zillow ZHVI, Zillow ZORI and BLS QCEW, combined here.",
+      "arithmetic": [
+        "-42.9% = (0.12 - 0.21) / 0.21 × 100",
+        "0.12 = Zillow ZHVI, Zillow ZORI and BLS QCEW, combined here, 2026-07-31",
+        "0.21 = Zillow ZHVI, Zillow ZORI and BLS QCEW, combined here, 2026-06-30",
+        "momentum = 0.30 × home 1-yr / 10 + 0.15 × rent 1-yr / 10 + 0.30 × jobs oty / 3 + 0.25 × wage oty / 6, each term clipped to ±1"
+      ],
+      "magnitude": 9,
+      "period": "2026-07-31",
+      "previousPeriod": "2026-06-30",
+      "citation": null,
+      "provenance": [
+        {
+          "source": {
+            "id": "zillow-zhvi",
+            "name": "Zillow Home Value Index (ZHVI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "County_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month",
+          "period": "2026-07"
+        },
+        {
+          "source": {
+            "id": "bls-qcew",
+            "name": "Quarterly Census of Employment and Wages",
+            "publisher": "U.S. Bureau of Labor Statistics",
+            "url": "https://www.bls.gov/cew/",
+            "license": "public domain"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "QCEW county, all industries, all ownerships",
+          "period": "2026-Q1"
+        },
+        {
+          "source": {
+            "id": "zillow-zhvi",
+            "name": "Zillow Home Value Index (ZHVI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "estimate",
+          "method": "momentum = 0.30 × home 1-yr / 10 + 0.15 × rent 1-yr / 10 + 0.30 × jobs oty / 3 + 0.25 × wage oty / 6, each term clipped to ±1"
+        }
+      ]
+    },
+    {
+      "id": "c2c35a67220bd",
+      "kind": "move",
+      "severity": "note",
+      "metric": "jobs.yoy.avgWeeklyWage",
+      "sentence": "Travis County's average weekly wage was 3.1% higher than the same quarter a year earlier in 2026-Q1, on BLS QCEW's published over-the-year change.",
+      "arithmetic": [
+        "+3.1 % = BLS QCEW over-the-year percent change for 2026-Q1, as published",
+        "the newest QCEW file carries no year-earlier level, so no move from one level to another is printed"
+      ],
+      "magnitude": 3.1,
+      "period": "2026-Q1",
+      "previousPeriod": null,
+      "citation": "BLS QCEW over-the-year percent change, as published",
+      "provenance": [
+        {
+          "source": {
+            "id": "bls-qcew",
+            "name": "Quarterly Census of Employment and Wages",
+            "publisher": "U.S. Bureau of Labor Statistics",
+            "url": "https://www.bls.gov/cew/",
+            "license": "public domain"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "QCEW county, all industries, all ownerships",
+          "period": "2026-Q1",
+          "notes": [
+            "Over-the-year percent change as BLS publishes it; the file carries no year-earlier level."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d540e1666db21",
+      "kind": "move",
+      "severity": "note",
+      "metric": "home.latest",
+      "sentence": "Travis County's typical home value fell 1.2% from $457,600 in June 2026 to $452,000 in July 2026, on Zillow ZHVI.",
+      "arithmetic": [
+        "-1.2% = (452000 - 457600) / 457600 × 100",
+        "452000 = Zillow ZHVI, 2026-07-31",
+        "457600 = Zillow ZHVI, 2026-06-30"
+      ],
+      "magnitude": 1.2237762237762237,
+      "period": "2026-07-31",
+      "previousPeriod": "2026-06-30",
+      "citation": null,
+      "provenance": [
+        {
+          "source": {
+            "id": "zillow-zhvi",
+            "name": "Zillow Home Value Index (ZHVI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "County_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month",
+          "period": "2026-07"
+        }
+      ]
+    },
+    {
+      "id": "31a7c7bf38a4e",
+      "kind": "move",
+      "severity": "note",
+      "metric": "jobs.yoy.emp",
+      "sentence": "Travis County's covered employment was 0.9% higher than the same quarter a year earlier in 2026-Q1, on BLS QCEW's published over-the-year change.",
+      "arithmetic": [
+        "+0.9 % = BLS QCEW over-the-year percent change for 2026-Q1, as published",
+        "the newest QCEW file carries no year-earlier level, so no move from one level to another is printed"
+      ],
+      "magnitude": 0.9,
+      "period": "2026-Q1",
+      "previousPeriod": null,
+      "citation": "BLS QCEW over-the-year percent change, as published",
+      "provenance": [
+        {
+          "source": {
+            "id": "bls-qcew",
+            "name": "Quarterly Census of Employment and Wages",
+            "publisher": "U.S. Bureau of Labor Statistics",
+            "url": "https://www.bls.gov/cew/",
+            "license": "public domain"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "QCEW county, all industries, all ownerships",
+          "period": "2026-Q1",
+          "notes": [
+            "Over-the-year percent change as BLS publishes it; the file carries no year-earlier level."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "68250f07b3eeb",
+      "kind": "move",
+      "severity": "note",
+      "metric": "rent.latest",
+      "sentence": "Travis County's typical asking rent fell 0.9% from $1,735 in June 2026 to $1,720 in July 2026, on Zillow ZORI.",
+      "arithmetic": [
+        "-0.9% = (1720 - 1735) / 1735 × 100",
+        "1720 = Zillow ZORI, 2026-07-31",
+        "1735 = Zillow ZORI, 2026-06-30"
+      ],
+      "magnitude": 0.8645533141210375,
+      "period": "2026-07-31",
+      "previousPeriod": "2026-06-30",
+      "citation": null,
+      "provenance": [
+        {
+          "source": {
+            "id": "zillow-zori",
+            "name": "Zillow Observed Rent Index (ZORI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "County_zori_uc_sfrcondo_sm_month",
+          "period": "2026-07"
+        }
+      ]
+    },
+    {
+      "id": "575c906491195",
+      "kind": "gap",
+      "severity": "note",
+      "metric": "",
+      "sentence": "typical home value (home.y5Pct) for Travis County could not be lined up against the previous published period this run, so no change is printed for it.",
+      "arithmetic": [
+        "not comparable this run: home.y5Pct"
+      ],
+      "magnitude": 1,
+      "period": null,
+      "previousPeriod": null,
+      "citation": "the two newest month columns in the published file are not the two this table carries",
+      "provenance": [
+        {
+          "source": {
+            "id": "zillow-zhvi",
+            "name": "Zillow Home Value Index (ZHVI)",
+            "publisher": "Zillow Research",
+            "url": "https://www.zillow.com/research/data/",
+            "license": "free for public use with attribution"
+          },
+          "retrievedAt": "2026-08-22T11:58:00.000Z",
+          "kind": "published",
+          "seriesId": "County_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month",
+          "period": "2026-07"
+        }
+      ]
+    }
+  ],
+  "digest": {
+    "id": "3a627b36d6f70",
+    "kind": "gap",
+    "severity": "note",
+    "metric": "",
+    "sentence": "16 findings fired for Travis County this run, against a typical home value of $452,000 in July 2026 and covered employment of 712,340 in 2026-Q1. 4 further findings are not listed here.",
+    "arithmetic": [
+      "home.latest = 452000 (2026-07-31)",
+      "rent.latest = 1720 (2026-07-31)",
+      "jobs.emp = 712340 (2026-Q1)",
+      "jobs.avgWeeklyWage = 1642 (2026-Q1)",
+      "priceToRent = 21.9 (2026-07-31)",
+      "momentum = 0.12 (2026-07-31)"
+    ],
+    "magnitude": 16,
+    "period": null,
+    "previousPeriod": null,
+    "citation": null,
+    "provenance": [
+      {
+        "source": {
+          "id": "zillow-zhvi",
+          "name": "Zillow Home Value Index (ZHVI)",
+          "publisher": "Zillow Research",
+          "url": "https://www.zillow.com/research/data/",
+          "license": "free for public use with attribution"
+        },
+        "retrievedAt": "2026-08-22T11:58:00.000Z",
+        "kind": "published",
+        "seriesId": "County_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month",
+        "period": "2026-07"
+      },
+      {
+        "source": {
+          "id": "bls-qcew",
+          "name": "Quarterly Census of Employment and Wages",
+          "publisher": "U.S. Bureau of Labor Statistics",
+          "url": "https://www.bls.gov/cew/",
+          "license": "public domain"
+        },
+        "retrievedAt": "2026-08-22T11:58:00.000Z",
+        "kind": "published",
+        "seriesId": "QCEW county, all industries, all ownerships",
+        "period": "2026-Q1"
+      },
+      {
+        "source": {
+          "id": "zillow-zhvi",
+          "name": "Zillow Home Value Index (ZHVI)",
+          "publisher": "Zillow Research",
+          "url": "https://www.zillow.com/research/data/",
+          "license": "free for public use with attribution"
+        },
+        "retrievedAt": "2026-08-22T11:58:00.000Z",
+        "kind": "estimate",
+        "method": "momentum = 0.30 × home 1-yr / 10 + 0.15 × rent 1-yr / 10 + 0.30 × jobs oty / 3 + 0.25 × wage oty / 6, each term clipped to ±1"
+      },
+      {
+        "source": {
+          "id": "zillow-zori",
+          "name": "Zillow Observed Rent Index (ZORI)",
+          "publisher": "Zillow Research",
+          "url": "https://www.zillow.com/research/data/",
+          "license": "free for public use with attribution"
+        },
+        "retrievedAt": "2026-08-22T11:58:00.000Z",
+        "kind": "published",
+        "seriesId": "County_zori_uc_sfrcondo_sm_month",
+        "period": "2026-07"
+      },
+      {
+        "source": {
+          "id": "zillow-zhvi",
+          "name": "Zillow Home Value Index (ZHVI)",
+          "publisher": "Zillow Research",
+          "url": "https://www.zillow.com/research/data/",
+          "license": "free for public use with attribution"
+        },
+        "retrievedAt": "2026-08-22T11:58:00.000Z",
+        "kind": "estimate",
+        "method": "price-to-rent = $452,000 / ($1,720 × 12) = 21.9",
+        "notes": [
+          "Zillow ZORI is the second input."
+        ]
+      },
+      {
+        "source": {
+          "id": "zillow-zhvi",
+          "name": "Zillow Home Value Index (ZHVI)",
+          "publisher": "Zillow Research",
+          "url": "https://www.zillow.com/research/data/",
+          "license": "free for public use with attribution"
+        },
+        "retrievedAt": "2026-08-22T11:58:00.000Z",
+        "kind": "estimate",
+        "method": "years of wages = $452,000 / ($1,642 × 52) = 5.3",
+        "notes": [
+          "One average covered job, not a household."
+        ]
+      }
+    ]
+  },
+  "coversPeriods": [
+    "2026-07-31",
+    "2026-Q1"
+  ],
+  "nextRelease": {
+    "title": "Zillow ZHVI county file",
+    "earliest": "2026-08-15T00:00:00.000Z",
+    "latest": "2026-08-20T00:00:00.000Z",
+    "precision": "approximate"
+  },
+  "provenance": [
+    {
+      "source": {
+        "id": "zillow-zhvi",
+        "name": "Zillow Home Value Index (ZHVI)",
+        "publisher": "Zillow Research",
+        "url": "https://www.zillow.com/research/data/",
+        "license": "free for public use with attribution"
+      },
+      "retrievedAt": "2026-08-22T11:58:00.000Z",
+      "kind": "published",
+      "seriesId": "County_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month",
+      "period": "2026-07"
+    },
+    {
+      "source": {
+        "id": "zillow-zori",
+        "name": "Zillow Observed Rent Index (ZORI)",
+        "publisher": "Zillow Research",
+        "url": "https://www.zillow.com/research/data/",
+        "license": "free for public use with attribution"
+      },
+      "retrievedAt": "2026-08-22T11:58:00.000Z",
+      "kind": "published",
+      "seriesId": "County_zori_uc_sfrcondo_sm_month",
+      "period": "2026-07"
+    },
+    {
+      "source": {
+        "id": "zillow-zhvi",
+        "name": "Zillow Home Value Index (ZHVI)",
+        "publisher": "Zillow Research",
+        "url": "https://www.zillow.com/research/data/",
+        "license": "free for public use with attribution"
+      },
+      "retrievedAt": "2026-08-22T11:58:00.000Z",
+      "kind": "estimate",
+      "method": "price-to-rent = $452,000 / ($1,720 × 12) = 21.9",
+      "notes": [
+        "Zillow ZORI is the second input."
+      ]
+    },
+    {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "retrievedAt": "2026-08-22T11:58:00.000Z",
+      "kind": "published",
+      "seriesId": "QCEW county, all industries, all ownerships",
+      "period": "2026-Q1"
+    },
+    {
+      "source": {
+        "id": "zillow-zhvi",
+        "name": "Zillow Home Value Index (ZHVI)",
+        "publisher": "Zillow Research",
+        "url": "https://www.zillow.com/research/data/",
+        "license": "free for public use with attribution"
+      },
+      "retrievedAt": "2026-08-22T11:58:00.000Z",
+      "kind": "estimate",
+      "method": "momentum = 0.30 × home 1-yr / 10 + 0.15 × rent 1-yr / 10 + 0.30 × jobs oty / 3 + 0.25 × wage oty / 6, each term clipped to ±1"
+    },
+    {
+      "source": {
+        "id": "zillow-zhvi",
+        "name": "Zillow Home Value Index (ZHVI)",
+        "publisher": "Zillow Research",
+        "url": "https://www.zillow.com/research/data/",
+        "license": "free for public use with attribution"
+      },
+      "retrievedAt": "2026-08-22T11:58:00.000Z",
+      "kind": "estimate",
+      "method": "years of wages = $452,000 / ($1,642 × 52) = 5.3",
+      "notes": [
+        "One average covered job, not a household."
+      ]
+    }
+  ],
+  "citations": [
+    "Zillow Research. Zillow Home Value Index (ZHVI). series County_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month. period 2026-07. https://www.zillow.com/research/data/. accessed 2026-08-22.",
+    "Zillow Research. Zillow Observed Rent Index (ZORI). series County_zori_uc_sfrcondo_sm_month. period 2026-07. https://www.zillow.com/research/data/. accessed 2026-08-22.",
+    "Zillow Research. Zillow Home Value Index (ZHVI). https://www.zillow.com/research/data/. accessed 2026-08-22. estimate computed by Embedding Atlas: price-to-rent = $452,000 / ($1,720 × 12) = 21.9.",
+    "U.S. Bureau of Labor Statistics. Quarterly Census of Employment and Wages. series QCEW county, all industries, all ownerships. period 2026-Q1. https://www.bls.gov/cew/. accessed 2026-08-22.",
+    "Zillow Research. Zillow Home Value Index (ZHVI). https://www.zillow.com/research/data/. accessed 2026-08-22. estimate computed by Embedding Atlas: momentum = 0.30 × home 1-yr / 10 + 0.15 × rent 1-yr / 10 + 0.30 × jobs oty / 3 + 0.25 × wage oty / 6, each term clipped to ±1.",
+    "Zillow Research. Zillow Home Value Index (ZHVI). https://www.zillow.com/research/data/. accessed 2026-08-22. estimate computed by Embedding Atlas: years of wages = $452,000 / ($1,642 × 52) = 5.3."
+  ],
+  "caveats": [
+    "The newest BLS QCEW file carries no year-earlier level, only the over-the-year percent change BLS publishes itself. Every employment and wage comparison here states that published change; none of them is a move from one level to another, because the two levels are not both in the file.",
+    "A percentile here is a min-max scaling of average rank across the entities that published the metric this period: the smallest published value scores 0 and the largest scores 100. It is not the share of entities below the value, and entities that did not publish the metric are counted in neither the rank nor its denominator."
+  ],
+  "generatedAt": "2026-08-22T12:00:00.000Z",
+  "rulesVersion": 1
+}

@@ -1,0 +1,63 @@
+# Contributing
+
+Thanks for looking. The point of this project is a globe anyone can run with no keys, showing public infrastructure, public land and public events, with every number traceable to the upstream that published it. Contributions that keep that are welcome.
+
+## Ground rules
+
+- **Public infrastructure, land and events; not people.** No face recognition, person tracking, named-individual search, licence plates or phone signals. Economic data is about places and institutions: counties, metros, states, harbours, ports of entry, and public companies, banks and federal award recipients as their regulators publish them (SEC EDGAR, FDIC, USAspending). The one exception is the people who file Forms 3, 4 and 5 about a listed company (its officers, directors and 10% owners): they may appear only with the company they file about, by CIK, under the rules in [docs/PEOPLE.md](docs/PEOPLE.md); no other shareholder names, no search by a person's name, no person on the map. Pull requests that break any of this will be closed; see the Ethics section of the README.
+- **Parcels, addresses and ownership come as each public source publishes them, as fully as it publishes them.** A county parcel service or a federal land inventory is in scope with its own fields and terms; add nothing to it. There is no search from a person's name to what they own: the ⌘K palette never reads an owner, operator, manager or easement-holder field, and searches names plus an explicit allowlist of identifier, category and place keys (`SEARCHABLE_DETAILS` in `lib/search/allowlist.ts`, tested next to it). Add your layer's identifiers there (a site number, a permit number); never add an owner, operator, manager, holder or applicant field, and never join owner names across sources. A feature's `name` is always searched: institutions are found by the names their regulators publish, and a bank branch's name includes its bank, so a bank's name finds its loaded branches; never put an owner's name into a feature's `name` unless the publisher itself names the feature that way.
+- **Never invent a value.** If an upstream does not send a field, leave it `undefined`. Simulations (traffic) and estimates (turbidity) are labelled as such on the layer, on every feature and in the dossier. Unknown heading stays unknown; stale readings are flagged, not hidden. A severity the source did not publish is shown as "not rated by source", never as calm. Watch for `Number("")` and `Number(null)`: both are 0, not missing.
+- **Keyless first.** A new layer must work with no API key. Optional keys can unlock more, but they are entered in the app, travel only as `x-gev-*` headers to this app's own `/api` routes or to the vendor SDK they belong to, and are never required.
+- **Be polite to upstreams.** Route handlers cache, rate-gate (`lib/server/upstream.ts`) and back off on 429. ArcGIS services go through `lib/server/arcgis.ts`, and flaky upstreams through `retrying()` in `lib/server/net.ts` (resets, timeouts and 5xx are retried; 4xx and 429 never). Read each source's terms before adding it, and put its attribution in the layer and in the README. No active scanning of hosts.
+
+## Adding a layer
+
+The README's **Layer API** section is the recipe: one file in `lib/layers/`, a style in `lib/globe/styles.ts` (or a sibling file like `waterStyles.ts`, `hazardStyles.ts`, `landStyles.ts`), a line in `lib/layers/index.ts`, and, if it needs a proxy, a route under `app/api/`. Add the id to `LayerId` in `lib/layers/types.ts`; TypeScript will point at everything else that needs a case (`FOLLOW_RANGE`). The rest is not type-checked, so do it by hand:
+
+- a source id in `lib/provenance/sources.ts`, and a route built on `lib/server/respond.ts` (`ok`, `badRequest`, `options`) with a `provenance` record per upstream used and `caveats` for what the data is not ([docs/API.md](docs/API.md), "Adding an op or a route");
+- the route's ops in the `op` enum of `public/openapi.json`, with a response schema tagged `x-op` (a test compares them with the route's `case` labels);
+- a `LAYER_LABEL_PRIORITY` entry in `lib/globe/labelBudget.ts`;
+- the layer in `NOT_PHYSICAL` (`lib/fabric/emergence.ts`) if its points are not things on the ground (alerts, statistics at a centroid);
+- voice aliases in `lib/voice/commands.ts` and the word list in `lib/voice/intent.ts`, without shadowing another layer's id;
+- tests next to the code (`*.test.ts`, vitest, no network) for every rule that keeps a value honest.
+
+A picture layer (a raster its publisher renders: relief, soils, land cover) sets `tiles` on its style (`lib/globe/tiles.ts`) instead of drawing features, and its fetch() only reports the height band and what the picture is not (`lib/layers/terrain.ts`). Put the source in `lib/terrain/products.ts`: a publisher's own tile cache or map service goes there as a direct source, whose host the CSP test then checks; a slow or flaky dynamic render (an ArcGIS `exportImage` or `export`, a WMS without a cache) goes through `/api/terrain` as a product, built from the product and the tile's projected box, never from a URL the caller sends. A cache that answers 404 where it publishes nothing sets `sparse` on its spec, so a 404 there is "no tile here" rather than the layer failing (probe a few levels first: a 404 says nothing about the tiles under it); a light, opaque picture sets `ink` (line art) or `shade` (a hillshade) so it does not veil the globe. If the service answers a point with a bare code, bundle its own legend as the class table and test the table against the legend payload (`lib/terrain/classes.test.ts`). A click on the ground while a picture is on opens the ground dossier (`lib/terrain/ground.ts`); add your layer's question there.
+
+Layers that only make sense up close (flood zones below 5 km) return an empty collection with a note above their height, use a fine `viewKey`, and draw the box they loaded as a dashed outline (`loadedBoxFeature` in `lib/layers/flood.ts`) so ground that was never loaded does not read as ground with nothing on it; the default key only moves every half degree. Static polygon layers pass their features through a `FeatureMemo` (`lib/layers/featureMemo.ts`) so polygons still in view are not rebuilt on every pan. A layer that draws differently depending on another layer lists it in `dependsOn` and does it in `refine(result, ctx)`, not in `fetch`: `ctx.layersOn`, `ctx.answering` (the layer has an answer on the map: not failed, not still loading) and `ctx.holds(layer, id)`, re-run whenever one of those layers is toggled, answers or fails, with no refetch. Step aside for another layer only for what it is drawing right now (`answering` and `holds`), never merely because it is on: the Hazard alerts layer leaves an NWS alert to Live warnings only when that layer holds it, so a warning it could not outline, or a feed that failed, is still drawn somewhere.
+
+City and registry sources (zoning, permits, licences) follow one pattern: a pure adapter in `lib/zoning/` or `lib/permits/` that builds the request (named columns, `$select` or `outFields`, never `*`; if a portal seems to refuse `$select`, check for a redirect to a new host first, as San Francisco's data.sfgov.org to data.sf.gov), turns rows into records and is tested on a payload captured from the service with that same request; the network code in `sources.ts` goes through `lib/civic/request.ts`, which gates per host. Pick a city by the Census place under a point, not a box. Every source a box meets gets a `coverage` state (covered, partial, error, stale, no-feed, token-required, not-wired) with its reason, so "not covered" never reads as "none". Never request an applicant, owner, contact or filing-representative name. A registrant's legal name may be requested only to test for an entity form or to compare it with the trade name, and is discarded on the server; a name shown as published that can be a person's (a contractor, a project name) stays in the dossier, is never searched, and is named as such in the README's Ethics section, the About dialog and the route's caveats. If a captured fixture row carries a name that may be a person's, replace it with a `[removed from this fixture: ...]` marker and test that the field never reaches a record.
+
+Before opening a PR:
+
+```bash
+npm test
+npm run typecheck
+npm run lint
+npm run build
+```
+
+Then drive the production build in a real browser (`npx next start -p 3100`, open it, watch the console). Two of the bugs in this repo's history only appeared in production bundles, never in `next dev`; the README's development notes explain both.
+
+## Infrastructure layers, cameras and operators
+
+Infrastructure registries name who owns or runs things: a transmission line's owner, a pipeline's operator, a railroad's reporting marks, a power plant's reporting entity. Relay them as the registry publishes them, in `details` only: never in a feature's `name` (the palette always searches names), never on `SEARCHABLE_DETAILS`, never joined across sources. Ask each service for an explicit `outFields` list that leaves out people and addresses (NID's representative and designer names, contact fields, street addresses, and free-text notes: USGS's landslide `Notes` quotes news stories that name homeowners and give their addresses); `lib/infra/features.test.ts` checks that operator fields stay out of names and off the allowlist.
+
+A camera source is added only after reading the agency's own terms, and only when they allow reuse; quote the operative sentence in `lib/cameras/agencies.ts`, in the source's licence and in the README's attribution. Stills must be https (the page upgrades http). Agencies left out and why are listed in the same file.
+
+`node scripts/infra-data.mjs` rebuilds the two power plant snapshots in `lib/infra/data/`: the newest EIA-860M generator workbook that answers (the EIA page links months that are not published yet; they redirect) and a Wikidata SPARQL pull of nuclear plants outside the US. `node scripts/infra-data.mjs eia` or `... nuclear` rebuilds only that one. Both carry the file or query and the date they were pulled; do not hand-edit them.
+
+## Refreshing the bundled port and country data
+
+`node scripts/economy-data.mjs` re-downloads the NGA World Port Index and the Natural Earth countries, re-matches the BTS port authorities to harbours (World Port Index entry within 150 km of the geocoded harbour city, otherwise the city point, otherwise left off) and rewrites `lib/economy/data/`. Every file carries the date it was pulled. Do not hand-edit coordinates in those files; fix the crosswalk in the script instead.
+
+## Adding a parcel source
+
+One adapter in `lib/parcels/adapters.ts`: the service URL, the county GEOIDs or state it answers for (`COUNTY_ADAPTERS`, `STATE_ADAPTERS`), an explicit `outFields` list (never `*`, and never a homestead or owner-occupancy flag, including a use or legal class that encodes one, as Minnesota's `useclass1` and Maricopa's `LC_CUR` do; read the source's code list before adding a class field), the parcel id and use fields an outline carries, and a `normalize()` that ends in `finalize()` so the shared privacy rules apply. Probe the service live first (a point query at a publicly owned parcel), capture that answer through `rowsAt()` into `lib/parcels/fixtures/`, and test the adapter on it; add its source id to `lib/provenance/sources.ts` and a row to the README's coverage table. A service that withholds owners with a flag or a placeholder keeps them withheld here, mailing address included; nothing it suppresses is looked up anywhere else. If its box queries are too slow for lot lines, give it `noOutlines` with the reason.
+
+## Adding an Explore preset
+
+`lib/explore/presets.ts`. A preset is a place, a height and which layers to switch on. Probe the place first (the USGS Water Data API is enough for the water layers; for flood zones, wetlands and public lands, query the upstream with the exact box the layer requests at the preset's height (flood and wetlands: a 4.5 km radius around the 0.04 degree view-key cell)) so the preset never lands on an empty map, and write the blurb about what the layers will show there, not about the water body itself. A place that moves (the largest fire) gets a `resolve()` that finds it when the preset is used, with a fixed fallback; use it through `presetTarget()`.
+
+## Reporting a wrong number
+
+Open an issue with the permalink (top bar → Share) and the upstream page linked from the dossier. Every feature carries its source and its timestamp, so a wrong number is usually either an upstream change or a unit we mis-labelled; both are quick to fix once reproducible.

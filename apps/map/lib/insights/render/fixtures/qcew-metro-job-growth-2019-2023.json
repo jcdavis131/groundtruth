@@ -1,0 +1,428 @@
+{
+  "version": 1,
+  "kind": "bubble",
+  "slug": "metro-finance-professional-goods-jobs-2019-2023",
+  "headline": "Job Growth by Industry Group in the 150 Largest US Metro Areas, 2019 to 2023",
+  "dek": "Private-sector jobs in finance and professional services against goods-producing jobs (natural resources and mining, construction, manufacturing), change in annual averages from 2019 to 2023.",
+  "asOf": "2026-10-01",
+  "universe": "The 150 largest metropolitan areas by 2019 total covered employment, Puerto Rico included",
+  "subject": "C1242",
+  "subjectNotes": [
+    "+35.6% / +18.7%"
+  ],
+  "x": {
+    "label": "Finance and professional services jobs, change 2019 to 2023",
+    "format": "signedPct",
+    "digits": 0,
+    "step": 10,
+    "reference": [
+      {
+        "value": 0
+      }
+    ]
+  },
+  "y": {
+    "label": "Goods-producing jobs, change 2019 to 2023",
+    "format": "signedPct",
+    "digits": 0,
+    "step": 10,
+    "reference": [
+      {
+        "value": 0
+      }
+    ]
+  },
+  "size": {
+    "label": "change in total covered jobs, 2019 to 2023",
+    "format": "num",
+    "negative": "outline"
+  },
+  "labels": {
+    "topBySize": 16,
+    "extremes": true
+  },
+  "provenance": {
+    "change-total-covered": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "period": "2019/2023",
+      "retrievedAt": "2026-10-01T03:23:39Z",
+      "kind": "estimate",
+      "method": "bubble = 2023 − 2019 annual average total covered employment, all industries and ownerships"
+    },
+    "growth": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "period": "2019/2023",
+      "retrievedAt": "2026-10-01T03:23:39Z",
+      "kind": "estimate",
+      "method": "growth = (2023 / 2019 − 1) × 100 of private annual average jobs summed over QCEW industries 1023 + 1024 (horizontal) and 1011 + 1012 + 1013 (vertical); null if any part is withheld"
+    },
+    "qcew-2019-10": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "seriesId": "industry 10 (total, all industries), own_code 0, agglvl_code 40",
+      "upstreamUrl": "https://data.bls.gov/cew/data/api/2019/a/industry/10.csv",
+      "period": "2019",
+      "retrievedAt": "2026-10-01T02:47:36Z",
+      "kind": "published",
+      "notes": [
+        "annual_avg_emplvl of the metropolitan rows (area_fips C-codes, the delineation QCEW uses for 2019); any non-blank disclosure_code is withheld and read as null, never as the 0 the row carries"
+      ]
+    },
+    "qcew-2019-1011": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "seriesId": "industry 1011 (natural resources and mining), own_code 5, agglvl_code 43",
+      "upstreamUrl": "https://data.bls.gov/cew/data/api/2019/a/industry/1011.csv",
+      "period": "2019",
+      "retrievedAt": "2026-10-01T02:47:38Z",
+      "kind": "published",
+      "notes": [
+        "annual_avg_emplvl of the metropolitan rows (area_fips C-codes, the delineation QCEW uses for 2019); any non-blank disclosure_code is withheld and read as null, never as the 0 the row carries"
+      ]
+    },
+    "qcew-2019-1012": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "seriesId": "industry 1012 (construction), own_code 5, agglvl_code 43",
+      "upstreamUrl": "https://data.bls.gov/cew/data/api/2019/a/industry/1012.csv",
+      "period": "2019",
+      "retrievedAt": "2026-10-01T02:47:38Z",
+      "kind": "published",
+      "notes": [
+        "annual_avg_emplvl of the metropolitan rows (area_fips C-codes, the delineation QCEW uses for 2019); any non-blank disclosure_code is withheld and read as null, never as the 0 the row carries"
+      ]
+    },
+    "qcew-2019-1013": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "seriesId": "industry 1013 (manufacturing), own_code 5, agglvl_code 43",
+      "upstreamUrl": "https://data.bls.gov/cew/data/api/2019/a/industry/1013.csv",
+      "period": "2019",
+      "retrievedAt": "2026-10-01T02:47:38Z",
+      "kind": "published",
+      "notes": [
+        "annual_avg_emplvl of the metropolitan rows (area_fips C-codes, the delineation QCEW uses for 2019); any non-blank disclosure_code is withheld and read as null, never as the 0 the row carries"
+      ]
+    },
+    "qcew-2019-1023": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "seriesId": "industry 1023 (financial activities), own_code 5, agglvl_code 43",
+      "upstreamUrl": "https://data.bls.gov/cew/data/api/2019/a/industry/1023.csv",
+      "period": "2019",
+      "retrievedAt": "2026-10-01T02:47:37Z",
+      "kind": "published",
+      "notes": [
+        "annual_avg_emplvl of the metropolitan rows (area_fips C-codes, the delineation QCEW uses for 2019); any non-blank disclosure_code is withheld and read as null, never as the 0 the row carries"
+      ]
+    },
+    "qcew-2019-1024": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "seriesId": "industry 1024 (professional and business services), own_code 5, agglvl_code 43",
+      "upstreamUrl": "https://data.bls.gov/cew/data/api/2019/a/industry/1024.csv",
+      "period": "2019",
+      "retrievedAt": "2026-10-01T02:47:37Z",
+      "kind": "published",
+      "notes": [
+        "annual_avg_emplvl of the metropolitan rows (area_fips C-codes, the delineation QCEW uses for 2019); any non-blank disclosure_code is withheld and read as null, never as the 0 the row carries"
+      ]
+    },
+    "qcew-2023-10": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "seriesId": "industry 10 (total, all industries), own_code 0, agglvl_code 40",
+      "upstreamUrl": "https://data.bls.gov/cew/data/api/2023/a/industry/10.csv",
+      "period": "2023",
+      "retrievedAt": "2026-10-01T02:54:30Z",
+      "kind": "published",
+      "notes": [
+        "annual_avg_emplvl of the metropolitan rows (area_fips C-codes, the delineation QCEW uses for 2023); any non-blank disclosure_code is withheld and read as null, never as the 0 the row carries"
+      ]
+    },
+    "qcew-2023-1011": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "seriesId": "industry 1011 (natural resources and mining), own_code 5, agglvl_code 43",
+      "upstreamUrl": "https://data.bls.gov/cew/data/api/2023/a/industry/1011.csv",
+      "period": "2023",
+      "retrievedAt": "2026-10-01T03:23:38Z",
+      "kind": "published",
+      "notes": [
+        "annual_avg_emplvl of the metropolitan rows (area_fips C-codes, the delineation QCEW uses for 2023); any non-blank disclosure_code is withheld and read as null, never as the 0 the row carries"
+      ]
+    },
+    "qcew-2023-1012": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "seriesId": "industry 1012 (construction), own_code 5, agglvl_code 43",
+      "upstreamUrl": "https://data.bls.gov/cew/data/api/2023/a/industry/1012.csv",
+      "period": "2023",
+      "retrievedAt": "2026-10-01T03:23:38Z",
+      "kind": "published",
+      "notes": [
+        "annual_avg_emplvl of the metropolitan rows (area_fips C-codes, the delineation QCEW uses for 2023); any non-blank disclosure_code is withheld and read as null, never as the 0 the row carries"
+      ]
+    },
+    "qcew-2023-1013": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "seriesId": "industry 1013 (manufacturing), own_code 5, agglvl_code 43",
+      "upstreamUrl": "https://data.bls.gov/cew/data/api/2023/a/industry/1013.csv",
+      "period": "2023",
+      "retrievedAt": "2026-10-01T03:23:39Z",
+      "kind": "published",
+      "notes": [
+        "annual_avg_emplvl of the metropolitan rows (area_fips C-codes, the delineation QCEW uses for 2023); any non-blank disclosure_code is withheld and read as null, never as the 0 the row carries"
+      ]
+    },
+    "qcew-2023-1023": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "seriesId": "industry 1023 (financial activities), own_code 5, agglvl_code 43",
+      "upstreamUrl": "https://data.bls.gov/cew/data/api/2023/a/industry/1023.csv",
+      "period": "2023",
+      "retrievedAt": "2026-10-01T03:23:39Z",
+      "kind": "published",
+      "notes": [
+        "annual_avg_emplvl of the metropolitan rows (area_fips C-codes, the delineation QCEW uses for 2023); any non-blank disclosure_code is withheld and read as null, never as the 0 the row carries"
+      ]
+    },
+    "qcew-2023-1024": {
+      "source": {
+        "id": "bls-qcew",
+        "name": "Quarterly Census of Employment and Wages",
+        "publisher": "U.S. Bureau of Labor Statistics",
+        "url": "https://www.bls.gov/cew/",
+        "license": "public domain"
+      },
+      "seriesId": "industry 1024 (professional and business services), own_code 5, agglvl_code 43",
+      "upstreamUrl": "https://data.bls.gov/cew/data/api/2023/a/industry/1024.csv",
+      "period": "2023",
+      "retrievedAt": "2026-10-01T03:23:39Z",
+      "kind": "published",
+      "notes": [
+        "annual_avg_emplvl of the metropolitan rows (area_fips C-codes, the delineation QCEW uses for 2023); any non-blank disclosure_code is withheld and read as null, never as the 0 the row carries"
+      ]
+    }
+  },
+  "data": [
+    {"id": "C1042", "label": "Akron", "fullLabel": "Akron, OH", "x": -1.0944268916321942, "y": -2.6011081862194696, "size": -4238, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1058", "label": "Albany", "fullLabel": "Albany-Schenectady-Troy, NY", "x": 0.3547339495378443, "y": 5.045286388569981, "size": -7647, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1074", "label": "Albuquerque", "fullLabel": "Albuquerque, NM", "x": 2.2597891193505193, "y": 7.824372415119751, "size": 13084, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1090", "label": "Allentown", "fullLabel": "Allentown-Bethlehem-Easton, PA-NJ", "x": -7.010754937335495, "y": 3.0544833729216236, "size": 5908, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1126", "label": "Anchorage", "fullLabel": "Anchorage, AK", "x": -0.9369805047604651, "y": -1.6411308417206283, "size": 955, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1146", "label": "Ann Arbor", "fullLabel": "Ann Arbor, MI", "x": 0.0, "y": -11.394992335206954, "size": -1606, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1170", "label": "Asheville", "fullLabel": "Asheville, NC", "x": 11.69522273735133, "y": 0.7146881765072166, "size": 5891, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1206", "label": "Atlanta", "fullLabel": "Atlanta-Sandy Springs-Roswell, GA", "x": 2.5431827730470813, "y": null, "size": 146349, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1226", "label": "Augusta", "fullLabel": "Augusta-Richmond County, GA-SC", "x": 0.655623645267478, "y": null, "size": -213, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1242", "label": "Austin", "fullLabel": "Austin-Round Rock-San Marcos, TX", "x": 35.64808677312443, "y": 18.684712716794017, "size": 187324, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1254", "label": "Bakersfield", "fullLabel": "Bakersfield-Delano, CA", "x": -6.080021999175034, "y": -6.466969459048489, "size": 11612, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1258", "label": "Baltimore", "fullLabel": "Baltimore-Columbia-Towson, MD", "x": -4.162572333224146, "y": 1.596734927681509, "size": -18490, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1294", "label": "Baton Rouge", "fullLabel": "Baton Rouge, LA", "x": null, "y": null, "size": 5858, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1314", "label": "Beaumont", "fullLabel": "Beaumont-Port Arthur, TX", "x": null, "y": null, "size": -3787, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1382", "label": "Birmingham", "fullLabel": "Birmingham, AL", "x": 2.084967510143998, "y": 1.4347757535797756, "size": 10338, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1426", "label": "Boise City", "fullLabel": "Boise City, ID", "x": null, "y": 14.225178532237104, "size": 43670, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1446", "label": "Boston", "fullLabel": "Boston-Cambridge-Newton, MA-NH", "x": 1.0828232039283625, "y": 0.9572716082095978, "size": -18081, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1450", "label": "Boulder", "fullLabel": "Boulder, CO", "x": 11.847128037005428, "y": 5.476642612988991, "size": 6772, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1486", "label": "Bridgeport", "fullLabel": "Bridgeport-Stamford-Danbury, CT", "x": -2.3921011725421715, "y": 2.77958789295103, "size": -1984, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1538", "label": "Buffalo", "fullLabel": "Buffalo-Cheektowaga, NY", "x": -1.7312726152898583, "y": 3.047442060894978, "size": -16276, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1594", "label": "Canton", "fullLabel": "Canton-Massillon, OH", "x": -5.384752882295107, "y": -3.31281066425666, "size": -3486, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1598", "label": "Cape Coral", "fullLabel": "Cape Coral-Fort Myers, FL", "x": 14.128669581511556, "y": 24.117071211626808, "size": 24726, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1670", "label": "Charleston", "fullLabel": "Charleston-North Charleston, SC", "x": 11.036036036036045, "y": 6.4565247483636234, "size": 26113, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1674", "label": "Charlotte", "fullLabel": "Charlotte-Concord-Gastonia, NC-SC", "x": null, "y": 4.16821897394315, "size": 100280, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1686", "label": "Chattanooga", "fullLabel": "Chattanooga, TN-GA", "x": 1.8509814454217954, "y": null, "size": 12820, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1698", "label": "Chicago", "fullLabel": "Chicago-Naperville-Elgin, IL-IN", "x": -2.3413080931735997, "y": -0.9406084404331438, "size": -36392, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1714", "label": "Cincinnati", "fullLabel": "Cincinnati, OH-KY-IN", "x": null, "y": null, "size": 18405, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1746", "label": "Cleveland", "fullLabel": "Cleveland-Elyria, OH", "x": -5.8773988417426875, "y": -1.7998970436828965, "size": -28599, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1782", "label": "Colorado Springs", "fullLabel": "Colorado Springs, CO", "x": 10.566634427915677, "y": null, "size": 25007, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1790", "label": "Columbia", "fullLabel": "Columbia, SC", "x": 4.835891508292778, "y": -0.3025477707006341, "size": 9635, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1814", "label": "Columbus", "fullLabel": "Columbus, OH", "x": -1.44191533545035, "y": 6.378385671400144, "size": 29656, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1858", "label": "Corpus Christi", "fullLabel": "Corpus Christi, TX", "x": 6.744901885340515, "y": -2.2506486453870767, "size": 1548, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1910", "label": "Dallas", "fullLabel": "Dallas-Fort Worth-Arlington, TX", "x": 15.806880214005758, "y": 6.412081656247737, "size": 358321, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1934", "label": "Davenport", "fullLabel": "Davenport-Moline-Rock Island, IA-IL", "x": -15.274110398591723, "y": 3.6220289180461496, "size": -3959, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1938", "label": "Dayton", "fullLabel": "Dayton, OH", "x": -6.027768887263196, "y": -2.2125131073051363, "size": -4958, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1966", "label": "Deltona", "fullLabel": "Deltona-Daytona Beach-Ormond Beach, FL", "x": 7.780556945139239, "y": 6.980815794375106, "size": 13709, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1974", "label": "Denver", "fullLabel": "Denver-Aurora-Centennial, CO", "x": null, "y": null, "size": 85021, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1978", "label": "Des Moines", "fullLabel": "Des Moines-West Des Moines, IA", "x": 1.444791370990628, "y": 14.883481996917759, "size": 18374, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C1982", "label": "Detroit", "fullLabel": "Detroit-Warren-Dearborn, MI", "x": -3.747459403049136, "y": 0.9315811456208412, "size": -27544, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2050", "label": "Durham", "fullLabel": "Durham-Chapel Hill, NC", "x": 29.17655257088816, "y": 6.656493369816885, "size": 27817, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2134", "label": "El Paso", "fullLabel": "El Paso, TX", "x": null, "y": null, "size": 13700, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2166", "label": "Eugene", "fullLabel": "Eugene-Springfield, OR", "x": 0.17304602200156616, "y": 4.3423956034805755, "size": -883, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2178", "label": "Evansville", "fullLabel": "Evansville, IN", "x": 0.5057259884644338, "y": -1.6566354806030636, "size": -926, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2222", "label": "Fayetteville", "fullLabel": "Fayetteville-Springdale-Rogers, AR", "x": 11.185958954672959, "y": 8.681270384677653, "size": 25386, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2266", "label": "Fort Collins", "fullLabel": "Fort Collins-Loveland, CO", "x": 8.226249721458823, "y": 1.5487773769177426, "size": 8940, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2306", "label": "Fort Wayne", "fullLabel": "Fort Wayne, IN", "x": null, "y": 3.5104748038502054, "size": 6864, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2342", "label": "Fresno", "fullLabel": "Fresno, CA", "x": -6.854395889020115, "y": 2.031486357779144, "size": 18485, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2434", "label": "Grand Rapids", "fullLabel": "Grand Rapids-Wyoming-Kentwood, MI", "x": -0.5642968575885865, "y": -0.9405877670071727, "size": 11606, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2458", "label": "Green Bay", "fullLabel": "Green Bay, WI", "x": -12.322858903265555, "y": 3.327714904888035, "size": -2138, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2466", "label": "Greensboro", "fullLabel": "Greensboro-High Point, NC", "x": -5.659696646272716, "y": -4.2617440104834365, "size": -1970, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2486", "label": "Greenville", "fullLabel": "Greenville-Anderson-Greer, SC", "x": -2.024566457067245, "y": 7.822801199645912, "size": 18191, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2542", "label": "Harrisburg", "fullLabel": "Harrisburg-Carlisle, PA", "x": -11.569979590574553, "y": 3.7266344758124292, "size": 1355, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2554", "label": "Hartford", "fullLabel": "Hartford-West Hartford-East Hartford, CT", "x": -4.663476224417062, "y": null, "size": -11335, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2586", "label": "Hickory", "fullLabel": "Hickory-Lenoir-Morganton, NC", "x": -2.5090866455621974, "y": 0.03850020319551284, "size": 880, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2642", "label": "Houston", "fullLabel": "Houston-Pasadena-The Woodlands, TX", "x": 7.371247635367872, "y": -3.2245350638399284, "size": 175962, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2662", "label": "Huntsville", "fullLabel": "Huntsville, AL", "x": 8.777211297240427, "y": 28.029916709161995, "size": 26925, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2690", "label": "Indianapolis", "fullLabel": "Indianapolis-Carmel-Greenwood, IN", "x": 4.470665918917449, "y": 8.029138326558538, "size": 56545, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2714", "label": "Jackson", "fullLabel": "Jackson, MS", "x": -6.035699649378445, "y": 2.1279270784221316, "size": -4506, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2726", "label": "Jacksonville", "fullLabel": "Jacksonville, FL", "x": 7.30356288039391, "y": 9.923527912312014, "size": 54161, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2814", "label": "Kansas City", "fullLabel": "Kansas City, MO-KS", "x": null, "y": 13.78724836321361, "size": 23801, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2894", "label": "Knoxville", "fullLabel": "Knoxville, TN", "x": null, "y": null, "size": 28910, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2918", "label": "Lafayette", "fullLabel": "Lafayette, LA", "x": 0.3656189865298254, "y": -3.0966038885222646, "size": 144, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2946", "label": "Lakeland", "fullLabel": "Lakeland-Winter Haven, FL", "x": 17.07638805612184, "y": 7.784062600744401, "size": 30538, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2954", "label": "Lancaster", "fullLabel": "Lancaster, PA", "x": -0.8071666615709128, "y": 3.5407296785732845, "size": 4401, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2962", "label": "Lansing", "fullLabel": "Lansing-East Lansing, MI", "x": 1.101720915962412, "y": 12.662768590594386, "size": 3739, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C2982", "label": "Las Vegas", "fullLabel": "Las Vegas-Henderson-North Las Vegas, NV", "x": 7.803319551326426, "y": 14.705912402047417, "size": 72701, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3046", "label": "Lexington", "fullLabel": "Lexington-Fayette, KY", "x": 7.262398280362348, "y": 3.9129893828798945, "size": 10927, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3070", "label": "Lincoln", "fullLabel": "Lincoln, NE", "x": -11.042835515183903, "y": 12.660871047472932, "size": 335, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3078", "label": "Little Rock", "fullLabel": "Little Rock-North Little Rock-Conway, AR", "x": null, "y": 3.4907330279050353, "size": 11850, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3108", "label": "Los Angeles", "fullLabel": "Los Angeles-Long Beach-Anaheim, CA", "x": -3.0627826753545473, "y": -3.529175725754208, "size": -44696, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3114", "label": "Louisville", "fullLabel": "Louisville/Jefferson County, KY-IN", "x": null, "y": 2.0369893084723367, "size": 16903, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3154", "label": "Madison", "fullLabel": "Madison, WI", "x": -2.759772803207483, "y": 6.850289839980572, "size": 7879, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3170", "label": "Manchester", "fullLabel": "Manchester-Nashua, NH", "x": 1.8035073734555596, "y": 0.26819595423550613, "size": -4030, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3258", "label": "McAllen", "fullLabel": "McAllen-Edinburg-Mission, TX", "x": 28.971190176322416, "y": -1.290995989672028, "size": 21293, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3282", "label": "Memphis", "fullLabel": "Memphis, TN-MS-AR", "x": null, "y": null, "size": -6190, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3310", "label": "Miami", "fullLabel": "Miami-Fort Lauderdale-West Palm Beach, FL", "x": 11.225807108286778, "y": 7.0324716949546895, "size": 144803, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3334", "label": "Milwaukee", "fullLabel": "Milwaukee-Waukesha, WI", "x": -4.378536859415139, "y": -1.771003070690813, "size": -18936, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3346", "label": "Minneapolis", "fullLabel": "Minneapolis-St. Paul-Bloomington, MN-WI", "x": -4.235767483028163, "y": 3.319074423238, "size": -13528, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3366", "label": "Mobile", "fullLabel": "Mobile, AL", "x": -6.926547437437113, "y": -6.191175488952672, "size": -373, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3370", "label": "Modesto", "fullLabel": "Modesto, CA", "x": -6.501228501228507, "y": 0.2422501393474219, "size": 3878, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3386", "label": "Montgomery", "fullLabel": "Montgomery, AL", "x": null, "y": 7.790149544863456, "size": 2330, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3482", "label": "Myrtle Beach", "fullLabel": "Myrtle Beach-Conway-North Myrtle Beach, SC", "x": 10.850588284907015, "y": 13.3737610850287, "size": 13750, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3494", "label": "Naples", "fullLabel": "Naples-Marco Island, FL", "x": 21.243732815785222, "y": 12.28912745177173, "size": 14340, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3498", "label": "Nashville", "fullLabel": "Nashville-Davidson--Murfreesboro--Franklin, TN", "x": 7.503389955334905, "y": null, "size": 90367, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3530", "label": "New Haven", "fullLabel": "New Haven, CT", "x": -1.1368738662691502, "y": -1.75012690075258, "size": 6128, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3538", "label": "New Orleans", "fullLabel": "New Orleans-Metairie, LA", "x": -0.6848686825450256, "y": -2.425927095836755, "size": -15813, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3562", "label": "New York", "fullLabel": "New York-Newark-Jersey City, NY-NJ", "x": 0.07446598661720039, "y": null, "size": -3846, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3584", "label": "North Port", "fullLabel": "North Port-Bradenton-Sarasota, FL", "x": 9.016064988525008, "y": 10.544932258617724, "size": 24995, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3626", "label": "Ogden", "fullLabel": "Ogden, UT", "x": -0.018851918182671845, "y": 13.79406631762652, "size": 24843, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3642", "label": "Oklahoma City", "fullLabel": "Oklahoma City, OK", "x": 7.110840117332984, "y": -4.343149274792379, "size": 34644, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3654", "label": "Omaha", "fullLabel": "Omaha, NE-IA", "x": -3.365691826927286, "y": 6.7285135423331255, "size": 5663, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3674", "label": "Orlando", "fullLabel": "Orlando-Kissimmee-Sanford, FL", "x": 14.371307285800917, "y": 5.668075079814128, "size": 104210, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3710", "label": "Oxnard", "fullLabel": "Oxnard-Thousand Oaks-Ventura, CA", "x": -5.812469968352863, "y": 0.7406763200997313, "size": -943, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3734", "label": "Palm Bay", "fullLabel": "Palm Bay-Melbourne-Titusville, FL", "x": 9.583083383323343, "y": 21.595933325452176, "size": 16393, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3786", "label": "Pensacola", "fullLabel": "Pensacola-Ferry Pass-Brent, FL", "x": 10.113470890457998, "y": 5.086596973006707, "size": 10459, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3790", "label": "Peoria", "fullLabel": "Peoria, IL", "x": -1.0877217685159146, "y": 3.2830128714444573, "size": -872, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3798", "label": "Philadelphia", "fullLabel": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD", "x": -1.7364235358003133, "y": null, "size": 14374, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3806", "label": "Phoenix", "fullLabel": "Phoenix-Mesa-Chandler, AZ", "x": 0.5068538610658146, "y": 17.658028700416907, "size": 182098, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3830", "label": "Pittsburgh", "fullLabel": "Pittsburgh, PA", "x": -7.801412469801939, "y": -7.067427936235249, "size": -57109, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3886", "label": "Portland, ME", "fullLabel": "Portland-South Portland, ME", "x": 0.9792907163989062, "y": null, "size": 5744, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3890", "label": "Portland, OR", "fullLabel": "Portland-Vancouver-Hillsboro, OR-WA", "x": 1.7726765246865561, "y": null, "size": 14554, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3894", "label": "Port St. Lucie", "fullLabel": "Port St. Lucie, FL", "x": 10.416753058262485, "y": 14.144396869924702, "size": 14826, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3930", "label": "Providence", "fullLabel": "Providence-Warwick, RI-MA", "x": -0.21394070551061795, "y": null, "size": -1417, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3934", "label": "Provo", "fullLabel": "Provo-Orem-Lehi, UT", "x": null, "y": 18.88430189478141, "size": 39843, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3958", "label": "Raleigh", "fullLabel": "Raleigh-Cary, NC", "x": 17.55315440920182, "y": 8.662757707584646, "size": 73580, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3974", "label": "Reading", "fullLabel": "Reading, PA", "x": -9.826262340327663, "y": -1.3986507134293946, "size": -4872, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C3990", "label": "Reno", "fullLabel": "Reno, NV", "x": 3.4202185533847462, "y": 14.610542350859124, "size": 13482, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4006", "label": "Richmond", "fullLabel": "Richmond, VA", "x": null, "y": null, "size": 7465, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4014", "label": "Riverside", "fullLabel": "Riverside-San Bernardino-Ontario, CA", "x": 2.2604823157517995, "y": 1.1042064157201104, "size": 124345, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4022", "label": "Roanoke", "fullLabel": "Roanoke, VA", "x": -7.441707236721696, "y": null, "size": -1445, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4038", "label": "Rochester", "fullLabel": "Rochester, NY", "x": -5.96203782429855, "y": -2.4249242959221484, "size": -16157, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4090", "label": "Sacramento", "fullLabel": "Sacramento-Roseville-Folsom, CA", "x": -3.8399487152091405, "y": 7.689430512425743, "size": 44084, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4118", "label": "St. Louis", "fullLabel": "St. Louis, MO-IL", "x": null, "y": null, "size": -9802, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4142", "label": "Salem", "fullLabel": "Salem, OR", "x": 10.804067413614526, "y": 1.9959534095258968, "size": 9922, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4150", "label": "Salinas", "fullLabel": "Salinas, CA", "x": -3.061653187690372, "y": -0.2107812359852912, "size": -1193, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4154", "label": "Salisbury", "fullLabel": "Salisbury, MD", "x": 8.29125186360795, "y": 4.443731451030719, "size": 7493, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4162", "label": "Salt Lake City", "fullLabel": "Salt Lake City-Murray, UT", "x": 9.130519641510126, "y": 16.12089963889336, "size": 70103, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4170", "label": "San Antonio", "fullLabel": "San Antonio-New Braunfels, TX", "x": 7.108061843279367, "y": 12.420728700885796, "size": 68659, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4174", "label": "San Diego", "fullLabel": "San Diego-Chula Vista-Carlsbad, CA", "x": 3.583990297149797, "y": 2.256481996052351, "size": 37632, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4186", "label": "San Francisco", "fullLabel": "San Francisco-Oakland-Fremont, CA", "x": -2.196150389338103, "y": 0.5130307637047027, "size": -37775, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4194", "label": "San Jose", "fullLabel": "San Jose-Sunnyvale-Santa Clara, CA", "x": -1.1425752414423895, "y": 3.286745440979999, "size": 387, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4198", "label": "San Juan", "fullLabel": "San Juan-Bayamon-Caguas, PR", "x": null, "y": 12.61129998381092, "size": 39974, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4220", "label": "Santa Maria", "fullLabel": "Santa Maria-Santa Barbara, CA", "x": 9.715717960556702, "y": 11.186737219424758, "size": 11398, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4222", "label": "Santa Rosa", "fullLabel": "Santa Rosa-Petaluma, CA", "x": -1.5598083127133733, "y": -2.7161290322580633, "size": -3841, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4234", "label": "Savannah", "fullLabel": "Savannah, GA", "x": 6.002468304723441, "y": 18.01560674030234, "size": 13733, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4254", "label": "Scranton", "fullLabel": "Scranton--Wilkes-Barre, PA", "x": -11.391245791245797, "y": 5.342980739520042, "size": -1941, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4266", "label": "Seattle", "fullLabel": "Seattle-Tacoma-Bellevue, WA", "x": 21.05390849884632, "y": -5.775153921842002, "size": 36868, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4334", "label": "Shreveport", "fullLabel": "Shreveport-Bossier City, LA", "x": -2.7972311055337373, "y": 6.15358606990406, "size": -2147, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4362", "label": "Sioux Falls", "fullLabel": "Sioux Falls, SD-MN", "x": 1.5601686668829107, "y": null, "size": 12211, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4390", "label": "Spartanburg", "fullLabel": "Spartanburg, SC", "x": -15.65772891225935, "y": 3.567871049533644, "size": 3842, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4406", "label": "Spokane", "fullLabel": "Spokane-Spokane Valley, WA", "x": 7.005842381083727, "y": 4.900278155885651, "size": 13708, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4414", "label": "Springfield, MA", "fullLabel": "Springfield, MA", "x": -10.825869454512771, "y": -1.5428074750108656, "size": -10742, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4418", "label": "Springfield, MO", "fullLabel": "Springfield, MO", "x": null, "y": 16.505809772529425, "size": 10811, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4470", "label": "Stockton", "fullLabel": "Stockton-Lodi, CA", "x": 9.575458190148911, "y": 7.716584805099802, "size": 24631, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4506", "label": "Syracuse", "fullLabel": "Syracuse, NY", "x": -2.015202773253144, "y": -1.7584819432715726, "size": -9725, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4522", "label": "Tallahassee", "fullLabel": "Tallahassee, FL", "x": 14.87558404867977, "y": 19.680268162186554, "size": 9920, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4530", "label": "Tampa", "fullLabel": "Tampa-St. Petersburg-Clearwater, FL", "x": 12.941728792709494, "y": 9.113730767737671, "size": 108940, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4578", "label": "Toledo", "fullLabel": "Toledo, OH", "x": -12.782982920159592, "y": -4.246686502569652, "size": -6493, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4594", "label": "Trenton", "fullLabel": "Trenton-Princeton, NJ", "x": -1.1301753665966863, "y": 1.046960142043707, "size": 1935, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4606", "label": "Tucson", "fullLabel": "Tucson, AZ", "x": -3.270977922814111, "y": 5.453152182917731, "size": 10749, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4614", "label": "Tulsa", "fullLabel": "Tulsa, OK", "x": 4.6655317325206225, "y": -6.7511168919300975, "size": 8388, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4652", "label": "Urban Honolulu", "fullLabel": "Urban Honolulu, HI", "x": -4.8289586377147415, "y": -4.464128438058335, "size": -21613, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4726", "label": "Virginia Beach", "fullLabel": "Virginia Beach-Chesapeake-Norfolk, VA-NC", "x": null, "y": null, "size": -6287, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4730", "label": "Visalia", "fullLabel": "Visalia, CA", "x": -5.1419599633651725, "y": 0.17819395188762854, "size": 9583, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4790", "label": "Washington", "fullLabel": "Washington-Arlington-Alexandria, DC-VA-MD-WV", "x": 0.10879264191090421, "y": null, "size": -9898, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4862", "label": "Wichita", "fullLabel": "Wichita, KS", "x": 3.5202698375424335, "y": -1.9527093323751799, "size": 5515, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4918", "label": "Winston-Salem", "fullLabel": "Winston-Salem, NC", "x": null, "y": 5.466488532620795, "size": 4525, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4934", "label": "Worcester", "fullLabel": "Worcester, MA", "x": 1.3459325638969233, "y": null, "size": -2589, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4962", "label": "York", "fullLabel": "York-Hanover, PA", "x": -8.174712987547217, "y": 3.8773279905286673, "size": 1416, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]},
+    {"id": "C4966", "label": "Youngstown", "fullLabel": "Youngstown-Warren, OH", "x": -10.97598881031937, "y": 3.9775122979620603, "size": -5991, "provenance": ["change-total-covered", "growth", "qcew-2019-10", "qcew-2019-1011", "qcew-2019-1012", "qcew-2019-1013", "qcew-2019-1023", "qcew-2019-1024", "qcew-2023-10", "qcew-2023-1011", "qcew-2023-1012", "qcew-2023-1013", "qcew-2023-1023", "qcew-2023-1024"]}
+  ]
+}
