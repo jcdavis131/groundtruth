@@ -273,6 +273,80 @@ const CASES = [
   ["deny", "P", "git push origin “HEAD:master”", "F"],
   ["deny", "P", "git push @flags origin feature", "F"],
 
+  // Round 5 findings: git inside a construct the guard doesn't model is denied, not guessed at.
+  // PowerShell assignment: modeled, so the command after $x = is checked.
+  ["deny", "P", "$r = git push origin feature:master", "F"],
+  ["deny", "P", "$out = git push -f origin feature", "F"],
+  ["deny", "P", "$r = git push --dry-run --porcelain origin feature:master", "F"],
+  ["deny", "P", "[string]$x = git push origin feature:master", "F"],
+  ["deny", "P", "$x += git push -f origin feature", "F"],
+  ["deny", "P", "$x=git push origin HEAD:master", "F"],
+  ["deny", "P", "$a = $b = git push -f origin feature", "F"],
+  ["deny", "P", "$r = git reset --hard", "M"],
+  // PowerShell script blocks of any kind, the safe-looking ones included (by design)
+  ["deny", "P", "try { git push -f origin feature } catch {}", "F"],
+  ["deny", "P", "try { git push origin feature:master } catch {}", "F"],
+  ["deny", "P", "Invoke-Command { git push origin feature:master }", "F"],
+  ["deny", "P", "Invoke-Command -ScriptBlock { git push -f origin feature }", "F"],
+  ["deny", "P", "1 | % { git push -f origin feature }", "F"],
+  ["deny", "P", "1 | ForEach-Object -Process { git push -f origin feature }", "F"],
+  ["deny", "P", "1 | Where-Object { git push -f origin feature }", "F"],
+  ["deny", "P", "Start-Job { git push -f origin feature }", "F"],
+  ["deny", "P", "function p { git push -f origin feature }; p", "F"],
+  ["deny", "P", "$h = @{ a = git push -f origin feature }", "F"],
+  ["deny", "P", "try { git status } catch {}", "F"],
+  ["deny", "P", "if ($LASTEXITCODE -eq 0) { git status }", "F"],
+  ["deny", "P", "try { & 'git' push -f origin feature } catch {}", "F"],
+  // PowerShell: a pipe into iex or a shell, and escapes the guard doesn't decode
+  ["deny", "P", "'git push -f origin feature' | iex", "F"],
+  ["deny", "P", "'git push -f origin feature' | Invoke-Expression", "F"],
+  ["deny", "P", "'git push -f origin feature' | pwsh -NoProfile -Command -", "F"],
+  ["deny", "P", "@'\ngit push -f origin feature\n'@ | powershell -", "F"],
+  ["deny", "P", 'git push origin "-`u{66}"', "F"],
+  ["deny", "P", 'git push origin "feature:mas`u{74}er"', "F"],
+  // bash brace expansion and globs
+  ["deny", "B", "git push origin feature:{master,x}", "F"],
+  ["deny", "B", "git push origin {feature,master}", "F"],
+  ["deny", "B", "git push origin ma{s,}ter", "F"],
+  ["deny", "B", "git push origin feature:{ma,}ster", "F"],
+  ["deny", "B", "{git,} push -f origin feature", "F"],
+  ["deny", "B", "git push origin ma?ter", "F"],
+  ["deny", "B", "git push origin mast*", "F"],
+  // ways to start git or a shell the guard doesn't follow
+  ["deny", "B", "find . -maxdepth 0 -exec git push -f origin feature \\;", "F"],
+  ["deny", "B", "find . -maxdepth 0 -execdir git push origin feature:master \\;", "F"],
+  ["deny", "B", "echo 'git push -f origin feature' | bash", "F"],
+  ["deny", "B", "echo 'git push -f origin feature' | sh", "F"],
+  ["deny", "B", "echo 'git push -f origin feature' | zsh -s", "F"],
+  ["deny", "B", "printf 'git push -f origin feature' | bash -", "F"],
+  ["deny", "B", "bash <<< 'git push -f origin feature'", "F"],
+  ["deny", "B", "echo 'git push -f origin feature' | wsl", "F"],
+  ["deny", "B", "echo git push -f origin feature | cmd", "F"],
+  ["deny", "B", "coproc git push -f origin feature", "F"],
+  ["deny", "B", "busybox sh -c 'git push -f origin feature'", "F"],
+  ["deny", "B", "chronic git push -f origin feature", "F"],
+  ["deny", "B", "caffeinate git push -f origin feature", "F"],
+  ["deny", "B", "parallel git push -f origin ::: feature", "F"],
+  ["deny", "B", "fish -c 'git push -f origin feature'", "F"],
+  ["deny", "B", "flock /tmp/l -c 'git push -f origin feature'", "F"],
+  ["deny", "B", "echo master | xargs git push origin", "F"],
+  ["deny", "B", "echo master | xargs -I{} git push origin {}", "F"],
+  ["deny", "B", "echo unmerged | xargs git branch -D", "M"],
+  ["deny", "B", "ls | xargs -n1 sh -c 'git push origin $0'", "F"],
+  ["deny", "B", "function f { git push -f origin feature; }; f", "F"],
+  ["deny", "B", "X=command; $X git push -f origin feature", "F"],
+  ["deny", "B", "python3 -c \"import os; os.system('git push -f')\"", "F"],
+  ["deny", "B", "echo `git status`", "F"],
+  ["deny", "B", "x=`git rev-parse HEAD`", "F"],
+  // commands git itself runs, carried in config, the environment or arguments
+  ["deny", "B", "GIT_EDITOR='git push -f origin master #' git commit", "F"],
+  ["deny", "B", "export GIT_SEQUENCE_EDITOR='git push -f'; git rebase -i HEAD~2", "F"],
+  ["deny", "B", "git -c core.editor='git push -f #' commit", "F"],
+  ["deny", "B", "git -c core.sshCommand='git push -f origin master; ssh' fetch", "F"],
+  ["deny", "B", "git rebase -x 'git push -f origin feature' master", "F"],
+  ["deny", "B", "git submodule foreach 'git push -f'", "F"],
+  ["deny", "B", "git bisect run git push -f origin feature", "F"],
+
   // allowed: feature-branch pushes
   ["allow", "B", "git push origin feature", "F"],
   ["allow", "B", "git push -u origin feature", "F"],
@@ -358,6 +432,84 @@ const CASES = [
   ["allow", "P", "git commit -m ‘no --force here’", "F"],
 ];
 
+// False positives. Everyday commands an agent runs all day, which must stay allowed now that git the guard
+// can't resolve is denied. [tool, command, cwd]; every one must pass.
+const SAFE = [
+  ["B", "git status", "F"],
+  ["B", "git status -sb", "F"],
+  ["B", "git log --oneline -10", "F"],
+  ["B", "git log origin/master..HEAD --format='%h %s'", "F"],
+  ["B", "git diff --stat HEAD~1", "M"],
+  ["B", "git diff | cat", "F"],
+  ["B", "git show HEAD --stat", "F"],
+  ["B", "git add -A", "F"],
+  ["B", "git add scripts/hooks/git-guard.mjs scripts/hooks/git-guard.test.mjs", "F"],
+  ["B", 'git commit -m "guard: block push --force to master"', "F"],
+  ["B", "git commit -m 'never force push to main; push a branch'", "F"],
+  ["B", 'git commit -m "fix: the master push went through with --force, now it does not"', "F"],
+  ["B", "git commit --amend --no-edit", "F"],
+  ["B", "git fetch origin", "F"],
+  ["B", "git fetch --all --prune", "F"],
+  ["B", "git pull --ff-only", "F"],
+  ["B", "git push origin feature", "F"],
+  ["B", "git push -u origin feature", "F"],
+  ["B", "git push origin HEAD:feature", "F"],
+  ["B", "git worktree add /tmp/wt-new -b wt-new", "M"],
+  ["B", "git worktree list", "M"],
+  ["B", "git checkout -b new-branch", "F"],
+  ["B", "git switch feature", "M"],
+  ["B", "git rebase origin/master", "F"],
+  ["B", "git rebase -x 'npm test' origin/master", "F"],
+  ["B", "git merge --ff-only origin/feature", "F"],
+  ["B", "git rev-parse --abbrev-ref HEAD", "F"],
+  ["B", "git branch --show-current", "F"],
+  ["B", "git remote -v", "F"],
+  ["B", "git remote add upstream git@github.com:example/repo.git", "F"],
+  ["B", "git clone https://github.com/example/repo.git /tmp/repo", "none"],
+  ["B", "git tag v1.2.3", "F"],
+  ["B", "git restore --staged a.txt", "F"],
+  ["B", "git stash list", "F"],
+  ["B", "git ls-files | wc -l", "F"],
+  ["B", "git ls-files -z | xargs -0 git add", "F"],
+  ["B", "git status && git diff && git log -1", "F"],
+  ["B", "git fetch && git status", "F"],
+  ["B", 'git add -A && git commit -m "push the master copy, not a force" && git push origin feature', "F"],
+  ["B", `cd '${fwd(F)}' && git status`, "M"],
+  ["B", "git -C /tmp/repo log -1", "none"],
+  ["B", "GIT_TRACE=1 git fetch origin", "F"],
+  ["B", "timeout 120 git fetch origin", "F"],
+  ["B", "for f in a.txt; do git add \"$f\"; done", "F"],
+  ["B", 'gh pr create --title "Block force push to master" --body "git push --force is denied"', "F"],
+  ["B", "gh pr view 5 --json body -q .body", "F"],
+  ["B", "gh pr checks 5 --watch", "F"],
+  ["B", "gh run list --branch git-guardrail", "F"],
+  ["B", "gh api repos/example/repo/branches/master/protection", "F"],
+  ["B", "ls ~/git/projects", "F"],
+  ["B", "cat .gitignore .git/config", "F"],
+  ["B", "mkdir -p /tmp/git-work && cd /tmp/git-work && ls", "F"],
+  ["B", "cp .gitattributes /tmp/gitattributes.bak", "F"],
+  ["B", "ssh -T git@github.com", "F"],
+  ["B", "node scripts/hooks/git-guard.test.mjs", "F"],
+  ["B", 'grep -rn "git push --force" scripts/', "F"],
+  ["B", "echo 'remember: git push --force is blocked'", "F"],
+  ["B", "npm test && npm run lint", "F"],
+  ["B", "which git && git --version", "F"],
+  ["P", "git status; git log -1", "F"],
+  ["P", "$branch = git rev-parse --abbrev-ref HEAD", "F"],
+  ["P", "$out = git status --porcelain", "F"],
+  ["P", "$r = git push origin feature", "F"],
+  ["P", "git push origin feature", "F"],
+  ["P", 'git commit -m "do not force push to master"', "F"],
+  ["P", "git add -A; git commit -m 'guard: push to a branch'; git push -u origin feature", "F"],
+  ["P", "Get-ChildItem /tmp/git | Select-Object -First 3", "F"],
+  ["P", "Set-Location /tmp/repo; git -C /tmp/repo status", "none"],
+  ["P", "Test-Path .git", "F"],
+  ["P", "Get-Content .gitignore", "F"],
+  ["P", 'Write-Output "git push is guarded"', "F"],
+  ["P", "Get-ChildItem | ForEach-Object { $_.Name }; git status", "F"],
+  ["P", "git log -1 | Select-Object -First 1", "F"],
+];
+
 let failed = 0;
 const check = (ok, msg) => {
   if (!ok) failed++;
@@ -370,6 +522,13 @@ for (const [want, tool, cmd, dir] of CASES) {
   const got = why ? "deny" : "allow";
   check(got === want, `${want.padEnd(5)} ${tool} ${dir.padEnd(4)} ${show(cmd)}${got === want ? "" : `  (got ${got}${why ? ": " + why : ""})`}`);
 }
+let safeDenied = 0;
+for (const [tool, cmd, dir] of SAFE) {
+  const why = checkCommand(cmd, tool === "P", DIRS[dir]);
+  if (why) safeDenied++;
+  check(!why, `safe  ${tool} ${dir.padEnd(4)} ${show(cmd)}${why ? `  (denied: ${why})` : ""}`);
+}
+check(SAFE.length >= 40, `the false-positive table has at least 40 rows (${SAFE.length})`);
 
 // The hook end to end: stdin JSON in, exit code and stderr out.
 const run = (input) => spawnSync(process.execPath, [hook], { input, encoding: "utf8" });
@@ -392,6 +551,16 @@ const HOOK_CASES = [
   [0, "Bash with no command string and no git", payload("Bash", { description: "list files" })],
   [2, "no tool_name, mentions git", JSON.stringify({ tool_input: { command: "git push -f" } })],
   [0, "no tool_name, no git", JSON.stringify({ tool_input: { command: "ls" } })],
+  [2, "PowerShell $r = git push to master", payload("PowerShell", { command: "$r = git push origin feature:master" })],
+  [0, "PowerShell $branch = git rev-parse", payload("PowerShell", { command: "$branch = git rev-parse --abbrev-ref HEAD" })],
+  [2, "PowerShell try { } around a push to master", payload("PowerShell", { command: "try { git push origin feature:master } catch {}" })],
+  [2, "PowerShell Invoke-Command script block", payload("PowerShell", { command: "Invoke-Command -ScriptBlock { git push -f origin feature }" })],
+  [2, "Bash brace expansion to master", payload("Bash", { command: "git push origin feature:{master,x}" })],
+  [2, "Bash find -exec git push", payload("Bash", { command: "find . -maxdepth 0 -exec git push -f origin feature \\;" })],
+  [2, "Bash pipe into bash", payload("Bash", { command: "echo 'git push -f origin feature' | bash" })],
+  [2, "Bash here-string into bash", payload("Bash", { command: "bash <<< 'git push -f origin feature'" })],
+  [2, "Bash coproc", payload("Bash", { command: "coproc git push -f origin feature" })],
+  [0, "Bash plain && chain", payload("Bash", { command: 'git add -A && git commit -m "no force push to master" && git push origin feature' })],
 ];
 for (const [code, name, input] of HOOK_CASES) {
   const r = run(input);
@@ -401,5 +570,9 @@ for (const [code, name, input] of HOOK_CASES) {
 }
 
 rmSync(tmp, { recursive: true, force: true });
-console.log(failed ? `\n${failed} check(s) failed` : `\nall ${CASES.length + HOOK_CASES.length} checks pass`);
+const nDeny = CASES.filter((c) => c[0] === "deny").length;
+console.log(
+  `\ndeny cases ${nDeny}, allow cases ${CASES.length - nDeny}, false-positive table ${SAFE.length} (${safeDenied} denied), stdin hook cases ${HOOK_CASES.length}`,
+);
+console.log(failed ? `${failed} check(s) failed` : `all ${CASES.length + SAFE.length + 1 + HOOK_CASES.length} checks pass`);
 process.exitCode = failed ? 1 : 0;

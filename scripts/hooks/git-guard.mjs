@@ -5,6 +5,29 @@
 //
 //   node scripts/hooks/git-guard.mjs < hook-input.json
 //
+// Threat model. This is a local seatbelt against an agent's mistakes, not a security boundary. Someone set
+// on getting past it can, from outside the shell text it reads. GitHub branch protection is what enforces
+// the remote rules on eye and groundtruth: enforce_admins on, no force push, no deletion of the default
+// branch. The hook catches the mistake before it reaches the remote and says why.
+// Known out of scope: python -c, node -e and perl -e calling git (git in their text is denied, git built
+// at run time isn't seen), git update-ref, git run from a script file, and commands built from variables.
+//
+// Design. Two layers:
+//   1. A precise path for git the guard fully resolves: plain git, after && || ; | & and newlines, in
+//      ( ), bash { ...; } groups, $( ) and <( ), behind known wrappers, inside bash -c / eval / iex
+//      strings and heredocs fed to a shell, and after a PowerShell "$x =". Its rules are below.
+//   2. A residual rule that fails closed. When the git token (git, git.exe, a path ending in /git) appears
+//      inside a construct the guard doesn't model, the command is denied and the reason names the
+//      construct: a PowerShell { } block of any kind (try, if, foreach, %, Invoke-Command, Start-Job,
+//      @{ }), bash brace expansion, an unquoted glob in a push, a pipe or here-string into a shell or iex,
+//      xargs feeding an unseen command, bash backticks, a command name from a variable, a git -c value or
+//      environment variable that holds a command (core.editor, GIT_EDITOR), git subcommands that run a
+//      given command (rebase -x, bisect run, submodule foreach), and any command that is on neither the
+//      modeled list nor the inert list (find -exec, coproc, busybox, parallel, fish, Start-Process, a
+//      function, python -c ...). Inert commands (echo, grep, cat, ls, gh, Write-Output ...) take git as
+//      data. Some safe commands are denied on purpose by this rule: if ($x) { git status }, echo `git x`,
+//      git add src/{a,b}.js, echo 'git status' | bash. Run git as its own command instead.
+//
 // Blocks:
 //   push      --force, -f (alone or in a cluster like -fu), --force-with-lease, --force-if-includes,
 //             a +refspec, --mirror, --all/--branches, and any push whose destination is master or main
@@ -21,7 +44,7 @@
 //             stash needs a tag that names it.
 // Long options count when cut to a prefix, the way git reads them (--har is --hard, --mirr is --mirror,
 // --del --forc is --delete --force), and -- ends the options.
-// It finds git after && || ; | & and newlines, inside ( ), $( ) and backticks, behind wrappers whose options
+// It finds git after && || ; | & and newlines, inside ( ) and $( ) (backticks are denied), behind wrappers whose options
 // take values (sudo -u root, timeout 60, nice -n 5, env -u FOO, stdbuf, strace, xargs, wsl, watch, su -c,
 // env -S), inside bash -c, sh -c, eval, cmd /c, pwsh/powershell -Command and -EncodedCommand, and iex.
 // It decodes bash $'...' escapes ($'\x2df' is -f) and reads PowerShell curly quotes as plain ones.
@@ -40,7 +63,7 @@
 // an earlier command in the same line changes before git runs (git config alias.x ... && git x, git
 // checkout master && git push), since the lookups read the repo as it is now; commands built at run time
 // from variables (blocked when the subcommand or a push option is a variable, missed when the whole command
-// is); Start-Process; and git run from a script file. It is a guardrail against mistakes, not a sandbox.
+// is); and git run from a script file. It is a guardrail against mistakes, not a sandbox.
 //
 // Idea from mattpocock/skills (MIT, (c) 2026 Matt Pocock), misc/git-guardrails-claude-code at 49dd158.
 // No code copied. That script reads its input with jq, so it fails open where jq isn't installed, and it
@@ -62,12 +85,14 @@ const MAX_DEPTH = 8;
 // '' inside single quotes, no backtick substitution, @' '@ here-strings.
 class LexError extends Error {}
 
-function lex(src, ps, start = 0, inSub = false) {
+// meta collects what the guard doesn't model, for the residual check: the spans of PowerShell { } blocks
+// and whether a bash backtick body mentions git. Nested $( ) lexes share it.
+function lex(src, ps, start = 0, inSub = false, meta = { spans: [], open: [], backtickGit: false }) {
   const esc = ps ? "`" : "\\";
   const segs = [];
   const subs = [];
-  let seg = [];
-  seg.bodies = [];
+  const newSeg = () => Object.assign([], { bodies: [], ps });
+  let seg = newSeg();
   let word = null;
   let skipNext = false; // the next word is a redirect target
   let hereNext = null; // the next word is a heredoc delimiter
@@ -88,11 +113,10 @@ function lex(src, ps, start = 0, inSub = false) {
   const endSeg = () => {
     endWord();
     if (seg.length) segs.push(seg);
-    seg = [];
-    seg.bodies = [];
+    seg = newSeg();
   };
   const sub = (from) => {
-    const r = lex(src, ps, from, true);
+    const r = lex(src, ps, from, true, meta);
     subs.push(r);
     startWord().dyn = true;
     return r.end + 1;
@@ -101,6 +125,9 @@ function lex(src, ps, start = 0, inSub = false) {
     let j = from;
     while (j < n && src[j] !== "`") j += src[j] === "\\" ? 2 : 1;
     if (j >= n) throw new LexError("an open backtick");
+    // Inside backticks bash removes one level of backslashes before it parses, which this lexer doesn't
+    // copy. So git inside backticks is never treated as resolved; $( ) is.
+    if (tokenIn(src.slice(from, j))) meta.backtickGit = true;
     subs.push(lex(src.slice(from, j), false));
     startWord().dyn = true;
     return j + 1;
@@ -200,6 +227,9 @@ function lex(src, ps, start = 0, inSub = false) {
         }
         if (d === esc) {
           if (ps) {
+            // "`u{66}" is f and "`n" a newline in PowerShell double quotes. The guard doesn't decode these,
+            // so a word with one is treated like a variable.
+            if (/[0abefnrtuv]/.test(src[i + 1] ?? "")) word.dyn = true;
             word.text += src[i + 1] ?? "";
             i += 2;
           } else if ("$`\"\\\n".includes(src[i + 1] ?? "")) {
@@ -231,7 +261,7 @@ function lex(src, ps, start = 0, inSub = false) {
       if (close < 0) throw new LexError("an open here-string");
       const body = src.slice(src.indexOf("\n", i + 2) + 1, close);
       startWord().text += body;
-      if (q === '"' && /\$/.test(body)) word.dyn = true;
+      if (q === '"' && /[$`]/.test(body)) word.dyn = true;
       i = close + 3;
       continue;
     }
@@ -319,12 +349,18 @@ function lex(src, ps, start = 0, inSub = false) {
       if (!m[1]) skipNext = true;
       continue;
     }
-    startWord().text += c;
+    startWord();
+    if (!ps && c === "{") word.brace = true; // unquoted: bash may brace-expand this word
+    if (!ps && "*?[".includes(c)) word.glob = true; // unquoted: bash may glob-expand this word
+    if (ps && c === "{") meta.open.push(i);
+    if (ps && c === "}" && meta.open.length) meta.spans.push([meta.open.pop(), i + 1]);
+    word.text += c;
     i++;
   }
   if (inSub) throw new LexError("an open $(");
   endSeg();
-  return { segs, subs, end: n };
+  if (!inSub) for (const a of meta.open.splice(0)) meta.spans.push([a, n]);
+  return { segs, subs, end: n, meta };
 }
 
 // ansiEscape(src, p) -> [decoded text, characters used] for the escape whose letter is at src[p], inside a
@@ -427,12 +463,20 @@ const GUARDED = new Set(["push", "reset", "clean", "branch", "stash"]);
 // Config a push reads to pick where it goes, and environment that swaps in other config or another repo.
 const PUSH_CONFIG = /^(?:push|remote|branch|include|includeif)\./i;
 const CONFIG_ENV = /^GIT_CONFIG/;
+// Subcommands that run a command given on their command line: rebase -x, bisect run, submodule foreach ...
+const EXEC_SUBS = new Set(["rebase", "bisect", "submodule", "filter-branch", "filter-repo", "difftool", "mergetool", "for-each-repo"]);
+// Environment that holds a path, not a command, so git in its value is a directory name.
+const PATH_ENV = new Set(["GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY", "GIT_COMMON_DIR", "HOME", "PWD", "OLDPWD", "PATH", "TMPDIR"]);
 
 // checkGit(args after "git", ctx, env set for this command) -> a reason string to block, or null.
 function checkGit(args, ctx, env = {}, depth = 0) {
   if (depth > MAX_DEPTH) return "git aliases nest too deeply for the guard to check";
+  const br = args.find((a) => a.brace && /\{[^{}]*(?:,|\.\.)[^{}]*\}/.test(a.text));
+  if (br) return `bash brace expansion (${br.text}) in a git command: the guard doesn't expand braces, so it can't tell what git gets. Spell the words out`;
   const g = { dir: ctx.cwd, forward: [] };
   const allEnv = { ...ctx.env, ...env };
+  for (const [k, v] of Object.entries(allEnv))
+    if (!PATH_ENV.has(k) && tokenIn(v.text)) return `${k} holds a command with git in it, and git can run it (an editor, pager or ssh command). The guard doesn't follow that`;
   for (const [k, flag] of [["GIT_DIR", "--git-dir"], ["GIT_WORK_TREE", "--work-tree"]]) {
     const v = allEnv[k];
     if (v) v.dyn ? (g.dir = null) : g.forward.push(flag, v.text);
@@ -459,10 +503,14 @@ function checkGit(args, ctx, env = {}, depth = 0) {
     } else if (GLOBAL_FLAGS.has(t)) i++;
     else return `git ${t} before the subcommand isn't an option this guard knows`;
   }
+  const runs = cfg.find((p) => p.value && !p.key?.startsWith("alias.") && tokenIn(p.value));
+  if (runs) return `git -c ${runs.key} holds a command with git in it, and git can run it. The guard doesn't follow that`;
   const sub = args[i];
   if (!sub) return null;
   if (sub.dyn) return "the git subcommand comes from a variable, so the guard can't tell what runs";
   const rest = args.slice(i + 1);
+  if (EXEC_SUBS.has(sub.text) && rest.some((a) => tokenIn(a.text)))
+    return `git ${sub.text} runs a command it is given, and that command has git in it. The guard doesn't follow it. Run that git command on its own`;
   if (GUARDED.has(sub.text) && configEnv.length && (sub.text === "push" || allEnv.GIT_COMMON_DIR))
     return `git ${sub.text} with ${configEnv[0]} set: that swaps in config or refs the guard can't read`;
   switch (sub.text) {
@@ -538,6 +586,7 @@ function checkPush(rest, g) {
     }
     // A variable can hold a flag, a remote or a refspec, so it is never treated as the harmless one.
     if (a.dyn) return "a push argument comes from a variable, so the guard can't tell whether it forces or where it goes";
+    if (a.glob) return `an unquoted glob in a push argument (${a.text}) can expand to master or main. Quote it or spell it out`;
     if (!ended && t.startsWith("-") && t.length > 1) {
       const name = t.split("=")[0];
       if (name.startsWith("--")) {
@@ -718,10 +767,34 @@ const WRAPPERS = new Set([
   "sudo", "doas", "env", "command", "builtin", "exec", "nohup", "time", "nice", "ionice", "chrt", "taskset", "setsid",
   "flock", "timeout", "stdbuf", "strace", "ltrace", "unbuffer", "runuser", "xargs", "wsl", "watch", "su", "script",
 ]);
-const SHELLS = new Set(["bash", "sh", "zsh", "dash", "ksh", "cmd", "pwsh", "powershell"]);
-// Wrappers that also run a string through sh: watch 'git push -f', su -c '...', script -c '...'.
-const STRING_RUNNERS = new Set(["watch", "su", "script"]);
+const SHELLS = new Set(["bash", "sh", "zsh", "dash", "ksh", "fish", "cmd", "pwsh", "powershell"]);
+// Wrappers that run a command with no command words of their own read it from stdin: echo ... | wsl.
+const STDIN_WRAPPERS = new Set(["wsl", "su", "sudo", "doas", "runuser", "script"]);
+// Commands that never run their arguments, so git in their arguments is data: echo "git push -f",
+// grep -rn "git push", ls ~/git. A command that is on no list and has git in its words is denied: that is
+// what makes the guard fail closed on try { }, find -exec, coproc, busybox, parallel and the rest.
+const INERT = new Set([
+  // bash and coreutils
+  "echo", "printf", "cat", "less", "more", "head", "tail", "wc", "sort", "uniq", "cut", "tr", "grep", "egrep",
+  "fgrep", "rg", "ag", "ls", "ll", "dir", "tree", "pwd", "whoami", "date", "which", "type", "where", "file",
+  "stat", "du", "df", "touch", "mkdir", "rmdir", "rm", "cp", "mv", "ln", "chmod", "chown", "basename", "dirname",
+  "realpath", "readlink", "test", "[", "[[", "true", "false", ":", "sleep", "diff", "cmp", "comm", "jq", "column",
+  "tee", "nl", "od", "xxd", "hexdump", "sha256sum", "md5sum", "base64", "curl", "wget", "ssh", "scp", "gh",
+  "code", "open", "start", "explorer", "notepad", "clear", "exit", "return", "set", "unset", "local", "read",
+  "wait", "kill", "jobs", "history", "alias", "unalias", "hash", "help", "man",
+  // PowerShell
+  "write-host", "write-output", "write-error", "write-warning", "write-verbose", "write-information",
+  "get-content", "gc", "get-childitem", "gci", "get-item", "gi", "get-itemproperty", "test-path", "join-path",
+  "split-path", "resolve-path", "get-location", "gl", "select-string", "sls", "out-file", "set-content",
+  "add-content", "new-item", "ni", "remove-item", "ri", "del", "erase", "copy-item", "cpi", "move-item", "mi",
+  "rename-item", "rni", "get-date", "measure-object", "out-null", "out-string", "out-host", "format-table", "ft",
+  "format-list", "fl", "convertto-json", "convertfrom-json", "get-command", "gcm", "get-process", "start-sleep",
+  "clear-host", "cls", "get-help", "get-filehash", "compare-object", "sort-object", "get-unique", "tee-object",
+]);
 const ASSIGN = /^([A-Za-z_][A-Za-z0-9_]*)=([\s\S]*)$/;
+// PowerShell assignment: $x = git ..., $x += ..., [string]$x = ..., $x=git ...
+const PS_VAR = /^(?:\[[^\]]*\])*\$(?:\{[^}]*\}|[A-Za-z_][\w:]*)/;
+const PS_OP = /^(?:[+\-*/%]|\?\?)?=(?!=)/;
 const EVALS = new Set(["eval", "iex", "invoke-expression"]);
 const CDS = new Set(["cd", "pushd", "chdir", "set-location", "sl", "push-location"]);
 
@@ -748,7 +821,66 @@ const assign = (env, w) => {
   return !!m;
 };
 
+// stripPsAssign(words) -> the words after any PowerShell "$x =" in front, so $r = git push ... is checked as
+// git push .... $env:X = ... is left alone: checkSegment records it.
+function stripPsAssign(words) {
+  let w = words;
+  for (;;) {
+    const h = w[0];
+    if (!h || /^\$env:/i.test(h.text)) return w;
+    const v = PS_VAR.exec(h.text);
+    if (!v) return w;
+    let after = h.text.slice(v[0].length);
+    let next = w.slice(1);
+    if (!after && next[0] && PS_OP.test(next[0].text)) {
+      after = next[0].text;
+      next = next.slice(1);
+    }
+    const op = PS_OP.exec(after);
+    if (!op) return w;
+    const tail = after.slice(op[0].length);
+    w = Object.assign(tail ? [{ ...h, text: tail }, ...next] : next, { bodies: words.bodies, ps: words.ps });
+  }
+}
+
+// shellReadsStdin(shell, args) -> true when the shell takes its script from stdin (a pipe or a here-string)
+// rather than from -c, -Command or a script file.
+function shellReadsStdin(name, args) {
+  if (name === "cmd") return !args.some((a) => /^\/[ck]/i.test(a.text));
+  if (name === "pwsh" || name === "powershell") {
+    const valued = ["-executionpolicy", "-workingdirectory", "-configurationname", "-inputformat", "-outputformat", "-windowstyle", "-settingsfile", "-custompipename", "-version", "-psconsolefile"];
+    for (let i = 0; i < args.length; i++) {
+      const t = args[i].text.toLowerCase();
+      if (t === "-") return true;
+      if (!t.startsWith("-")) return false; // a command or a script file
+      if (t.length >= 2 && (["-command", "-file", "-encodedcommand"].some((o) => o.startsWith(t)) || t === "-ec")) return args[i + 1]?.text === "-";
+      if (["-ep", "-wd", "-if", "-of", "-w"].includes(t) || (t.length >= 3 && valued.some((o) => o.startsWith(t)))) i++;
+    }
+    return true;
+  }
+  for (let i = 0; i < args.length; i++) {
+    const t = args[i].text;
+    if (t === "-") return true;
+    if (t === "--") return !args[i + 1];
+    if (/^[-+]O?o$/.test(t) || t === "--rcfile" || t === "--init-file") {
+      i++;
+      continue;
+    }
+    if (t.startsWith("--")) continue;
+    if (/^[-+]/.test(t)) {
+      if (t.includes("c")) return false;
+      if (t.includes("s")) return true;
+      continue;
+    }
+    return false; // a script file
+  }
+  return true;
+}
+
+const wordsText = (ws) => ws.map((w) => w.text).join(" ");
+
 function checkSegment(words, ctx, depth, env = {}, brace = false) {
+  if (words.ps) words = stripPsAssign(words);
   let k = 0;
   env = { ...env };
   // brace: a { block opened in this segment, so a trailing } closes it
@@ -784,11 +916,13 @@ function checkSegment(words, ctx, depth, env = {}, brace = false) {
     return null;
   }
   if (WRAPPERS.has(name)) {
-    if (STRING_RUNNERS.has(name)) {
-      for (const a of args) {
-        const r = scanText(a.text, false, ctx, depth + 1);
-        if (r) return r;
-      }
+    if (name === "xargs") return checkXargs(args, ctx, env);
+    if (STDIN_WRAPPERS.has(name) && !args.some((a) => !a.text.startsWith("-")) && tokenIn(ctx.root))
+      return `a pipe into ${name}, with git in the command: the guard can't see what it reads. Run git directly`;
+    // Any word may be a string the wrapper hands to sh: watch 'git push -f', flock /tmp/l -c '...'.
+    for (const a of args) {
+      const r = scanText(a.text, false, ctx, depth + 1);
+      if (r) return r;
     }
     const wenv = { ...env };
     for (let j = 0; j < args.length; j++) {
@@ -805,8 +939,7 @@ function checkSegment(words, ctx, depth, env = {}, brace = false) {
       }
       const cn = cmdName(w.text);
       if (w.dyn || cn === "git" || SHELLS.has(cn) || EVALS.has(cn) || WRAPPERS.has(cn)) {
-        const rest = args.slice(j);
-        rest.bodies = words.bodies;
+        const rest = Object.assign(args.slice(j), { bodies: words.bodies, ps: words.ps });
         const r = checkSegment(rest, ctx, depth, wenv); // a closing } was already taken off
         if (r) return r;
       }
@@ -815,6 +948,8 @@ function checkSegment(words, ctx, depth, env = {}, brace = false) {
   }
   if (SHELLS.has(name)) {
     const inPs = name === "pwsh" || name === "powershell";
+    if (!words.bodies?.length && shellReadsStdin(name, args) && tokenIn(ctx.root))
+      return `a pipe or here-string into ${name}, with git in the command: the guard can't see what the shell reads. Run git directly`;
     for (let i = 0; i < args.length; i++) {
       const t = args[i].text.toLowerCase();
       if (inPs && args[i + 1] && t.length >= 2 && ("-encodedcommand".startsWith(t) || t === "-ec")) {
@@ -839,13 +974,37 @@ function checkSegment(words, ctx, depth, env = {}, brace = false) {
     }
     return null;
   }
-  if (EVALS.has(name)) return scanText(args.map((a) => a.text).join(" "), name !== "eval", ctx, depth + 1);
+  if (EVALS.has(name)) {
+    if (!args.length && tokenIn(ctx.root)) return `a pipe into ${head.text}, with git in the command: the guard can't see what it runs. Run git directly`;
+    return scanText(args.map((a) => a.text).join(" "), name !== "eval", ctx, depth + 1);
+  }
   if (name === "git") return checkGit(args, ctx, env);
+  // The residual rule. Everything below is a command the guard doesn't model, so git anywhere in its words
+  // (or its heredoc) means git the guard hasn't resolved, and that is denied.
+  const seen = `${wordsText(args)}\n${(words.bodies ?? []).join("\n")}`;
   if (head.dyn) {
     // $GIT push -f: the command name is unknown, so check it as git and block only what git would.
     const r = checkGit(args, ctx, env);
     if (r && /^(?:push|reset|clean|branch|stash)$/.test(args.find((a) => !a.text.startsWith("-"))?.text ?? "")) return r;
+    if (tokenIn(seen)) return `the command name ${head.text} comes from a variable and git appears after it, so the guard can't tell what runs`;
+    return null;
   }
+  if (INERT.has(name) && !(name === "gh" && /^(?:alias|extension|ext)$/.test(args[0]?.text ?? ""))) return null;
+  if (tokenIn(`${head.text} ${seen}`))
+    return `${head.text} isn't a command the guard models, and git appears in it, so the guard can't tell what git runs. Run git as its own command`;
+  return null;
+}
+
+// xargs appends its input to the command, so the git it runs has arguments the guard can't see. They are
+// checked as a variable would be: git push, branch -D, clean and reset block, xargs git add passes.
+function checkXargs(args, ctx, env) {
+  for (let j = 0; j < args.length; j++) {
+    const w = args[j];
+    const cn = cmdName(w.text);
+    if (cn === "git") return checkGit([...args.slice(j + 1), { text: "<xargs input>", dyn: true }], ctx, env);
+    if (w.dyn || SHELLS.has(cn) || EVALS.has(cn) || WRAPPERS.has(cn)) break;
+  }
+  if (tokenIn(wordsText(args))) return "xargs feeds its input to a command with git in it, and the guard can't follow that. Run git directly";
   return null;
 }
 
@@ -867,6 +1026,17 @@ const gitShaped = (s) => /g["'`\\]*i["'`\\]*t|pwsh|powershell|\$'[^']*\\/i.test(
 // PowerShell reads curly quotes as plain ones: git push origin x ‘--force’ is a force push.
 const psQuotes = (s) => s.replace(/[‘’‚‛]/g, "'").replace(/[“”„]/g, '"');
 
+// The git token: git, git.exe, or a path ending in /git or \git, as its own word. .gitignore, .git/config,
+// git-guard, ~/git/repo and git@github.com are not it. Quotes and empty $( ) are dropped first, since an
+// inner shell would drop them ('g"i"t', g$()it), and backslashes are read both as escapes and as path
+// separators. A $'...' with an escape in it can spell anything, so it counts too.
+const GIT_TOKEN = /(?<![\w.\-])git(?:\.exe)?(?![\w.\-/\\@:])/i;
+function tokenIn(s) {
+  if (!s) return false;
+  const t = s.replace(/["'`]/g, "").replace(/\$\(\s*\)|\$\{\s*\}/g, "");
+  return GIT_TOKEN.test(t.replace(/\\/g, "")) || GIT_TOKEN.test(t.replace(/\\/g, "/")) || /\$'[^']*\\/.test(s);
+}
+
 function scanText(src, ps, ctx, depth) {
   if (ps) src = psQuotes(src);
   if (!gitShaped(src)) return null;
@@ -878,12 +1048,16 @@ function scanText(src, ps, ctx, depth) {
     if (e instanceof LexError) return `the guard can't parse this command (${e.message})`;
     throw e;
   }
+  if (lx.meta.backtickGit) return "git inside bash backticks: the guard doesn't model backtick escaping. Use $( ) instead";
+  for (const [a, b] of lx.meta.spans)
+    if (tokenIn(src.slice(a, b)))
+      return "git inside a PowerShell script block { } (try, if, foreach, %, Invoke-Command, Start-Job ...): the guard doesn't model what runs inside one. Run git as its own command";
   return scanLexed(lx, ctx, depth);
 }
 
 // checkCommand(command, ps, cwd) -> a reason string to block, or null to allow.
 export function checkCommand(command, ps = false, cwd = null) {
-  const ctx = { cwd: typeof cwd === "string" && cwd ? path.resolve(cwd) : null, env: {} };
+  const ctx = { cwd: typeof cwd === "string" && cwd ? path.resolve(cwd) : null, env: {}, root: ps ? psQuotes(command) : command };
   return scanText(command, ps, ctx, 0);
 }
 
