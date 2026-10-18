@@ -1,0 +1,181 @@
+{
+  "note": "CIK -> class for reporting owners the word test in scripts/people_classify.py gets wrong. CIKs and classes only, never names (a CIK resolves to its name on EDGAR). Checked by hand against the 2024q3-2026q2 roster. See docs/PEOPLE.md, 'Who counts as what'.",
+  "overrides": [
+    {
+      "cik": "0000314984",
+      "class": "entity"
+    },
+    {
+      "cik": "0000792990",
+      "class": "entity"
+    },
+    {
+      "cik": "0000898286",
+      "class": "entity"
+    },
+    {
+      "cik": "0001056947",
+      "class": "entity"
+    },
+    {
+      "cik": "0001259869",
+      "class": "entity"
+    },
+    {
+      "cik": "0001311759",
+      "class": "entity"
+    },
+    {
+      "cik": "0001330387",
+      "class": "entity"
+    },
+    {
+      "cik": "0001392780",
+      "class": "entity"
+    },
+    {
+      "cik": "0001433317",
+      "class": "entity"
+    },
+    {
+      "cik": "0001531885",
+      "class": "entity"
+    },
+    {
+      "cik": "0001581835",
+      "class": "entity"
+    },
+    {
+      "cik": "0001632373",
+      "class": "entity"
+    },
+    {
+      "cik": "0001655148",
+      "class": "entity"
+    },
+    {
+      "cik": "0001729635",
+      "class": "entity"
+    },
+    {
+      "cik": "0001731118",
+      "class": "entity"
+    },
+    {
+      "cik": "0001783455",
+      "class": "entity"
+    },
+    {
+      "cik": "0001876264",
+      "class": "entity"
+    },
+    {
+      "cik": "0001883139",
+      "class": "entity"
+    },
+    {
+      "cik": "0001889193",
+      "class": "entity"
+    },
+    {
+      "cik": "0001956510",
+      "class": "entity"
+    },
+    {
+      "cik": "0001972882",
+      "class": "entity"
+    },
+    {
+      "cik": "0001993256",
+      "class": "entity"
+    },
+    {
+      "cik": "0001993718",
+      "class": "entity"
+    },
+    {
+      "cik": "0002008729",
+      "class": "entity"
+    },
+    {
+      "cik": "0002008855",
+      "class": "entity"
+    },
+    {
+      "cik": "0002008859",
+      "class": "entity"
+    },
+    {
+      "cik": "0002009044",
+      "class": "entity"
+    },
+    {
+      "cik": "0002009094",
+      "class": "entity"
+    },
+    {
+      "cik": "0002009104",
+      "class": "entity"
+    },
+    {
+      "cik": "0002009129",
+      "class": "entity"
+    },
+    {
+      "cik": "0002009391",
+      "class": "entity"
+    },
+    {
+      "cik": "0002009716",
+      "class": "entity"
+    },
+    {
+      "cik": "0002009717",
+      "class": "entity"
+    },
+    {
+      "cik": "0002010099",
+      "class": "entity"
+    },
+    {
+      "cik": "0002012114",
+      "class": "entity"
+    },
+    {
+      "cik": "0002037057",
+      "class": "entity"
+    },
+    {
+      "cik": "0002046115",
+      "class": "entity"
+    },
+    {
+      "cik": "0002065260",
+      "class": "entity"
+    },
+    {
+      "cik": "0002079703",
+      "class": "entity"
+    },
+    {
+      "cik": "0002080095",
+      "class": "entity"
+    },
+    {
+      "cik": "0002081011",
+      "class": "entity"
+    },
+    {
+      "cik": "0002099035",
+      "class": "entity"
+    },
+    {
+      "cik": "0002124920",
+      "class": "entity"
+    },
+    {
+      "cik": "0002124921",
+      "class": "entity"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+ "note": "NOAA OCM dc_slr/slr_3ft MapServer /legend?f=json, 2026-09-26; swatch = centre pixel of each legend image",
+ "layers": [
+  {
+   "layerId": 0,
+   "layerName": "3ft SLR Low-lying Areas",
+   "legend": [
+    {
+     "label": "",
+     "swatch": "#55FF00"
+    }
+   ]
+  },
+  {
+   "layerId": 1,
+   "layerName": "3ft SLR Depth",
+   "legend": [
+    {
+     "label": "High - Low",
+     "swatch": "#4895E5"
+    }
+   ]
+  }
+ ]
+}

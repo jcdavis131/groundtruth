@@ -1,0 +1,84 @@
+{
+ "adapter": "mt-statewide",
+ "capturedAt": "2026-09-26T15:37:43.203Z",
+ "point": [
+  -112.0181,
+  46.5857
+ ],
+ "county": {
+  "geoid": "30049",
+  "name": "Lewis and Clark County",
+  "basename": "Lewis and Clark",
+  "state": "30"
+ },
+ "rows": [
+  {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -112.016679,
+       46.585408
+      ],
+      [
+       -112.0167,
+       46.586705
+      ],
+      [
+       -112.020169,
+       46.586679
+      ],
+      [
+       -112.020154,
+       46.585231
+      ],
+      [
+       -112.019875,
+       46.585041
+      ],
+      [
+       -112.016673,
+       46.585065
+      ],
+      [
+       -112.016679,
+       46.585408
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "PARCELID": "05188832244010000",
+    "PropertyID": 532483,
+    "AssessmentCode": "0000031489",
+    "TaxYear": 2026,
+    "CountyName": "Lewis and Clark",
+    "Township": "10 N",
+    "Range": "03 W",
+    "Section": "32",
+    "LegalDescriptionShort": "CORBIN SUBD, S32, T10 N, R03 W, BLOCK 7, Lot 1 - 30, BLK 8 LTS 1-32 BLK 17 LTS 1-32 BLK 18 LTS 1-27, VACATED ROBERTS ST & FIFTH AVE",
+    "Subdivision": "CORBIN SUBD",
+    "CertificateOfSurvey": null,
+    "AddressLine1": "118 N ROBERTS ST ",
+    "AddressLine2": "",
+    "CityStateZip": "HELENA, MT 59601",
+    "PropType": "Exempt Property",
+    "TotalAcres": 11.921,
+    "GISAcres": 11.92297071,
+    "TotalBuildingValue": 0,
+    "TotalLandValue": 1299920,
+    "TotalValue": 1299920,
+    "OwnerName": "STATE OF MONTANA DEPT OF ADMIN ATTN GSD",
+    "OwnerAddress1": "PO BOX 200110",
+    "OwnerAddress2": null,
+    "OwnerAddress3": null,
+    "OwnerCity": "HELENA",
+    "OwnerState": "MT",
+    "OwnerZipCode": "59620-0110",
+    "DbaName": null,
+    "CareOfTaxpayer": null
+   }
+  }
+ ]
+}

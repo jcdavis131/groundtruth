@@ -1,0 +1,1271 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-display), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-display: var(--font-display), system-ui, sans-serif;
+  --font-heading: var(--font-display), system-ui, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-alert: var(--alert);
+  --color-warn: var(--warn);
+  --color-signal: var(--signal);
+  --color-signal-foreground: var(--signal-foreground);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ---------- Paper default + night-board dark ----------
+   The chrome defaults to a quiet-luxury monochrome paper shell; the globe
+   viewport stays dark in both themes so the DATA carries the colour (the way
+   a Threads page lets a vivid video be the only colour). The .dark class on
+   <html> opts into the original "Embedding Atlas cockpit". A small sun/moon
+   toggle in the top bar flips it, persisted in localStorage.
+   Contrast on white — foreground 16.7:1, muted-foreground (#737373) 4.8:1,
+   signal (#b45309) 4.7:1, warn (#92400e) 5.9:1, alert (#dc2626) 4.8:1.
+   Cockpit contrast (unchanged): foreground 12:1, primary 12:1,
+   muted-foreground 5.4:1, signal 10:1, warn 11:1, alert 6.4:1. */
+:root {
+  --background: #ffffff;
+  --foreground: #111111;
+  --card: #ffffff;
+  --card-foreground: #111111;
+  --popover: #ffffff;
+  --popover-foreground: #111111;
+  --primary: #111111;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #111111;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  --accent: #f5f5f5;
+  --accent-foreground: #111111;
+  --destructive: #dc2626;
+  --alert: #dc2626;
+  --warn: #92400e;
+  --signal: #b45309;
+  --signal-foreground: #ffffff;
+  --border: #e8e8e8;
+  --input: #e8e8e8;
+  --ring: #111111;
+  --chart-1: #2563eb;
+  --chart-2: #0d9488;
+  --chart-3: #b45309;
+  --chart-4: #dc2626;
+  --chart-5: #7c3aed;
+  --radius: 1rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #111111;
+  --sidebar-primary: #111111;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f5f5f5;
+  --sidebar-accent-foreground: #111111;
+  --sidebar-border: #e8e8e8;
+  --sidebar-ring: #111111;
+
+  /* Chrome: the hairline and the brightest readout ink. */
+  --hairline: #e8e8e8;
+  --glass: rgba(255, 255, 255, 0.92);
+  --glass-deep: rgba(255, 255, 255, 0.97);
+  --bracket: #d4d4d4;
+  --bright: #111111;
+
+  /* Chrome type: the rounded geometric sans. Data readouts keep tabular mono
+     through explicit font-mono / tabular-nums classes on the readout elements. */
+  --font-chrome: var(--font-sans);
+
+  /* Type scale, relaxed for the paper chrome. */
+  --text-micro: 10px;
+  --text-caption: 12px;
+  --text-body: 13px;
+  --text-data: 13px;
+  --text-read: 14px;
+  --text-heading: 17px;
+  --text-title: 20px;
+  --text-card: clamp(24px, 5.2vw, 64px);
+  --track-label: 0.06em;
+  --track-display: 0;
+  --track-title: 0.3em;
+
+  /* Pacing: long, confident, never bouncy. */
+  --ease-slow: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --dur-quick: 180ms;
+  --dur-slow: 900ms;
+
+  /* The chrome grid: gutter, top-bar height, side-column width. */
+  --gutter: 16px;
+  --bar-h: 56px;
+  --col-w: 320px;
+  color-scheme: light;
+}
+
+/* Night-board: the original dark cockpit, opt-in via the .dark class. */
+.dark {
+  --background: #05070a;
+  --foreground: #c9d1d9;
+  --card: rgba(7, 10, 14, 0.84);
+  --card-foreground: #c9d1d9;
+  --popover: #080b10;
+  --popover-foreground: #d6dde4;
+  --primary: #b4dcf2;
+  --primary-foreground: #041018;
+  --secondary: rgba(180, 210, 235, 0.07);
+  --secondary-foreground: #d6e6f0;
+  --muted: rgba(150, 170, 190, 0.1);
+  --muted-foreground: #7d8894;
+  --accent: rgba(180, 210, 235, 0.09);
+  --accent-foreground: #eef6fb;
+  --destructive: #ff5f56;
+  --alert: #ff5f56;
+  --warn: #e0bd84;
+  --signal: #ffa458;
+  --signal-foreground: #1a0c02;
+  --border: rgba(180, 210, 235, 0.13);
+  --input: rgba(180, 210, 235, 0.12);
+  --ring: rgba(255, 164, 88, 0.75);
+  --chart-1: #4dd8ff;
+  --chart-2: #79e6a8;
+  --chart-3: #f5b849;
+  --chart-4: #ff6b3d;
+  --chart-5: #b48cff;
+  --radius: 0.125rem;
+  --sidebar: #080b10;
+  --sidebar-foreground: #c9d1d9;
+  --sidebar-primary: #b4dcf2;
+  --sidebar-primary-foreground: #041018;
+  --sidebar-accent: rgba(180, 210, 235, 0.09);
+  --sidebar-accent-foreground: #eef6fb;
+  --sidebar-border: rgba(180, 210, 235, 0.13);
+  --sidebar-ring: rgba(255, 164, 88, 0.75);
+
+  /* Chrome: the hairline, the panel glass, the bracket ink. */
+  --hairline: rgba(180, 210, 235, 0.13);
+  --glass: rgba(6, 9, 13, 0.84);
+  --glass-deep: rgba(4, 6, 9, 0.9);
+  --bracket: rgba(214, 230, 242, 0.55);
+  /* Readouts and titles: the brightest ink in the chrome. */
+  --bright: #eef3f7;
+
+  /* Chrome type: the cockpit's tabular mono. */
+  --font-chrome: var(--font-mono);
+
+  /* Type scale. One display face (Geist, tracked, uppercase) and one text face
+     (Geist Mono, tabular). Components use these through the hud-* classes. */
+  --text-micro: 9px;
+  --text-caption: 10px;
+  --text-body: 11px;
+  --text-data: 12px;
+  --text-read: 13px;
+  --text-heading: 15px;
+  --text-title: 18px;
+  --text-card: clamp(20px, 5.2vw, 64px);
+  --track-label: 0.22em;
+  --track-display: 0.14em;
+  --track-title: 0.42em;
+
+  /* Pacing: long, confident, never bouncy. */
+  --ease-slow: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --dur-quick: 180ms;
+  --dur-slow: 900ms;
+
+  /* The HUD grid: gutter, top-bar height, side-column width. */
+  --gutter: 12px;
+  --bar-h: 48px;
+  --col-w: 300px;
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    /* Phones must not "boost" the HUD's small type: the grid is set in px. */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  html,
+  body {
+    height: 100%;
+    background: var(--background);
+    color: var(--foreground);
+  }
+  body {
+    font-family: var(--font-chrome);
+    font-size: var(--text-data);
+    font-variant-numeric: tabular-nums;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--signal) 38%, transparent);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 1px solid var(--signal);
+    outline-offset: 2px;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(180, 210, 235, 0.22);
+    border-radius: 0;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(180, 210, 235, 0.4);
+  }
+  * {
+    scrollbar-color: rgba(180, 210, 235, 0.22) transparent;
+  }
+}
+
+/* ---------- Cesium chrome ---------- */
+.cesium-viewer,
+.cesium-widget,
+.cesium-widget canvas {
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+/* Attribution stays visible (Esri / NASA / OSM require it); it is just kept tiny. */
+.cesium-viewer-bottom {
+  display: none !important;
+}
+.cesium-widget-credits {
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  line-height: 1;
+  color: rgba(201, 209, 217, 0.45);
+}
+.cesium-widget-credits a {
+  color: rgba(201, 209, 217, 0.55);
+  text-decoration: none;
+}
+.cesium-credit-logoContainer,
+.cesium-credit-logoContainer img,
+.cesium-credit-logoContainer svg {
+  height: 14px !important;
+  width: auto;
+  opacity: 0.5;
+}
+.cesium-credit-expand-link {
+  color: rgba(180, 220, 242, 0.7);
+  cursor: pointer;
+}
+.cesium-credit-lightbox-overlay {
+  background: rgba(5, 7, 10, 0.85) !important;
+  font-family: var(--font-geist-mono), monospace;
+}
+.cesium-credit-lightbox {
+  background: var(--popover) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+}
+.cesium-credit-lightbox a {
+  color: var(--primary) !important;
+}
+.cesium-performanceDisplay-defaultContainer {
+  top: 56px;
+  right: 12px;
+  background: rgba(5, 7, 10, 0.7);
+  border: 1px solid var(--border);
+  font-family: var(--font-geist-mono), monospace;
+}
+
+/* ---------- HUD primitives ---------- */
+.hud-label {
+  font-size: var(--text-caption);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--foreground) 62%, transparent);
+}
+.hud-display {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+}
+/* Panels: dark glass, a hairline, and four matching corner brackets drawn by
+   one pseudo-element so every panel is symmetric about both of its axes. */
+/* In the components layer so a utility on the same element (a dialog's
+   `fixed`, a popover's `absolute`) still places it; unlayered, this used to
+   pin every dialog built on .hud-panel into the document flow. */
+@layer components {
+  .hud-panel {
+    position: relative;
+  }
+}
+.hud-panel {
+  --b: var(--bracket);
+  background: var(--glass);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 18px 48px -24px rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(12px) saturate(0.9);
+  -webkit-backdrop-filter: blur(12px) saturate(0.9);
+}
+.hud-panel::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--b), var(--b)) left top / 9px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) left top / 1px 9px no-repeat,
+    linear-gradient(var(--b), var(--b)) right top / 9px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) right top / 1px 9px no-repeat,
+    linear-gradient(var(--b), var(--b)) left bottom / 9px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) left bottom / 1px 9px no-repeat,
+    linear-gradient(var(--b), var(--b)) right bottom / 9px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) right bottom / 1px 9px no-repeat;
+}
+/* A panel that holds the current selection carries the signal on its top edge. */
+.hud-panel-lit {
+  --b: var(--signal);
+}
+.hud-panel-lit::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -1px;
+  width: 48px;
+  height: 1px;
+  margin-left: -24px;
+  background: var(--signal);
+  pointer-events: none;
+}
+.hud-panel a.text-primary,
+.hud-panel button.text-primary.hover\:underline {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--primary) 35%, transparent);
+  text-underline-offset: 3px;
+}
+.hud-panel a.text-primary:hover,
+.hud-panel button.text-primary.hover\:underline:hover {
+  text-decoration-color: currentColor;
+}
+/* Definition lists inside panels: tighter tracking so keys fit their column. */
+.hud-panel dt.hud-label {
+  font-size: var(--text-micro);
+  letter-spacing: 0.14em;
+  padding-top: 2px;
+}
+.hud-corner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-color: color-mix(in oklab, var(--foreground) 34%, transparent);
+}
+.hud-kbd {
+  font-size: 9px;
+  padding: 1px 4px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--muted-foreground);
+}
+.hud-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  box-shadow: 0 0 6px currentColor;
+}
+/* The live/online lamp: the only element that glows in the warm accent. */
+.hud-lamp {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--signal);
+  box-shadow: 0 0 8px color-mix(in oklab, var(--signal) 70%, transparent);
+}
+.hud-lamp-off {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--muted-foreground);
+}
+/* A chrome button in the top bar and the captions: icon-only, square, lit on hover. */
+.hud-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  min-width: 28px;
+  padding: 0 7px;
+  font-size: var(--text-caption);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--foreground) 78%, transparent);
+  transition:
+    color var(--dur-quick) var(--ease-slow),
+    background-color var(--dur-quick) var(--ease-slow);
+}
+.hud-btn:hover {
+  color: var(--accent-foreground);
+  background: var(--accent);
+}
+.hud-btn[aria-pressed="true"],
+.hud-btn[data-on="true"] {
+  color: var(--primary);
+  background: color-mix(in oklab, var(--primary) 10%, transparent);
+  box-shadow: inset 0 -1px 0 var(--primary);
+}
+.hud-rule {
+  width: 1px;
+  align-self: stretch;
+  background: var(--hairline);
+}
+
+/* ---------- Paper chrome (light default) ----------
+   The quiet-luxury shell: soft white cards, whisper hairlines, no cockpit
+   furniture. Hierarchy comes from weight and gray tone, not colour. The globe
+   viewport itself stays dark — it is the vivid content the shell frames. */
+html:not(.dark) .hud-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 32px -20px rgba(0, 0, 0, 0.22);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+/* Corner brackets are cockpit furniture; the paper shell uses plain hairlines. */
+html:not(.dark) .hud-panel::before {
+  display: none;
+}
+html:not(.dark) .scanlines {
+  display: none;
+}
+html:not(.dark) .hud-label {
+  font-weight: 600;
+  color: var(--muted-foreground);
+}
+html:not(.dark) .hud-display {
+  font-family: inherit;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+}
+html:not(.dark) .hud-btn {
+  border-radius: 999px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+}
+html:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: #a3a3a3;
+}
+html:not(.dark) * {
+  scrollbar-color: #d4d4d4 transparent;
+}
+
+/* ---------- Skeleton shimmer ----------
+   Gentle gray placeholder bars that resolve into content — the Threads loading
+   feel. Used by layer panels and asides while their data is in flight. */
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+.skeleton {
+  display: inline-block;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--muted) 25%,
+    color-mix(in oklab, var(--muted) 45%, var(--card)) 50%,
+    var(--muted) 75%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+
+/* ---------- Frame ---------- */
+.scanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.1) 3px,
+    rgba(0, 0, 0, 0) 4px
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+}
+/* The globe is the monolith at the centre: a deep, even falloff to the frame. */
+.vignette {
+  background:
+    radial-gradient(ellipse 70% 78% at 50% 50%, rgba(0, 0, 0, 0) 58%, rgba(2, 3, 5, 0.62) 100%),
+    linear-gradient(to bottom, rgba(2, 3, 5, 0.55) 0, rgba(2, 3, 5, 0) 120px),
+    linear-gradient(to top, rgba(2, 3, 5, 0.5) 0, rgba(2, 3, 5, 0) 140px);
+}
+/* Axis ticks at the midpoint of every frame edge: the one-point lines of the view. */
+.frame-tick {
+  position: absolute;
+  background: color-mix(in oklab, var(--foreground) 30%, transparent);
+}
+.frame-tick-n,
+.frame-tick-s {
+  left: 50%;
+  width: 1px;
+  height: 10px;
+  margin-left: -0.5px;
+}
+.frame-tick-e,
+.frame-tick-w {
+  top: 50%;
+  height: 1px;
+  width: 10px;
+  margin-top: -0.5px;
+}
+
+/* ---------- Reticle ---------- */
+.reticle {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border: 1px solid color-mix(in oklab, var(--foreground) 32%, transparent);
+  border-radius: 999px;
+  transition:
+    border-color var(--dur-slow) var(--ease-slow),
+    transform var(--dur-slow) var(--ease-slow);
+}
+.reticle::before {
+  content: "";
+  position: absolute;
+  inset: -34px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--foreground) 9%, transparent);
+}
+.reticle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  margin: -1.5px;
+  border-radius: 999px;
+  background: var(--signal);
+  box-shadow: 0 0 6px color-mix(in oklab, var(--signal) 80%, transparent);
+}
+.reticle-lock {
+  border-color: var(--signal);
+  transform: rotate(45deg) scale(1.15);
+}
+.reticle-tick {
+  position: absolute;
+  background: color-mix(in oklab, var(--foreground) 45%, transparent);
+}
+.reticle-lock .reticle-tick {
+  background: var(--signal);
+}
+.reticle-n,
+.reticle-s {
+  left: 50%;
+  width: 1px;
+  height: 10px;
+  margin-left: -0.5px;
+}
+.reticle-e,
+.reticle-w {
+  top: 50%;
+  height: 1px;
+  width: 10px;
+  margin-top: -0.5px;
+}
+.reticle-n {
+  top: -14px;
+}
+.reticle-s {
+  bottom: -14px;
+}
+.reticle-e {
+  right: -14px;
+}
+.reticle-w {
+  left: -14px;
+}
+
+/* ---------- Timeline scrubber ---------- */
+.timeline-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 3px;
+  height: 16px;
+  border-radius: 0;
+  background: var(--signal);
+  box-shadow: 0 0 8px color-mix(in oklab, var(--signal) 60%, transparent);
+}
+.timeline-range::-moz-range-thumb {
+  width: 3px;
+  height: 16px;
+  border: 0;
+  border-radius: 0;
+  background: var(--signal);
+}
+
+/* ---------- Title card ----------
+   The first frame: the name, the rule, one line of fact, the boot status. It sits
+   over the globe while Cesium loads and fades once the globe is online; any key
+   or tap skips it and it never takes pointer events. */
+.title-card {
+  position: absolute;
+  inset: 0;
+  z-index: 45;
+  pointer-events: none;
+  /* Follows the theme: the dark cockpit keeps its deep radial, the paper
+     shell gets a clean white one. */
+  background: radial-gradient(
+    ellipse 60% 60% at 50% 50%,
+    color-mix(in oklab, var(--background) 55%, transparent),
+    var(--background) 80%
+  );
+  transition: opacity 1200ms var(--ease-slow);
+}
+.title-card[data-state="out"] {
+  opacity: 0;
+}
+.title-card-name {
+  white-space: nowrap;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 300;
+  font-size: var(--text-card);
+  line-height: 1;
+  letter-spacing: var(--track-title);
+  /* Tracking adds space after the last letter; pull it back so the word is centred. */
+  margin-right: calc(-1 * var(--track-title));
+  text-transform: uppercase;
+  color: var(--bright);
+}
+@media (max-width: 520px) {
+  .title-card-name {
+    --track-title: 0.3em;
+  }
+}
+/* The rule runs along the horizontal axis and parts around the reticle. */
+.title-card-rule {
+  height: 1px;
+  width: min(220px, 30vw);
+  background: linear-gradient(90deg, transparent, var(--signal));
+}
+.title-card-rule + .title-card-rule {
+  background: linear-gradient(90deg, var(--signal), transparent);
+}
+.title-card-rule-solo {
+  width: min(420px, 60vw);
+  margin: 28px auto;
+  background: linear-gradient(90deg, transparent, var(--signal) 30%, var(--signal) 70%, transparent);
+}
+.tc-1,
+.tc-3,
+.tc-4 {
+  animation: title-rise 1400ms var(--ease-slow) both;
+}
+.tc-2 {
+  animation: title-draw 1600ms var(--ease-slow) 250ms both;
+}
+.tc-3 {
+  animation-delay: 500ms;
+}
+.tc-4 {
+  animation-delay: 750ms;
+}
+@keyframes title-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes title-draw {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+/* Panels and captions enter on the same slow ease. */
+.hud-enter {
+  animation: title-rise 700ms var(--ease-slow) both;
+}
+
+/* ---------- Motion ---------- */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+.blink {
+  animation: blink 1.4s steps(2, jump-none) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .blink,
+  .tc-1,
+  .tc-2,
+  .tc-3,
+  .tc-4,
+  .hud-enter {
+    animation: none;
+  }
+  .title-card,
+  .reticle,
+  .hud-btn {
+    transition: none;
+  }
+}
+
+/* ---------- Desk mode ----------
+   lib/desk/store.ts sets data-mode="desk" and data-theme="light|dark" on <html>.
+   Nothing below applies when data-mode is absent, so the HUD is untouched.
+   Structure (density, fonts, no scanlines/glow) keys off data-mode; the light
+   palette keys off data-theme so a dark desk keeps the cockpit tokens. */
+[data-mode="desk"][data-theme="light"] {
+  /* Contrast on white: foreground 15:1, muted-foreground 7.5:1, primary 6.3:1, warn 6.2:1, alert 6.6:1 (WCAG AA for 11-12 px text). */
+  --background: #f4f6f8;
+  --foreground: #16202a;
+  --card: #ffffff;
+  --card-foreground: #16202a;
+  --popover: #ffffff;
+  --popover-foreground: #16202a;
+  --primary: #0b6e5c;
+  --primary-foreground: #ffffff;
+  --secondary: #e6f1ee;
+  --secondary-foreground: #0b4f43;
+  --muted: #eceff3;
+  --muted-foreground: #4a5563;
+  --accent: #dcefe9;
+  --accent-foreground: #0b4f43;
+  --destructive: #b42318;
+  --alert: #b42318;
+  --warn: #8a5300;
+  --border: #cdd4dc;
+  --input: #cdd4dc;
+  --ring: #0b6e5c;
+  --chart-1: #1d4ed8;
+  --chart-2: #0b6e5c;
+  --chart-3: #b45309;
+  --chart-4: #be185d;
+  --chart-5: #6d28d9;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #16202a;
+  --sidebar-primary: #0b6e5c;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #dcefe9;
+  --sidebar-accent-foreground: #0b4f43;
+  --sidebar-border: #cdd4dc;
+  --sidebar-ring: #0b6e5c;
+  /* The signal stays warm on paper but dark enough for AA (5.3:1 on white). */
+  --signal: #a64b00;
+  --signal-foreground: #ffffff;
+  --bright: #0d1620;
+  --hairline: #cdd4dc;
+  --bracket: #9aa6b2;
+  color-scheme: light;
+}
+[data-mode="desk"][data-theme="light"] ::selection {
+  background: #bfe3d8;
+}
+[data-mode="desk"][data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #b7c0ca;
+}
+[data-mode="desk"][data-theme="light"] .cesium-widget-credits,
+[data-mode="desk"][data-theme="light"] .cesium-widget-credits a {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Density and type: a system stack with tabular figures, tighter panels. */
+[data-mode="desk"] body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+}
+[data-mode="desk"] .hud-display {
+  font-family: inherit;
+  letter-spacing: 0;
+  text-transform: none;
+}
+[data-mode="desk"] .hud-label {
+  color: var(--primary);
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+[data-mode="desk"] .hud-panel {
+  background: var(--card);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+[data-mode="desk"] .hud-panel::before,
+[data-mode="desk"] .hud-panel::after,
+[data-mode="desk"] .scanlines,
+[data-mode="desk"] .vignette,
+[data-mode="desk"] .hud-corner {
+  display: none;
+}
+[data-mode="desk"] .hud-dot {
+  box-shadow: none;
+}
+[data-mode="desk"] .reticle {
+  opacity: 0.6;
+}
+/* Cockpit's floating report column sits under the pane; hide it so reports
+   render once, in the Report tab. Integrator: add class "desk-hud-only" to
+   that column. The second selector is a fallback on its Tailwind classes. */
+[data-mode="desk"] .desk-hud-only,
+[data-mode="desk"] main > div.top-\[71px\] {
+  display: none;
+}
+/* Visible focus in both desk themes. */
+[data-mode="desk"] :focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+[data-mode="desk"] .desk-pane {
+  transition: width 160ms ease;
+  /* Cockpit's <main> is select-none; analysts copy from the pane. */
+  user-select: text;
+  -webkit-user-select: text;
+}
+[data-mode="desk"] .desk-layout[data-dragging] .desk-pane {
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-mode="desk"] .desk-pane {
+    transition: none;
+  }
+}
+.desk-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--card);
+  color: var(--foreground);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.desk-btn:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+.desk-btn:disabled {
+  opacity: 0.5;
+}
+.desk-btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+}
+.desk-btn-primary:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--primary) 85%, black);
+  color: var(--primary-foreground);
+}
+.desk-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 0 6px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 10px;
+  color: var(--foreground);
+}
+.desk-chip-on {
+  background: var(--accent);
+  border-color: var(--primary);
+  color: var(--accent-foreground);
+}
+.desk-grid th,
+.desk-grid td {
+  line-height: 1.2;
+}
+/* Reports laid out as documents: no viewport cap, no inner scroll, no
+   pink/blue brand tints on the light paper, tighter section padding. */
+.desk-doc .hud-panel {
+  max-height: none !important;
+  border-radius: 3px;
+}
+.desk-doc .hud-panel .overflow-y-auto {
+  overflow: visible !important;
+}
+.desk-doc .hud-panel .py-2 {
+  padding-block: 5px;
+}
+[data-mode="desk"][data-theme="light"] .desk-doc .hud-label[style] {
+  color: var(--primary) !important;
+}
+.desk-print-only {
+  display: none;
+}
+
+/* ---------- Print (desk mode) ----------
+   Hides the globe and the chrome; the right pane prints full width with a
+   page break between report sections. The HUD (no data-mode) prints as-is. */
+@media print {
+  html[data-mode="desk"],
+  [data-mode="desk"] body {
+    height: auto;
+    overflow: visible;
+    background: #fff;
+    color: #111;
+  }
+  [data-mode="desk"] main {
+    position: static;
+    height: auto;
+    overflow: visible;
+    background: #fff;
+  }
+  [data-mode="desk"] main > *:not(.desk-layout) {
+    display: none !important;
+  }
+  [data-mode="desk"] .desk-layout {
+    position: static;
+    inset: auto;
+  }
+  [data-mode="desk"] .desk-pane {
+    position: static;
+    width: 100% !important;
+    max-width: none !important;
+    border: 0;
+    background: #fff;
+    color: #111;
+  }
+  [data-mode="desk"] .desk-noprint,
+  [data-mode="desk"] .desk-handle {
+    display: none !important;
+  }
+  [data-mode="desk"] .desk-scroll,
+  [data-mode="desk"] .desk-pane .overflow-y-auto,
+  [data-mode="desk"] .desk-pane .overflow-auto {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+  [data-mode="desk"] .desk-doc {
+    display: block;
+  }
+  [data-mode="desk"] .desk-section {
+    break-inside: avoid;
+    break-after: page;
+  }
+  [data-mode="desk"] .desk-section:last-child {
+    break-after: auto;
+  }
+  [data-mode="desk"] .desk-doc button {
+    display: none;
+  }
+  [data-mode="desk"] .desk-notes {
+    display: none;
+  }
+  [data-mode="desk"] .desk-print-only {
+    display: block;
+  }
+  [data-mode="desk"] .desk-grid thead {
+    display: table-header-group;
+  }
+  [data-mode="desk"] .desk-grid tr {
+    break-inside: avoid;
+  }
+}
+
+/* ---------- Phone layout (below md) ----------
+   Cockpit swaps the pinned panels for a bottom stack: one sheet holding every
+   open panel, a compact timeline and a nav strip. The panels keep their
+   desktop markup; these rules relax the widths and inner max-heights so the
+   sheet is the only thing that scrolls. */
+.mobile-sheet-half {
+  max-height: min(48dvh, 480px);
+}
+.mobile-sheet-tall {
+  max-height: calc(100dvh - 190px);
+}
+.mobile-sheet .hud-panel {
+  width: 100% !important;
+  max-width: 100% !important;
+  max-height: none !important;
+}
+.mobile-sheet .mobile-sheet-body > * {
+  width: 100%;
+}
+/* Inner scroll regions become part of the sheet's single scroll. */
+.mobile-sheet .hud-panel .overflow-y-auto {
+  max-height: none !important;
+  overflow-y: visible !important;
+}
+/* Tables and code stay scrollable sideways inside the sheet. */
+.mobile-sheet table,
+.mobile-sheet pre {
+  max-width: 100%;
+}
+.mobile-nav {
+  -webkit-overflow-scrolling: touch;
+}
+.mobile-nav::-webkit-scrollbar,
+.mobile-nav div::-webkit-scrollbar {
+  display: none;
+}
+.mobile-nav div {
+  scrollbar-width: none;
+}
+/* Cesium's credit strip sits under the nav on phones; give it room. */
+@media (max-width: 767px) {
+  .cesium-viewer-bottom {
+    bottom: 128px !important;
+  }
+  /* Taller touch targets on the layer switches and the timeline scrubber. */
+  .timeline-range {
+    height: 28px;
+  }
+}
+
+/* ---------- Phone ergonomics ----------
+   Readable type and 32 px targets inside the sheet, dialogs pinned to the top
+   so the on-screen keyboard never hides them, no backdrop blur or scanlines
+   (both are GPU-heavy on phones), a fatter scrubber thumb. */
+.mobile-sheet .hud-label {
+  font-size: 11px;
+}
+.mobile-sheet .text-\[9px\] {
+  font-size: 11px;
+}
+.mobile-sheet .text-\[10px\] {
+  font-size: 12px;
+}
+.mobile-sheet .text-\[11px\] {
+  font-size: 13px;
+}
+.mobile-sheet .text-\[12px\],
+.mobile-sheet .text-\[13px\] {
+  font-size: 14px;
+}
+/* Panel headers: the title keeps the row and the icon actions wrap under it. */
+.mobile-sheet .hud-panel > div:first-child {
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+.mobile-sheet .hud-panel button:not(table button) {
+  min-height: 32px;
+  min-width: 32px;
+}
+.mobile-sheet input,
+.mobile-sheet select,
+.mobile-sheet textarea {
+  /* iOS zooms into inputs smaller than 16px; keep them at 16px on phones. */
+  font-size: 16px !important;
+  min-height: 40px;
+}
+@media (max-width: 767px), (max-height: 480px) {
+  .hud-panel {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--glass-deep);
+  }
+  .scanlines {
+    display: none;
+  }
+  /* Tailwind 4 centres the popup with the `translate` property and base-ui
+     wraps it in its own centring box, so pin it to the viewport ourselves. */
+  [data-slot="dialog-content"] {
+    position: fixed !important;
+    top: max(8px, env(safe-area-inset-top)) !important;
+    left: 8px !important;
+    right: auto !important;
+    width: calc(100vw - 16px) !important;
+    max-width: none !important;
+    max-height: calc(100dvh - 16px - max(8px, env(safe-area-inset-top))) !important;
+    /* lightningcss folds `translate: none` into transform and drops it, so zero
+       Tailwind's own variables instead; its utility reads them. */
+    --tw-translate-x: 0px !important;
+    --tw-translate-y: 0px !important;
+    transform: none !important;
+  }
+  [data-slot="dialog-content"] [cmdk-list],
+  [data-slot="dialog-content"] .max-h-\[50vh\] {
+    max-height: 40dvh !important;
+  }
+  .timeline-range::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+  }
+  .timeline-range::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+  }
+  button,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+}
+
+/* ---------- Sheet heights and grip ----------
+   Peek holds the handle row and the top of the first panel (the strata rail's
+   focused construct), so a framed construct stays in view above it. */
+.mobile-sheet-peek {
+  max-height: 124px;
+}
+.mobile-sheet-peek .mobile-sheet-body {
+  overflow: hidden;
+}
+.mobile-sheet {
+  transition: max-height var(--dur-slow) var(--ease-slow);
+}
+.mobile-sheet-dragging {
+  transition: none;
+}
+.mobile-sheet-grip {
+  position: absolute;
+  left: 50%;
+  top: 3px;
+  width: 28px;
+  height: 2px;
+  margin-left: -14px;
+  background: color-mix(in oklab, var(--foreground) 32%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-sheet {
+    transition: none;
+  }
+}
+
+/* ---------- Strata rail ----------
+   One row per construct, smallest to largest. The focused row carries the
+   signal: a bar on its left edge and a faint warm wash. */
+.strata-list,
+.strata-head {
+  /* The kind column fits the longest short kind name (11 characters) at the rail's type size. */
+  --strata-kind-w: 68px;
+}
+.mobile-sheet .strata-list,
+.mobile-sheet .strata-head {
+  --strata-kind-w: 84px;
+}
+.strata-row {
+  position: relative;
+}
+.strata-row > button {
+  transition: background-color var(--dur-quick) var(--ease-slow);
+}
+.strata-row > button:hover {
+  background: var(--accent);
+}
+.strata-row-focus {
+  background: color-mix(in oklab, var(--signal) 7%, transparent);
+}
+.strata-row-focus::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--signal);
+}
+/* Ascend: the stack as a scale, one tick per stratum; the current one lit. */
+.ascend-scale {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+.ascend-scale > span {
+  flex: 1;
+  background: color-mix(in oklab, var(--foreground) 22%, transparent);
+  transition:
+    background-color var(--dur-slow) var(--ease-slow),
+    height var(--dur-slow) var(--ease-slow);
+}
+.ascend-scale > span[data-state="past"] {
+  background: color-mix(in oklab, var(--signal) 45%, transparent);
+}
+.ascend-scale > span[data-state="now"] {
+  background: var(--signal);
+}
+@media (prefers-reduced-motion: reduce) {
+  .strata-row > button,
+  .ascend-scale > span {
+    transition: none;
+  }
+}
+
+/* ---- "Inside the racks" chip viewer ---- */
+.chips-viewer canvas { cursor: grab; }
+.chips-viewer canvas:active { cursor: grabbing; }
+.chips-label-layer {
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+}
+.chips-label {
+  position: absolute; transform: translate(-50%, -130%);
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10px; line-height: 1.2; white-space: nowrap;
+  color: #e8e2d5; background: rgba(14, 12, 9, 0.72);
+  border: 1px solid rgba(232, 226, 213, 0.18);
+  border-radius: 3px; padding: 2px 6px;
+}
+.chips-dot { width: 6px; height: 6px; border-radius: 9999px; flex-shrink: 0; }

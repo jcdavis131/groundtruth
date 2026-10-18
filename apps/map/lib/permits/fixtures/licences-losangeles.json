@@ -1,0 +1,302 @@
+[
+ {
+  "location_account": "0003007319-0001-2",
+  "business_name": "ELITE DOWNTOWN MANAGEMENT CO",
+  "dba_name": "ANNA'S FISH MARKET",
+  "street_address": "812 W 7TH STREET",
+  "zip_code": "90017-3404",
+  "location_description": "812 7TH 90017-3404",
+  "naics": "722211",
+  "primary_naics_description": "Limited-service eating places",
+  "council_district": "14",
+  "location_start_date": "2017-09-15T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0488",
+   "longitude": "-118.2592",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0002597414-0002-6",
+  "business_name": "[removed from this fixture: a name that may be a person]",
+  "dba_name": "BLOOM FASHION",
+  "street_address": "112 W 9TH STREET SUITE #803",
+  "zip_code": "90015-1532",
+  "location_description": "112 9TH 90015-1532",
+  "naics": "315000",
+  "primary_naics_description": "Apparel mfg.",
+  "council_district": "14",
+  "location_start_date": "2017-03-15T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0416",
+   "longitude": "-118.2555",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0002351795-0001-6",
+  "business_name": "[removed from this fixture: a name that may be a person]",
+  "dba_name": "RUIZ DESIGN STUDIOS",
+  "street_address": "112 W 9TH STREET SUITE #518",
+  "zip_code": "90015-1529",
+  "location_description": "112 9TH 90015-1529",
+  "naics": "448150",
+  "primary_naics_description": "Clothing accessories stores",
+  "council_district": "14",
+  "location_start_date": "2008-06-19T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0416",
+   "longitude": "-118.2555",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0002715566-0001-9",
+  "business_name": "[removed from this fixture: a name that may be a person]",
+  "dba_name": "HARY'S IMMIGRATION SERVICES",
+  "street_address": "108 JUDGE JOHN AISO STREET",
+  "zip_code": "90012-3805",
+  "location_description": "108 JUDGE JOHN AISO 90012-3805",
+  "naics": "999999",
+  "primary_naics_description": "Unclassified establishments (unable to classify)",
+  "council_district": "14",
+  "location_start_date": "2013-11-01T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0505",
+   "longitude": "-118.2407",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0000078094-0040-3",
+  "business_name": "ATHENA PARKING INC",
+  "dba_name": "ATHENA PARKING",
+  "street_address": "350 S BIXEL STREET",
+  "zip_code": "90017-1418",
+  "location_description": "350 BIXEL 90017-1418",
+  "naics": "812930",
+  "primary_naics_description": "Parking lots & garages",
+  "council_district": "1",
+  "location_start_date": "1998-01-01T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0574",
+   "longitude": "-118.2599",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0002181562-0001-3",
+  "business_name": "BONAVENTURE CLUB INC",
+  "dba_name": "BONAVENTURE CLUB",
+  "street_address": "404 S FIGUEROA STREET #302",
+  "zip_code": "90071-1710",
+  "location_description": "404 FIGUEROA 90071-1710",
+  "naics": "425120",
+  "primary_naics_description": "Wholesale trade agents & brokers",
+  "council_district": "14",
+  "location_start_date": "2006-09-12T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0534",
+   "longitude": "-118.256",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0000724498-0001-1",
+  "business_name": "THE HOLLYWOOD LOCATION COMPANY INC",
+  "dba_name": "HOLLYWOOD PRODUCTION ASSOC/THE HOLLYWOOD LOCATION CO",
+  "street_address": "1201 W 5TH STREET #F 170",
+  "zip_code": "90017-2019",
+  "location_description": "1201 5TH 90017-2019",
+  "naics": "561210",
+  "primary_naics_description": "Facilities support (management) services",
+  "council_district": "1",
+  "location_start_date": "1989-07-28T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0541",
+   "longitude": "-118.2594",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0002493371-0001-3",
+  "business_name": "SHEN ZHEN NEW WORLD 1, LLC",
+  "dba_name": "THE L.A. HOTEL DOWNTOWN",
+  "street_address": "333 S FIGUEROA STREET",
+  "zip_code": "90071-1001",
+  "location_description": "333 FIGUEROA 90071-1001",
+  "naics": "721100",
+  "primary_naics_description": "Traveler accommodation (including hotels, motels, & bed & breakfast inns)",
+  "council_district": "14",
+  "location_start_date": "2010-03-24T00:00:00.000",
+  "location_1": {
+   "latitude": "34.054",
+   "longitude": "-118.2555",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0002569389-0046-3",
+  "business_name": "CITY CENTER PARKING, INC.",
+  "dba_name": "CITY CENTER PARKING",
+  "street_address": "201 S BEAUDRY AVENUE",
+  "zip_code": "90012-2016",
+  "location_description": "201 BEAUDRY 90012-2016",
+  "naics": "812930",
+  "primary_naics_description": "Parking lots & garages",
+  "council_district": "1",
+  "location_start_date": "2013-10-30T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0573",
+   "longitude": "-118.2557",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0002610138-0012-8",
+  "business_name": "PLATINUM PARKING INC",
+  "dba_name": "PLATINUM PARKING INC",
+  "street_address": "331 S FIGUEROA STREET",
+  "zip_code": "90071-0071",
+  "location_description": "331 Figueroa 90071-0071",
+  "naics": "812930",
+  "primary_naics_description": "Parking lots & garages",
+  "council_district": "14",
+  "location_start_date": "2022-02-03T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0548",
+   "longitude": "-118.2557",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0000790102-0216-2",
+  "business_name": "UNITED VALET PARKING INC",
+  "street_address": "800 W 7TH STREET",
+  "zip_code": "90017-3404",
+  "location_description": "800 7TH 90017-3404",
+  "naics": "812930",
+  "primary_naics_description": "Parking lots & garages",
+  "council_district": "14",
+  "location_start_date": "2016-01-01T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0488",
+   "longitude": "-118.2595",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0002886496-0001-9",
+  "business_name": "PALMER TEMPLE STREET PROPERTIES LLC",
+  "street_address": "909 W TEMPLE STREET",
+  "zip_code": "90012-3981",
+  "location_description": "909 TEMPLE 90012-3981",
+  "naics": "531100",
+  "primary_naics_description": "Lessors of real estate (including mini warehouses & self-storage units)",
+  "council_district": "14",
+  "location_start_date": "2015-04-01T00:00:00.000",
+  "location_1": {
+   "latitude": "34.051",
+   "longitude": "-118.2406",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0003321489-0001-1",
+  "business_name": "HMLM PRODUCTIONS LLC",
+  "street_address": "501 N MAIN STREET",
+  "zip_code": "90012-2828",
+  "location_description": "501 MAIN 90012-2828",
+  "naics": "999999",
+  "primary_naics_description": "Unclassified establishments (unable to classify)",
+  "council_district": "14",
+  "location_start_date": "2022-06-28T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0566",
+   "longitude": "-118.2399",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0000353520-0001-7",
+  "business_name": "INTERSTATE HOTELS LLC",
+  "street_address": "404 S FIGUEROA STREET",
+  "zip_code": "90071-1710",
+  "location_description": "404 FIGUEROA 90071-1710",
+  "naics": "531100",
+  "primary_naics_description": "Lessors of real estate (including mini warehouses & self-storage units)",
+  "council_district": "14",
+  "location_start_date": "1995-12-16T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0534",
+   "longitude": "-118.256",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0002701940-0001-1",
+  "business_name": "[removed from this fixture: a name that may be a person]",
+  "street_address": "411 W 5TH STREET",
+  "zip_code": "90013-1000",
+  "location_description": "411 5TH 90013-1000",
+  "naics": "541990",
+  "primary_naics_description": "All other professional, scientific, & technical services",
+  "council_district": "14",
+  "location_start_date": "2012-01-01T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0488",
+   "longitude": "-118.2518",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0003261468-0001-0",
+  "business_name": "[removed from this fixture: a name that may be a person]",
+  "street_address": "115 W 9TH STREET",
+  "zip_code": "90015-1525",
+  "location_description": "115 9TH 90015",
+  "naics": "812990",
+  "primary_naics_description": "All other personal services",
+  "council_district": "14",
+  "location_start_date": "2021-08-01T00:00:00.000",
+  "location_1": {
+   "latitude": "34.042",
+   "longitude": "-118.2554",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0003284932-0001-7",
+  "business_name": "[removed from this fixture: a name that may be a person]",
+  "dba_name": "HVAC COMPANY",
+  "street_address": "112 W 9TH STREET UNIT #628",
+  "zip_code": "90015-1560",
+  "location_description": "112 9TH 90015-1560",
+  "naics": "315000",
+  "primary_naics_description": "Apparel mfg.",
+  "council_district": "14",
+  "location_start_date": "2019-01-01T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0416",
+   "longitude": "-118.2555",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ },
+ {
+  "location_account": "0002989871-0001-9",
+  "business_name": "[removed from this fixture: a name that may be a person]",
+  "dba_name": "ANIKO FASHION",
+  "street_address": "112 9TH     UNIT #600",
+  "zip_code": "90015-0000",
+  "location_description": "112 9TH 90015-0000",
+  "naics": "448120",
+  "primary_naics_description": "Women's clothing stores",
+  "council_district": "14",
+  "location_start_date": "2017-06-06T00:00:00.000",
+  "location_1": {
+   "latitude": "34.0416",
+   "longitude": "-118.2555",
+   "human_address": "{\"address\": \"\", \"city\": \"\", \"state\": \"\", \"zip\": \"\"}"
+  }
+ }
+]

@@ -1,0 +1,80 @@
+{
+ "adapter": "tx-hcad",
+ "capturedAt": "2026-09-26T15:37:39.663Z",
+ "point": [
+  -95.3693,
+  29.7604
+ ],
+ "county": {
+  "geoid": "48201",
+  "name": "Harris County",
+  "basename": "Harris",
+  "state": "48"
+ },
+ "rows": [
+  {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -95.369262,
+       29.759713
+      ],
+      [
+       -95.368814,
+       29.76027
+      ],
+      [
+       -95.36946,
+       29.760671
+      ],
+      [
+       -95.369907,
+       29.760107
+      ],
+      [
+       -95.369262,
+       29.759713
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "HCAD_NUM": "0011490000001",
+    "acct_num": "0011490000001",
+    "tax_year": "2026",
+    "owner_name_1": "CITY OF HOUSTON",
+    "owner_name_2": null,
+    "owner_name_3": null,
+    "mail_addr_1": "PO BOX 1562",
+    "mail_addr_2": "",
+    "mail_city": "HOUSTON",
+    "mail_state": "TX",
+    "mail_zip": "77251-1562",
+    "site_str_pfx": "  ",
+    "site_str_num": 901,
+    "site_str_num_sfx": "   ",
+    "site_str_name": "BAGBY",
+    "site_str_sfx": "ST",
+    "site_str_sfx_dir": "  ",
+    "site_city": "HOUSTON",
+    "site_zip": "77002",
+    "state_class": "X1",
+    "land_use": "8001",
+    "land_value": 15625000,
+    "impr_value": 4000000,
+    "total_appraised_val": 19625000,
+    "total_market_val": 19625000,
+    "new_owner_date": 568080000000,
+    "legal_dscr_1": "LTS 1 THRU 12 BLK 149",
+    "legal_dscr_2": "CITY HALL",
+    "legal_dscr_3": "SSBB",
+    "legal_dscr_4": null,
+    "Acreage": "1.4348 AC",
+    "land_sqft": 62500,
+    "confidential_flag": "          "
+   }
+  }
+ ]
+}

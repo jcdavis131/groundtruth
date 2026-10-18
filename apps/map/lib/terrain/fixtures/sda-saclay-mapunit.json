@@ -1,0 +1,22 @@
+{
+ "Table": [
+  [
+   "cokey",
+   "compname",
+   "comppct_r",
+   "majcompflag",
+   "mrulename",
+   "interphr",
+   "interphrc"
+  ],
+  [
+   "26763411",
+   "San Antonio",
+   "100",
+   "Yes",
+   "NCCPI - National Commodity Crop Productivity Index (Ver 3.0)",
+   "0.455",
+   "Moderate inherent productivity"
+  ]
+ ]
+}

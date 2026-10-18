@@ -1,0 +1,21 @@
+{
+ "type": "FeatureCollection",
+ "crs": {
+  "type": "name",
+  "properties": {
+   "name": "EPSG:4326"
+  }
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "ZONE_CMPLT": "[LF1-WH1-5][P2-FA][CPIO]",
+    "ZONE_CLASS": "",
+    "ZONE_UNDER": "",
+    "ZONING_DESCRIPTION": "Public (Chapter 1A)"
+   }
+  }
+ ]
+}

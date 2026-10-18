@@ -1,0 +1,34 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "ZONING": "DOC1 U/450-U",
+    "BASE_ZONE": "DOC1 U/450-U",
+    "CLASS_DESC": "Downtown",
+    "CATEGORY_DESC": "Downtown",
+    "ZONELUT": "DOC1",
+    "ZONELUT_DESC": "Downtown Office Core 1",
+    "DETAIL_DESC": "Downtown Office Core",
+    "ZONING_DESC": "Downtown Office Core 1 U/450-U",
+    "OVERLAY": "DF",
+    "HISTORIC": " ",
+    "PEDESTRIAN": " ",
+    "SHORELINE": " ",
+    "LIGHTRAIL": " ",
+    "MHA": "Y",
+    "MHA_VALUE": null,
+    "IZ": "Y",
+    "MIO_NAME": null,
+    "CONTRACT": " ",
+    "ORDINANCE": "125291",
+    "EFFECTIVE": 1494745200000,
+    "PUBLIC_DESCRIPTION": "is in a zone Downtown where both commercial and residential development is generally allowed.",
+    "CHAPTER": "Chapter 23.49",
+    "CHAPTER_LINK": "https://library.municode.com/wa/seattle/codes/municipal_code?nodeId=TIT23LAUSCO_SUBTITLE_IIILAUSRE_CH23.49DOZO"
+   }
+  }
+ ]
+}

@@ -1,0 +1,66 @@
+{
+ "adapter": "wa-king",
+ "capturedAt": "2026-09-26T15:37:41.474Z",
+ "point": [
+  -122.3301,
+  47.6036
+ ],
+ "county": {
+  "geoid": "53033",
+  "name": "King County",
+  "basename": "King",
+  "state": "53"
+ },
+ "rows": [
+  {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -122.329757,
+       47.604148
+      ],
+      [
+       -122.329885,
+       47.604288
+      ],
+      [
+       -122.330737,
+       47.603932
+      ],
+      [
+       -122.330223,
+       47.60337
+      ],
+      [
+       -122.329371,
+       47.603727
+      ],
+      [
+       -122.329757,
+       47.604148
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "PIN": "0942000810",
+    "MAJOR": "094200",
+    "MINOR": "0810",
+    "ADDR_FULL": "600 4TH AVE",
+    "ZIP5": "98104",
+    "POSTALCTYNAME": "SEATTLE",
+    "PROP_NAME": "SEATTLE CITY HALL (SEATTLE MUNICIPAL BUILDING)",
+    "PLAT_NAME": "BORENS C D ADD",
+    "LOTSQFT": 59280,
+    "APPRLNDVAL": 94848000,
+    "APPR_IMPR": 86163800,
+    "PROPTYPE": "C",
+    "KCA_ZONING": "DOC1 U/450/U",
+    "KCA_ACRES": 1.36088154,
+    "PREUSE_DESC": "Office Building                                   "
+   }
+  }
+ ]
+}

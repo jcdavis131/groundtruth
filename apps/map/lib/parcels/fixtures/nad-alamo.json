@@ -1,0 +1,560 @@
+{
+ "capturedAt": "2026-09-26T15:38:03.817Z",
+ "point": [
+  -98.4861,
+  29.426
+ ],
+ "radiusM": 120,
+ "rows": [
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4861147807412,
+     29.425698974678
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "300",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.485866669653,
+     29.4265661479081
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "705",
+    "StNam_Full": "East HOUSTON Street",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4855588205983,
+     29.4264771006343
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "713",
+    "StNam_Full": "East HOUSTON Street",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4859877409937,
+     29.425265341862
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "139",
+    "StNam_Full": "East CROCKETT Street",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4854724502787,
+     29.4265271497342
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "717",
+    "StNam_Full": "East HOUSTON Street",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4857931730897,
+     29.4252419276371
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "215",
+    "StNam_Full": "East CROCKETT Street",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4853657358129,
+     29.4265074867245
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "719",
+    "StNam_Full": "East HOUSTON Street",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4869105713019,
+     29.4264444846351
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "333",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4870697788214,
+     29.4260789501572
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "327",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4864326460112,
+     29.4268012429766
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "615",
+    "StNam_Full": "East HOUSTON Street",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4870545487841,
+     29.4261919696589
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "329",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4870833020597,
+     29.4259975717816
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "325",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4870921567534,
+     29.42594232086
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "323",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4851885853439,
+     29.4263606380119
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "723",
+    "StNam_Full": "East HOUSTON Street",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4871054131921,
+     29.4259053371915
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "321",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4870427116836,
+     29.4263284679558
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "331",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4851784640256,
+     29.4263821702551
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "733",
+    "StNam_Full": "East HOUSTON Street",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4871256441506,
+     29.4258572688869
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "319",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4871447423335,
+     29.425807092704
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "317",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4871640911464,
+     29.4257374043458
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "315",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4869975237298,
+     29.4265957202549
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "521",
+    "StNam_Full": "East HOUSTON Street",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4871735288468,
+     29.4256744127328
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "313",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4863794900009,
+     29.4249680351843
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "214",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4860845766864,
+     29.4249369859132
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "216",
+    "StNam_Full": "ALAMO PLAZA",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  },
+  {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -98.4869357636557,
+     29.4267773447887
+    ]
+   },
+   "properties": {
+    "AddNo_Full": "105",
+    "StNam_Full": "North ALAMO Street",
+    "SubAddress": null,
+    "Unit": null,
+    "Post_City": "SAN ANTONIO",
+    "State": "TX",
+    "Zip_Code": null,
+    "Addr_Type": "Unknown",
+    "Parcel_ID": null,
+    "NAD_Source": "State of Texas",
+    "DateUpdate": 1745539200000
+   }
+  }
+ ]
+}

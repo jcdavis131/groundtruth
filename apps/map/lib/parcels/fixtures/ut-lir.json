@@ -1,0 +1,65 @@
+{
+ "adapter": "ut-lir",
+ "capturedAt": "2026-09-26T15:37:47.984Z",
+ "point": [
+  -111.8864,
+  40.7596
+ ],
+ "county": {
+  "geoid": "49035",
+  "name": "Salt Lake County",
+  "basename": "Salt Lake",
+  "state": "49"
+ },
+ "rows": [
+  {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -111.885606,
+       40.759567
+      ],
+      [
+       -111.885606,
+       40.758661
+      ],
+      [
+       -111.887989,
+       40.75866
+      ],
+      [
+       -111.88799,
+       40.760472
+      ],
+      [
+       -111.885607,
+       40.760473
+      ],
+      [
+       -111.885606,
+       40.759567
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "PARCEL_ID": "16063070010000",
+    "SERIAL_NUM": null,
+    "PARCEL_ADD": "451 S STATE ST",
+    "PARCEL_CITY": "Salt Lake City",
+    "COUNTY_NAME": "Salt Lake County",
+    "ASSESSOR_SRC": "https://www.saltlakecounty.gov/assessor/",
+    "CURRENT_ASOF": 1774483200000,
+    "TAXEXEMPT_TYPE": "Other",
+    "TOTAL_MKT_VALUE": 126083800,
+    "LAND_MKT_VALUE": 66914700,
+    "PARCEL_ACRES": 10,
+    "PROP_CLASS": "Tax Exempt - Government",
+    "SUBDIV_NAME": null,
+    "BUILT_YR": 1914
+   }
+  }
+ ]
+}

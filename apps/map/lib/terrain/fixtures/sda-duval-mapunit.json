@@ -1,0 +1,58 @@
+{
+ "Table": [
+  [
+   "cokey",
+   "compname",
+   "comppct_r",
+   "majcompflag",
+   "mrulename",
+   "interphr",
+   "interphrc"
+  ],
+  [
+   "26763468",
+   "Duval",
+   "85",
+   "Yes",
+   "NCCPI - National Commodity Crop Productivity Index (Ver 3.0)",
+   "0.379",
+   "Moderately low inherent productivity"
+  ],
+  [
+   "26763470",
+   "Dilley",
+   "5",
+   "No ",
+   "NCCPI - National Commodity Crop Productivity Index (Ver 3.0)",
+   null,
+   "Not rated"
+  ],
+  [
+   "26763472",
+   "Webb",
+   "5",
+   "No ",
+   "NCCPI - National Commodity Crop Productivity Index (Ver 3.0)",
+   null,
+   "Not rated"
+  ],
+  [
+   "26763471",
+   "Poth",
+   "4",
+   "No ",
+   "NCCPI - National Commodity Crop Productivity Index (Ver 3.0)",
+   null,
+   "Not rated"
+  ],
+  [
+   "26763469",
+   "Unnamed",
+   "1",
+   "No ",
+   "NCCPI - National Commodity Crop Productivity Index (Ver 3.0)",
+   null,
+   "Not rated"
+  ]
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "ZONING_ZTYPE": "CBD",
+    "ZONING_BASE": "CBD",
+    "MODIFIED_DATE": 1565102398000
+   }
+  }
+ ]
+}

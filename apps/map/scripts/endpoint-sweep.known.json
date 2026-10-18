@@ -1,0 +1,10 @@
+{
+  "_comment": "Upstreams known to be down, so the weekly sweep reports them without failing. Remove an entry when the sweep says it is back. match is a substring of the probed URL.",
+  "outages": [
+    {
+      "match": "geopub.epa.gov/arcgis/rest/services/EMEF/",
+      "since": "2026-10-18",
+      "note": "EPA's geopub.epa.gov answers 503 at its root; EPA's item still points there and lists no successor. /api/permits?op=contaminants reports sems/tri/rcra/acres as state error with count null."
+    }
+  ]
+}
