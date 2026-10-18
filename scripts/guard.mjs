@@ -46,8 +46,10 @@ const SECRETS = [
   ["private key", /-----BEGIN (?:RSA |EC |OPENSSH |DSA |ENCRYPTED |PGP )?PRIVATE KEY(?: BLOCK)?-----/],
 ];
 // Drive-letter paths match in any case. The Git Bash form needs "Users" capitalized and a single drive letter
-// that isn't part of a longer path, so web routes like /c/users/42 or /api/r/Users/top are not flagged.
-const HOME_PATH = /[A-Za-z]:(?:\\+|\/+)Users(?:\\+|\/+)[^\\/\s"'<>]+|(?<![\w/.-])\/[A-Za-z]\/Users\/[^/\s"'<>]+/i;
+// that isn't part of a longer path (except the WSL /mnt and Cygwin /cygdrive mounts), so web routes like
+// /c/users/42 or /api/r/Users/top are not flagged but /mnt/c/Users/<name> is. Lowercase /c/users/<name>
+// is accepted as a miss: Git Bash itself prints /c/Users.
+const HOME_PATH = /[A-Za-z]:(?:\\+|\/+)Users(?:\\+|\/+)[^\\/\s"'<>]+|(?:(?<![\w/.-])|(?<=\/mnt|\/cygdrive))\/[A-Za-z]\/Users\/[^/\s"'<>]+/i;
 const GITBASH_CASE = /\/[A-Za-z]\/Users\//;
 
 function textOf(buf) {
