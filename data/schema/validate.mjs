@@ -2,6 +2,7 @@
 //
 //   node data/schema/validate.mjs record <file.json | file.jsonl> ...
 //   node data/schema/validate.mjs manifest <manifest.json> ...   (also checks the files it lists, next to it)
+//   node data/schema/validate.mjs manifest --no-files <manifest.json> ...   (the manifest alone)
 //
 // Two layers of checks:
 //   1. The JSON Schema in record.schema.json / manifest.schema.json, read by a small evaluator for the subset
@@ -217,6 +218,14 @@ export function verifyFiles(m, dir) {
     if (buf.length !== f.bytes) out.push({ code: "file-bytes", path: `/files/${i}/bytes`, message: `${f.path} is ${buf.length} bytes, manifest says ${f.bytes}` });
     const sha = createHash("sha256").update(buf).digest("hex");
     if (sha !== f.sha256) out.push({ code: "file-sha", path: `/files/${i}/sha256`, message: `${f.path} hashes to ${sha}` });
+    if (f.format === "geoparquet") {
+      // Plain Node can't read Parquet, so a GeoParquet file is checked by bytes, sha256 and its PAR1 magic here;
+      // data/pipeline/read.py checks its row count and records when it reads it.
+      const magic = (b) => b.length >= 4 && b.subarray(0, 4).toString("latin1") === "PAR1";
+      if (buf.length < 8 || !magic(buf) || !magic(buf.subarray(buf.length - 4)))
+        out.push({ code: "file-format", path: `/files/${i}/format`, message: `${f.path} is not a Parquet file (no PAR1 magic at both ends)` });
+      return;
+    }
     const lines = buf.toString("utf8").split("\n").filter((l) => l.length);
     if (lines.length !== f.records) out.push({ code: "file-records", path: `/files/${i}/records`, message: `${f.path} holds ${lines.length} records, manifest says ${f.records}` });
     lines.forEach((l, n) => {
@@ -238,9 +247,13 @@ export function verifyFiles(m, dir) {
 // ---------------------------------------------------------------- CLI
 
 function main(argv) {
-  const [what, ...files] = argv;
-  if (!["record", "manifest"].includes(what) || !files.length) {
-    console.log("usage: node data/schema/validate.mjs record|manifest <file> ...");
+  const [what, ...rest] = argv;
+  // --no-files: check a manifest alone, for the committed copies under data/manifests/ whose files live in the
+  // data root, outside git.
+  const noFiles = rest.includes("--no-files");
+  const files = rest.filter((a) => a !== "--no-files");
+  if (!["record", "manifest"].includes(what) || !files.length || (noFiles && what !== "manifest")) {
+    console.log("usage: node data/schema/validate.mjs record <file> ... | manifest [--no-files] <file> ...");
     return 2;
   }
   let bad = 0;
@@ -248,7 +261,7 @@ function main(argv) {
     const text = readFileSync(f, "utf8");
     const docs = f.endsWith(".jsonl") ? text.split("\n").filter(Boolean).map((l) => JSON.parse(l)) : [JSON.parse(text)];
     docs.forEach((d, n) => {
-      const errs = what === "record" ? validateRecord(d) : [...validateManifest(d), ...verifyFiles(d, path.dirname(f))];
+      const errs = what === "record" ? validateRecord(d) : [...validateManifest(d), ...(noFiles ? [] : verifyFiles(d, path.dirname(f)))];
       const label = docs.length > 1 ? `${f}:${n + 1}` : f;
       if (errs.length) bad++;
       console.log(errs.length ? `FAIL  ${label}` : `ok    ${label}`);

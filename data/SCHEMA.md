@@ -14,6 +14,7 @@ Files:
 ```
 node data/schema/validate.mjs record <file.json | file.jsonl> ...
 node data/schema/validate.mjs manifest <snapshot>/manifest.json ...
+node data/schema/validate.mjs manifest --no-files data/manifests/*/*.json    (a manifest alone, without its files)
 node data/schema/validate.test.mjs
 ```
 
@@ -87,7 +88,9 @@ A snapshot is one collection, one region and one UTC day, and it never changes o
 
 The day is the UTC date of `createdAt`. The commit that built it is in `builder.gitSha`. The charter's draft name was `YYYY-MM-DD+<commit7>`, with the commit inside the id. This version keeps the id readable and puts the commit in the manifest, because a training run cites the id and the manifest pins the code. If the id should carry the commit too, that takes a `manifest/2`.
 
-A snapshot is a folder holding `manifest.json` and the record files it lists (`records.jsonl` for now). Records are sorted by `id`, one JSON object per line, LF line endings, UTF-8.
+A snapshot is a folder holding `manifest.json` and the record files it lists. The fixtures use `records.jsonl`: records sorted by `id`, one JSON object per line, LF line endings, UTF-8. The pipeline's snapshots use `records.parquet` (GeoParquet; its columns are in [PIPELINE.md](PIPELINE.md)), and their folders live in the data root, outside git, with a copy of each manifest committed under `data/manifests/`.
+
+The `geoparquet` format, the `point-in-polygon` rule and the `region` request purpose were added to `manifest/1` on 2026-10-18 without a version bump, because each one only widens an enum (`files[].format`, `region.rule`, `requests[].purpose`) and every manifest that was valid before is still valid.
 
 ### The manifest
 
@@ -96,15 +99,15 @@ A snapshot is a folder holding `manifest.json` and the record files it lists (`r
 | `schemaVersion` | yes | `"manifest/1"` |
 | `snapshotId` | yes | Must equal `<collection>.<region.id>.<createdAt's UTC date>`. |
 | `collection` | yes | The collection. |
-| `region` | yes | `id` (a slug), `name`, `bbox` as [west, south, east, north] in WGS84 with west < east and south < north, and `rule`: `point-in-bbox` (a Point is in when it lies inside the box, edges included) or `intersects-bbox`. `definition` is optional prose. |
+| `region` | yes | `id` (a slug), `name`, `bbox` as [west, south, east, north] in WGS84 with west < east and south < north, and `rule`: `point-in-bbox` (a Point is in when it lies inside the box, edges included), `intersects-bbox`, or `point-in-polygon` (a Point is in when it lies inside a named boundary; `definition` then names the boundary, its URL and the sha256 of the response it came from, and `bbox` is the boundary's extent). `definition` is optional prose. |
 | `createdAt` | yes | When the builder ran, in UTC. |
 | `builder` | yes | `name`, `version` (semver) and `gitSha` (the full 40-character commit the builder ran from). `repo` is optional. |
 | `recordSchemaVersion` | yes | `"record/1"` |
 | `sources` | yes | Each `sourceId` in the records, with its `licence`. |
-| `requests` | yes | Every request the builder made, in order: `purpose` (`records`, `count` or `gap`), `url`, `status`, `retrievedAt`, `bytes` and the `sha256` of the response body. |
+| `requests` | yes | Every request the builder made, in order: `purpose` (`records`, `count`, `gap`, or `region` for the boundary a `point-in-polygon` rule tests against), `url`, `status`, `retrievedAt`, `bytes` and the `sha256` of the response body. |
 | `recordCount` | yes | Rows in the snapshot. Must equal the sum of `files[].records`. |
 | `publisherCount` | yes | The publisher's own count for the region: `value`, `method` (how it was asked for, in words), `url` and `countedAt`. When `value` differs from `recordCount`, `gap` is required and names the rows that aren't records and why. |
-| `files` | yes | Each file: `path` (relative, inside the snapshot folder), `format` (`jsonl`), `sha256` (64 lowercase hex characters), `bytes` and `records`. |
+| `files` | yes | Each file: `path` (relative, inside the snapshot folder), `format` (`jsonl`, or `geoparquet` for the files `data/pipeline` writes), `sha256` (64 lowercase hex characters), `bytes` and `records`. |
 | `withheldFields` | no | Source fields left out, each with `field` and `why`. Absent when none are withheld. |
 
 ### Checks beyond the schema
@@ -122,6 +125,7 @@ A snapshot is a folder holding `manifest.json` and the record files it lists (`r
 - `count`: `recordCount` doesn't match the files.
 - `gap`: the counts differ and `gap` doesn't say why.
 - `file-missing`, `file-bytes`, `file-sha`, `file-records`, `file-record`: a listed file is absent, its size, hash or line count differs from the manifest, or one of its lines isn't a valid record of this snapshot (including a repeated id).
+- `file-format`: a file listed as `geoparquet` doesn't start and end with Parquet's `PAR1` magic. Plain Node can't read Parquet, so for these files the validator checks bytes, sha256 and the magic only; `data/pipeline/read.py` checks the row count and every row when it reads one.
 
 Schema problems use the keyword's name (`required`, `type`, `pattern`, `enum`, `const`, `additional`, `minItems`), with `range` for `minimum` and `maximum`. The evaluator implements only the keywords the two schema files use, and throws on any other, so a schema can't quietly promise a check that isn't made.
 
@@ -142,6 +146,6 @@ The first record of each snapshot is copied to `record/valid/`. The builder refu
 ## Not in this version
 
 - **A conformance count over all 60 collections.** This is the database's first real job. Of the six routes probed on 2026-10-18, three already emit this shape. WRC passes the upstream's raw fields through, with no canonical id or record text. Gauges and HUD DDA returned no features in the probe boxes, so they weren't checked.
-- **A snapshot builder for production.** The fixture builder shows the mapping, but it isn't the weekly job the consumer contract asks for.
+- **A weekly snapshot job.** `data/pipeline/` (see [PIPELINE.md](PIPELINE.md)) builds whole-state snapshots by hand. Nothing schedules it yet.
 - **Records outside the United States.** `place` requires state codes, so a collection abroad (some World Heritage sites, for example) needs a `record/2` with a country join.
 - **Embeddings.** A snapshot holds record text, not vectors. When vectors ship, the manifest will name the embedder, its commit and its table's sha256, as `catalog_search` already reports them.

@@ -2,7 +2,9 @@
 //   node data/schema/validate.test.mjs
 // Every valid fixture must pass; every invalid one must fail with the reason make-invalid.mjs gives it; the
 // invalid files must match their source; each snapshot's files must hash to what its manifest says.
-import { readdirSync, readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CASES, build, fileOf } from "./fixtures/make-invalid.mjs";
@@ -80,6 +82,20 @@ const tampered = { ...m0, files: [{ ...m0.files[0], sha256: "0".repeat(64) }] };
 check(verifyFiles(tampered, sdir).some((e) => e.code === "file-sha"), "a file whose bytes don't match the manifest's sha256 fails with file-sha");
 check(verifyFiles({ ...m0, files: [{ ...m0.files[0], records: m0.files[0].records + 1 }] }, sdir).some((e) => e.code === "file-records"), "a wrong per-file record count fails with file-records");
 check(verifyFiles({ ...m0, snapshotId: "nrhp-listed.elsewhere.2026-10-18" }, sdir).some((e) => e.code === "file-record"), "records from another snapshot fail with file-record");
+
+// GeoParquet files (data/pipeline) are checked by bytes, sha256 and the PAR1 magic; a jsonl file posing as one fails.
+const pq = Buffer.from("PAR1 not a real footer PAR1", "latin1");
+const pqDir = mkdtempSync(path.join(tmpdir(), "gt-pq-"));
+writeFileSync(path.join(pqDir, "records.parquet"), pq);
+const pqFile = { path: "records.parquet", format: "geoparquet", sha256: createHash("sha256").update(pq).digest("hex"), bytes: pq.length, records: m0.recordCount };
+const pqManifest = { ...m0, files: [pqFile] };
+check(validateManifest(pqManifest).length === 0 && verifyFiles(pqManifest, pqDir).length === 0, "a geoparquet file whose bytes and sha256 match passes");
+check(verifyFiles({ ...pqManifest, files: [{ ...pqFile, sha256: "0".repeat(64) }] }, pqDir).some((e) => e.code === "file-sha"), "a tampered geoparquet file fails with file-sha");
+check(verifyFiles({ ...m0, files: [{ ...m0.files[0], format: "geoparquet" }] }, sdir).some((e) => e.code === "file-format"), "a jsonl file listed as geoparquet fails with file-format");
+const polyRegion = { ...m0.region, rule: "point-in-polygon" };
+check(validateManifest({ ...m0, region: polyRegion }).length === 0, "region rule point-in-polygon is accepted");
+check(validateManifest({ ...m0, requests: [...m0.requests, { ...m0.requests[0], purpose: "region" }] }).length === 0, "request purpose region is accepted");
+check(validateManifest({ ...m0, region: { ...m0.region, rule: "inside-texas" } }).some((e) => e.code === "enum"), "an unknown region rule fails with enum");
 
 // The evaluator refuses keywords it does not implement, so a schema can't claim more than is checked.
 let threw = false;
