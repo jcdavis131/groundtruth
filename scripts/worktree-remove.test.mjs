@@ -10,7 +10,7 @@ import fs from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { findLinks, removeWorktree } from "./worktree-remove.mjs";
+import { findLinks, removeWorktree, unlinkOnly } from "./worktree-remove.mjs";
 
 const script = fileURLToPath(new URL("./worktree-remove.mjs", import.meta.url));
 const git = (dir, ...a) =>
@@ -95,6 +95,20 @@ try {
     check(p.status === 1 && /still in the worktree/.test(p.stderr) && listed(w2), "refuses when the link's folder is read-only");
   }
 
+  // An unlink that reaches through the link and deletes from the target (how gods-eye-view's
+  // node_modules was emptied on 2026-10-19): refuse before git runs and name the target.
+  const w3 = worktree("w3");
+  const eaten = removeWorktree(w3, {
+    repo: main,
+    unlink: (p) => {
+      fs.rmSync(path.join(p, "c.js"), { force: true });
+      unlinkOnly(p);
+    },
+  });
+  fs.writeFileSync(path.join(target, "c.js"), "x\n");
+  check(eaten.code === 1 && eaten.lines.some((l) => /REFUSED: link target\(s\) lost entries/.test(l) && l.includes(path.basename(target))), "refuses when a link target shrank, naming it");
+  check(listed(w3) && fs.existsSync(w3), "shrink refusal stops before git removes the worktree");
+
   // Not a worktree, and the main checkout itself.
   check(cli(target).status === 1, "refuses a folder that is not a worktree");
   check(cli(main).status === 1, "refuses the main checkout");
@@ -104,7 +118,7 @@ try {
   const ok2 = removeWorktree(w2, { repo: main });
   check(ok2.code === 0 && !listed(w2) && targetCount() === full, "second worktree removes once links can be unlinked");
 } finally {
-  for (const wt of ["w1", "w2"].map((n) => path.join(root, n)))
+  for (const wt of ["w1", "w2", "w3"].map((n) => path.join(root, n)))
     if (fs.existsSync(wt)) for (const l of findLinks(wt)) fs.unlinkSync(l);
   if (findLinks(root).length === 0) fs.rmSync(root, { recursive: true, force: true });
   else console.log(`left ${root} in place: it still holds links`);

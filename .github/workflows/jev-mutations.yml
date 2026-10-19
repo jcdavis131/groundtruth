@@ -18,6 +18,12 @@ on:
       - "apps/map/scripts/jev-mutate.mjs"
       - "apps/map/scripts/jev-mutations.sh"
       - ".github/workflows/jev-mutations.yml"
+      # A test-runner or dependency bump can change what kills a mutant (vitest 3 -> 5
+      # in #46 never ran here), so those run it too.
+      - "apps/map/package.json"
+      - "apps/map/package-lock.json"
+      - "apps/map/vitest.config.*"
+  workflow_dispatch:
 
 permissions:
   contents: read
