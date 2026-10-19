@@ -158,6 +158,73 @@ describe("emergence", () => {
   });
 });
 
+// Missing means missing: a unit the counted layers did not load gets no number.
+describe("emergence coverage", () => {
+  // The dashed box a near-only layer loaded (lib/layers/civicBox.ts), with what the answer left out.
+  const box = (layer: string, w: number, s: number, e: number, n: number, extra: Record<string, unknown> = {}) =>
+    ({
+      type: "Feature",
+      geometry: { type: "Polygon", coordinates: [[[w, s], [e, s], [e, n], [w, n], [w, s]]] },
+      properties: { id: `${layer}:loaded-box`, layer, name: "Loaded area", kind: "loaded-box", source: "this app", extra },
+    }) as unknown as LayerFeature;
+  const a = unit("county:a", sq(0, 0, 1), 1000);
+  const b = unit("county:b", sq(2, 0, 1), 1000);
+  const c = unit("county:c", sq(4, 0, 1), 1000);
+  // Read the coverage fields without leaning on the type, so the assertions fail rather than the compile.
+  const cov = (x: unknown) => x as { value: number | null; coverage?: string; reason?: string; display: string };
+
+  it("gives a unit with no known area no density, not a density of 0", () => {
+    const noArea = unit("county:x", sq(0, 0, 1));
+    const v = computeVitals([noArea, b], [pt("water", "g1", 0.5, 0.5), pt("water", "g2", 2.5, 0.5)], "all", "density").get("county:x")!;
+    expect(cov(v).value).toBeNull();
+    expect(cov(v).coverage).not.toBe("complete");
+    expect(cov(v).reason).toMatch(/area/);
+  });
+
+  it("gives a unit outside a counted layer's loaded box no value, with the reason", () => {
+    // Schools loaded for a box around a only; c lies wholly outside it, b runs past its edge.
+    const fs = [pt("schools", "s1", 0.5, 0.5), pt("schools", "s2", 2.2, 0.5), box("schools", -0.5, -0.5, 2.5, 1.5)];
+    const v = computeVitals([a, b, c], fs, "schools", "count");
+    expect(v.get("county:a")).toMatchObject({ value: 1, coverage: "complete" });
+    expect(v.get("county:c")).toMatchObject({ value: null, coverage: "none" });
+    expect(cov(v.get("county:c")).reason).toMatch(/schools not loaded here: outside the loaded box/);
+    expect(v.get("county:b")).toMatchObject({ value: null, coverage: "partial" });
+    expect(cov(v.get("county:b")).reason).toMatch(/schools not loaded here/);
+    // Under "every signal" the same gap makes the total a floor, so it is not shown as one.
+    expect(cov(computeVitals([a, b, c], [...fs, pt("water", "g", 4.5, 0.5)], "all", "count").get("county:c")!).value).toBeNull();
+  });
+
+  it("gives no value inside a box whose source hit its record limit", () => {
+    const fs = [pt("schools", "s1", 0.5, 0.5), box("schools", -1, -1, 6, 2, { truncated: true })];
+    const v = computeVitals([a, c], fs, "schools", "count").get("county:a")!;
+    expect(cov(v).value).toBeNull();
+    expect(cov(v).coverage).toBe("partial");
+    expect(cov(v).reason).toMatch(/record limit/);
+    expect(cov(v).display).not.toMatch(/^\d/);
+  });
+
+  it("is the same whatever order the units and features arrive in", () => {
+    // a and b tie, so a rank that leaned on input order would show here.
+    const fs = [pt("water", "g1", 0.5, 0.5), pt("water", "g2", 2.5, 0.5), pt("water", "g3", 2.6, 0.5), pt("schools", "s1", 0.4, 0.4), box("schools", -0.5, -0.5, 3.5, 1.5)];
+    const strip = (m: Map<string, unknown>) => Object.fromEntries([...m.entries()].sort(([x], [y]) => (x < y ? -1 : 1)));
+    const one = strip(computeVitals([a, b, c], fs, "all", "density"));
+    const two = strip(computeVitals([c, b, a], [...fs].reverse(), "all", "density"));
+    expect(two).toEqual(one);
+  });
+
+  it("does not let a partly loaded unit move a complete unit's heat", () => {
+    // a is wholly inside the schools box; b runs past it and holds many loaded schools.
+    const inA = [pt("schools", "s1", 0.5, 0.5), pt("schools", "s2", 0.6, 0.6)];
+    const inB = Array.from({ length: 10 }, (_, i) => pt("schools", `b${i}`, 2.1 + i * 0.01, 0.5));
+    const fs = [...inA, ...inB, box("schools", -0.5, -0.5, 2.5, 1.5)];
+    const alone = computeVitals([a], fs, "schools", "count").get("county:a")!;
+    const withB = computeVitals([a, b], fs, "schools", "count").get("county:a")!;
+    expect(withB.heat).toBe(alone.heat);
+    expect(withB.color).toBe(alone.color);
+    expect(withB.heat).toBe(1);
+  });
+});
+
 describe("downstream", () => {
   // Two basins: 1209 flows into 1210, which reaches the ocean.
   const tables: Record<string, BasinTable> = {
