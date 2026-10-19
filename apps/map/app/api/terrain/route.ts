@@ -385,7 +385,7 @@ async function opNaip(q: URLSearchParams): Promise<Response> {
     {
       meta: { source: "USDA FSA NAIP via Microsoft Planetary Computer (STAC search)", attribution: NAIP_ATTRIBUTION, cacheAge: r.age },
       ttlS: 7 * 86_400,
-      provenance: [provenance(source("usda-naip-pc"), { kind: "published", seriesId: "STAC collection naip, items intersecting the point", upstreamUrl: PC_STAC_SEARCH, retrievedAt: new Date(Date.now() - r.age).toISOString(), notes: [`point ${x},${y}`, `${years.length} years`] })],
+      provenance: [provenance(source("usda-naip-pc"), { kind: "published", seriesId: "STAC collection naip, items intersecting the point", upstreamUrl: PC_STAC_SEARCH, retrievedAt: new Date(Date.now() - r.age).toISOString(), notes: [`point ${x},${y}`, `${years.length} year${years.length === 1 ? "" : "s"}`] })],
       caveats,
     },
   );

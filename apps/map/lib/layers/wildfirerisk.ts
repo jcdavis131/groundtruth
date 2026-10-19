@@ -70,7 +70,7 @@ async function fetchWildfireRisk(ctx: FetchContext): Promise<FetchResult> {
     source: `${WRC_SOURCE_LABEL} + Census TIGERweb`,
     collection: { type: "FeatureCollection", features: j.features as LayerFeature[] },
     note:
-      `${j.ranked} counties · ${label} (fixed breaks)` +
+      `${j.ranked} ${j.ranked === 1 ? "county" : "counties"} · ${label} (fixed breaks)` +
       (j.notRanked ? ` · ${j.notRanked} not ranked by USFS` : "") +
       (j.notInRelease ? ` · ${j.notInRelease} not in this release` : "") +
       ` · dashed grey: no rank (never low) · relative ranks, not a forecast · descend below ${WRC_PLACE_MAX_M / 1000} km for communities`,

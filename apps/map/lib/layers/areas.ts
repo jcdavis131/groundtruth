@@ -89,7 +89,7 @@ export async function fetchAreas(ctx: FetchContext, layer: "commerce" | "realest
   const note =
     level === "state"
       ? `${features.length} states${stamp ? " · " + stamp : ""} · descend below ${Math.round(COUNTY_MAX_HEIGHT_M / 1000).toLocaleString()} km for counties`
-      : `${features.length} counties${stamp ? " · " + stamp : ""}`;
+      : `${features.length} ${features.length === 1 ? "county" : "counties"}${stamp ? " · " + stamp : ""}`;
   return {
     collection: { type: "FeatureCollection", features },
     source: env.source ?? "BLS QCEW + Zillow + Census TIGERweb",

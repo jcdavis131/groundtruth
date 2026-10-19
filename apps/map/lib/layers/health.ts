@@ -176,7 +176,7 @@ async function fetchHealth(ctx: FetchContext): Promise<FetchResult> {
     ...base,
     source: "CDC PLACES + Census TIGERweb",
     collection: { type: "FeatureCollection", features: j.features as LayerFeature[] },
-    note: `${j.published} counties · ${m.short}, age-adjusted prevalence, ${m.year} · national quintiles${j.notPublished ? ` · ${j.notPublished} not published (dashed grey)` : ""} · model-based estimates, not counts · descend below ${PLACES_TRACT_MAX_M / 1000} km for tracts`,
+    note: `${j.published} ${j.published === 1 ? "county" : "counties"} · ${m.short}, age-adjusted prevalence, ${m.year} · national quintiles${j.notPublished ? ` · ${j.notPublished} not published (dashed grey)` : ""} · model-based estimates, not counts · descend below ${PLACES_TRACT_MAX_M / 1000} km for tracts`,
     meta: { count: j.features.length, level: "county", measure, breaks, bbox: countyViewBbox(ctx) },
   };
 }

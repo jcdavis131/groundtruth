@@ -37,6 +37,21 @@ describe("riskindex", () => {
     expect(r.note).toMatch(/^52 counties · hurricane risk/);
   });
 
+  it("says '1 county' when one county is joined", async () => {
+    const all = areasCt as unknown as { polygons: { features: unknown[] } };
+    const one = { ...all, polygons: { ...all.polygons, features: all.polygons.features.slice(0, 1) } };
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => {
+        const body = url.startsWith("/api/economy?op=areas") ? one : { data: { level: "county", rows: (ctyCt as { features: Array<{ attributes: unknown }> }).features.map((f) => f.attributes) } };
+        return new Response(JSON.stringify(body), { status: 200 });
+      }),
+    );
+    const r = await riskindexLayer.fetch(ctx(400_000, { nriHazard: "HRCN" }));
+    expect(r.collection.features).toHaveLength(1);
+    expect(r.note).toMatch(/^1 county · hurricane risk/);
+  });
+
   it("asks nothing above 2,500 km and keys tracts below 60 km apart from counties", async () => {
     const r = await riskindexLayer.fetch(ctx(3_000_000));
     expect(calls).toEqual([]);

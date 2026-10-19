@@ -68,7 +68,7 @@ export default function DataTable({ columns, rows, filename = "table", rowHeight
   const exportCsv = () => downloadText(`${filename}-${stamp()}.csv`, toCsv(columns, visible), "text/csv");
   const copyTsv = () => {
     navigator.clipboard.writeText(toTsv(columns, visible)).then(
-      () => useGlobe.getState().pushLog({ level: "info", text: `${visible.length} rows copied as TSV; paste into a spreadsheet.` }),
+      () => useGlobe.getState().pushLog({ level: "info", text: `${visible.length} row${visible.length === 1 ? "" : "s"} copied as TSV; paste into a spreadsheet.` }),
       () => useGlobe.getState().pushLog({ level: "warn", text: "Clipboard blocked." }),
     );
   };

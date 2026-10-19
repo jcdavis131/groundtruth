@@ -77,7 +77,7 @@ async function fetchBroadband(ctx: FetchContext): Promise<FetchResult> {
     source: `${BDC_SOURCE_LABEL} + Census TIGERweb`,
     collection: { type: "FeatureCollection", features: j.features as LayerFeature[] },
     note:
-      `${j.drawn} counties · ${label} (fixed breaks)` +
+      `${j.drawn} ${j.drawn === 1 ? "county" : "counties"} · ${label} (fixed breaks)` +
       (j.ctRegions ? ` · ${j.ctRegions} Connecticut planning regions not published in this geography (dashed)` : "") +
       (j.noData - j.ctRegions > 0 ? ` · ${j.noData - j.ctRegions} with no BDC row (dashed)` : "") +
       ` · available, not subscribed · descend below ${BROADBAND_HEX_MAX_M / 1000} km for hexagons`,

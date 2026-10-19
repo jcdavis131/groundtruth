@@ -58,7 +58,7 @@ async function fetchRiskindex(ctx: FetchContext): Promise<FetchResult> {
     source: "FEMA National Risk Index + Census TIGERweb",
     fetchedAt: ctx.now,
     note:
-      `${joined.matched} counties · ${pickLabel(pick)}, FEMA's rating words · dashed grey: no rating or not in the index (never low)` +
+      `${joined.matched} ${joined.matched === 1 ? "county" : "counties"} · ${pickLabel(pick)}, FEMA's rating words · dashed grey: no rating or not in the index (never low)` +
       (joined.notInIndex ? ` · ${joined.notInIndex} not in the index` : "") +
       ` · a county's percentile among all US counties, not a likelihood · descend below ${NRI_TRACT_MAX_M / 1000} km for tracts`,
     meta: { count: joined.features.length, level: "county", pick, notInIndex: joined.notInIndex, unmatched: joined.unmatched.length },

@@ -1336,7 +1336,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     }
     if (dropped) {
       payload.truncated = { droppedItems: dropped, note: `items cut from the longest topics to stay under ${WORLD_MAX_BYTES} bytes; ask fewer topics or a smaller max_records` };
-      basis.push(`the reply was cut to ${WORLD_MAX_BYTES} bytes (${dropped} items dropped)`);
+      basis.push(`the reply was cut to ${WORLD_MAX_BYTES} bytes (${dropped} item${dropped === 1 ? "" : "s"} dropped)`);
     }
     if (basis.length) payload.coverageStatus = { status: "partial", basis: basis.slice(0, 40) };
     else delete payload.coverageStatus;

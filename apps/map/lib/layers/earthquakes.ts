@@ -88,7 +88,7 @@ async function fetchEarthquakes(ctx: FetchContext): Promise<FetchResult> {
     collection: { type: "FeatureCollection", features },
     source: "USGS all_day",
     fetchedAt: Date.now(),
-    note: `${features.length} events / 24 h · ${strong.length} ≥ M5`,
+    note: `${features.length} event${features.length === 1 ? "" : "s"} / 24 h · ${strong.length} ≥ M5`,
   };
 }
 
