@@ -1,0 +1,488 @@
+{
+ "recorded": "2026-10-19T02:33:00.284Z",
+ "from": "https://www.arxiviq.com",
+ "input": {
+  "lon": -104.99,
+  "lat": 39.74,
+  "topics": [
+   "collections",
+   "hazards"
+  ],
+  "about": "wildfire smoke"
+ },
+ "routes": {
+  "/api/fabric?op=stack&lon=-104.99&lat=39.74": {
+   "status": 200,
+   "body": {
+    "data": {
+     "point": {
+      "elevationM": 1595.9
+     },
+     "nodes": [
+      {
+       "kind": "tract",
+       "name": "Census Tract 20",
+       "code": "08031002000",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "zcta",
+       "name": "80202",
+       "code": "80202",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc12",
+       "name": "Cherry Creek-South Platte River",
+       "code": "101900030304",
+       "source": "usgs-wbd",
+       "facts": {
+        "drains to": "101900030402"
+       }
+      },
+      {
+       "kind": "place",
+       "name": "Denver city",
+       "code": "0820000",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "school",
+       "name": "Denver County School District 1",
+       "code": "0803360",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "unified"
+       }
+      },
+      {
+       "kind": "county",
+       "name": "Denver County, CO",
+       "code": "08031",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "cd",
+       "name": "CO-01",
+       "code": "0801",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "cbsa",
+       "name": "Denver-Aurora-Centennial, CO Metro Area",
+       "code": "19740",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "metropolitan"
+       }
+      },
+      {
+       "kind": "nws-office",
+       "name": "NWS Denver/Boulder, CO",
+       "code": "BOU",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "eco3",
+       "name": "High Plains",
+       "code": "25",
+       "source": "epa-ecoregions",
+       "facts": {}
+      },
+      {
+       "kind": "state",
+       "name": "Colorado",
+       "code": "08",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "timezone",
+       "name": "America/Denver",
+       "code": "America/Denver",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "country",
+       "name": "United States",
+       "code": "USA",
+       "source": "natural-earth",
+       "facts": {}
+      }
+     ],
+     "failed": [
+      {
+       "source": "fema-nfhl",
+       "error": "This operation was aborted (not retried for 5 min)"
+      }
+     ],
+     "answered": [
+      "natural-earth",
+      "census-tigerweb",
+      "federal-regions",
+      "usgs-wbd",
+      "epa-ecoregions",
+      "nws-api",
+      "usgs-epqs",
+      "wikipedia"
+     ],
+     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "natural-earth",
+       "publisher": "Natural Earth",
+       "url": "https://www.naturalearthdata.com/"
+      },
+      "retrievedAt": "2026-10-19T02:32:59.487Z"
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T02:32:59.487Z"
+     },
+     {
+      "source": {
+       "id": "federal-regions",
+       "publisher": "EPA, FEMA, Federal Reserve System",
+       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
+      },
+      "retrievedAt": "2026-10-19T02:32:59.487Z"
+     },
+     {
+      "source": {
+       "id": "usgs-wbd",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
+      },
+      "retrievedAt": "2026-10-19T02:32:59.487Z"
+     },
+     {
+      "source": {
+       "id": "epa-ecoregions",
+       "publisher": "U.S. Environmental Protection Agency",
+       "url": "https://www.epa.gov/eco-research/ecoregions"
+      },
+      "retrievedAt": "2026-10-19T02:32:59.487Z"
+     },
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "retrievedAt": "2026-10-19T02:32:59.487Z"
+     },
+     {
+      "source": {
+       "id": "usgs-epqs",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://apps.nationalmap.gov/epqs/"
+      },
+      "retrievedAt": "2026-10-19T02:32:59.487Z"
+     },
+     {
+      "source": {
+       "id": "wikipedia",
+       "publisher": "Wikimedia Foundation",
+       "url": "https://en.wikipedia.org/"
+      },
+      "retrievedAt": "2026-10-19T02:32:59.487Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:59.487Z"
+   }
+  },
+  "/api/live": {
+   "status": 200,
+   "body": {
+    "data": {
+     "items": [],
+     "failed": [],
+     "unmapped": 0
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     },
+     {
+      "source": {
+       "id": "usgs-earthquakes",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://earthquake.usgs.gov/"
+      },
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:49.835Z"
+   }
+  },
+  "/api/hazards?op=nri&fips=08031": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "STCOFIPS": "08031",
+      "POPULATION": 715210,
+      "RISK_SCORE": 95.22900763358778,
+      "RISK_RATNG": "Relatively High",
+      "EAL_VALT": 221992551.1400563,
+      "EAL_RATNG": "Relatively High",
+      "SOVI_SCORE": 17.77989822,
+      "SOVI_RATNG": "Very Low",
+      "NRI_VER": "December 2025",
+      "AVLN_RISKR": "Not Applicable",
+      "CFLD_RISKR": "Not Applicable",
+      "CWAV_RISKR": "Relatively High",
+      "DRGT_RISKR": "Very Low",
+      "ERQK_RISKR": "Relatively Moderate",
+      "HAIL_RISKR": "Very High",
+      "HWAV_RISKR": "Relatively Low",
+      "HRCN_RISKR": "Not Applicable",
+      "ISTM_RISKR": "Very Low",
+      "IFLD_RISKR": "Relatively High",
+      "LNDS_RISKR": "Relatively Moderate",
+      "LTNG_RISKR": "Very High",
+      "SWND_RISKR": "Relatively High",
+      "TRND_RISKR": "Relatively High",
+      "TSUN_RISKR": "Not Applicable",
+      "VLCN_RISKR": "Very Low",
+      "WFIR_RISKR": "Very Low",
+      "WNTW_RISKR": "Relatively High"
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-nri",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://hazards.fema.gov/nri/"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
+      "retrievedAt": "2026-10-19T02:32:59.783Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:59.783Z"
+   }
+  },
+  "/api/catalog?op=search&q=wildfire%20smoke&limit=3": {
+   "status": 200,
+   "body": {
+    "data": {
+     "hits": [
+      {
+       "id": "wrc-counties",
+       "title": "Wildfire risk to communities, county ranks (USDA Forest Service, 2nd edition, 2024)",
+       "score": 0.331
+      },
+      {
+       "id": "fema-declarations",
+       "title": "Disaster declarations by county (FEMA OpenFEMA Disaster Declarations Summaries v2)",
+       "score": 0.2341
+      },
+      {
+       "id": "wrc-communities",
+       "title": "Wildfire risk to communities, community ranks (USDA Forest Service, 2nd edition, 2024)",
+       "score": 0.2089
+      }
+     ],
+     "matched": true
+    },
+    "provenance": [],
+    "generatedAt": "2026-10-19T02:32:59.949Z"
+   }
+  },
+  "/api/hazards?op=history&fips=08031&years=10&declarations=15": {
+   "status": 200,
+   "body": {
+    "data": {
+     "declarations": [
+      {
+       "disasterNumber": 4498,
+       "declarationType": "DR",
+       "declarationDate": "2020-03-28",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19 PANDEMIC"
+      },
+      {
+       "disasterNumber": 3436,
+       "declarationType": "EM",
+       "declarationDate": "2020-03-13",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19"
+      },
+      {
+       "disasterNumber": 4229,
+       "declarationType": "DR",
+       "declarationDate": "2015-07-16",
+       "incidentType": "Flood",
+       "declarationTitle": "SEVERE STORMS, TORNADOES, FLOODING, LANDSLIDES, AND MUDSLIDES"
+      },
+      {
+       "disasterNumber": 4145,
+       "declarationType": "DR",
+       "declarationDate": "2013-09-14",
+       "incidentType": "Flood",
+       "declarationTitle": "SEVERE STORMS, FLOODING, LANDSLIDES, AND MUDSLIDES"
+      },
+      {
+       "disasterNumber": 3365,
+       "declarationType": "EM",
+       "declarationDate": "2013-09-12",
+       "incidentType": "Flood",
+       "declarationTitle": "SEVERE STORMS, FLOODING, LANDSLIDES, AND MUDSLIDES"
+      },
+      {
+       "disasterNumber": 3270,
+       "declarationType": "EM",
+       "declarationDate": "2007-01-07",
+       "incidentType": "Snowstorm",
+       "declarationTitle": "SNOW"
+      },
+      {
+       "disasterNumber": 3224,
+       "declarationType": "EM",
+       "declarationDate": "2005-09-05",
+       "incidentType": "Coastal Storm",
+       "declarationTitle": "HURRICANE KATRINA EVACUATION"
+      },
+      {
+       "disasterNumber": 3185,
+       "declarationType": "EM",
+       "declarationDate": "2003-04-09",
+       "incidentType": "Snowstorm",
+       "declarationTitle": "SNOW"
+      },
+      {
+       "disasterNumber": 1421,
+       "declarationType": "DR",
+       "declarationDate": "2002-06-19",
+       "incidentType": "Fire",
+       "declarationTitle": "WILDFIRES"
+      },
+      {
+       "disasterNumber": 385,
+       "declarationType": "DR",
+       "declarationDate": "1973-05-23",
+       "incidentType": "Flood",
+       "declarationTitle": "HEAVY RAINS, SNOWMELT AND FLOODING"
+      },
+      {
+       "disasterNumber": 200,
+       "declarationType": "DR",
+       "declarationDate": "1965-06-19",
+       "incidentType": "Tornado",
+       "declarationTitle": "TORNADOES, SEVERE STORMS & FLOODING"
+      }
+     ],
+     "declarationRows": 11,
+     "droughtNow": {
+      "mapDate": "2026-10-13",
+      "validStart": "2026-10-13",
+      "validEnd": "2026-10-19",
+      "none": 0,
+      "d0": 0,
+      "d1": 0,
+      "d2": 99.85,
+      "d3": 0.15,
+      "d4": 0
+     },
+     "missing": []
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-openfema",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      },
+      "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'08'%20and%20fipsCountyCode%20eq%20'031'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
+      "retrievedAt": "2026-10-19T02:32:59.858Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=08031&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
+      "retrievedAt": "2026-10-19T02:33:00.499Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=08031&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
+      "retrievedAt": "2026-10-19T02:33:00.444Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/CO-031/tavg/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T02:32:59.882Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/CO-031/pcp/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T02:33:00.137Z"
+     },
+     {
+      "source": {
+       "id": "noaa-spc",
+       "publisher": "NOAA National Weather Service, Storm Prediction Center",
+       "url": "https://www.spc.noaa.gov/wcm/"
+      },
+      "upstreamUrl": "https://www.spc.noaa.gov/wcm/data/1950-2025_all_tornadoes.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "usgs-landslide-susc",
+       "publisher": "U.S. Geological Survey (Belair, Jones, Martinez, Mirus and Wood)",
+       "url": "https://doi.org/10.5066/P13KAGU3"
+      },
+      "upstreamUrl": "https://www.sciencebase.gov/catalog/file/get/65ccea5bd34ef4b119cb3bac?name=county_analysis.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "ncei-storm-events",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/stormevents/"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:33:00.501Z"
+   }
+  }
+ }
+}

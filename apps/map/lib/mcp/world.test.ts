@@ -5,7 +5,8 @@ import { errorResult, toCallResult, createServer } from "./server";
 import { toolByName, type FetchJson, type JsonObject, type ToolReply } from "./tools";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { MISSING_NAMES, ringsTouchBox, WORLD_MAX_BYTES, worldContext, type WorldItem, type WorldSection } from "./world";
+import { BOUNDARY_CHANGED_SINCE_2010, femaCodes } from "../hazards/history";
+import { ringsTouchBox, WORLD_MAX_BYTES, worldContext, type WorldItem, type WorldSection } from "./world";
 
 // Fixtures trimmed from real replies of www.arxiviq.com on 2026-10-18 (shapes only; values shortened).
 
@@ -117,7 +118,7 @@ const FIELD = {
 const decl = (n: number, title = "SEVERE STORMS") => ({ disasterNumber: 4000 + n, declarationType: "DR", declarationDate: `2024-0${(n % 9) + 1}-01`, incidentType: "Severe Storm", declarationTitle: title, designatedArea: "Travis (County)" });
 
 const HISTORY = {
-  data: { fips: "48453", declarations: [decl(1), decl(2), decl(3), decl(4)], droughtNow: { mapDate: "2026-10-13", none: 60, d0: 40, d1: 10, d2: 0, d3: 0, d4: 0 }, missing: [] },
+  data: { fips: "48453", declarations: [decl(1), decl(2), decl(3), decl(4)], declarationRows: 4, droughtNow: { mapDate: "2026-10-13", none: 60, d0: 40, d1: 10, d2: 0, d3: 0, d4: 0 }, missing: [] },
   provenance: [
     prov("fema-openfema", "Federal Emergency Management Agency", "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?x"),
     prov("usdm", "National Drought Mitigation Center", "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=48453"),
@@ -192,7 +193,7 @@ const CALENDAR = {
   generatedAt: T,
 };
 
-const CATALOG = { data: { hits: [{ id: "nid-dams", title: "Dams (USACE National Inventory of Dams)", score: 0.62 }], matched: true }, provenance: [], generatedAt: T };
+const CATALOG = { data: { hits: [{ id: "nid-dams", title: "Dams (USACE National Inventory of Dams)", score: 0.62 }], matched: true }, provenance: [{ source: { id: "eye-catalog", publisher: "Embedding Atlas", url: "https://www.arxiviq.com/catalog" }, upstreamUrl: "https://www.arxiviq.com/catalog", retrievedAt: T, kind: "estimate" }], generatedAt: T };
 
 type Answer = JsonObject | { status: number; body: unknown } | "hang" | "throw";
 
@@ -249,7 +250,7 @@ describe("world_context: shape", () => {
       [
         '/api/screen?kind=county&q=geoid%20%3D%3D%20%2248453%22%20LIMIT%201',
         "/api/hazards?op=nri&fips=48453",
-        "/api/hazards?op=history&fips=48453&years=10&declarations=3",
+        "/api/hazards?op=history&fips=48453&years=10&declarations=15",
         "/api/live",
         "/api/civic?op=svi&level=place&fips=48453",
         "/api/infra?op=hospitals&bbox=-97.84,30.17,-97.64,30.37",
@@ -276,7 +277,7 @@ describe("world_context: shape", () => {
     expect(topicsOf(r).freshness.items.map((i) => i.value)).toEqual(["Zillow ZHVI (monthly)", "QCEW 2026 Q2"]);
     // Three FEMA declarations shown of four: the cut is reported, not hidden.
     expect(topicsOf(r).hazards.items.filter((i) => i.fact === "FEMA declaration")).toHaveLength(3);
-    expect(topicsOf(r).hazards.coverageStatus!.basis).toContain("FEMA declarations: 3 of 4 shown (max_records)");
+    expect(topicsOf(r).hazards.coverageStatus!.basis).toContain("FEMA declarations: the latest 3 distinct shown, any date (FEMA files 4 rows for this county; a disaster can have one row per designated area)");
     expect(r.payload.coverageStatus).toMatchObject({ status: "partial" });
   });
 
@@ -315,6 +316,10 @@ describe("world_context: shape", () => {
     expect(f.calls).toContain("/api/companies?op=near&bbox=-97.8,30.2,-97.6,30.35");
     // Only outlines that touch the box; the county under its centre first; Bastrop (in the padded tile only) dropped.
     expect(topicsOf(r).identity.items.filter((i) => i.fact === "county touching the box").map((i) => i.code)).toEqual(["48453", "48491", "48209"]);
+    // With room for every county, Bastrop is still absent: the ring filter drops it, not the cap.
+    const wide = await run({ bbox: [-97.8, 30.2, -97.6, 30.35], topics: ["institutions"], max_records: 10 }).reply;
+    expect(topicsOf(wide).identity.items.filter((i) => i.fact === "county touching the box").map((i) => i.code)).toEqual(["48453", "48491", "48209"]);
+    expect(topicsOf(wide).identity.coverageStatus?.basis ?? []).not.toContain(expect.stringMatching(/counties touching the box: \d+ of/));
     const inst = topicsOf(r).institutions.items;
     expect(inst.filter((i) => i.fact === "hospital").map((i) => i.value)).toEqual(["DELL SETON MEDICAL CENTER"]);
     expect(inst.find((i) => i.fact === "hospital")!.note).toBe("general acute care; open; CMS overall star rating 4; inside the box");
@@ -324,7 +329,12 @@ describe("world_context: shape", () => {
     const { f, reply } = run({ lon: -97.74, lat: 30.27, topics: ["collections"], about: "dams near the river" });
     const r = await reply;
     expect(f.calls).toContain("/api/catalog?op=search&q=dams%20near%20the%20river&limit=3");
-    expect(topicsOf(r).collections.items[0]).toMatchObject({ value: "Dams (USACE National Inventory of Dams)", code: "nid-dams", link: "http://t/api/catalog?id=nid-dams" });
+    // Cited to the catalogue's own provenance on the search route it came from; the card is named in the note.
+    expect(topicsOf(r).collections.items[0]).toMatchObject({ value: "Dams (USACE National Inventory of Dams)", code: "nid-dams", sourceId: "eye-catalog", publisher: "Embedding Atlas", link: "http://t/api/catalog?op=search&q=dams%20near%20the%20river&limit=3", note: expect.stringMatching(/card: \/api\/catalog\?id=nid-dams/) });
+    // A search route that sends no provenance gives no collection item, only the reason.
+    const bare = await run({ lon: -97.74, lat: 30.27, topics: ["collections"], about: "dams near the river" }, { "/api/catalog?op=search": { ...CATALOG, provenance: [] } }).reply;
+    expect(topicsOf(bare).collections.items).toEqual([]);
+    expect(topicsOf(bare).collections.missing).toContainEqual({ what: "collections", reason: "eye-catalog: the route sent no provenance for it, so nothing from it is shown" });
   });
 
   it("goes through the MCP server as a normal tool result", async () => {
@@ -544,9 +554,11 @@ describe("world_context: auth refusal", () => {
 
 // ---- the invariant over recorded replies ---------------------------------------
 //
-// Both earlier review failures were one class of bug: a source that is missing turned into a
+// Every review failure so far was one class of bug: a source that is missing turned into a
 // value, or borrowed another source's citation. These replies were recorded from
-// www.arxiviq.com on 2026-10-18 and trimmed to the fields the tool reads.
+// www.arxiviq.com (or this branch's preview deployment, for routes this PR changes; the file
+// says which) and trimmed to the fields the tool reads. A file with `derivedFrom` is a recorded
+// reply with one stated edit, for a shape the live site does not show today.
 
 interface Recorded {
   input: JsonObject;
@@ -569,15 +581,44 @@ function replay(rec: Recorded): FetchJson {
 
 const runRecorded = (rec: Recorded) => worldContext(toolByName("world_context")!.inputSchema.parse(rec.input) as never, { fetchJson: replay(rec) });
 
+/**
+ * The names lib/hazards/history.ts writes in `missing`, by source id: a second copy, kept here on
+ * purpose so the invariant does not share world.ts's table (MISSING_NAMES) with the code it checks.
+ */
+const ROUTE_MISSING_NAMES: Record<string, string> = {
+  FEMA: "fema-openfema",
+  USDM: "usdm",
+  SPC: "noaa-spc",
+  "NCEI Storm Events": "ncei-storm-events",
+  "USGS landslide susceptibility": "usgs-landslide-susc",
+  "NOAA Climate at a Glance (tavg)": "noaa-cag",
+  "NOAA Climate at a Glance (pcp)": "noaa-cag",
+};
+
 /** Source ids a route reply names as missing or failed (its own lists), by id. */
 function namedMissing(body: JsonObject): Set<string> {
   const d = (body.data ?? {}) as JsonObject;
   const out = new Set<string>();
   for (const m of [...((d.missing as unknown[]) ?? []), ...((d.failed as unknown[]) ?? [])] as JsonObject[]) {
     const n = String(m.source ?? m.id ?? "");
-    out.add(MISSING_NAMES[n] ?? n);
+    out.add(ROUTE_MISSING_NAMES[n] ?? n);
   }
   return out;
+}
+
+/** The route's own word that an empty answer is complete, for each kind of 0 the tool may state. */
+function zeroIsComplete(fact: string, route: JsonObject): string | null {
+  const d = (route.data ?? {}) as JsonObject;
+  if (fact === "FEMA declarations listed") {
+    if (d.declarationRows !== 0) return `declarationRows is ${String(d.declarationRows)}, not 0`;
+    const gap = ((d.missing as JsonObject[]) ?? []).find((m) => /^join:|boundary/.test(String(m.reason ?? "")));
+    return gap ? `the route reports ${String(gap.reason)} for this county` : null;
+  }
+  if (/^(hospitals|dams) found$/.test(fact)) return route.truncated === false ? null : `truncated is ${String(route.truncated)}`;
+  if (/^public companies/.test(fact)) return route.pulled ? null : "the SEC bundle is the committed fixture (pulled: null)";
+  if (/^Severe or Extreme NWS alerts/.test(fact)) return ((d.failed as unknown[]) ?? []).length || Number(d.unmapped ?? 0) > 0 ? "the live list is incomplete" : null;
+  if (/^M4\.5\+ earthquakes/.test(fact)) return ((d.failed as unknown[]) ?? []).length ? "the live list is incomplete" : null;
+  return `no completeness rule for a 0 in "${fact}"`;
 }
 
 /** Source ids a route reply cites: its provenance, or for the release calendar, the sources it schedules. */
@@ -593,7 +634,7 @@ const routeOf = (link: string) => link.replace(/^http:\/\/t/, "");
  * any other source has borrowed a citation (the FEMA-to-USDM and Zillow-to-TIGERweb bugs);
  * a fact not in this table fails until someone says where it comes from.
  */
-const FACT_SOURCE: Array<[RegExp, string | null]> = [
+const FACT_SOURCE: Array<[RegExp, string | null, RegExp?]> = [
   [/^(county|state|metro or micro area \(CBSA\)|city or town|census tract|ZIP code area \(ZCTA\)|county touching the box|school district|congressional district|tribal land)$/, "census-tigerweb"],
   [/^(time zone|NWS forecast office|NWS alert)$|^Severe or Extreme NWS alerts/, "nws-api"],
   [/^HUC-12 watershed$/, "usgs-wbd"],
@@ -602,7 +643,7 @@ const FACT_SOURCE: Array<[RegExp, string | null]> = [
   [/^elevation$/, "usgs-epqs"],
   [/^FEMA NRI|^NRI hazards|^population \(as carried in FEMA's NRI row\)$/, "fema-nri"],
   [/^FEMA declaration/, "fema-openfema"],
-  [/^U\.S\. Drought Monitor/, "usdm"],
+  [/^U\.S\. Drought Monitor/, "usdm", /DroughtSeverityStatisticsByAreaPercent/], // usdm has two entries; the shares come from this one
   [/^earthquake$|^M4\.5\+ earthquakes/, "usgs-earthquakes"],
   [/\(BLS QCEW/, "bls-qcew"],
   [/\(Zillow ZHVI\)$/, "zillow-zhvi"],
@@ -624,22 +665,57 @@ function checkInvariant(label: string, rec: Recorded, r: ToolReply): void {
     const rule = FACT_SOURCE.find(([re]) => re.test(it.fact));
     expect(rule, `${where}: a fact the invariant knows`).toBeDefined();
     if (rule![1]) expect(it.sourceId, where).toBe(rule![1]);
-    const route = rec.routes[routeOf(it.link)];
+    if (rule![2]) expect(it.upstreamUrl, where).toMatch(rule![2]);
+    const p = routeOf(it.link);
+    const route = rec.routes[p];
     expect(route, `${where}: link ${it.link} is a route the tool called`).toBeDefined();
     // (1) the source is cited by the route the item links to
-    expect(citedBy(routeOf(it.link), route.body).has(it.sourceId), `${where}: cited by ${it.link}`).toBe(true);
+    expect(citedBy(p, route.body).has(it.sourceId), `${where}: cited by ${it.link}`).toBe(true);
+    // (1b) its publisher and upstreamUrl come from that source's own provenance entry (an event item
+    // may point at the event itself; a release at the calendar's schedule page for it)
+    const d = (route.body.data ?? {}) as JsonObject;
+    if (p.startsWith("/api/releases")) {
+      const rel = ((d.releases as JsonObject[]) ?? []).filter((x) => x.sourceId === it.sourceId && x.title === it.value);
+      expect(rel.some((x) => (x.scheduleUrl ?? it.link) === it.upstreamUrl), `${where}: the release's own schedule page`).toBe(true);
+    } else {
+      const entries = ((route.body.provenance as JsonObject[]) ?? []).filter((x) => (x.source as JsonObject)?.id === it.sourceId);
+      const own = entries.filter((x) => (x.source as JsonObject).publisher === it.publisher);
+      expect(own.length, `${where}: publisher ${it.publisher} is that source's`).toBeGreaterThan(0);
+      const urls = new Set(own.map((x) => String(x.upstreamUrl ?? (x.source as JsonObject).url ?? "")));
+      if (/^(NWS alert|earthquake)$/.test(it.fact)) for (const x of (d.items as JsonObject[]) ?? []) if (x.title === it.value && typeof x.url === "string") urls.add(x.url);
+      expect(urls.has(it.upstreamUrl), `${where}: upstreamUrl ${it.upstreamUrl} is one of ${[...urls].join(" | ")}`).toBe(true);
+    }
     // (2) that route does not list the source as missing or failed
     expect(namedMissing(route.body).has(it.sourceId), `${where}: listed missing by ${it.link}`).toBe(false);
-    // (3) a 0 or an empty value only with that source's own provenance present
-    if (it.value === 0 || it.value === "" || (Array.isArray(it.value) && !(it.value as unknown[]).length)) {
-      expect(citedBy(routeOf(it.link), route.body).has(it.sourceId), `${where}: a zero with no provenance`).toBe(true);
-    }
+    // (3) a 0 only where the route itself says the answer is complete
+    if (it.value === 0) expect(zeroIsComplete(it.fact, route.body), `${where}: a 0 the route does not vouch for`).toBeNull();
   }
+}
+
+/** Every (route, source) pair the tool cited in a reply, except the calendar (which cites no provenance of its own). */
+function citedPairs(r: ToolReply): Map<string, Set<string>> {
+  const pairs = new Map<string, Set<string>>();
+  for (const it of allItems(r)) {
+    const p = routeOf(it.link);
+    if (p.startsWith("/api/releases")) continue;
+    (pairs.get(p) ?? pairs.set(p, new Set()).get(p)!).add(it.sourceId);
+  }
+  return pairs;
 }
 
 describe("world_context: invariant over recorded live replies", () => {
   it("has the recorded places", () => {
-    expect(recorded.map(([k]) => k)).toEqual(["ct_09110", "mobile_01097", "nola_smallbox", "ocean_atlantic", "petroleum_30069", "pr_72127"]);
+    expect(recorded.map(([k]) => k)).toEqual(["austin_pt", "chugach_02063", "ct_09110", "denver_about", "mobile_01097", "nola_smallbox", "ocean_atlantic", "petroleum_30069", "pr_72127", "volusia_alert_pt", "zero_declarations"]);
+  });
+
+  it("between them the fixtures cite, and so the mutations drop, every source in the fact table", async () => {
+    const dropped = new Set<string>();
+    for (const [, rec] of recorded) for (const ids of citedPairs(await runRecorded(rec)).values()) for (const id of ids) dropped.add(id);
+    const wanted = new Set(FACT_SOURCE.map(([, id]) => id).filter((x): x is string => !!x));
+    expect([...wanted].filter((id) => !dropped.has(id)).sort()).toEqual([]);
+    // and the item kinds the earlier rounds could not see
+    const all = (await Promise.all(recorded.map(([, rec]) => runRecorded(rec)))).flatMap(allItems);
+    for (const fact of ["NWS alert", "FEMA declarations listed", "collection", "public company (by ticker; names are not copied)", "FEMA flood zone"]) expect(all.map((i) => i.fact), fact).toContain(fact);
   });
 
   for (const [label, rec] of recorded) {
@@ -651,13 +727,7 @@ describe("world_context: invariant over recorded live replies", () => {
     });
 
     it(`${label}: drop each cited source from its route (provenance gone, named missing) and it becomes a missing entry, never a value`, async () => {
-      const base = await runRecorded(rec);
-      const pairs = new Map<string, Set<string>>();
-      for (const it of allItems(base)) {
-        const p = routeOf(it.link);
-        if (p.startsWith("/api/releases")) continue; // the calendar cites no provenance of its own
-        (pairs.get(p) ?? pairs.set(p, new Set()).get(p)!).add(it.sourceId);
-      }
+      const pairs = citedPairs(await runRecorded(rec));
       expect(pairs.size).toBeGreaterThan(0);
       for (const [p, ids] of pairs) {
         for (const id of ids) {
@@ -744,6 +814,64 @@ describe("world_context: citations never borrow", () => {
     const sc = toCallResult(r).structuredContent;
     expect(sc).toMatchObject({ code: "upstream_failure" });
     expect(new TextEncoder().encode(JSON.stringify(sc)).length).toBeLessThanOrEqual(WORLD_MAX_BYTES);
+  });
+});
+
+describe("world_context: FEMA zeros, duplicates and the cut order", () => {
+  const emptyFema = (missing: JsonObject[]) => ({ ...HISTORY, data: { ...HISTORY.data, declarations: [], declarationRows: 0, missing } });
+
+  it("every county with a boundary change, a Connecticut region or a rename gets a missing entry or a crosswalked list, never a 0", async () => {
+    const regions = ["09110", "09120", "09130", "09140", "09150", "09160", "09170", "09180", "09190"];
+    const cases: Array<[string, JsonObject[]]> = [
+      // The route's own missing list for these (lib/hazards/history.ts): landslide is withheld on a changed boundary.
+      ...Object.keys(BOUNDARY_CHANGED_SINCE_2010).map((f): [string, JsonObject[]] => [f, [{ source: "USGS landslide susceptibility", reason: "join:boundary_changed_since_2010" }]]),
+      ...regions.map((f): [string, JsonObject[]] => [f, [{ source: "FEMA", reason: "join:legacy_ct_counties" }]]),
+    ];
+    for (const [fips, missing] of cases) {
+      const r = await run({ fips, topics: ["hazards"] }, { "/api/hazards?op=history": emptyFema(missing) }).reply;
+      expect(allItems(r).some((i) => i.fact === "FEMA declarations listed"), fips).toBe(false);
+      expect(topicsOf(r).hazards.missing!.some((m) => m.what === "FEMA declarations"), fips).toBe(true);
+    }
+    // The renamed and split counties with no join entry are read with their legacy code, so their list is not empty.
+    for (const fips of ["46102", "02158", "02063", "02066", "02198", "02130", "02275", "02195", "51019"]) expect(femaCodes(fips).length, fips).toBeGreaterThan(1);
+  });
+
+  it("a 0 needs the route's own declarationRows 0, and says 'at any date'", async () => {
+    const r = await run({ fips: "48453", topics: ["hazards"] }, { "/api/hazards?op=history": emptyFema([]) }).reply;
+    expect(topicsOf(r).hazards.items.find((i) => i.fact === "FEMA declarations listed")).toMatchObject({ value: 0, note: expect.stringMatching(/at any date/) });
+    const noRows = { ...HISTORY, data: { ...HISTORY.data, declarations: [], missing: [] } };
+    const r2 = await run({ fips: "48453", topics: ["hazards"] }, { "/api/hazards?op=history": noRows }).reply;
+    expect(topicsOf(r2).hazards.items.some((i) => i.fact === "FEMA declarations listed")).toBe(false);
+    expect(topicsOf(r2).hazards.missing).toContainEqual({ what: "FEMA declarations", reason: expect.stringMatching(/did not report reading zero rows/) });
+  });
+
+  it("each disaster once (Kusilvak's DR-4893 has one row per designated area); the list says latest, any date; a legacy row is marked", async () => {
+    const k = (n: number, area: string, filedUnder?: string) => ({ ...decl(n), disasterNumber: n, designatedArea: area, ...(filedUnder ? { filedUnder } : {}) });
+    const h = { ...HISTORY, data: { ...HISTORY.data, declarations: [k(4893, "Kusilvak (Census Area)"), k(4893, "St. Marys City School District", "02270"), k(4533, "Kusilvak", "02270"), k(3446, "x")], declarationRows: 14 } };
+    const r = await run({ fips: "48453", topics: ["hazards"] }, { "/api/hazards?op=history": h }).reply;
+    const ds = topicsOf(r).hazards.items.filter((i) => i.fact === "FEMA declaration");
+    expect(ds.map((i) => i.code)).toEqual(["DR-4893", "DR-4533", "DR-3446"]);
+    expect(ds[1].note).toMatch(/filed by FEMA under the former county code 02270/);
+    expect(topicsOf(r).hazards.coverageStatus!.basis).toContain("FEMA declarations: the latest 3 distinct shown, any date (FEMA files 14 rows for this county; a disaster can have one row per designated area)");
+  });
+
+  it("the byte cap cuts list rows (declarations past the first, hospitals) before the drought reading and the live counts", async () => {
+    const long = "Z".repeat(190);
+    const many = (n: number) => Array.from({ length: n }, (_, i) => feature(-97.74 + i * 0.001, 30.27, { id: `hifld-hosp:${i}`, name: `${long}${i}`, details: { type: long }, extra: { status: long, embedText: `name: ${long}${i}` } }));
+    const r = await run(
+      { lon: -97.74, lat: 30.27, max_records: 10 },
+      {
+        "/api/infra?op=hospitals": { ...HOSPITALS, data: { type: "FeatureCollection", features: many(40) } },
+        "/api/infra?op=dams": { ...DAMS, data: { type: "FeatureCollection", features: many(40) } },
+        "/api/hazards?op=history": { ...HISTORY, data: { ...HISTORY.data, declarations: Array.from({ length: 40 }, (_, i) => decl(i, long)), declarationRows: 40 } },
+      },
+    ).reply;
+    expect((r.payload.truncated as { droppedItems: number }).droppedItems).toBeGreaterThan(0);
+    const hz = facts(r, "hazards");
+    expect(hz.some((f) => f.startsWith("U.S. Drought Monitor"))).toBe(true);
+    expect(hz.some((f) => f.startsWith("Severe or Extreme NWS alerts"))).toBe(true);
+    expect(hz.some((f) => f.startsWith("FEMA NRI overall"))).toBe(true);
+    expect(facts(r, "economy").length).toBeGreaterThan(3);
   });
 });
 

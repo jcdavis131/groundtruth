@@ -1,5 +1,5 @@
 {
- "recorded": "2026-10-19T01:59:12.945Z",
+ "recorded": "2026-10-19T02:32:29.848Z",
  "from": "https://www.arxiviq.com",
  "input": {
   "fips": "72127"
@@ -39,7 +39,7 @@
        "publisher": "U.S. Census Bureau",
        "url": "https://tigerweb.geo.census.gov/"
       },
-      "retrievedAt": "2026-10-19T01:43:49.821Z"
+      "retrievedAt": "2026-10-19T02:32:27.274Z"
      },
      {
       "source": {
@@ -47,7 +47,7 @@
        "publisher": "Zillow Research",
        "url": "https://www.zillow.com/research/data/"
       },
-      "retrievedAt": "2026-10-19T01:43:49.821Z"
+      "retrievedAt": "2026-10-19T02:32:27.274Z"
      },
      {
       "source": {
@@ -55,7 +55,7 @@
        "publisher": "Zillow Research",
        "url": "https://www.zillow.com/research/data/"
       },
-      "retrievedAt": "2026-10-19T01:43:49.821Z"
+      "retrievedAt": "2026-10-19T02:32:27.274Z"
      },
      {
       "source": {
@@ -63,7 +63,7 @@
        "publisher": "U.S. Bureau of Labor Statistics",
        "url": "https://www.bls.gov/cew/"
       },
-      "retrievedAt": "2026-10-19T01:43:49.821Z"
+      "retrievedAt": "2026-10-19T02:32:27.274Z"
      },
      {
       "source": {
@@ -71,7 +71,7 @@
        "publisher": "Zillow Research",
        "url": "https://www.zillow.com/research/data/"
       },
-      "retrievedAt": "2026-10-19T01:43:49.821Z"
+      "retrievedAt": "2026-10-19T02:32:27.274Z"
      },
      {
       "source": {
@@ -79,7 +79,7 @@
        "publisher": "Zillow Research",
        "url": "https://www.zillow.com/research/data/"
       },
-      "retrievedAt": "2026-10-19T01:43:49.821Z"
+      "retrievedAt": "2026-10-19T02:32:27.274Z"
      },
      {
       "source": {
@@ -87,58 +87,10 @@
        "publisher": "U.S. Bureau of Labor Statistics",
        "url": "https://www.bls.gov/cew/"
       },
-      "retrievedAt": "2026-10-19T01:43:49.821Z"
+      "retrievedAt": "2026-10-19T02:32:27.274Z"
      }
     ],
-    "generatedAt": "2026-10-19T01:44:53.800Z"
-   }
-  },
-  "/api/hazards?op=nri&fips=72127": {
-   "status": 200,
-   "body": {
-    "data": {
-     "row": {
-      "STCOFIPS": "72127",
-      "POPULATION": 341981,
-      "RISK_SCORE": null,
-      "RISK_RATNG": "Insufficient Data",
-      "EAL_VALT": 434520246.2896882,
-      "EAL_RATNG": "Relatively High",
-      "SOVI_SCORE": null,
-      "SOVI_RATNG": "Data Unavailable",
-      "NRI_VER": "December 2025",
-      "AVLN_RISKR": "Not Applicable",
-      "CFLD_RISKR": "Insufficient Data",
-      "CWAV_RISKR": "Insufficient Data",
-      "DRGT_RISKR": "Insufficient Data",
-      "ERQK_RISKR": "Insufficient Data",
-      "HAIL_RISKR": "Insufficient Data",
-      "HWAV_RISKR": "Insufficient Data",
-      "HRCN_RISKR": "Insufficient Data",
-      "ISTM_RISKR": "Not Applicable",
-      "IFLD_RISKR": "Insufficient Data",
-      "LNDS_RISKR": "Insufficient Data",
-      "LTNG_RISKR": "Insufficient Data",
-      "SWND_RISKR": "Insufficient Data",
-      "TRND_RISKR": "Insufficient Data",
-      "TSUN_RISKR": "Insufficient Data",
-      "VLCN_RISKR": "Insufficient Data",
-      "WFIR_RISKR": "Insufficient Data",
-      "WNTW_RISKR": "Insufficient Data"
-     }
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "fema-nri",
-       "publisher": "Federal Emergency Management Agency",
-       "url": "https://hazards.fema.gov/nri/"
-      },
-      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
-      "retrievedAt": "2026-10-19T01:44:54.034Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T01:44:54.034Z"
+    "generatedAt": "2026-10-19T02:32:27.332Z"
    }
   },
   "/api/releases?op=calendar": {
@@ -206,7 +158,7 @@
        "url": "https://data.bts.gov/"
       },
       "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
-      "retrievedAt": "2026-10-19T01:36:48.227Z"
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
@@ -215,7 +167,7 @@
        "url": "https://api.waterdata.usgs.gov/"
       },
       "upstreamUrl": "https://waterdata.usgs.gov/nwis",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
@@ -224,7 +176,7 @@
        "url": "https://fred.stlouisfed.org/"
       },
       "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
@@ -233,7 +185,7 @@
        "url": "https://fred.stlouisfed.org/"
       },
       "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
@@ -242,7 +194,7 @@
        "url": "https://fred.stlouisfed.org/"
       },
       "upstreamUrl": "https://www.freddiemac.com/pmms",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
@@ -251,7 +203,7 @@
        "url": "https://droughtmonitor.unl.edu/"
       },
       "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
@@ -260,7 +212,7 @@
        "url": "https://data.bts.gov/"
       },
       "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
@@ -269,7 +221,7 @@
        "url": "https://fred.stlouisfed.org/"
       },
       "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
@@ -278,7 +230,7 @@
        "url": "https://fred.stlouisfed.org/"
       },
       "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
@@ -287,7 +239,7 @@
        "url": "https://fred.stlouisfed.org/"
       },
       "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
      },
      {
       "source": {
@@ -296,7 +248,7 @@
        "url": "https://fred.stlouisfed.org/"
       },
       "upstreamUrl": "https://www.bea.gov/news/schedule",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
      },
      {
       "source": {
@@ -305,7 +257,7 @@
        "url": "https://fred.stlouisfed.org/"
       },
       "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
      },
      {
       "source": {
@@ -314,7 +266,7 @@
        "url": "https://www.zillow.com/research/data/"
       },
       "upstreamUrl": "https://www.zillow.com/research/data/",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
      },
      {
       "source": {
@@ -323,7 +275,7 @@
        "url": "https://www.zillow.com/research/data/"
       },
       "upstreamUrl": "https://www.zillow.com/research/data/",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
      },
      {
       "source": {
@@ -332,7 +284,7 @@
        "url": "https://fred.stlouisfed.org/"
       },
       "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
      },
      {
       "source": {
@@ -341,466 +293,41 @@
        "url": "https://fred.stlouisfed.org/"
       },
       "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
-      "retrievedAt": "2026-10-19T01:36:48.228Z"
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
      }
     ],
-    "generatedAt": "2026-10-19T01:36:48.228Z"
+    "generatedAt": "2026-10-19T02:31:47.351Z"
    }
   },
-  "/api/fabric?op=stack&lon=-66.0628&lat=18.3932": {
+  "/api/live": {
    "status": 200,
    "body": {
     "data": {
-     "point": {
-      "elevationM": 16
-     },
-     "nodes": [
-      {
-       "kind": "flood",
-       "name": "Flood zone X",
-       "code": "X",
-       "source": "fema-nfhl",
-       "facts": {
-        "special flood hazard area": "no",
-        "FIRM panel": "72000C0365J"
-       }
-      },
-      {
-       "kind": "tract",
-       "name": "Census Tract 9800",
-       "code": "72127980000",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "zcta",
-       "name": "00927",
-       "code": "00927",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "huc12",
-       "name": "Rio Puerto Nuevo",
-       "code": "210100050502",
-       "source": "usgs-wbd",
-       "facts": {
-        "drains to": "210100050800"
-       }
-      },
-      {
-       "kind": "county",
-       "name": "San Juan Municipio, PR",
-       "code": "72127",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "flood-community",
-       "name": "Puerto Rico Unincorporated Areas",
-       "code": "720000",
-       "source": "fema-nfhl",
-       "facts": {}
-      },
-      {
-       "kind": "cbsa",
-       "name": "San Juan-Bayamón-Caguas, PR Metro Area",
-       "code": "41980",
-       "source": "census-tigerweb",
-       "facts": {
-        "type": "metropolitan"
-       }
-      },
-      {
-       "kind": "school",
-       "name": "Puerto Rico Department of Education",
-       "code": "7200030",
-       "source": "census-tigerweb",
-       "facts": {
-        "type": "unified"
-       }
-      },
-      {
-       "kind": "cd",
-       "name": "PR-Resident Commissioner District (at Large)",
-       "code": "7298",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "state",
-       "name": "Puerto Rico",
-       "code": "72",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "nws-office",
-       "name": "NWS San Juan, PR",
-       "code": "SJU",
-       "source": "nws-api",
-       "facts": {}
-      },
-      {
-       "kind": "timezone",
-       "name": "America/Puerto Rico",
-       "code": "America/Puerto_Rico",
-       "source": "nws-api",
-       "facts": {}
-      },
-      {
-       "kind": "country",
-       "name": "Puerto Rico",
-       "code": "PRI",
-       "source": "natural-earth",
-       "facts": {}
-      }
-     ],
+     "items": [],
      "failed": [],
-     "answered": [
-      "natural-earth",
-      "census-tigerweb",
-      "federal-regions",
-      "usgs-wbd",
-      "epa-ecoregions",
-      "fema-nfhl",
-      "nws-api",
-      "usgs-epqs",
-      "wikipedia"
-     ],
-     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
+     "unmapped": 0
     },
     "provenance": [
-     {
-      "source": {
-       "id": "natural-earth",
-       "publisher": "Natural Earth",
-       "url": "https://www.naturalearthdata.com/"
-      },
-      "retrievedAt": "2026-10-19T01:44:57.658Z"
-     },
-     {
-      "source": {
-       "id": "census-tigerweb",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://tigerweb.geo.census.gov/"
-      },
-      "retrievedAt": "2026-10-19T01:44:57.658Z"
-     },
-     {
-      "source": {
-       "id": "federal-regions",
-       "publisher": "EPA, FEMA, Federal Reserve System",
-       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
-      },
-      "retrievedAt": "2026-10-19T01:44:57.658Z"
-     },
-     {
-      "source": {
-       "id": "usgs-wbd",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
-      },
-      "retrievedAt": "2026-10-19T01:44:57.658Z"
-     },
-     {
-      "source": {
-       "id": "epa-ecoregions",
-       "publisher": "U.S. Environmental Protection Agency",
-       "url": "https://www.epa.gov/eco-research/ecoregions"
-      },
-      "retrievedAt": "2026-10-19T01:44:57.658Z"
-     },
-     {
-      "source": {
-       "id": "fema-nfhl",
-       "publisher": "Federal Emergency Management Agency",
-       "url": "https://www.fema.gov/flood-maps/national-flood-hazard-layer"
-      },
-      "retrievedAt": "2026-10-19T01:44:57.658Z"
-     },
      {
       "source": {
        "id": "nws-api",
        "publisher": "NOAA National Weather Service",
        "url": "https://www.weather.gov/documentation/services-web-api"
       },
-      "retrievedAt": "2026-10-19T01:44:57.658Z"
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
      },
      {
       "source": {
-       "id": "usgs-epqs",
+       "id": "usgs-earthquakes",
        "publisher": "U.S. Geological Survey",
-       "url": "https://apps.nationalmap.gov/epqs/"
+       "url": "https://earthquake.usgs.gov/"
       },
-      "retrievedAt": "2026-10-19T01:44:57.658Z"
-     },
-     {
-      "source": {
-       "id": "wikipedia",
-       "publisher": "Wikimedia Foundation",
-       "url": "https://en.wikipedia.org/"
-      },
-      "retrievedAt": "2026-10-19T01:44:57.658Z"
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
      }
     ],
-    "generatedAt": "2026-10-19T01:44:57.658Z"
-   }
-  },
-  "/api/infra?op=dams&bbox=-66.3128,18.1432,-65.8128,18.6432": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": [
-      {
-       "geometry": {
-        "coordinates": [
-         -66.23590861618784,
-         18.34352507543894
-        ]
-       },
-       "properties": {
-        "id": "nid:PR00017",
-        "name": "La Plata Dam",
-        "details": {
-         "hazard potential": "High",
-         "condition assessment": "Satisfactory",
-         "year completed": 1974,
-         "owner type": "Public Utility"
-        },
-        "extra": {
-         "embedText": "name: La Plata Dam"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.20550120543547,
-         18.267543953536077
-        ]
-       },
-       "properties": {
-        "id": "nid:PR00019",
-        "name": "Comerio I Dam",
-        "details": {
-         "hazard potential": "High",
-         "condition assessment": "Poor",
-         "year completed": 1907,
-         "owner type": "Local Government"
-        },
-        "extra": {
-         "embedText": "name: Comerio I Dam"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.20637940560128,
-         18.26150075174028
-        ]
-       },
-       "properties": {
-        "id": "nid:PR00018",
-        "name": "Comerio Ii Dam",
-        "details": {
-         "hazard potential": "High",
-         "condition assessment": "Poor",
-         "year completed": 1913,
-         "owner type": "Local Government"
-        },
-        "extra": {
-         "embedText": "name: Comerio Ii Dam"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.14058488409168,
-         18.197114933804585
-        ]
-       },
-       "properties": {
-        "id": "nid:PR00020",
-        "name": "Cidra Dam",
-        "details": {
-         "hazard potential": "High",
-         "condition assessment": "Satisfactory",
-         "year completed": 1946,
-         "owner type": "Public Utility"
-        },
-        "extra": {
-         "embedText": "name: Cidra Dam"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.05066925880372,
-         18.342511578121652
-        ]
-       },
-       "properties": {
-        "id": "nid:PR00022",
-        "name": "Las Curias Dam",
-        "details": {
-         "hazard potential": "High",
-         "condition assessment": "Satisfactory",
-         "year completed": 1946,
-         "owner type": "Public Utility"
-        },
-        "extra": {
-         "embedText": "name: Las Curias Dam"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.01583754775812,
-         18.32800927441078
-        ]
-       },
-       "properties": {
-        "id": "nid:PR00024",
-        "name": "Loiza Dam",
-        "details": {
-         "hazard potential": "High",
-         "condition assessment": "Satisfactory",
-         "year completed": 1954,
-         "owner type": "Public Utility"
-        },
-        "extra": {
-         "embedText": "name: Loiza Dam"
-        }
-       }
-      }
-     ]
-    },
-    "truncated": false,
-    "provenance": [
-     {
-      "source": {
-       "id": "usace-nid",
-       "publisher": "U.S. Army Corps of Engineers",
-       "url": "https://nid.sec.usace.army.mil/"
-      },
-      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
-      "retrievedAt": "2026-10-19T01:44:54.154Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T01:44:54.154Z"
-   }
-  },
-  "/api/hazards?op=history&fips=72127&years=10&declarations=3": {
-   "status": 200,
-   "body": {
-    "data": {
-     "declarations": [
-      {
-       "disasterNumber": 3610,
-       "declarationType": "EM",
-       "declarationDate": "2024-08-13",
-       "incidentType": "Severe Storm",
-       "declarationTitle": "TROPICAL STORM ERNESTO"
-      },
-      {
-       "disasterNumber": 4671,
-       "declarationType": "DR",
-       "declarationDate": "2022-09-21",
-       "incidentType": "Hurricane",
-       "declarationTitle": "HURRICANE FIONA"
-      },
-      {
-       "disasterNumber": 3583,
-       "declarationType": "EM",
-       "declarationDate": "2022-09-18",
-       "incidentType": "Hurricane",
-       "declarationTitle": "TROPICAL STORM FIONA"
-      }
-     ],
-     "droughtNow": {
-      "mapDate": "2026-10-13",
-      "validStart": "2026-10-13",
-      "validEnd": "2026-10-19",
-      "none": 0,
-      "d0": 0,
-      "d1": 100,
-      "d2": 0,
-      "d3": 0,
-      "d4": 0
-     },
-     "missing": [
-      {
-       "source": "NOAA Climate at a Glance (tavg)",
-       "reason": "source:not_published_for_puerto_rico"
-      },
-      {
-       "source": "NOAA Climate at a Glance (pcp)",
-       "reason": "source:not_published_for_puerto_rico"
-      }
-     ]
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "fema-openfema",
-       "publisher": "Federal Emergency Management Agency",
-       "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
-      },
-      "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'72'%20and%20fipsCountyCode%20eq%20'127'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
-      "retrievedAt": "2026-10-19T01:44:54.160Z"
-     },
-     {
-      "source": {
-       "id": "usdm",
-       "publisher": "National Drought Mitigation Center, USDA, NOAA",
-       "url": "https://droughtmonitor.unl.edu/"
-      },
-      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=72127&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
-      "retrievedAt": "2026-10-19T01:44:54.544Z"
-     },
-     {
-      "source": {
-       "id": "usdm",
-       "publisher": "National Drought Mitigation Center, USDA, NOAA",
-       "url": "https://droughtmonitor.unl.edu/"
-      },
-      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=72127&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
-      "retrievedAt": "2026-10-19T01:44:54.561Z"
-     },
-     {
-      "source": {
-       "id": "noaa-spc",
-       "publisher": "NOAA National Weather Service, Storm Prediction Center",
-       "url": "https://www.spc.noaa.gov/wcm/"
-      },
-      "upstreamUrl": "https://www.spc.noaa.gov/wcm/data/1950-2025_all_tornadoes.csv",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
-     },
-     {
-      "source": {
-       "id": "usgs-landslide-susc",
-       "publisher": "U.S. Geological Survey (Belair, Jones, Martinez, Mirus and Wood)",
-       "url": "https://doi.org/10.5066/P13KAGU3"
-      },
-      "upstreamUrl": "https://www.sciencebase.gov/catalog/file/get/65ccea5bd34ef4b119cb3bac?name=county_analysis.csv",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
-     },
-     {
-      "source": {
-       "id": "ncei-storm-events",
-       "publisher": "NOAA National Centers for Environmental Information",
-       "url": "https://www.ncei.noaa.gov/stormevents/"
-      },
-      "upstreamUrl": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T01:44:54.563Z"
+    "generatedAt": "2026-10-19T02:31:49.835Z"
    }
   },
   "/api/companies?op=county&fips=72127": {
@@ -834,7 +361,13 @@
       }
      }
     ],
-    "generatedAt": "2026-10-19T01:44:53.891Z"
+    "generatedAt": "2026-10-19T02:32:27.412Z"
+   }
+  },
+  "/api/civic?op=svi&level=place&fips=72127": {
+   "status": 404,
+   "body": {
+    "error": "not in this release: CDC/ATSDR SVI 2022 has no row for FIPS 72127 (SVI US covers the states and DC)"
    }
   },
   "/api/infra?op=hospitals&bbox=-66.3128,18.1432,-65.8128,18.6432": {
@@ -1109,7 +642,7 @@
        "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
       },
       "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
-      "retrievedAt": "2026-10-19T01:44:53.996Z"
+      "retrievedAt": "2026-10-19T02:32:27.529Z"
      },
      {
       "source": {
@@ -1121,44 +654,575 @@
       "retrievedAt": "2026-10-17T00:00:00.000Z"
      }
     ],
-    "generatedAt": "2026-10-19T01:44:53.996Z"
+    "generatedAt": "2026-10-19T02:32:27.529Z"
    }
   },
-  "/api/live": {
+  "/api/infra?op=dams&bbox=-66.3128,18.1432,-65.8128,18.6432": {
    "status": 200,
    "body": {
     "data": {
-     "items": [],
-     "failed": [],
-     "unmapped": 0
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -66.23590861618784,
+         18.34352507543894
+        ]
+       },
+       "properties": {
+        "id": "nid:PR00017",
+        "name": "La Plata Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Satisfactory",
+         "year completed": 1974,
+         "owner type": "Public Utility"
+        },
+        "extra": {
+         "embedText": "name: La Plata Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.20550120543547,
+         18.267543953536077
+        ]
+       },
+       "properties": {
+        "id": "nid:PR00019",
+        "name": "Comerio I Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Poor",
+         "year completed": 1907,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "name: Comerio I Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.20637940560128,
+         18.26150075174028
+        ]
+       },
+       "properties": {
+        "id": "nid:PR00018",
+        "name": "Comerio Ii Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Poor",
+         "year completed": 1913,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "name: Comerio Ii Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.14058488409168,
+         18.197114933804585
+        ]
+       },
+       "properties": {
+        "id": "nid:PR00020",
+        "name": "Cidra Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Satisfactory",
+         "year completed": 1946,
+         "owner type": "Public Utility"
+        },
+        "extra": {
+         "embedText": "name: Cidra Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.05066925880372,
+         18.342511578121652
+        ]
+       },
+       "properties": {
+        "id": "nid:PR00022",
+        "name": "Las Curias Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Satisfactory",
+         "year completed": 1946,
+         "owner type": "Public Utility"
+        },
+        "extra": {
+         "embedText": "name: Las Curias Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.01583754775812,
+         18.32800927441078
+        ]
+       },
+       "properties": {
+        "id": "nid:PR00024",
+        "name": "Loiza Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Satisfactory",
+         "year completed": 1954,
+         "owner type": "Public Utility"
+        },
+        "extra": {
+         "embedText": "name: Loiza Dam"
+        }
+       }
+      }
+     ]
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "usace-nid",
+       "publisher": "U.S. Army Corps of Engineers",
+       "url": "https://nid.sec.usace.army.mil/"
+      },
+      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+      "retrievedAt": "2026-10-19T02:32:27.633Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:27.633Z"
+   }
+  },
+  "/api/hazards?op=nri&fips=72127": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "STCOFIPS": "72127",
+      "POPULATION": 341981,
+      "RISK_SCORE": null,
+      "RISK_RATNG": "Insufficient Data",
+      "EAL_VALT": 434520246.2896882,
+      "EAL_RATNG": "Relatively High",
+      "SOVI_SCORE": null,
+      "SOVI_RATNG": "Data Unavailable",
+      "NRI_VER": "December 2025",
+      "AVLN_RISKR": "Not Applicable",
+      "CFLD_RISKR": "Insufficient Data",
+      "CWAV_RISKR": "Insufficient Data",
+      "DRGT_RISKR": "Insufficient Data",
+      "ERQK_RISKR": "Insufficient Data",
+      "HAIL_RISKR": "Insufficient Data",
+      "HWAV_RISKR": "Insufficient Data",
+      "HRCN_RISKR": "Insufficient Data",
+      "ISTM_RISKR": "Not Applicable",
+      "IFLD_RISKR": "Insufficient Data",
+      "LNDS_RISKR": "Insufficient Data",
+      "LTNG_RISKR": "Insufficient Data",
+      "SWND_RISKR": "Insufficient Data",
+      "TRND_RISKR": "Insufficient Data",
+      "TSUN_RISKR": "Insufficient Data",
+      "VLCN_RISKR": "Insufficient Data",
+      "WFIR_RISKR": "Insufficient Data",
+      "WNTW_RISKR": "Insufficient Data"
+     }
     },
     "provenance": [
+     {
+      "source": {
+       "id": "fema-nri",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://hazards.fema.gov/nri/"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
+      "retrievedAt": "2026-10-19T02:32:27.855Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:27.855Z"
+   }
+  },
+  "/api/hazards?op=history&fips=72127&years=10&declarations=15": {
+   "status": 200,
+   "body": {
+    "data": {
+     "declarations": [
+      {
+       "disasterNumber": 3610,
+       "declarationType": "EM",
+       "declarationDate": "2024-08-13",
+       "incidentType": "Severe Storm",
+       "declarationTitle": "TROPICAL STORM ERNESTO"
+      },
+      {
+       "disasterNumber": 4671,
+       "declarationType": "DR",
+       "declarationDate": "2022-09-21",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE FIONA"
+      },
+      {
+       "disasterNumber": 3583,
+       "declarationType": "EM",
+       "declarationDate": "2022-09-18",
+       "incidentType": "Hurricane",
+       "declarationTitle": "TROPICAL STORM FIONA"
+      },
+      {
+       "disasterNumber": 3537,
+       "declarationType": "EM",
+       "declarationDate": "2020-08-22",
+       "incidentType": "Hurricane",
+       "declarationTitle": "TROPICAL STORM LAURA"
+      },
+      {
+       "disasterNumber": 3532,
+       "declarationType": "EM",
+       "declarationDate": "2020-07-29",
+       "incidentType": "Hurricane",
+       "declarationTitle": "POTENTIAL TROPICAL CYCLONE NINE"
+      },
+      {
+       "disasterNumber": 4493,
+       "declarationType": "DR",
+       "declarationDate": "2020-03-27",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19 PANDEMIC"
+      },
+      {
+       "disasterNumber": 3452,
+       "declarationType": "EM",
+       "declarationDate": "2020-03-13",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19"
+      },
+      {
+       "disasterNumber": 3426,
+       "declarationType": "EM",
+       "declarationDate": "2020-01-07",
+       "incidentType": "Earthquake",
+       "declarationTitle": "EARTHQUAKES"
+      },
+      {
+       "disasterNumber": 3417,
+       "declarationType": "EM",
+       "declarationDate": "2019-08-27",
+       "incidentType": "Severe Storm",
+       "declarationTitle": "TROPICAL STORM DORIAN"
+      },
+      {
+       "disasterNumber": 4339,
+       "declarationType": "DR",
+       "declarationDate": "2017-09-20",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE MARIA"
+      },
+      {
+       "disasterNumber": 3391,
+       "declarationType": "EM",
+       "declarationDate": "2017-09-18",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE MARIA"
+      },
+      {
+       "disasterNumber": 4336,
+       "declarationType": "DR",
+       "declarationDate": "2017-09-10",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE IRMA"
+      },
+      {
+       "disasterNumber": 4017,
+       "declarationType": "DR",
+       "declarationDate": "2011-08-27",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE IRENE"
+      },
+      {
+       "disasterNumber": 3326,
+       "declarationType": "EM",
+       "declarationDate": "2011-08-22",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE IRENE"
+      },
+      {
+       "disasterNumber": 3306,
+       "declarationType": "EM",
+       "declarationDate": "2009-10-24",
+       "incidentType": "Fire",
+       "declarationTitle": "EXPLOSIONS AND FIRE"
+      }
+     ],
+     "declarationRows": 24,
+     "droughtNow": {
+      "mapDate": "2026-10-13",
+      "validStart": "2026-10-13",
+      "validEnd": "2026-10-19",
+      "none": 0,
+      "d0": 0,
+      "d1": 100,
+      "d2": 0,
+      "d3": 0,
+      "d4": 0
+     },
+     "missing": [
+      {
+       "source": "NOAA Climate at a Glance (tavg)",
+       "reason": "source:not_published_for_puerto_rico"
+      },
+      {
+       "source": "NOAA Climate at a Glance (pcp)",
+       "reason": "source:not_published_for_puerto_rico"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-openfema",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      },
+      "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'72'%20and%20fipsCountyCode%20eq%20'127'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
+      "retrievedAt": "2026-10-19T02:32:27.949Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=72127&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
+      "retrievedAt": "2026-10-19T02:32:28.839Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=72127&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
+      "retrievedAt": "2026-10-19T02:32:28.777Z"
+     },
+     {
+      "source": {
+       "id": "noaa-spc",
+       "publisher": "NOAA National Weather Service, Storm Prediction Center",
+       "url": "https://www.spc.noaa.gov/wcm/"
+      },
+      "upstreamUrl": "https://www.spc.noaa.gov/wcm/data/1950-2025_all_tornadoes.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "usgs-landslide-susc",
+       "publisher": "U.S. Geological Survey (Belair, Jones, Martinez, Mirus and Wood)",
+       "url": "https://doi.org/10.5066/P13KAGU3"
+      },
+      "upstreamUrl": "https://www.sciencebase.gov/catalog/file/get/65ccea5bd34ef4b119cb3bac?name=county_analysis.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "ncei-storm-events",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/stormevents/"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:28.844Z"
+   }
+  },
+  "/api/fabric?op=stack&lon=-66.0628&lat=18.3932": {
+   "status": 200,
+   "body": {
+    "data": {
+     "point": {
+      "elevationM": 16
+     },
+     "nodes": [
+      {
+       "kind": "tract",
+       "name": "Census Tract 9800",
+       "code": "72127980000",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "zcta",
+       "name": "00927",
+       "code": "00927",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc12",
+       "name": "Rio Puerto Nuevo",
+       "code": "210100050502",
+       "source": "usgs-wbd",
+       "facts": {
+        "drains to": "210100050800"
+       }
+      },
+      {
+       "kind": "county",
+       "name": "San Juan Municipio, PR",
+       "code": "72127",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "cbsa",
+       "name": "San Juan-Bayamón-Caguas, PR Metro Area",
+       "code": "41980",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "metropolitan"
+       }
+      },
+      {
+       "kind": "school",
+       "name": "Puerto Rico Department of Education",
+       "code": "7200030",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "unified"
+       }
+      },
+      {
+       "kind": "cd",
+       "name": "PR-Resident Commissioner District (at Large)",
+       "code": "7298",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "state",
+       "name": "Puerto Rico",
+       "code": "72",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "nws-office",
+       "name": "NWS San Juan, PR",
+       "code": "SJU",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "timezone",
+       "name": "America/Puerto Rico",
+       "code": "America/Puerto_Rico",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "country",
+       "name": "Puerto Rico",
+       "code": "PRI",
+       "source": "natural-earth",
+       "facts": {}
+      }
+     ],
+     "failed": [
+      {
+       "source": "fema-nfhl",
+       "error": "This operation was aborted (not retried for 5 min)"
+      }
+     ],
+     "answered": [
+      "natural-earth",
+      "census-tigerweb",
+      "federal-regions",
+      "usgs-wbd",
+      "epa-ecoregions",
+      "nws-api",
+      "usgs-epqs",
+      "wikipedia"
+     ],
+     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "natural-earth",
+       "publisher": "Natural Earth",
+       "url": "https://www.naturalearthdata.com/"
+      },
+      "retrievedAt": "2026-10-19T02:32:30.079Z"
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T02:32:30.079Z"
+     },
+     {
+      "source": {
+       "id": "federal-regions",
+       "publisher": "EPA, FEMA, Federal Reserve System",
+       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
+      },
+      "retrievedAt": "2026-10-19T02:32:30.079Z"
+     },
+     {
+      "source": {
+       "id": "usgs-wbd",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
+      },
+      "retrievedAt": "2026-10-19T02:32:30.079Z"
+     },
+     {
+      "source": {
+       "id": "epa-ecoregions",
+       "publisher": "U.S. Environmental Protection Agency",
+       "url": "https://www.epa.gov/eco-research/ecoregions"
+      },
+      "retrievedAt": "2026-10-19T02:32:30.079Z"
+     },
      {
       "source": {
        "id": "nws-api",
        "publisher": "NOAA National Weather Service",
        "url": "https://www.weather.gov/documentation/services-web-api"
       },
-      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
-      "retrievedAt": "2026-10-19T01:59:12.433Z"
+      "retrievedAt": "2026-10-19T02:32:30.079Z"
      },
      {
       "source": {
-       "id": "usgs-earthquakes",
+       "id": "usgs-epqs",
        "publisher": "U.S. Geological Survey",
-       "url": "https://earthquake.usgs.gov/"
+       "url": "https://apps.nationalmap.gov/epqs/"
       },
-      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
-      "retrievedAt": "2026-10-19T01:59:12.433Z"
+      "retrievedAt": "2026-10-19T02:32:30.079Z"
+     },
+     {
+      "source": {
+       "id": "wikipedia",
+       "publisher": "Wikimedia Foundation",
+       "url": "https://en.wikipedia.org/"
+      },
+      "retrievedAt": "2026-10-19T02:32:30.079Z"
      }
     ],
-    "generatedAt": "2026-10-19T01:59:12.433Z"
-   }
-  },
-  "/api/civic?op=svi&level=place&fips=72127": {
-   "status": 404,
-   "body": {
-    "error": "not in this release: CDC/ATSDR SVI 2022 has no row for FIPS 72127 (SVI US covers the states and DC)"
+    "generatedAt": "2026-10-19T02:32:30.079Z"
    }
   }
  }

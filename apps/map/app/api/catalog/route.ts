@@ -34,6 +34,7 @@ import { POTION } from "@/lib/embed/pins";
 import { potionNode } from "@/lib/embed/loadNode";
 import { LAYER_IDS, type LayerId } from "@/lib/layers/types";
 import { source } from "@/lib/provenance/sources";
+import { provenance } from "@/lib/provenance/types";
 
 export const OPTIONS = options;
 
@@ -64,7 +65,9 @@ function search(q: string | null, limitRaw: string | null) {
   const embedder = { id: CARD_VECTORS.embedder.id, model: POTION.model, commit: POTION.commit, tableSha256: POTION.derived["table.i8"], licence: POTION.licence };
   // A query with no word in the vocabulary has no vector: an empty answer, not a ranking of noise.
   const hits = v ? rankCards(v, limit).map((h) => ({ ...h, ops: collection(h.id)!.ops, catalog: `/catalog#${h.id}` })) : [];
-  return ok({ hits, embedder, matched: v != null }, { ttlS: 3600, caveats: SEARCH_CAVEATS });
+  // The ranking is eye's own: cite the catalogue (each card cites its own sources when fetched by id).
+  const prov = provenance(source("eye-catalog"), { kind: "estimate", upstreamUrl: "https://www.arxiviq.com/catalog", retrievedAt: new Date().toISOString(), method: `cosine between the query and each card's description, ${embedder.id} at ${POTION.commit.slice(0, 8)}` });
+  return ok({ hits, embedder, matched: v != null }, { ttlS: 3600, caveats: SEARCH_CAVEATS, provenance: [prov] });
 }
 
 export function GET(req: NextRequest) {

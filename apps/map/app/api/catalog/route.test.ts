@@ -66,6 +66,8 @@ describe("/api/catalog?op=search", () => {
     }
     expect(d.embedder).toMatchObject({ id: "potion-base-8M@bf8b0566-int8", licence: "MIT" });
     expect(d.embedder.commit).toMatch(/^[0-9a-f]{40}$/);
+    // The ranking is the catalogue's own work, cited as such (world_context cites collections from this entry).
+    expect(body.provenance).toEqual([expect.objectContaining({ source: expect.objectContaining({ id: "eye-catalog", publisher: "Embedding Atlas" }), kind: "estimate", upstreamUrl: "https://www.arxiviq.com/catalog" })]);
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 

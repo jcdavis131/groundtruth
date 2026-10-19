@@ -22,8 +22,9 @@
 //     route's own record text carries them (the PUBLIC_NAME_RULE cards:
 //     hospitals and dams with a non-private owner); companies are labelled by
 //     ticker and CIK; no address, website, owner or free text is copied.
-//   - The whole reply stays under WORLD_MAX_BYTES (UTF-8 JSON), trimming the
-//     longest topic first and saying so.
+//   - The whole reply stays under WORLD_MAX_BYTES (UTF-8 JSON, with the error
+//     envelope's fields when it is an error), cutting rows of lists before
+//     summaries, from the topic with the most rows, and saying so.
 //
 // Relative imports only (see ./tools.ts for why); only types come from
 // ./tools, so there is no import cycle at run time.
@@ -264,6 +265,14 @@ function item(c: Cite | NoCite, fact: string, value: WorldItem["value"], extra: 
 
 function section(): Section {
   return { items: [], cut: [] };
+}
+
+/** Items that are rows of a list (declarations, records, events, companies); the byte cap drops these before summaries. */
+const LIST_ROWS = new WeakSet<object>();
+
+function listRow(b: Built): Built {
+  if (!("uncited" in b)) LIST_ROWS.add(b);
+  return b;
 }
 
 /** Add an item; one without a citation is never shown, and is listed as missing instead. */
@@ -567,7 +576,8 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     nri: needNri ? get("/api/hazards" + q({ op: "nri", fips: cf! })) : null,
     // Census TIGERweb county outlines in the box (the fabric's field op); filtered below to those that touch it.
     counties: r.kind === "bbox" ? get("/api/fabric" + q({ op: "field", kind: "county", bbox: r.box!.join(",") })) : null,
-    history: cf && want("hazards") ? get("/api/hazards" + q({ op: "history", fips: cf, years: 10, declarations: max })) : null,
+    // FEMA lists a disaster once per designated area: ask for more rows than max so `max` distinct disasters survive the dedupe.
+    history: cf && want("hazards") ? get("/api/hazards" + q({ op: "history", fips: cf, years: 10, declarations: Math.min(50, max * 5) })) : null,
     live: want("hazards") && r.box ? get("/api/live") : null,
     svi: cf && want("vulnerability") ? get("/api/civic" + q({ op: "svi", level: "place", fips: cf })) : null,
     hospitals: want("institutions") && r.box ? get("/api/infra" + q({ op: "hospitals", bbox: r.box.join(",") })) : null,
@@ -620,7 +630,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
       if (obj(g.body.data).truncated === true) id.cut.push("counties touching the box: the route hit its record limit, so some may be missing");
       if (!touching.length) miss(id, "counties touching the box", units.length ? "none of the county outlines the route returned touches the box" : "Census TIGERweb returned no county in the box (offshore or outside the US)");
       for (const u of capList(id, "counties touching the box", touching, max)) {
-        push(id, item(c, "county touching the box", str(u.name), { code: str(u.code) ?? undefined, note: "its Census TIGERweb outline (generalised) touches the box" }));
+        push(id, listRow(item(c, "county touching the box", str(u.name), { code: str(u.code) ?? undefined, note: "its Census TIGERweb outline (generalised) touches the box" })));
       }
     } else miss(id, "counties touching the box", g.reason ?? "failed");
   }
@@ -675,13 +685,42 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         // FEMA's declarations only with FEMA's own citation, and never when the route lists FEMA missing:
         // an empty list is "none filed" only when OpenFEMA was actually read for this county.
         const fema = cite(h, "fema-openfema");
-        const decls = arr(d.declarations).map(obj);
+        // FEMA lists one row per designated area: one disaster can be several rows. Keep each disaster once, newest first.
+        const seenDecl = new Set<string>();
+        const decls = arr(d.declarations)
+          .map(obj)
+          .filter((x) => {
+            const k = x.disasterNumber != null ? `${str(x.declarationType) ?? ""}-${str(x.disasterNumber)}` : JSON.stringify(x);
+            if (seenDecl.has(k)) return false;
+            seenDecl.add(k);
+            return true;
+          });
+        const rowsTotal = num(d.declarationRows);
+        // Any boundary or join gap the route reports for this county means an empty list is not proof of none.
+        const gap = arr(d.missing)
+          .map(obj)
+          .find((m) => /^join:|boundary/.test(str(m.reason) ?? ""));
         if (!isCite(fema)) miss(s, "FEMA declarations", fema.reason);
-        else {
-          for (const x of capList(s, "FEMA declarations", decls, max)) {
-            push(s, item(fema, "FEMA declaration", str(x.declarationTitle), { code: x.disasterNumber != null ? `${str(x.declarationType) ?? ""}-${str(x.disasterNumber)}` : undefined, period: str(x.declarationDate) ?? undefined, note: str(x.incidentType) ?? undefined }));
+        else if (!decls.length) {
+          if (gap) miss(s, "FEMA declarations", `the route reports a boundary or join gap for this county (${explainReason(str(gap.reason) ?? "", str(gap.source) ?? "a source", str(gap.detail))}), so an empty FEMA list is not proof that none were declared`);
+          else if (rowsTotal !== 0) miss(s, "FEMA declarations", `the route listed none but did not report reading zero rows (declarationRows ${rowsTotal ?? "absent"}), so no count is given`);
+          else push(s, item(fema, "FEMA declarations listed", 0, { note: "OpenFEMA lists no declaration naming this county, at any date (declarationRows 0)" }));
+        } else {
+          const shown = decls.slice(0, max);
+          if (rowsTotal == null || rowsTotal > shown.length) s.cut.push(`FEMA declarations: the latest ${shown.length} distinct shown, any date (FEMA files ${rowsTotal ?? "an unstated number of"} rows for this county; a disaster can have one row per designated area)`);
+          for (const x of shown) {
+            const filed = str(x.filedUnder);
+            push(
+              s,
+              listRow(
+                item(fema, "FEMA declaration", str(x.declarationTitle), {
+                  code: x.disasterNumber != null ? `${str(x.declarationType) ?? ""}-${str(x.disasterNumber)}` : undefined,
+                  period: str(x.declarationDate) ?? undefined,
+                  note: [str(x.incidentType), filed ? `filed by FEMA under the former county code ${filed}, which covered more than or other than this county (see the route's caveats)` : null].filter(Boolean).join("; ") || undefined,
+                }),
+              ),
+            );
           }
-          if (!decls.length) push(s, item(fema, "FEMA declarations listed", 0, { note: "OpenFEMA lists none for this county in the window asked" }));
         }
         const dn = obj(d.droughtNow);
         if (Object.keys(dn).length) {
@@ -725,7 +764,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
           const c = quake ? usgs : nws;
           const t = num(x.time);
           const u = num(x.until);
-          push(s, item(isCite(c) && typeof x.url === "string" ? { ...c, upstreamUrl: x.url } : c, quake ? "earthquake" : "NWS alert", str(x.title), { note: str(x.subtitle) ?? undefined, period: t != null ? new Date(t).toISOString() + (u != null ? "/" + new Date(u).toISOString() : "") : undefined }));
+          push(s, listRow(item(isCite(c) && typeof x.url === "string" ? { ...c, upstreamUrl: x.url } : c, quake ? "earthquake" : "NWS alert", str(x.title), { note: str(x.subtitle) ?? undefined, period: t != null ? new Date(t).toISOString() + (u != null ? "/" + new Date(u).toISOString() : "") : undefined })));
         }
       } else miss(s, "live events", live.reason ?? "failed");
     }
@@ -807,7 +846,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
       } else if (!feats.length) push(s, item(c, `${label} found`, 0, { note: boxNote }));
       if (routeCut && feats.length > max) s.cut.push(`${label}: ${max} of at least ${feats.length} shown (max_records)`);
       const shown = routeCut ? feats.slice(0, max) : capList(s, label, feats, max);
-      for (const f of shown) push(s, build(obj(f.properties), pointOf(f), c));
+      for (const f of shown) push(s, listRow(build(obj(f.properties), pointOf(f), c)));
     };
     records(got.hospitals, "hospitals", "hifld-hospitals", (p, pt, c) => {
       const x = obj(p.extra);
@@ -850,7 +889,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         for (const f of capList(s, "public companies", feats, max)) {
           const x = obj(obj(f.properties).extra);
           const ticker = str(x.ticker);
-          push(s, item(c, "public company (by ticker; names are not copied)", ticker, { code: x.cik != null ? `CIK ${str(x.cik)}` : undefined, note: [str(x.exchange), where, universe].filter(Boolean).join("; ") }));
+          push(s, listRow(item(c, "public company (by ticker; names are not copied)", ticker, { code: x.cik != null ? `CIK ${str(x.cik)}` : undefined, note: [str(x.exchange), where, universe].filter(Boolean).join("; ") })));
         }
       } else miss(s, "public companies", co.reason ?? "failed");
     }
@@ -864,13 +903,18 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     if (cat) {
       if (cat.ok) {
         const hits = arr(obj(cat.body.data).hits).map(obj);
+        // The ranking is cited to the catalogue's own provenance on the search route; the card is at ?id=.
+        const c = cite(cat, "eye-catalog");
         if (obj(cat.body.data).matched === false) miss(s, "collections", "no word of `about` is in the embedder's vocabulary");
-        for (const hit of hits.slice(0, max)) {
-          const hid = str(hit.id);
-          if (!hid) continue;
-          const link = cat.url.replace(/\/api\/catalog\?.*$/, "/api/catalog" + q({ id: hid }));
-          push(s, item({ sourceId: "eye-catalog", publisher: "Embedding Atlas catalogue (curated)", upstreamUrl: link, retrievedAt: typeof cat.body.generatedAt === "string" ? cat.body.generatedAt : new Date().toISOString(), link }, "collection", str(hit.title), { code: hid, note: num(hit.score) != null ? `cosine ${round(num(hit.score)!, 3)} between descriptions; not proof the collection answers the question` : undefined }));
-        }
+        if (!isCite(c)) {
+          if (hits.length) miss(s, "collections", c.reason);
+        } else
+          for (const hit of hits.slice(0, max)) {
+            const hid = str(hit.id);
+            if (!hid) continue;
+            const card = "/api/catalog" + q({ id: hid });
+            push(s, listRow(item(c, "collection", str(hit.title), { code: hid, note: [num(hit.score) != null ? `cosine ${round(num(hit.score)!, 3)} between descriptions; not proof the collection answers the question` : null, `card: ${card}`].filter(Boolean).join("; ") })));
+          }
       } else miss(s, "collections", cat.reason ?? "failed");
     }
   }
@@ -970,6 +1014,27 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
   };
   const sent = () => bytes(status < 400 ? payload : { ...payload, ...envelopeForStatus(status, payload, false) });
   const popOne = (): boolean => {
+    // List rows go first (the last row of the topic with the most of them): the 4th declaration or a
+    // hospital is cut before a summary such as the drought reading or a live count.
+    let rowsBest: ("identity" | WorldTopic) | null = null;
+    let rowsN = 0;
+    // Identity's list rows (counties touching a box) only once no other topic has any.
+    for (const k of [...order.filter((x) => x !== "identity"), "identity" as const]) {
+      const n = out[k].items.filter((i) => LIST_ROWS.has(i)).length;
+      if (k === "identity" && rowsBest) break;
+      if (n > rowsN) {
+        rowsBest = k;
+        rowsN = n;
+      }
+    }
+    if (rowsBest) {
+      const list = out[rowsBest].items;
+      for (let i = list.length - 1; i >= 0; i--)
+        if (LIST_ROWS.has(list[i])) {
+          list.splice(i, 1);
+          return true;
+        }
+    }
     let best: ("identity" | WorldTopic) | null = null;
     for (const k of order) if (k !== "identity" && out[k].items.length && (!best || out[k].items.length > out[best].items.length)) best = k;
     if (!best && out.identity.items.length > 1) best = "identity";
