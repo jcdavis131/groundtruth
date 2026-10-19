@@ -42,7 +42,7 @@ afterEach(() => vi.unstubAllGlobals());
 
 const notStorm = (id: string) => !id.startsWith("se:");
 
-type Body = { data: Record<string, unknown> & { series?: Array<{ id: string; points: unknown[] }>; missing?: Array<{ source: string; reason: string }>; landslide?: Record<string, number> | null; fips?: string }; caveats: string[]; provenance: Array<{ source: { id: string } }>; error?: string; ctRegime?: unknown };
+type Body = { data: Record<string, unknown> & { series?: Array<{ id: string; points: unknown[] }>; missing?: Array<{ source: string; reason: string }>; landslide?: Record<string, number> | null; fips?: string }; caveats: string[]; provenance: Array<{ source: { id: string } }>; error?: string; ctRegime?: unknown; declarationsListed?: number };
 async function get(qs: string) {
   const res = await GET(new NextRequest(`http://localhost/api/hazards?${qs}`));
   return { status: res.status, body: (await res.json()) as Body };
@@ -69,6 +69,7 @@ describe("op=history", () => {
     expect(hail.points.find((p) => p.t === Date.UTC(2025, 0, 1))?.v).toBe(15);
     expect(body.provenance.map((p) => p.source.id)).toContain("ncei-storm-events");
     expect((body.data.declarations as unknown[]).length).toBe(37);
+    expect(body.declarationsListed).toBe(37);
     expect(body.data.landslide).toMatchObject({ prop_susc: 0.361441295 });
     expect(body.provenance.map((p) => p.source.id)).toEqual(expect.arrayContaining(["fema-openfema", "usdm", "noaa-cag", "noaa-spc", "usgs-landslide-susc"]));
     expect(JSON.stringify(body).length).toBeLessThan(4_500_000);
@@ -98,6 +99,8 @@ describe("op=history", () => {
     expect(body.data.missing!.map((m) => m.reason)).toEqual(["join:legacy_ct_counties", "join:legacy_ct_counties", "join:legacy_ct_counties", "join:legacy_ct_counties", "join:legacy_ct_counties", "join:legacy_ct_counties"]);
     expect(body.data.missing!.find((m) => m.source === "NCEI Storm Events")?.reason).toBe("join:legacy_ct_counties");
     expect(body.data.storms).toBeNull();
+    // FEMA was not asked, so no declaration count: an empty list here is unknown, not zero.
+    expect(body).not.toHaveProperty("declarationsListed");
     expect(body.caveats.join(" ")).toMatch(/only drought is shown for planning regions/);
   });
 
@@ -106,6 +109,8 @@ describe("op=history", () => {
     const { status, body } = await get("op=history&fips=48453");
     expect(status).toBe(200);
     expect(body.data.missing!.find((m) => m.source === "FEMA")?.reason).toBe("source:failed");
+    // FEMA failed, so no declaration count: unknown, not zero.
+    expect(body).not.toHaveProperty("declarationsListed");
     expect(body.data.missing!.filter((m) => m.source.startsWith("NOAA Climate")).map((m) => m.reason)).toEqual(["source:not_in_release", "source:not_in_release"]);
     expect(body.caveats.join(" ")).toMatch(/FEMA did not answer this time/);
     expect(body.data.series!.map((s) => s.id).filter(notStorm)).toEqual(["usdm:dsci:48453", "spc:tornadoes:48453"]);

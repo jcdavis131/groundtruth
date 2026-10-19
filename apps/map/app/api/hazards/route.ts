@@ -721,9 +721,12 @@ async function opHistory(fips: string, years: number | null, declarationsCap: nu
     stormsPart(fips),
   ]);
   const a = assembleHistory({ fips, name: c.name, stusab: c.stusab, now, years, declarationsCap, fema, dsci, droughtNow, tavg, pcp, spc: SPC_BAKE, landslide: LANDSLIDE_BAKE, storms });
+  // A count of declarations only when FEMA was asked and answered: an empty list from a FEMA that was skipped
+  // (Connecticut's planning regions) or failed is unknown, not zero, so the count is left out.
+  const femaAnswered = !a.data.missing.some((m) => m.source === "FEMA");
   return {
     data: a.data,
-    meta: { source: "FEMA OpenFEMA, U.S. Drought Monitor, NOAA NCEI Climate at a Glance, NOAA SPC, USGS, NOAA NCEI Storm Events", ...a.meta, count: a.data.series.length, declarationsListed: a.data.declarations.length },
+    meta: { source: "FEMA OpenFEMA, U.S. Drought Monitor, NOAA NCEI Climate at a Glance, NOAA SPC, USGS, NOAA NCEI Storm Events", ...a.meta, count: a.data.series.length, ...(femaAnswered ? { declarationsListed: a.data.declarations.length } : {}) },
     ttlS: 3600,
     provenance: a.provenance,
     caveats: a.caveats,
