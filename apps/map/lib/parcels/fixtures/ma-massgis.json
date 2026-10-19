@@ -1,0 +1,119 @@
+{
+ "adapter": "ma-massgis",
+ "capturedAt": "2026-09-26T15:37:46.119Z",
+ "point": [
+  -71.0636,
+  42.3587
+ ],
+ "county": {
+  "geoid": "25025",
+  "name": "Suffolk County",
+  "basename": "Suffolk",
+  "state": "25"
+ },
+ "rows": [
+  {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -71.064664,
+       42.357339
+      ],
+      [
+       -71.064741,
+       42.357692
+      ],
+      [
+       -71.064623,
+       42.357705
+      ],
+      [
+       -71.064703,
+       42.358103
+      ],
+      [
+       -71.064687,
+       42.358105
+      ],
+      [
+       -71.06473,
+       42.358332
+      ],
+      [
+       -71.064066,
+       42.35841
+      ],
+      [
+       -71.064096,
+       42.358534
+      ],
+      [
+       -71.06429,
+       42.358515
+      ],
+      [
+       -71.064313,
+       42.359366
+      ],
+      [
+       -71.062978,
+       42.359416
+      ],
+      [
+       -71.062968,
+       42.358812
+      ],
+      [
+       -71.062777,
+       42.357981
+      ],
+      [
+       -71.06332,
+       42.35776
+      ],
+      [
+       -71.063329,
+       42.357776
+      ],
+      [
+       -71.064664,
+       42.357339
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "MAP_PAR_ID": "0501615000",
+    "LOC_ID": "F_774077_2955940",
+    "PROP_ID": "0501615000",
+    "BLDG_VAL": 106258300,
+    "LAND_VAL": 71309100,
+    "OTHER_VAL": 425300,
+    "TOTAL_VAL": 177992700,
+    "FY": 2023,
+    "LOT_SIZE": 5.73,
+    "LOT_UNITS": "Acres",
+    "LS_DATE": "19870101",
+    "LS_PRICE": 0,
+    "LS_BOOK": "00000",
+    "LS_PAGE": "000",
+    "USE_CODE": "901",
+    "USE_DESC": "(formerly Commonwealth of Massachusetts.  Removed June 2009.)",
+    "SITE_ADDR": "24 BEACON ST",
+    "CITY": "BOSTON",
+    "ZIP": "02133",
+    "OWNER1": "COMMWLTH OF MASS",
+    "OWN_ADDR": "BEACON STATE HOUSE",
+    "OWN_CITY": "BOSTON",
+    "OWN_STATE": "MA",
+    "OWN_ZIP": "02133",
+    "OWN_CO": null,
+    "ZONING": null,
+    "YEAR_BUILT": 1899,
+    "POLY_TYPE": "FEE"
+   }
+  }
+ ]
+}

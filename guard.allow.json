@@ -1,0 +1,12 @@
+[
+  {
+    "path": "apps/map/public/embed/potion-base-8M-bf8b0566/table.i8",
+    "sha256": "02727ea774d77f964eed1ce84bbf0bc216228e49d1627ab44e1f00db1f58c41e",
+    "reason": "The map's browser search model (potion-base-8M int8 embedding table, 7.2 MB). The browser loads it at runtime, and lib/embed/pins.ts pins the same sha256, so it ships with the app."
+  },
+  {
+    "path": "apps/map/lib/companies/data/raw/tab20_zcta520_county20_natl.txt",
+    "sha256": "3ed41278d637dc249e0323306f68be8a6c234e3090f4de88ef328dee71aeaaaf",
+    "reason": "Census 2020 ZCTA-to-county crosswalk (6.5 MB, public domain, from www2.census.gov rel2020), an offline input to the companies build. Allowed for the eye import only: move it to the data tier or a build-time fetch later."
+  }
+]

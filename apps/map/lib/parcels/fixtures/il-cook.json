@@ -1,0 +1,72 @@
+{
+ "adapter": "il-cook",
+ "capturedAt": "2026-09-26T15:37:40.666Z",
+ "point": [
+  -87.6319,
+  41.8837
+ ],
+ "county": {
+  "geoid": "17031",
+  "name": "Cook County",
+  "basename": "Cook",
+  "state": "17"
+ },
+ "rows": [
+  {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -87.63106,
+       41.883326
+      ],
+      [
+       -87.631091,
+       41.884379
+      ],
+      [
+       -87.632258,
+       41.884375
+      ],
+      [
+       -87.632236,
+       41.883324
+      ],
+      [
+       -87.63106,
+       41.883326
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "PIN14": "17094470040000",
+    "PIN14_dash": "17-09-447-004-0000",
+    "street_address": "121 N LA SALLE ST",
+    "city_state_zip": "CHICAGO, IL 60602",
+    "TAXYR": 2025,
+    "BCLASS": "EX",
+    "class_description": null,
+    "major_class_description": "Exempt Property",
+    "township_name": "South Chicago",
+    "CURRENTVALUE_TOTAL": null,
+    "CURRENTVALUE_LAND": null,
+    "CURRENTVALUE_BLDG": null,
+    "current_value_desc": "2025 Assessor Certified",
+    "LANDSF": 0,
+    "assessor_link": "https://www.cookcountyassessor.com/pin/17094470040000",
+    "tax_municipality_name": "CITY OF CHICAGO"
+   }
+  }
+ ],
+ "extra": {
+  "pin": "17094470040000",
+  "year": "2026.0",
+  "owner_address_name": "COOK COUNTY",
+  "owner_address_full": "69 W WASHINGTON 1060",
+  "owner_address_city_name": "CHICAGO",
+  "owner_address_state": "IL",
+  "owner_address_zipcode_1": "60602"
+ }
+}

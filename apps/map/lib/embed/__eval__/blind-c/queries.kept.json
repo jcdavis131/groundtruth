@@ -1,0 +1,494 @@
+{
+ "version": "blind-c-kept",
+ "note": "Set C per AMENDMENT-1: writer c001-c072 plus writer2 top-up d001-d030, repeats of blind/ and blind-b0/ and cross-writer normalised duplicates dropped (c-id kept). Normalisation: lower case, strip non-alphanumerics except spaces, collapse spaces.",
+ "sources": {
+  "writer": {
+   "file": "blind-c/writer/queries.blind.json",
+   "sha256": "2ee893146b8210ebd4cfc490bed951824274aafdad44eabdfd2eab244b6c5e88",
+   "n": 72
+  },
+  "writer2": {
+   "file": "blind-c/writer2/queries.blind.json",
+   "sha256": "a5acef8529d1d60821df5dd09bfb82e6cf8ae573c6e5b81ba5542ae7a5e57b98",
+   "n": 30
+  },
+  "descriptionSha256": "3bd39548c5a37a5695a2ebbac776e834098de7a842df68311ef0736b6aab8d6a"
+ },
+ "queries": [
+  {
+   "id": "c004",
+   "type": "topical",
+   "q": "dams and reservoirs"
+  },
+  {
+   "id": "c005",
+   "type": "place",
+   "q": "hosptials in montana"
+  },
+  {
+   "id": "c006",
+   "type": "topical",
+   "q": "list of hospitals"
+  },
+  {
+   "id": "c007",
+   "type": "place",
+   "q": "high schools in santa fe"
+  },
+  {
+   "id": "c008",
+   "type": "known-item",
+   "q": "tuttle creek damn"
+  },
+  {
+   "id": "c010",
+   "type": "negative",
+   "q": "er wait times"
+  },
+  {
+   "id": "c011",
+   "type": "negative",
+   "q": "river flood forecast this week"
+  },
+  {
+   "id": "c012",
+   "type": "attribute",
+   "q": "level 1 trauma centers"
+  },
+  {
+   "id": "c014",
+   "type": "place",
+   "q": "wetlands around chesapeake bay"
+  },
+  {
+   "id": "c015",
+   "type": "known-item",
+   "q": "upmc presbyterian hospital"
+  },
+  {
+   "id": "c016",
+   "type": "place",
+   "q": "historic houses in charleston sc"
+  },
+  {
+   "id": "c017",
+   "type": "known-item",
+   "q": "truman medical center kansas city"
+  },
+  {
+   "id": "c019",
+   "type": "negative",
+   "q": "wildfires burning right now"
+  },
+  {
+   "id": "c023",
+   "type": "place",
+   "q": "superfund sites in new jersy"
+  },
+  {
+   "id": "c024",
+   "type": "negative",
+   "q": "air quality today"
+  },
+  {
+   "id": "c026",
+   "type": "attribute",
+   "q": "seasonally flooded freshwater wetlands"
+  },
+  {
+   "id": "c029",
+   "type": "topical",
+   "q": "toxic waste dumps"
+  },
+  {
+   "id": "c030",
+   "type": "place",
+   "q": "toxic release reporting plants in texas"
+  },
+  {
+   "id": "c033",
+   "type": "place",
+   "q": "hazardous waste handlers in louisiana"
+  },
+  {
+   "id": "c035",
+   "type": "negative",
+   "q": "tribal census tracts"
+  },
+  {
+   "id": "c037",
+   "type": "place",
+   "q": "brownfeilds in detroit"
+  },
+  {
+   "id": "c038",
+   "type": "topical",
+   "q": "hazardous waste generators"
+  },
+  {
+   "id": "c040",
+   "type": "known-item",
+   "q": "palace of the governors santa fe"
+  },
+  {
+   "id": "c041",
+   "type": "place",
+   "q": "former military sites in alaska"
+  },
+  {
+   "id": "c043",
+   "type": "known-item",
+   "q": "love canal superfund site"
+  },
+  {
+   "id": "c044",
+   "type": "attribute",
+   "q": "fuds properties with no cleanup projects"
+  },
+  {
+   "id": "c045",
+   "type": "topical",
+   "q": "abandoned contaminated lots"
+  },
+  {
+   "id": "c046",
+   "type": "known-item",
+   "q": "lowry bombing range"
+  },
+  {
+   "id": "c049",
+   "type": "place",
+   "q": "leaking underground tanks by county in florida"
+  },
+  {
+   "id": "c050",
+   "type": "negative",
+   "q": "who owns this parcel"
+  },
+  {
+   "id": "c051",
+   "type": "topical",
+   "q": "is there unexploded ordnance anywhere?"
+  },
+  {
+   "id": "c052",
+   "type": "known-item",
+   "q": "duwamish river pollution"
+  },
+  {
+   "id": "c053",
+   "type": "negative",
+   "q": "live flight tracker"
+  },
+  {
+   "id": "c054",
+   "type": "place",
+   "q": "polluted water near seattle"
+  },
+  {
+   "id": "c056",
+   "type": "attribute",
+   "q": "rivers with no tmdl yet"
+  },
+  {
+   "id": "c057",
+   "type": "place",
+   "q": "public land near boulder colorado"
+  },
+  {
+   "id": "c058",
+   "type": "negative",
+   "q": "cheapest gas prices"
+  },
+  {
+   "id": "c061",
+   "type": "negative",
+   "q": "iss pass times tonight"
+  },
+  {
+   "id": "c062",
+   "type": "topical",
+   "q": "which rivers are too polluted to swim in?"
+  },
+  {
+   "id": "c063",
+   "type": "attribute",
+   "q": "wilderness areas with public access"
+  },
+  {
+   "id": "c064",
+   "type": "known-item",
+   "q": "navajo nation reservation"
+  },
+  {
+   "id": "c065",
+   "type": "place",
+   "q": "flood zones in kansas city"
+  },
+  {
+   "id": "c066",
+   "type": "place",
+   "q": "wildfire risk for towns in montana"
+  },
+  {
+   "id": "c067",
+   "type": "attribute",
+   "q": "flood zones with a base flood elevation"
+  },
+  {
+   "id": "c068",
+   "type": "topical",
+   "q": "floodplains"
+  },
+  {
+   "id": "c069",
+   "type": "negative",
+   "q": "local news headlines"
+  },
+  {
+   "id": "c070",
+   "type": "known-item",
+   "q": "wildfire risk for grass valley"
+  },
+  {
+   "id": "c072",
+   "type": "attribute",
+   "q": "communities with very high wildfire risk"
+  },
+  {
+   "id": "d003",
+   "type": "place",
+   "q": "flood zones in galvaston"
+  },
+  {
+   "id": "d004",
+   "type": "negative",
+   "q": "private schools"
+  },
+  {
+   "id": "d005",
+   "type": "attribute",
+   "q": "high hazard dams with no emergency action plan"
+  },
+  {
+   "id": "d008",
+   "type": "place",
+   "q": "marshes around the chesapeake bay"
+  },
+  {
+   "id": "d010",
+   "type": "negative",
+   "q": "active wildfires burning right now"
+  },
+  {
+   "id": "d012",
+   "type": "topical",
+   "q": "are there any old army bases around here?"
+  },
+  {
+   "id": "d013",
+   "type": "place",
+   "q": "wildfire risk santa fe"
+  },
+  {
+   "id": "d014",
+   "type": "attribute",
+   "q": "charter schools with more than 500 students"
+  },
+  {
+   "id": "d015",
+   "type": "negative",
+   "q": "air quality monitoring stations"
+  },
+  {
+   "id": "d019",
+   "type": "attribute",
+   "q": "polluted rivers with no tmdl"
+  },
+  {
+   "id": "d022",
+   "type": "topical",
+   "q": "unexploded bombs"
+  },
+  {
+   "id": "d023",
+   "type": "place",
+   "q": "public open space near boulder colorado"
+  },
+  {
+   "id": "d024",
+   "type": "attribute",
+   "q": "federal facility superfund sites on the national priorities list"
+  },
+  {
+   "id": "d025",
+   "type": "negative",
+   "q": "flights over denver"
+  },
+  {
+   "id": "d027",
+   "type": "topical",
+   "q": "abandoned industrial lots being cleaned up for reuse"
+  },
+  {
+   "id": "d028",
+   "type": "place",
+   "q": "indian reservations in arizona"
+  },
+  {
+   "id": "d029",
+   "type": "attribute",
+   "q": "national historic landmarks listed before 1970"
+  }
+ ],
+ "dropped": [
+  {
+   "id": "c001",
+   "reason": "repeats a query in blind-b0/"
+  },
+  {
+   "id": "c002",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c003",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c009",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c013",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c018",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c020",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c021",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c022",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c025",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c027",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c028",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c031",
+   "reason": "repeats a query in blind-b0/"
+  },
+  {
+   "id": "c032",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c034",
+   "reason": "repeats a query in blind-b0/"
+  },
+  {
+   "id": "c036",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c039",
+   "reason": "repeats a query in blind-b0/"
+  },
+  {
+   "id": "c042",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c047",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c048",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c055",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c059",
+   "reason": "repeats a query in blind-b0/"
+  },
+  {
+   "id": "c060",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "c071",
+   "reason": "repeats a query in blind-b0/"
+  },
+  {
+   "id": "d001",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "d002",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "d006",
+   "reason": "normalised duplicate of c015"
+  },
+  {
+   "id": "d007",
+   "reason": "repeats a query in blind-b0/"
+  },
+  {
+   "id": "d009",
+   "reason": "normalised duplicate of c012"
+  },
+  {
+   "id": "d011",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "d016",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "d017",
+   "reason": "repeats a query in blind-b0/"
+  },
+  {
+   "id": "d018",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "d020",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "d021",
+   "reason": "normalised duplicate of c064"
+  },
+  {
+   "id": "d026",
+   "reason": "repeats a query in blind/"
+  },
+  {
+   "id": "d030",
+   "reason": "normalised duplicate of c058"
+  }
+ ]
+}

@@ -1,0 +1,28 @@
+{
+ "collected_utc": "2026-10-06T03:33:20.778222+00:00",
+ "results": [
+  {
+   "label": "ember_generation_yearly_global.csv",
+   "status": "ok",
+   "rows": 104203,
+   "areas": 224,
+   "year_range": "1985-2025",
+   "file": "/tmp/tm_raw/ember_generation_yearly_global.csv",
+   "url": "https://files.ember-energy.org/public-downloads/generation/outputs/release_generation_yearly_global.csv"
+  },
+  {
+   "label": "ember_generation_yearly_lower.csv",
+   "status": "ok",
+   "rows": 27549,
+   "areas": 38,
+   "year_range": "1985-2025",
+   "file": "/tmp/tm_raw/ember_generation_yearly_lower.csv",
+   "url": "https://files.ember-energy.org/public-downloads/generation/outputs/release_generation_yearly_lower.csv"
+  },
+  {
+   "label": "entsoe_transparency",
+   "status": "blocked",
+   "note": "API returns 401 without security token; registration required. No signup per policy. Ember covers Europe annually instead."
+  }
+ ]
+}

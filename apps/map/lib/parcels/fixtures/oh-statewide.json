@@ -1,0 +1,55 @@
+{
+ "adapter": "oh-statewide",
+ "capturedAt": "2026-09-26T15:37:49.599Z",
+ "point": [
+  -82.9993,
+  39.9612
+ ],
+ "county": {
+  "geoid": "39049",
+  "name": "Franklin County",
+  "basename": "Franklin",
+  "state": "39"
+ },
+ "rows": [
+  {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -82.997753,
+       39.960576
+      ],
+      [
+       -83.000077,
+       39.960303
+      ],
+      [
+       -83.000425,
+       39.96209
+      ],
+      [
+       -82.998104,
+       39.962357
+      ],
+      [
+       -82.997753,
+       39.960576
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "County": "Franklin",
+    "LocalParcelID": "010-067008",
+    "StateParcelID": "39049-010-067008",
+    "StateLUC": "610: Exm-Ohio",
+    "SitusAddressAll": "0 S HIGH ST   ",
+    "MailAddressAll": "  ",
+    "CurrentTo": 1695760320000,
+    "CAMADataSite": "https://audr-apps.franklincountyohio.gov/redir/Link/Parcel/010-067008"
+   }
+  }
+ ]
+}

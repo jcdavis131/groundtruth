@@ -1,0 +1,161 @@
+{
+ "adapter": "ct-cama",
+ "capturedAt": "2026-09-26T15:37:50.891Z",
+ "point": [
+  -72.6822,
+  41.764
+ ],
+ "county": {
+  "geoid": "09110",
+  "name": "Capitol Planning Region",
+  "basename": "Capitol",
+  "state": "09"
+ },
+ "rows": [
+  {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -72.683112,
+       41.764773
+      ],
+      [
+       -72.682753,
+       41.76467
+      ],
+      [
+       -72.682672,
+       41.764705
+      ],
+      [
+       -72.682607,
+       41.76472
+      ],
+      [
+       -72.68254,
+       41.764728
+      ],
+      [
+       -72.682406,
+       41.764715
+      ],
+      [
+       -72.681918,
+       41.764578
+      ],
+      [
+       -72.681518,
+       41.764439
+      ],
+      [
+       -72.680948,
+       41.764204
+      ],
+      [
+       -72.680808,
+       41.764126
+      ],
+      [
+       -72.680688,
+       41.764031
+      ],
+      [
+       -72.681068,
+       41.76302
+      ],
+      [
+       -72.681118,
+       41.762938
+      ],
+      [
+       -72.681184,
+       41.76288
+      ],
+      [
+       -72.681271,
+       41.762834
+      ],
+      [
+       -72.681348,
+       41.762815
+      ],
+      [
+       -72.68145,
+       41.762812
+      ],
+      [
+       -72.682372,
+       41.762946
+      ],
+      [
+       -72.68397,
+       41.763264
+      ],
+      [
+       -72.683898,
+       41.7634
+      ],
+      [
+       -72.683821,
+       41.763485
+      ],
+      [
+       -72.683722,
+       41.763555
+      ],
+      [
+       -72.683665,
+       41.763583
+      ],
+      [
+       -72.683513,
+       41.763631
+      ],
+      [
+       -72.683546,
+       41.763983
+      ],
+      [
+       -72.683134,
+       41.764779
+      ],
+      [
+       -72.683112,
+       41.764773
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "Town_Name": "Hartford",
+    "Parcel_ID": "224431013",
+    "Location": null,
+    "Location_1": "168 CAPITOL AVE",
+    "Property_City": "Hartford",
+    "Property_Zip": "06105",
+    "Owner": "STATE OF CONN CAPITOL",
+    "Co_Owner": null,
+    "Mailing_Address": "210 CAPITOL AV",
+    "Mailing_City": "HARTFORD",
+    "Mailing_State": "CT",
+    "Mailing_Zip": "06106-1535",
+    "Assessed_Total": 52253390,
+    "Assessed_Land": 20005790,
+    "Assessed_Building": 32180680,
+    "Appraised_Land": 28579700,
+    "Appraised_Building": 45972400,
+    "Valuation_Year": 2021,
+    "Land_Acres": 12.15,
+    "Zone": "MX-2",
+    "State_Use": "910.0",
+    "State_Use_Description": "ST-ADMINISTR",
+    "AYB": null,
+    "Sale_Price": null,
+    "Sale_Date": null,
+    "Collection_year": "2025"
+   }
+  }
+ ]
+}

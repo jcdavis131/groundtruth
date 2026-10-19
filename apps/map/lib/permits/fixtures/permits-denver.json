@@ -1,0 +1,443 @@
+{
+ "type": "FeatureCollection",
+ "crs": {
+  "type": "name",
+  "properties": {
+   "name": "EPSG:4326"
+  }
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.978549184802,
+     39.7580346412824
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2026-RESCON-0000531",
+    "DATE_RECEIVED": 1771804800000,
+    "DATE_ISSUED": 1790208000000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Phased Construction",
+    "UNITS": null,
+    "VALUATION": 15000,
+    "PERMIT_FEE": 139,
+    "CONTRACTOR_NAME": "CLARIDGE CONSTRUCTION LTD",
+    "ADDRESS": "2834 Champa ST",
+    "SCHEDNUM": "0227617006000",
+    "NEIGHBORHOOD": "Five Points",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.975448569638,
+     39.7579028185125
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2025-RESCON-0000933",
+    "DATE_RECEIVED": 1743033600000,
+    "DATE_ISSUED": 1789948800000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Alteration/Tenant Finish",
+    "UNITS": null,
+    "VALUATION": 1250,
+    "PERMIT_FEE": 35,
+    "CONTRACTOR_NAME": "MULDROW CONSTRUCTION CO INC",
+    "ADDRESS": "2948 California ST",
+    "SCHEDNUM": "0227614029000",
+    "NEIGHBORHOOD": "Five Points",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.957534689881,
+     39.7613080923139
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2025-RESCON-0003538",
+    "DATE_RECEIVED": 1761264000000,
+    "DATE_ISSUED": 1789948800000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Addition",
+    "UNITS": null,
+    "VALUATION": 175000,
+    "PERMIT_FEE": 1190,
+    "CONTRACTOR_NAME": "AUTUMN FINE BUILDING LLC",
+    "ADDRESS": "3127 N Columbine ST SFR",
+    "SCHEDNUM": "0225307015000",
+    "NEIGHBORHOOD": "Skyland",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.961871605226,
+     39.7598043852372
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2026-RESCON-0002770",
+    "DATE_RECEIVED": 1788912000000,
+    "DATE_ISSUED": 1789516800000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Repair/Replace",
+    "UNITS": null,
+    "VALUATION": 10367,
+    "PERMIT_FEE": 107,
+    "CONTRACTOR_NAME": "GROUNDWORKS COLORADO LLC",
+    "ADDRESS": "3010 N Vine ST",
+    "SCHEDNUM": "0226607008000",
+    "NEIGHBORHOOD": "Whittier",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.971628272658,
+     39.7546271152271
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2026-RESCON-0002450",
+    "DATE_RECEIVED": 1786665600000,
+    "DATE_ISSUED": 1789430400000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Alteration/Tenant Finish",
+    "UNITS": null,
+    "VALUATION": 79823,
+    "PERMIT_FEE": 630,
+    "CONTRACTOR_NAME": "FOX ENTERPRISE LLC",
+    "ADDRESS": "1311 E 26th AVE",
+    "SCHEDNUM": "0226542037000",
+    "NEIGHBORHOOD": "Whittier",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.966307591334,
+     39.7541391608664
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2026-RESCON-0002838",
+    "DATE_RECEIVED": 1789430400000,
+    "DATE_ISSUED": 1789430400000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Phased Construction",
+    "UNITS": null,
+    "VALUATION": 26000,
+    "PERMIT_FEE": 228,
+    "CONTRACTOR_NAME": "MIDDLETON HOMES INC",
+    "ADDRESS": "2545 N Williams ST",
+    "SCHEDNUM": "0235106018000",
+    "NEIGHBORHOOD": "Whittier",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.968077311411,
+     39.759964364533
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2026-RESCON-0002308",
+    "DATE_RECEIVED": 1785801600000,
+    "DATE_ISSUED": 1789430400000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Addition",
+    "UNITS": null,
+    "VALUATION": 0,
+    "PERMIT_FEE": null,
+    "CONTRACTOR_NAME": "PR BUILDERS",
+    "ADDRESS": "3020 N Franklin ST",
+    "SCHEDNUM": "0226513006000",
+    "NEIGHBORHOOD": "Whittier",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.954802298759,
+     39.7362229690263
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2026-RESCON-0002841",
+    "DATE_RECEIVED": 1789430400000,
+    "DATE_ISSUED": 1789430400000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Alteration/Tenant Finish",
+    "UNITS": null,
+    "VALUATION": 14500,
+    "PERMIT_FEE": 139,
+    "CONTRACTOR_NAME": "PIONEER CONSTRUCTION MANAGEMENT LLC",
+    "ADDRESS": "1260 N Clayton ST",
+    "SCHEDNUM": "0501225006000",
+    "NEIGHBORHOOD": "Congress Park",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.971903235268,
+     39.7440920391853
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2026-RESCON-0002745",
+    "DATE_RECEIVED": 1788825600000,
+    "DATE_ISSUED": 1789084800000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Repair/Replace",
+    "UNITS": null,
+    "VALUATION": 28538,
+    "PERMIT_FEE": 252,
+    "CONTRACTOR_NAME": "GROUNDWORKS COLORADO LLC",
+    "ADDRESS": "1740 N Marion ST",
+    "SCHEDNUM": "0235412044000",
+    "NEIGHBORHOOD": "City Park West",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.983337876989,
+     39.7361595579124
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2026-RESCON-0001282",
+    "DATE_RECEIVED": 1777593600000,
+    "DATE_ISSUED": 1788825600000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Alteration/Tenant Finish",
+    "UNITS": null,
+    "VALUATION": 300000,
+    "PERMIT_FEE": 1890,
+    "CONTRACTOR_NAME": "BLACK FOREST BUILDERS",
+    "ADDRESS": "1244 N Grant ST",
+    "SCHEDNUM": "0503115046000",
+    "NEIGHBORHOOD": "Capitol Hill",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.950320698233,
+     39.7418354232173
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2026-RESCON-0002625",
+    "DATE_RECEIVED": 1787702400000,
+    "DATE_ISSUED": 1788393600000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Repair/Replace",
+    "UNITS": null,
+    "VALUATION": 26100,
+    "PERMIT_FEE": 236,
+    "CONTRACTOR_NAME": "THRASHER INC",
+    "ADDRESS": "1589 N Steele ST",
+    "SCHEDNUM": "0236313025000",
+    "NEIGHBORHOOD": "City Park",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.952812057666,
+     39.7597955612806
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2026-RESCON-0002672",
+    "DATE_RECEIVED": 1788134400000,
+    "DATE_ISSUED": 1788134400000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Alteration/Tenant Finish",
+    "UNITS": null,
+    "VALUATION": 5200,
+    "PERMIT_FEE": 67,
+    "CONTRACTOR_NAME": "AFFORDABLE REMODELNG SOLUTIONS INC",
+    "ADDRESS": "3015 N Milwaukee ST",
+    "SCHEDNUM": "0225316009000",
+    "NEIGHBORHOOD": "Skyland",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.958934622368,
+     39.7596646390933
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2025-RESCON-0002713",
+    "DATE_RECEIVED": 1755561600000,
+    "DATE_ISSUED": 1787875200000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Addition",
+    "UNITS": null,
+    "VALUATION": 50000,
+    "PERMIT_FEE": 420,
+    "CONTRACTOR_NAME": "[removed from this fixture: a contractor name that may be a person]",
+    "ADDRESS": "3005 N Josephine ST SFR",
+    "SCHEDNUM": "0225311011000",
+    "NEIGHBORHOOD": "Skyland",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.959978442491,
+     39.7548350397045
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2026-RESCON-0002660",
+    "DATE_RECEIVED": 1787875200000,
+    "DATE_ISSUED": 1787875200000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Alteration/Tenant Finish",
+    "UNITS": null,
+    "VALUATION": 30000,
+    "PERMIT_FEE": 260,
+    "CONTRACTOR_NAME": "DENVER DREAM BUILDERS",
+    "ADDRESS": "2611 N York ST",
+    "SCHEDNUM": "0226624011000",
+    "NEIGHBORHOOD": "Whittier",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.980156846716,
+     39.7594802641095
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2026-RESCON-0002634",
+    "DATE_RECEIVED": 1787788800000,
+    "DATE_ISSUED": 1787788800000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Alteration/Tenant Finish",
+    "UNITS": null,
+    "VALUATION": 38000,
+    "PERMIT_FEE": 324,
+    "CONTRACTOR_NAME": "STIRK CONSTRUCTION SERVICES",
+    "ADDRESS": "2840 Arapahoe ST",
+    "SCHEDNUM": "0227619008000",
+    "NEIGHBORHOOD": "Five Points",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -104.977500793023,
+     39.7588700387716
+    ]
+   },
+   "properties": {
+    "PERMIT_NUM": "2026-RESCON-0002641",
+    "DATE_RECEIVED": 1787788800000,
+    "DATE_ISSUED": 1787788800000,
+    "FINAL_DATE": null,
+    "CANCEL": null,
+    "CLASS": "Alteration/Tenant Finish",
+    "UNITS": null,
+    "VALUATION": 4388,
+    "PERMIT_FEE": 59,
+    "CONTRACTOR_NAME": "LIFETIME WINDOWS AND SIDING DBA LIFETIME HOME REMODELING",
+    "ADDRESS": "2924 Champa ST",
+    "SCHEDNUM": "0227612008000",
+    "NEIGHBORHOOD": "Five Points",
+    "CO_REQUIRED": "No",
+    "DATE_CO_ISSUED": null
+   }
+  }
+ ]
+}

@@ -1,0 +1,346 @@
+{
+ "kind": "texts the port is checked on: card texts, record texts of real fixture rows, catalogue edge cases",
+ "generatedBy": "scripts/embed-reference-texts.mts",
+ "texts": [
+  {
+   "source": "card:nwi-wetlands",
+   "text": "National Wetlands Inventory polygons. USFWS's map of wetland and deepwater habitat, one polygon per mapped unit, each with its Cowardin code decoded locally into its system, subsystem, class and water regime names and the year of the imagery it was drawn from (NWI Data_Source). A habitat polygon mapped from aerial imagery of a given year. It is not a jurisdictional (Clean Water Act) delineation and does not say the area is wet today. Shelf: Land and heritage."
+  },
+  {
+   "source": "card:nwi-wetlands-raster",
+   "text": "National Wetlands Inventory raster (zoomed out). NWI's national generalised raster, about 100 m pixels in eight wetland types, drawn above 10 km where the polygons are not loaded. The legend is the raster's own attribute table. A pixel class at about 100 m: a picture of where NWI maps wetland types at that scale. Shelf: Land and heritage."
+  },
+  {
+   "source": "card:nrhp-listed",
+   "text": "National Register of Historic Places, listed properties. Properties listed on the National Register as NPS publishes them in its public, non-restricted spatial data: points for every listing it maps, and boundaries for districts and sites, each with its NRIS reference number, resource type, NHL flag, listing date and National Archives nomination link. A listing on the National Register: a property NPS has listed, at the location NPS publishes. Absence is not absence on the ground. Shelf: Land and heritage."
+  },
+  {
+   "source": "card:fws-crithab",
+   "text": "USFWS designated critical habitat, final and proposed. ESA critical habitat designations under the U.S. Fish and Wildlife Service, one polygon set per species and rule, final and proposed, drawn from FWS's own tile caches and answered at a click from its FeatureServer: species, listing status, Final or Proposed, Federal Register rule and publication date. A regulatory designation under the Endangered Species Act. It is not species range or occurrence, and FWS says the GIS file is not the legal boundary (the Federal Register rule and 50 CFR 17 are). Shelf: Species."
+  },
+  {
+   "source": "card:nmfs-crithab",
+   "text": "NOAA Fisheries designated critical habitat (marine and anadromous species). ESA critical habitat for species under NOAA Fisheries (whales, sea turtles, corals, salmon and steelhead, and others), drawn from NOAA's MapServer /export over FWS's caches and answered at a click: polygons containing the point (layer 226) and river and stream lines within about 200 m (layer 2), with listing status, Final or Proposed, unit, Federal Register rule, eCFR section and dates. A regulatory designation under the Endangered Species Act, as NOAA maps it. Not range or occurrence; the eCFR text is the legal boundary. Shelf: Species."
+  },
+  {
+   "source": "card:opp-ranges",
+   "text": "Listed species ranges (EPA OPP, USFWS and NOAA). ESA listed and proposed species ranges as USFWS and NOAA Fisheries delineate them, published by EPA's Office of Pesticide Programs for Section 7 work. A click with Critical habitat on lists the species whose range covers the point, grouped by status, with taxonomic group, lead agency, range date and ECOS page. The polygons are never drawn. A range: where a species could occur. Not presence, not habitat, not a sighting. Shelf: Species."
+  },
+  {
+   "source": "card:attains-impaired",
+   "text": "Impaired waters (EPA ATTAINS, 303(d)). Assessment units that states, territories and tribes report to EPA as impaired (isimpaired = 'Y'): Integrated Report category 4 and 5 stream reaches (lines) and lakes, estuaries and watersheds (areas), each with its category, 303(d) listing, TMDL, reporting cycle, overall status, EPA action status and How's My Waterway page. A state's report that a whole assessment unit is impaired, for one reporting cycle. A regulatory listing, not a measured value at a point. Shelf: Water quality."
+  },
+  {
+   "source": "card:ucmr5-pfas",
+   "text": "PFAS in public drinking water (EPA UCMR 5). UCMR 5 PFAS results per public water system, as EPA's PFAS Analytic Tools publish them: for each system serving a box and each of 29 PFAS, the highest single result at or above the minimum reporting level in ng/L, how many results reached it and how many results there were; or that the system was sampled with none at or above it, was not in UCMR 5, or is unknown this time. Systems are found by their service areas first (cws-service-areas), then by EPA's estimated location. A water system's UCMR 5 results for one PFAS: samples taken where treated water enters the distribution system, 2023-2025. Not a tap, not current water quality, and not compared with any health limit. Shelf: Water quality."
+  },
+  {
+   "source": "card:cws-service-areas",
+   "text": "Community water system service areas (EPA). EPA's Community Water System service-area boundaries, the geography UCMR 5 results are drawn on below 10 km: each with its PWSID, population served and category, service-area type, whether the boundary comes from the system or state or is modelled by EPA, its original data provider, and the system's ECHO report. The area a community water system serves, as its state or the system mapped it or as EPA modelled it. Not a pipe network, and not a statement that every address inside is served. Shelf: Water quality."
+  },
+  {
+   "source": "card:emef-sems",
+   "text": "Superfund sites (EPA EMEF, SEMS). Superfund sites as EPA's Envirofacts EMEF map service publishes them (layer 0, program system SEMS), each with its EPA program id, FRS registry id and EPA facility page. A Superfund program listing at EPA's facility coordinates. A regulatory status, not a finding of contamination at the point. Shelf: Contaminants."
+  },
+  {
+   "source": "card:emef-tri",
+   "text": "Toxics Release Inventory reporters (EPA EMEF). Facilities that report to the Toxics Release Inventory, as EMEF layer 1 publishes them, with the TRI facility id (TRIFID), FRS registry id and EPA facility page. A TRI reporter: a facility that filed with TRI. The listing alone says nothing about how much was released. Shelf: Contaminants."
+  },
+  {
+   "source": "card:emef-rcra",
+   "text": "RCRA hazardous-waste handlers (EPA EMEF, RCRAInfo). Handlers of hazardous waste registered in RCRAInfo, as EMEF layer 4 publishes them. A RCRA handler registration: a regulatory status, not a finding of contamination. Shelf: Contaminants."
+  },
+  {
+   "source": "card:emef-acres",
+   "text": "Brownfields properties (EPA EMEF, ACRES). Brownfields properties in EPA's ACRES system, as EMEF layer 5 publishes them. A Brownfields property record: a property in an EPA grant program, not a finding of contamination. Shelf: Contaminants."
+  },
+  {
+   "source": "card:tri-releases",
+   "text": "Toxics Release Inventory reported releases (EPA). What a TRI facility reported releasing on site in a reporting year, by chemical and medium (stack and fugitive air, surface water, underground injection, landfills, surface impoundments, land treatment), in its reported units and estimation basis, with the chemicals it certified on Form A. Asked from a TRI listing's record; never drawn. One Form R release line: a facility's own report of a quantity to one medium for one chemical and year. Not exposure, not concentration, not a measurement by EPA. Shelf: Contaminants."
+  },
+  {
+   "source": "card:npl-boundaries",
+   "text": "Superfund site boundaries (EPA). Superfund site boundary polygons as EPA regions map them, harvested into EPA_GEO's national layer: site areas, ground boundaries, operable-unit outlines and extents of contamination, each with its EPA ID, NPL status decoded from the layer's own domain, federal-facility flag, EPA program as published, city, county, state and EPA site page, and the site's NPL list row joined by EPA ID (npl-status). Drawn below 10 km, coloured by NPL status. One mapped feature of a Superfund site: a regulatory area as an EPA region drew it. Not a contamination footprint. A site can have several overlapping features; they are not merged, and each says how many its site has. Shelf: Contaminants."
+  },
+  {
+   "source": "card:npl-status",
+   "text": "National Priorities List status (EPA). EPA's NPL list: each site's status (final, proposed, deleted), Hazard Ranking System score, proposal, listing, construction-completion, intent-to-delete and deletion dates, partial deletion, and its Federal Register notices and site progress profile. Joined by EPA ID to every Superfund point and boundary in a box, never by the box itself (a site's point can sit outside a box its polygon enters). Read in the record; not drawn on its own. A site's row on the NPL list. A site with no row is shown as not on EPA's NPL status list, which is not a finding that it is clean; a list that did not answer is shown as unknown. Shelf: Contaminants."
+  },
+  {
+   "source": "card:fuds-properties",
+   "text": "Formerly Used Defense Sites: properties (USACE FUDS). Properties the Department of Defense once used and USACE is responsible for investigating and cleaning up, as USACE's FY2024 FUDS inventory publishes them: every property as a point (layer 1) and, below 10 km, the property's boundary where USACE has drawn one (layer 4), each with its FUDS property number, status, eligibility, county, state, closest city, USACE district, data year, FUDS portal page and its cleanup projects (fuds-projects). A property in the FUDS program. A program status, not a finding of contamination at the point; a property with no projects was found to need none or is not eligible. Shelf: Contaminants."
+  },
+  {
+   "source": "card:fuds-projects",
+   "text": "Formerly Used Defense Sites: cleanup projects (USACE FUDS). The cleanup projects on each FUDS property (layer 2): project number, restoration category (military munitions, hazardous, toxic and radioactive waste, containerized, building demolition and debris removal, potentially responsible party), program (IRP or MMRP), status, remedy-in-place, response-complete and closeout dates, risk value, USACE's cost-to-complete estimate and any overlapping federal land. Listed in their property's record; not drawn. One environmental restoration project on a FUDS property, as USACE tracks it. A date after today is USACE's planned date and is marked so. Shelf: Contaminants."
+  },
+  {
+   "source": "card:fuds-mrs",
+   "text": "Formerly Used Defense Sites: munitions response sites (USACE FUDS). Munitions Response Site polygons on FUDS properties (layer 3), with property number, site id, project number, status, program and relative priority. Drawn below 10 km, dashed. Where munitions may be present on a former defense property, as USACE maps it. Not a confirmed hazard footprint. Shelf: Contaminants."
+  },
+  {
+   "source": "card:ust-releases-county",
+   "text": "Leaking underground storage tank releases by county (EPA UST Finder). EPA UST Finder's county counts of reported leaking underground storage tank (LUST) releases: total, open, and no further action, with the county's population as the layer gives it. Drawn as county outlines filled by open releases. A county's count of reported tank leaks in state records as of 2018-2021. A release is a reported leak; 'no further action' is the state's closure, not proof that no contamination remains. A snapshot, not current status. Shelf: Contaminants."
+  },
+  {
+   "source": "card:ust-facilities-county",
+   "text": "Underground storage tank facilities by county (EPA UST Finder). EPA UST Finder's county counts of UST facilities and tanks (open, closed, temporarily out of service), joined to the release counties by county name and state; the county layers carry no FIPS code. A county's count of tank facilities and tanks in state records as of 2018-2021. A snapshot, not current status. Shelf: Contaminants."
+  },
+  {
+   "source": "card:fema-nfhl-zones",
+   "text": "Flood hazard zones (FEMA National Flood Hazard Layer). FEMA's regulatory flood hazard zones (NFHL layer 28) in a box below 5 km: zone and subtype with FEMA's own meaning, whether the ground is in the special flood hazard area, the static base flood elevation where FEMA published one, depth and its units and datum, and the FIRM study it comes from (DFIRM_ID, study type). Under the zones, FEMA's own rendering of the same layer as a picture. A flood hazard zone on FEMA's regulatory map (FIRM): the 1% annual-chance floodplain and others. Not a forecast, and the absence of a zone is not a finding of no flood risk. Shelf: Land and heritage."
+  },
+  {
+   "source": "card:padus-units",
+   "text": "Protected areas and public lands (USGS PAD-US 4.1). USGS's Protected Areas Database (PAD-US 4.1, Manager Name service) in the four categories the route asks for, fee lands, easements, designations and proclamation boundaries: each unit's owner and owner type, local owner, manager and manager type, designation, GAP status, IUCN category, public access, acres and year established, and for easements the holder and holder type, decoded with the service's own domains. A protected-area unit as PAD-US publishes it. Public access is PAD-US's code, not permission to enter; land inside a proclamation boundary is not all public; an easement's owner keeps the land. Shelf: Land and heritage."
+  },
+  {
+   "source": "card:nid-dams",
+   "text": "Dams (USACE National Inventory of Dams). Dams in USACE's National Inventory of Dams public service: NID id, hazard potential with its meaning, the regulator's condition assessment and its date, purposes, dam type, height, storage, surface and drainage area, year completed, river, county, state, owner type, emergency action plan, operational status and the record's update date. A dam as NID lists it. Hazard potential is the damage a failure would cause downstream, not the dam's condition or how likely it is to fail. Shelf: Infrastructure."
+  },
+  {
+   "source": "card:esri-wayback",
+   "text": "World Imagery Wayback releases. Every published release of Esri World Imagery since 2014-02-20, each its own tile set, picked by release date; the release index comes from Esri's waybackconfig.json. A release: the basemap as Esri published it on that date. A release date is not a capture date. Shelf: Imagery and maps."
+  },
+  {
+   "source": "card:wayback-capture",
+   "text": "World Imagery Wayback capture dates. Esri's per-release imagery metadata: for each Wayback release, polygons saying which capture each region of that release came from, in 14 resolution bands, with the capture date, resolution, accuracy, provider and Esri's collection name. A click on Wayback imagery reads it at the point for the release drawn and the zoom it is drawn at. A capture: when and by whom the pixels in that release were taken, as Esri records it. A point can sit on more than one capture. Shelf: Imagery and maps."
+  },
+  {
+   "source": "card:usgs-htmc",
+   "text": "USGS historical topographic maps, 1879-2006. Every scale and edition of the topographic map USGS published, scanned (the Historical Topographic Map Collection), drawn one edition year at a time from Esri's HTMC ImageServer; a click lists the sheets at the point with their USGS citation, and their GeoPDF and GeoTIFF from USGS TNM Access matched by scan id. A sheet: one edition of one USGS quadrangle as published. The edition year (DateCurrent) is when USGS revised the map, not a survey date; parts of a sheet can be decades older. Shelf: Imagery and maps."
+  },
+  {
+   "source": "record:nid-dams",
+   "text": "dam purpose: Hydroelectric; dam type: Earth; hazard potential: High; condition assessment: Satisfactory; state: Texas; year completed: 1963"
+  },
+  {
+   "source": "record:nid-dams",
+   "text": "dam purpose: Irrigation; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; state: Texas; year completed: 1967"
+  },
+  {
+   "source": "record:nid-dams",
+   "text": "dam purpose: Hydroelectric; dam type: Earth; hazard potential: High; condition assessment: Satisfactory; state: Texas; year completed: 1969"
+  },
+  {
+   "source": "record:nid-dams",
+   "text": "dam purpose: Irrigation; dam type: Earth; hazard potential: Low; condition assessment: Poor; state: Texas; year completed: 1907"
+  },
+  {
+   "source": "record:nid-dams",
+   "text": "dam purpose: Water Supply; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; state: Texas; year completed: 1970"
+  },
+  {
+   "source": "record:nid-dams",
+   "text": "dam purpose: Recreation; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; state: Texas; year completed: 1967"
+  },
+  {
+   "source": "record:nwi-wetlands",
+   "text": "wetland type: Lake; wetland system: Lacustrine; wetland class: Unconsolidated Shore; water regime: Temporarily Flooded"
+  },
+  {
+   "source": "record:nwi-wetlands",
+   "text": "wetland type: Freshwater Emergent Wetland; wetland system: Palustrine; wetland class: Emergent; water regime: Seasonally Flooded"
+  },
+  {
+   "source": "record:nwi-wetlands",
+   "text": "wetland type: Freshwater Pond; wetland system: Palustrine; wetland class: Unconsolidated Bottom; water regime: Semipermanently Flooded"
+  },
+  {
+   "source": "record:nwi-wetlands",
+   "text": "wetland type: Freshwater Pond; wetland system: Palustrine; wetland class: Unconsolidated Bottom; water regime: Permanently Flooded"
+  },
+  {
+   "source": "record:nwi-wetlands",
+   "text": "wetland type: Freshwater Pond; wetland system: Palustrine; wetland class: Unconsolidated Shore; water regime: Temporarily Flooded"
+  },
+  {
+   "source": "record:nwi-wetlands",
+   "text": "wetland type: Freshwater Pond; wetland system: Palustrine; wetland class: Unconsolidated Shore; water regime: Seasonally Flooded"
+  },
+  {
+   "source": "record:nrhp-listed",
+   "text": "historic resource type: object; listed on the National Register: 2007-10; city: Washington; county: District of Columbia; state: DISTRICT OF COLUMBIA"
+  },
+  {
+   "source": "record:nrhp-listed",
+   "text": "historic resource type: building; listed on the National Register: 1983-09; city: Washington; county: District of Columbia; state: DISTRICT OF COLUMBIA"
+  },
+  {
+   "source": "record:nrhp-listed",
+   "text": "historic resource type: building; listed on the National Register: 1985-03; city: Washington; county: District of Columbia; state: DISTRICT OF COLUMBIA"
+  },
+  {
+   "source": "record:nrhp-listed",
+   "text": "historic resource type: building; national historic landmark: yes; listed on the National Register: 1969-03; city: Washington; county: District of Columbia; state: DISTRICT OF COLUMBIA"
+  },
+  {
+   "source": "record:nrhp-listed",
+   "text": "historic resource type: building; national historic landmark: yes; listed on the National Register: 1966-10; city: Washington; county: District of Columbia; state: DISTRICT OF COLUMBIA"
+  },
+  {
+   "source": "record:nrhp-listed",
+   "text": "historic resource type: building; listed on the National Register: 1973-07; city: Washington; county: District of Columbia; state: DISTRICT OF COLUMBIA"
+  },
+  {
+   "source": "record:emef-sems",
+   "text": "EPA program: SEMS"
+  },
+  {
+   "source": "record:emef-tri",
+   "text": "EPA program: TRIS"
+  },
+  {
+   "source": "record:emef-rcra",
+   "text": "EPA program: RCRAINFO"
+  },
+  {
+   "source": "record:emef-acres",
+   "text": "EPA program: ACRES"
+  },
+  {
+   "source": "record:npl-boundaries",
+   "text": "NPL status: Currently on the Final NPL; federal facility: Not a Federal Facility; EPA program: Superfund Remedial; mapped feature: Extent of Contamination; county: MORRIS; state: NJ"
+  },
+  {
+   "source": "record:npl-boundaries",
+   "text": "NPL status: Currently on the Final NPL; federal facility: Not a Federal Facility; EPA program: Superfund Remedial; mapped feature: Total Site Polygon/OU Aggregation; county: BERGEN; state: NJ"
+  },
+  {
+   "source": "record:npl-boundaries",
+   "text": "NPL status: Deleted from the Final NPL; federal facility: Not a Federal Facility; EPA program: Superfund Remedial; mapped feature: Comprehensive Site Area; county: MIDDLESEX; state: NJ"
+  },
+  {
+   "source": "record:npl-boundaries",
+   "text": "NPL status: Currently on the Final NPL; federal facility: Not a Federal Facility; EPA program: Superfund Remedial; mapped feature: Current Ground Boundary; county: MIDDLESEX; state: NJ"
+  },
+  {
+   "source": "record:npl-boundaries",
+   "text": "NPL status: Currently on the Final NPL; federal facility: Not a Federal Facility; EPA program: Superfund Remedial; mapped feature: Comprehensive Site Area; county: ESSEX; state: NJ"
+  },
+  {
+   "source": "record:npl-boundaries",
+   "text": "NPL status: Currently on the Final NPL; federal facility: Not a Federal Facility; EPA program: Superfund Remedial; mapped feature: Total Site Polygon/OU Aggregation; county: MIDDLESEX; state: NJ"
+  },
+  {
+   "source": "record:fuds-properties",
+   "text": "FUDS status: has cleanup projects; FUDS eligibility: Eligible; county: MONMOUTH; state: NJ; USACE district: NAE; data fiscal year: 2024"
+  },
+  {
+   "source": "record:fuds-properties",
+   "text": "FUDS status: every project at site closeout; FUDS eligibility: Eligible; county: HUDSON; state: NJ; USACE district: NAE; data fiscal year: 2024"
+  },
+  {
+   "source": "record:fuds-properties",
+   "text": "FUDS status: has cleanup projects; FUDS eligibility: Eligible; county: MIDDLESEX; state: NJ; USACE district: NAE; data fiscal year: 2024"
+  },
+  {
+   "source": "record:fuds-properties",
+   "text": "FUDS status: no cleanup projects; FUDS eligibility: Ineligible; county: HUDSON; state: NJ; USACE district: NAE; data fiscal year: 2024"
+  },
+  {
+   "source": "record:fuds-properties",
+   "text": "FUDS status: no cleanup projects; FUDS eligibility: Ineligible; county: PASSAIC; state: NJ; USACE district: NAE; data fiscal year: 2024"
+  },
+  {
+   "source": "record:fuds-properties",
+   "text": "FUDS status: no cleanup projects; FUDS eligibility: Eligible; county: UNION; state: NJ; USACE district: NAE; data fiscal year: 2024"
+  },
+  {
+   "source": "record:fuds-mrs",
+   "text": "project status: investigation; restoration program: MMRP"
+  },
+  {
+   "source": "record:fuds-mrs",
+   "text": "project status: responseCompleteSiteCloseout; restoration program: MMRP"
+  },
+  {
+   "source": "record:fuds-mrs",
+   "text": "project status: cleanup; restoration program: MMRP"
+  },
+  {
+   "source": "record:ust-releases-county",
+   "text": "county: Matagorda; state: Texas"
+  },
+  {
+   "source": "record:ust-releases-county",
+   "text": "county: Brazoria; state: Texas"
+  },
+  {
+   "source": "record:ust-releases-county",
+   "text": "county: Fort Bend; state: Texas"
+  },
+  {
+   "source": "record:ust-releases-county",
+   "text": "county: Wharton; state: Texas"
+  },
+  {
+   "source": "record:ust-releases-county",
+   "text": "county: Waller; state: Texas"
+  },
+  {
+   "source": "record:ust-releases-county",
+   "text": "county: Grimes; state: Texas"
+  },
+  {
+   "source": "record:attains-impaired",
+   "text": "state: MD; reporting cycle: 2024; impaired water category: 4A: impaired, TMDL approved; on the 303(d) list: no; has a TMDL: yes; EPA action status: EPA Final Action"
+  },
+  {
+   "source": "record:attains-impaired",
+   "text": "state: MD; reporting cycle: 2024; impaired water category: 5: impaired, needs a TMDL: on the 303(d) list; on the 303(d) list: yes; has a TMDL: yes; EPA action status: EPA Final Action"
+  },
+  {
+   "source": "record:padus-units (test-written row)",
+   "text": "protected area category: Easement; owner type: PVT; public access: XA"
+  },
+  {
+   "source": "record:fema-nfhl-zones (test-written row)",
+   "text": "flood zone: AE (1 % annual-chance flood (base flood, \"100-year\")); special flood hazard area: yes"
+  },
+  {
+   "source": "edge",
+   "text": "303(d)"
+  },
+  {
+   "source": "edge",
+   "text": "PFAS"
+  },
+  {
+   "source": "edge",
+   "text": "Toxics Release Inventory"
+  },
+  {
+   "source": "edge",
+   "text": "non-community"
+  },
+  {
+   "source": "edge",
+   "text": "1879-2006"
+  },
+  {
+   "source": "edge",
+   "text": "MM/DD/YYYY"
+  },
+  {
+   "source": "edge",
+   "text": "Rice's whale"
+  },
+  {
+   "source": "edge",
+   "text": "doi:10.5066/P96WBCHS"
+  },
+  {
+   "source": "edge",
+   "text": "3,001 in a 0.4 by 0.25 degree Houston box"
+  },
+  {
+   "source": "edge",
+   "text": ""
+  },
+  {
+   "source": "edge",
+   "text": "; ;"
+  }
+ ]
+}

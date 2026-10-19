@@ -1,0 +1,1861 @@
+{
+ "kind": "hand-written by the eval agent (Forge), not user queries",
+ "version": 3,
+ "supersedes": "queries.v2.json (v2, sha256 c439e9f35ba04351363eae2ee1be4e4b536f55e7d89775eda7eff7bfa67e9c45), which stays as it was; v1 queries.json stays as it was too",
+ "written": "2026-10-17, after reading the distinct record texts of the two new cards (all 335 BIA land area names; the 9 WRC community texts) and searching the 16-card corpus for tribal and fire words (one PAD-US unit is designated Native American Land Area). No query was embedded or scored on the 18-card corpus before this file was hashed, v2's included.",
+ "changes_from_v2": [
+  "keeps every v2 query unchanged (95: 21 collection, 48 value, 26 control)",
+  "adds c22-c26 (collection) and v49-v63 (value) for bia-lar and wrc-communities",
+  "adds controls n29-n39, next to the new cards on purpose: tribal and fire subjects with no record loaded; with v2's 26 that is 37",
+  "no v2 control becomes relevant: n03 'wildfire perimeters' stays a control (see disputable)"
+ ],
+ "disputable": [
+  "v32 'level 1 trauma center' counts LEVEL I and LEVEL I PEDIATRIC; LEVEL II-IV and the state codes (CTH, TRF, RTC, ATH) are partial",
+  "v39 'elementary schools' counts only school level Elementary, not Prekindergarten",
+  "v40 'high schools' counts High and Secondary",
+  "v42 'online virtual school' counts Full Virtual and 'Virtual with face to face options'",
+  "v46 'rural schools' counts NCES locale codes 41-43 (Rural: Fringe, Distant, Remote) only, not Town",
+  "v48 'schools in New Mexico': the record text says 'state: NM', an abbreviation",
+  "n22 'colleges and universities' is a control: the NCES layer is K-12 only",
+  "n28 'emergency shelters' is a control: hospitals are not shelters",
+  "n03 'wildfire perimeters' stays a control: WRC community records are modelled risk ranks of Census places, not fire perimeters",
+  "c22-c24 count the one PAD-US unit designated 'Native American Land Area' as relevant, as well as every BIA land area",
+  "v52 'Apache reservations' counts San Carlos (the San Carlos Apache reservation), whose BIA name does not say Apache",
+  "v54 'Seminole reservations in Florida' counts the Seminole Tribe of Florida's six land areas (Big Cypress, Brighton, Hollywood (Dania), Immokalee, Fort Pierce, Tampa); Miccosukee is partial",
+  "v55 'pueblos in New Mexico' counts the 19 New Mexico pueblos by their BIA names (San Juan is Ohkay Owingeh), plus Acoma (Red Lake); Ysleta Del Sur (a Texas pueblo) is partial",
+  "v59 'Paiute reservations' counts only the two land areas whose BIA name says Paiute; the many Paiute colonies and reservations named otherwise (Bishop, Pyramid Lake, Walker River and others) are partial",
+  "v62 counts the WRC records whose exclusion reason starts 'no people'",
+  "n32 'Census tribal statistical areas' is a control: BIA's layer is trust land, and the card says Census areas are not this",
+  "n34 'Indian Health Service clinics' is a control: hospital record text carries no owner, and a clinic is not a hospital"
+ ],
+ "rubric": {
+  "0": "everything else, including every record when the query names something with no record vectors loaded (controls)",
+  "1": "partial: right collection, value not the one asked for",
+  "2": "relevant: the query's intent matches a published value in the record text (or, for a collection-level query, the record is in that collection)"
+ },
+ "matching": "a rule applies to a record when card equals and, if given, the record text's '<field>: <value>' has value in values (exact) or starting with one of prefixes; a record's grade is the max over matching rules",
+ "queries": [
+  {
+   "id": "c01",
+   "kind": "collection",
+   "q": "dams",
+   "judge": [
+    {
+     "card": "nid-dams",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c02",
+   "kind": "collection",
+   "q": "reservoir embankments",
+   "judge": [
+    {
+     "card": "nid-dams",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c03",
+   "kind": "collection",
+   "q": "wetlands",
+   "judge": [
+    {
+     "card": "nwi-wetlands",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c04",
+   "kind": "collection",
+   "q": "marsh and swamp habitat",
+   "judge": [
+    {
+     "card": "nwi-wetlands",
+     "grade": 1
+    },
+    {
+     "card": "nwi-wetlands",
+     "field": "wetland class",
+     "values": [
+      "Emergent",
+      "Forested",
+      "Scrub-Shrub"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c05",
+   "kind": "collection",
+   "q": "historic buildings",
+   "judge": [
+    {
+     "card": "nrhp-listed",
+     "grade": 1
+    },
+    {
+     "card": "nrhp-listed",
+     "field": "historic resource type",
+     "values": [
+      "building"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c06",
+   "kind": "collection",
+   "q": "places on the National Register",
+   "judge": [
+    {
+     "card": "nrhp-listed",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c07",
+   "kind": "collection",
+   "q": "Superfund site",
+   "judge": [
+    {
+     "card": "npl-boundaries",
+     "grade": 2
+    },
+    {
+     "card": "emef-sems",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c08",
+   "kind": "collection",
+   "q": "toxic release inventory facility",
+   "judge": [
+    {
+     "card": "emef-tri",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c09",
+   "kind": "collection",
+   "q": "hazardous waste handlers",
+   "judge": [
+    {
+     "card": "emef-rcra",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c10",
+   "kind": "collection",
+   "q": "brownfield grants",
+   "judge": [
+    {
+     "card": "emef-acres",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c11",
+   "kind": "collection",
+   "q": "leaking underground storage tanks",
+   "judge": [
+    {
+     "card": "ust-releases-county",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c12",
+   "kind": "collection",
+   "q": "former military sites",
+   "judge": [
+    {
+     "card": "fuds-properties",
+     "grade": 2
+    },
+    {
+     "card": "fuds-mrs",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c13",
+   "kind": "collection",
+   "q": "unexploded ordnance",
+   "judge": [
+    {
+     "card": "fuds-properties",
+     "grade": 1
+    },
+    {
+     "card": "fuds-mrs",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c14",
+   "kind": "collection",
+   "q": "polluted rivers and streams",
+   "judge": [
+    {
+     "card": "attains-impaired",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c15",
+   "kind": "collection",
+   "q": "flood zone",
+   "judge": [
+    {
+     "card": "fema-nfhl-zones",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c16",
+   "kind": "collection",
+   "q": "parks and open space",
+   "judge": [
+    {
+     "card": "padus-units",
+     "grade": 1
+    },
+    {
+     "card": "padus-units",
+     "field": "designation",
+     "values": [
+      "Local Park",
+      "State Park",
+      "Local Recreation Area",
+      "Local Conservation Area"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c17",
+   "kind": "collection",
+   "q": "protected land",
+   "judge": [
+    {
+     "card": "padus-units",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c18",
+   "kind": "collection",
+   "q": "hospitals",
+   "judge": [
+    {
+     "card": "hifld-hospitals",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c19",
+   "kind": "collection",
+   "q": "medical centers",
+   "judge": [
+    {
+     "card": "hifld-hospitals",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c20",
+   "kind": "collection",
+   "q": "public schools",
+   "judge": [
+    {
+     "card": "nces-public-schools",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c21",
+   "kind": "collection",
+   "q": "K-12 education",
+   "judge": [
+    {
+     "card": "nces-public-schools",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v01",
+   "kind": "value",
+   "q": "high hazard dams",
+   "judge": [
+    {
+     "card": "nid-dams",
+     "grade": 1
+    },
+    {
+     "card": "nid-dams",
+     "field": "hazard potential",
+     "values": [
+      "High"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v02",
+   "kind": "value",
+   "q": "dams in poor condition",
+   "judge": [
+    {
+     "card": "nid-dams",
+     "grade": 1
+    },
+    {
+     "card": "nid-dams",
+     "field": "condition assessment",
+     "values": [
+      "Poor",
+      "Unsatisfactory"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v03",
+   "kind": "value",
+   "q": "hydroelectric dam",
+   "judge": [
+    {
+     "card": "nid-dams",
+     "grade": 1
+    },
+    {
+     "card": "nid-dams",
+     "field": "dam purpose",
+     "values": [
+      "Hydroelectric"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v04",
+   "kind": "value",
+   "q": "flood control dam",
+   "judge": [
+    {
+     "card": "nid-dams",
+     "grade": 1
+    },
+    {
+     "card": "nid-dams",
+     "field": "dam purpose",
+     "values": [
+      "Flood Risk Reduction"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v05",
+   "kind": "value",
+   "q": "concrete dam",
+   "judge": [
+    {
+     "card": "nid-dams",
+     "grade": 1
+    },
+    {
+     "card": "nid-dams",
+     "field": "dam type",
+     "values": [
+      "Concrete",
+      "Gravity",
+      "Arch",
+      "Multi-Arch"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v06",
+   "kind": "value",
+   "q": "farm pond dam",
+   "judge": [
+    {
+     "card": "nid-dams",
+     "grade": 1
+    },
+    {
+     "card": "nid-dams",
+     "field": "dam purpose",
+     "values": [
+      "Fire Protection, Stock, Or Small Fish Pond"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v07",
+   "kind": "value",
+   "q": "Kansas dams",
+   "judge": [
+    {
+     "card": "nid-dams",
+     "grade": 1
+    },
+    {
+     "card": "nid-dams",
+     "field": "state",
+     "values": [
+      "Kansas"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v08",
+   "kind": "value",
+   "q": "tidal salt marsh",
+   "judge": [
+    {
+     "card": "nwi-wetlands",
+     "grade": 1
+    },
+    {
+     "card": "nwi-wetlands",
+     "field": "wetland type",
+     "values": [
+      "Estuarine and Marine Wetland"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v09",
+   "kind": "value",
+   "q": "permanently flooded pond",
+   "judge": [
+    {
+     "card": "nwi-wetlands",
+     "grade": 1
+    },
+    {
+     "card": "nwi-wetlands",
+     "field": "water regime",
+     "values": [
+      "Permanently Flooded"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v10",
+   "kind": "value",
+   "q": "wooded swamp",
+   "judge": [
+    {
+     "card": "nwi-wetlands",
+     "grade": 1
+    },
+    {
+     "card": "nwi-wetlands",
+     "field": "wetland class",
+     "values": [
+      "Forested",
+      "Scrub-Shrub"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v11",
+   "kind": "value",
+   "q": "seasonal wetland",
+   "judge": [
+    {
+     "card": "nwi-wetlands",
+     "grade": 1
+    },
+    {
+     "card": "nwi-wetlands",
+     "field": "water regime",
+     "prefixes": [
+      "Seasonally Flooded"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v12",
+   "kind": "value",
+   "q": "national historic landmark",
+   "judge": [
+    {
+     "card": "nrhp-listed",
+     "grade": 1
+    },
+    {
+     "card": "nrhp-listed",
+     "field": "national historic landmark",
+     "values": [
+      "yes"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v13",
+   "kind": "value",
+   "q": "historic district",
+   "judge": [
+    {
+     "card": "nrhp-listed",
+     "grade": 1
+    },
+    {
+     "card": "nrhp-listed",
+     "field": "historic resource type",
+     "values": [
+      "district"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v14",
+   "kind": "value",
+   "q": "historic bridge or structure",
+   "judge": [
+    {
+     "card": "nrhp-listed",
+     "grade": 1
+    },
+    {
+     "card": "nrhp-listed",
+     "field": "historic resource type",
+     "values": [
+      "structure"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v15",
+   "kind": "value",
+   "q": "Charleston historic places",
+   "judge": [
+    {
+     "card": "nrhp-listed",
+     "grade": 1
+    },
+    {
+     "card": "nrhp-listed",
+     "field": "city",
+     "values": [
+      "Charleston"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v16",
+   "kind": "value",
+   "q": "sites removed from the Superfund list",
+   "judge": [
+    {
+     "card": "npl-boundaries",
+     "grade": 1
+    },
+    {
+     "card": "npl-boundaries",
+     "field": "NPL status",
+     "values": [
+      "Deleted from the Final NPL"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v17",
+   "kind": "value",
+   "q": "federal facility Superfund site",
+   "judge": [
+    {
+     "card": "npl-boundaries",
+     "grade": 1
+    },
+    {
+     "card": "npl-boundaries",
+     "field": "federal facility",
+     "values": [
+      "Federal Facility"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v18",
+   "kind": "value",
+   "q": "military munitions cleanup underway",
+   "judge": [
+    {
+     "card": "fuds-properties",
+     "grade": 1
+    },
+    {
+     "card": "fuds-mrs",
+     "grade": 1
+    },
+    {
+     "card": "fuds-mrs",
+     "field": "project status",
+     "values": [
+      "cleanup"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v19",
+   "kind": "value",
+   "q": "100-year floodplain",
+   "judge": [
+    {
+     "card": "fema-nfhl-zones",
+     "grade": 1
+    },
+    {
+     "card": "fema-nfhl-zones",
+     "field": "special flood hazard area",
+     "values": [
+      "yes"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v20",
+   "kind": "value",
+   "q": "coastal storm surge zone",
+   "judge": [
+    {
+     "card": "fema-nfhl-zones",
+     "grade": 1
+    },
+    {
+     "card": "fema-nfhl-zones",
+     "field": "flood zone",
+     "prefixes": [
+      "VE "
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v21",
+   "kind": "value",
+   "q": "levee protected area",
+   "judge": [
+    {
+     "card": "fema-nfhl-zones",
+     "grade": 1
+    },
+    {
+     "card": "fema-nfhl-zones",
+     "field": "zone subtype",
+     "values": [
+      "AREA WITH REDUCED FLOOD RISK DUE TO LEVEE"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v22",
+   "kind": "value",
+   "q": "minimal flood hazard",
+   "judge": [
+    {
+     "card": "fema-nfhl-zones",
+     "grade": 1
+    },
+    {
+     "card": "fema-nfhl-zones",
+     "field": "zone subtype",
+     "values": [
+      "AREA OF MINIMAL FLOOD HAZARD"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v23",
+   "kind": "value",
+   "q": "conservation easement",
+   "judge": [
+    {
+     "card": "padus-units",
+     "grade": 1
+    },
+    {
+     "card": "padus-units",
+     "field": "designation",
+     "values": [
+      "Conservation Easement"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v24",
+   "kind": "value",
+   "q": "closed to the public",
+   "judge": [
+    {
+     "card": "padus-units",
+     "grade": 1
+    },
+    {
+     "card": "padus-units",
+     "field": "public access",
+     "values": [
+      "Closed"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v25",
+   "kind": "value",
+   "q": "state park",
+   "judge": [
+    {
+     "card": "padus-units",
+     "grade": 1
+    },
+    {
+     "card": "padus-units",
+     "field": "designation",
+     "values": [
+      "State Park"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v26",
+   "kind": "value",
+   "q": "land managed for biodiversity",
+   "judge": [
+    {
+     "card": "padus-units",
+     "grade": 1
+    },
+    {
+     "card": "padus-units",
+     "field": "GAP status",
+     "prefixes": [
+      "1 ",
+      "2 "
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v27",
+   "kind": "value",
+   "q": "waters that still need a cleanup plan",
+   "judge": [
+    {
+     "card": "attains-impaired",
+     "grade": 1
+    },
+    {
+     "card": "attains-impaired",
+     "field": "has a TMDL",
+     "values": [
+      "no"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v28",
+   "kind": "value",
+   "q": "military sites with no cleanup projects",
+   "judge": [
+    {
+     "card": "fuds-properties",
+     "grade": 1
+    },
+    {
+     "card": "fuds-properties",
+     "field": "FUDS status",
+     "values": [
+      "no cleanup projects"
+     ],
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v29",
+   "kind": "value",
+   "q": "children's hospital",
+   "judge": [
+    {
+     "card": "hifld-hospitals",
+     "grade": 1
+    },
+    {
+     "card": "hifld-hospitals",
+     "field": "hospital type",
+     "grade": 2,
+     "values": [
+      "CHILDREN"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v30",
+   "kind": "value",
+   "q": "psychiatric hospital",
+   "judge": [
+    {
+     "card": "hifld-hospitals",
+     "grade": 1
+    },
+    {
+     "card": "hifld-hospitals",
+     "field": "hospital type",
+     "grade": 2,
+     "values": [
+      "PSYCHIATRIC"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v31",
+   "kind": "value",
+   "q": "mental health facility",
+   "judge": [
+    {
+     "card": "hifld-hospitals",
+     "grade": 1
+    },
+    {
+     "card": "hifld-hospitals",
+     "field": "hospital type",
+     "grade": 2,
+     "values": [
+      "PSYCHIATRIC"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v32",
+   "kind": "value",
+   "q": "level 1 trauma center",
+   "judge": [
+    {
+     "card": "hifld-hospitals",
+     "grade": 1
+    },
+    {
+     "card": "hifld-hospitals",
+     "field": "trauma center level",
+     "grade": 2,
+     "values": [
+      "LEVEL I",
+      "LEVEL I PEDIATRIC"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v33",
+   "kind": "value",
+   "q": "hospital with a helipad",
+   "judge": [
+    {
+     "card": "hifld-hospitals",
+     "grade": 1
+    },
+    {
+     "card": "hifld-hospitals",
+     "field": "helipad",
+     "grade": 2,
+     "values": [
+      "yes"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v34",
+   "kind": "value",
+   "q": "rural critical access hospital",
+   "judge": [
+    {
+     "card": "hifld-hospitals",
+     "grade": 1
+    },
+    {
+     "card": "hifld-hospitals",
+     "field": "hospital type",
+     "grade": 2,
+     "values": [
+      "CRITICAL ACCESS"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v35",
+   "kind": "value",
+   "q": "rehabilitation hospital",
+   "judge": [
+    {
+     "card": "hifld-hospitals",
+     "grade": 1
+    },
+    {
+     "card": "hifld-hospitals",
+     "field": "hospital type",
+     "grade": 2,
+     "values": [
+      "REHABILITATION"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v36",
+   "kind": "value",
+   "q": "military hospital",
+   "judge": [
+    {
+     "card": "hifld-hospitals",
+     "grade": 1
+    },
+    {
+     "card": "hifld-hospitals",
+     "field": "hospital type",
+     "grade": 2,
+     "values": [
+      "MILITARY"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v37",
+   "kind": "value",
+   "q": "long-term care hospital",
+   "judge": [
+    {
+     "card": "hifld-hospitals",
+     "grade": 1
+    },
+    {
+     "card": "hifld-hospitals",
+     "field": "hospital type",
+     "grade": 2,
+     "values": [
+      "LONG TERM CARE"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v38",
+   "kind": "value",
+   "q": "charter schools",
+   "judge": [
+    {
+     "card": "nces-public-schools",
+     "grade": 1
+    },
+    {
+     "card": "nces-public-schools",
+     "field": "charter school",
+     "grade": 2,
+     "values": [
+      "Yes"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v39",
+   "kind": "value",
+   "q": "elementary schools",
+   "judge": [
+    {
+     "card": "nces-public-schools",
+     "grade": 1
+    },
+    {
+     "card": "nces-public-schools",
+     "field": "school level",
+     "grade": 2,
+     "values": [
+      "Elementary"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v40",
+   "kind": "value",
+   "q": "high schools",
+   "judge": [
+    {
+     "card": "nces-public-schools",
+     "grade": 1
+    },
+    {
+     "card": "nces-public-schools",
+     "field": "school level",
+     "grade": 2,
+     "values": [
+      "High",
+      "Secondary"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v41",
+   "kind": "value",
+   "q": "middle school",
+   "judge": [
+    {
+     "card": "nces-public-schools",
+     "grade": 1
+    },
+    {
+     "card": "nces-public-schools",
+     "field": "school level",
+     "grade": 2,
+     "values": [
+      "Middle"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v42",
+   "kind": "value",
+   "q": "online virtual school",
+   "judge": [
+    {
+     "card": "nces-public-schools",
+     "grade": 1
+    },
+    {
+     "card": "nces-public-schools",
+     "field": "virtual school status",
+     "grade": 2,
+     "values": [
+      "Full Virtual",
+      "Virtual with face to face options"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v43",
+   "kind": "value",
+   "q": "special education school",
+   "judge": [
+    {
+     "card": "nces-public-schools",
+     "grade": 1
+    },
+    {
+     "card": "nces-public-schools",
+     "field": "school type",
+     "grade": 2,
+     "values": [
+      "Special Education School"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v44",
+   "kind": "value",
+   "q": "vocational technical school",
+   "judge": [
+    {
+     "card": "nces-public-schools",
+     "grade": 1
+    },
+    {
+     "card": "nces-public-schools",
+     "field": "school type",
+     "grade": 2,
+     "values": [
+      "Career and Technical School"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v45",
+   "kind": "value",
+   "q": "alternative school",
+   "judge": [
+    {
+     "card": "nces-public-schools",
+     "grade": 1
+    },
+    {
+     "card": "nces-public-schools",
+     "field": "school type",
+     "grade": 2,
+     "values": [
+      "Alternative Education School"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v46",
+   "kind": "value",
+   "q": "rural schools",
+   "judge": [
+    {
+     "card": "nces-public-schools",
+     "grade": 1
+    },
+    {
+     "card": "nces-public-schools",
+     "field": "locale",
+     "grade": 2,
+     "prefixes": [
+      "41-",
+      "42-",
+      "43-"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v47",
+   "kind": "value",
+   "q": "newly opened schools",
+   "judge": [
+    {
+     "card": "nces-public-schools",
+     "grade": 1
+    },
+    {
+     "card": "nces-public-schools",
+     "field": "school status",
+     "grade": 2,
+     "values": [
+      "New"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v48",
+   "kind": "value",
+   "q": "schools in New Mexico",
+   "judge": [
+    {
+     "card": "nces-public-schools",
+     "grade": 1
+    },
+    {
+     "card": "nces-public-schools",
+     "field": "state",
+     "grade": 2,
+     "values": [
+      "NM"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "n01",
+   "kind": "control",
+   "q": "airports",
+   "judge": []
+  },
+  {
+   "id": "n02",
+   "kind": "control",
+   "q": "earthquake faults",
+   "judge": []
+  },
+  {
+   "id": "n03",
+   "kind": "control",
+   "q": "wildfire perimeters",
+   "judge": []
+  },
+  {
+   "id": "n04",
+   "kind": "control",
+   "q": "power plants",
+   "judge": []
+  },
+  {
+   "id": "n06",
+   "kind": "control",
+   "q": "shipwrecks",
+   "judge": []
+  },
+  {
+   "id": "n08",
+   "kind": "control",
+   "q": "salmon critical habitat",
+   "judge": []
+  },
+  {
+   "id": "n09",
+   "kind": "control",
+   "q": "railroad lines",
+   "judge": []
+  },
+  {
+   "id": "n10",
+   "kind": "control",
+   "q": "oil pipelines",
+   "judge": []
+  },
+  {
+   "id": "n11",
+   "kind": "control",
+   "q": "weather radar",
+   "judge": []
+  },
+  {
+   "id": "n12",
+   "kind": "control",
+   "q": "satellite imagery",
+   "judge": []
+  },
+  {
+   "id": "n13",
+   "kind": "control",
+   "q": "volcanoes",
+   "judge": []
+  },
+  {
+   "id": "n14",
+   "kind": "control",
+   "q": "cell phone towers",
+   "judge": []
+  },
+  {
+   "id": "n15",
+   "kind": "control",
+   "q": "wind turbines",
+   "judge": []
+  },
+  {
+   "id": "n16",
+   "kind": "control",
+   "q": "bus stops",
+   "judge": []
+  },
+  {
+   "id": "n17",
+   "kind": "control",
+   "q": "ski resorts",
+   "judge": []
+  },
+  {
+   "id": "n18",
+   "kind": "control",
+   "q": "coral reefs",
+   "judge": []
+  },
+  {
+   "id": "n19",
+   "kind": "control",
+   "q": "fire stations",
+   "judge": []
+  },
+  {
+   "id": "n20",
+   "kind": "control",
+   "q": "police stations",
+   "judge": []
+  },
+  {
+   "id": "n21",
+   "kind": "control",
+   "q": "public libraries",
+   "judge": []
+  },
+  {
+   "id": "n22",
+   "kind": "control",
+   "q": "colleges and universities",
+   "judge": []
+  },
+  {
+   "id": "n23",
+   "kind": "control",
+   "q": "pharmacies",
+   "judge": []
+  },
+  {
+   "id": "n24",
+   "kind": "control",
+   "q": "prisons",
+   "judge": []
+  },
+  {
+   "id": "n25",
+   "kind": "control",
+   "q": "post offices",
+   "judge": []
+  },
+  {
+   "id": "n26",
+   "kind": "control",
+   "q": "tornado tracks",
+   "judge": []
+  },
+  {
+   "id": "n27",
+   "kind": "control",
+   "q": "traffic cameras",
+   "judge": []
+  },
+  {
+   "id": "n28",
+   "kind": "control",
+   "q": "emergency shelters",
+   "judge": []
+  },
+  {
+   "id": "c22",
+   "kind": "collection",
+   "q": "Indian reservations",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 2
+    },
+    {
+     "card": "padus-units",
+     "field": "designation",
+     "grade": 2,
+     "values": [
+      "Native American Land Area"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c23",
+   "kind": "collection",
+   "q": "tribal trust land",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 2
+    },
+    {
+     "card": "padus-units",
+     "field": "designation",
+     "grade": 2,
+     "values": [
+      "Native American Land Area"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c24",
+   "kind": "collection",
+   "q": "Native American lands",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 2
+    },
+    {
+     "card": "padus-units",
+     "field": "designation",
+     "grade": 2,
+     "values": [
+      "Native American Land Area"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c25",
+   "kind": "collection",
+   "q": "wildfire risk to communities",
+   "judge": [
+    {
+     "card": "wrc-communities",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "c26",
+   "kind": "collection",
+   "q": "towns ranked for wildfire risk",
+   "judge": [
+    {
+     "card": "wrc-communities",
+     "grade": 2
+    }
+   ]
+  },
+  {
+   "id": "v49",
+   "kind": "value",
+   "q": "Navajo Nation",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 1
+    },
+    {
+     "card": "bia-lar",
+     "field": "BIA land area",
+     "grade": 2,
+     "values": [
+      "Navajo",
+      "Navajo (Alamo)",
+      "Navajo (Ramah)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v50",
+   "kind": "value",
+   "q": "Hopi reservation",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 1
+    },
+    {
+     "card": "bia-lar",
+     "field": "BIA land area",
+     "grade": 2,
+     "values": [
+      "Hopi"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v51",
+   "kind": "value",
+   "q": "Pine Ridge reservation",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 1
+    },
+    {
+     "card": "bia-lar",
+     "field": "BIA land area",
+     "grade": 2,
+     "values": [
+      "Pine Ridge"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v52",
+   "kind": "value",
+   "q": "Apache reservations",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 1
+    },
+    {
+     "card": "bia-lar",
+     "field": "BIA land area",
+     "grade": 2,
+     "values": [
+      "Fort Apache",
+      "Jicarilla Apache",
+      "Mescalero Apache",
+      "Tonto Apache",
+      "San Carlos"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v53",
+   "kind": "value",
+   "q": "Potawatomi land",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 1
+    },
+    {
+     "card": "bia-lar",
+     "field": "BIA land area",
+     "grade": 2,
+     "values": [
+      "Forest County Potawatomi",
+      "Huron Potawatomi",
+      "Pokagon of Potawatomi",
+      "Potawatomi (Kansas)"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v54",
+   "kind": "value",
+   "q": "Seminole reservations in Florida",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 1
+    },
+    {
+     "card": "bia-lar",
+     "field": "BIA land area",
+     "grade": 2,
+     "values": [
+      "Big Cypress",
+      "Brighton",
+      "Hollywood (Dania)",
+      "Immokalee",
+      "Fort Pierce",
+      "Tampa"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v55",
+   "kind": "value",
+   "q": "pueblos in New Mexico",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 1
+    },
+    {
+     "card": "bia-lar",
+     "field": "BIA land area",
+     "grade": 2,
+     "values": [
+      "Acoma",
+      "Acoma (Red Lake)",
+      "Cochiti",
+      "Isleta",
+      "Jemez",
+      "Laguna",
+      "Nambe",
+      "Picuris",
+      "Pojoaque",
+      "San Felipe",
+      "San Ildefonso",
+      "San Juan",
+      "Sandia",
+      "Santa Ana",
+      "Santa Clara",
+      "Santo Domingo",
+      "Taos",
+      "Tesuque",
+      "Zia",
+      "Zuni"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v56",
+   "kind": "value",
+   "q": "Ute tribal land",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 1
+    },
+    {
+     "card": "bia-lar",
+     "field": "BIA land area",
+     "grade": 2,
+     "values": [
+      "Southern Ute",
+      "Ute Mountain Ute",
+      "Uintah and Ouray"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v57",
+   "kind": "value",
+   "q": "Mohawk territory",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 1
+    },
+    {
+     "card": "bia-lar",
+     "field": "BIA land area",
+     "grade": 2,
+     "values": [
+      "St. Regis Mohawk"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v58",
+   "kind": "value",
+   "q": "Choctaw land",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 1
+    },
+    {
+     "card": "bia-lar",
+     "field": "BIA land area",
+     "grade": 2,
+     "values": [
+      "Choctaw",
+      "Jena of the Choctaw"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v59",
+   "kind": "value",
+   "q": "Paiute reservations",
+   "judge": [
+    {
+     "card": "bia-lar",
+     "grade": 1
+    },
+    {
+     "card": "bia-lar",
+     "field": "BIA land area",
+     "grade": 2,
+     "values": [
+      "Benton Paiute",
+      "Burns Paiute"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v60",
+   "kind": "value",
+   "q": "California communities ranked for wildfire risk",
+   "judge": [
+    {
+     "card": "wrc-communities",
+     "grade": 1
+    },
+    {
+     "card": "wrc-communities",
+     "field": "state",
+     "grade": 2,
+     "values": [
+      "CA"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v61",
+   "kind": "value",
+   "q": "Colorado towns wildfire risk",
+   "judge": [
+    {
+     "card": "wrc-communities",
+     "grade": 1
+    },
+    {
+     "card": "wrc-communities",
+     "field": "state",
+     "grade": 2,
+     "values": [
+      "CO"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v62",
+   "kind": "value",
+   "q": "places not ranked for wildfire because no one lives there",
+   "judge": [
+    {
+     "card": "wrc-communities",
+     "grade": 1
+    },
+    {
+     "card": "wrc-communities",
+     "field": "not ranked by USFS because",
+     "grade": 2,
+     "prefixes": [
+      "no people"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "v63",
+   "kind": "value",
+   "q": "wildfire risk for New Mexico communities",
+   "judge": [
+    {
+     "card": "wrc-communities",
+     "grade": 1
+    },
+    {
+     "card": "wrc-communities",
+     "field": "state",
+     "grade": 2,
+     "values": [
+      "NM"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "n29",
+   "kind": "control",
+   "q": "tribal casinos",
+   "judge": []
+  },
+  {
+   "id": "n30",
+   "kind": "control",
+   "q": "Alaska Native corporation lands",
+   "judge": []
+  },
+  {
+   "id": "n31",
+   "kind": "control",
+   "q": "Oklahoma tribal jurisdictional areas",
+   "judge": []
+  },
+  {
+   "id": "n32",
+   "kind": "control",
+   "q": "Census tribal statistical areas",
+   "judge": []
+  },
+  {
+   "id": "n33",
+   "kind": "control",
+   "q": "treaty ceded territories",
+   "judge": []
+  },
+  {
+   "id": "n34",
+   "kind": "control",
+   "q": "Indian Health Service clinics",
+   "judge": []
+  },
+  {
+   "id": "n35",
+   "kind": "control",
+   "q": "prescribed burns",
+   "judge": []
+  },
+  {
+   "id": "n36",
+   "kind": "control",
+   "q": "active fire hotspots",
+   "judge": []
+  },
+  {
+   "id": "n37",
+   "kind": "control",
+   "q": "red flag fire weather warnings",
+   "judge": []
+  },
+  {
+   "id": "n38",
+   "kind": "control",
+   "q": "evacuation zones",
+   "judge": []
+  },
+  {
+   "id": "n39",
+   "kind": "control",
+   "q": "smoke plumes",
+   "judge": []
+  }
+ ]
+}

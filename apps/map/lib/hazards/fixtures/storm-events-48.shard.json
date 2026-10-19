@@ -1,0 +1,1 @@
+{"note":"DERIVED: lib/hazards/stormBake.ts's output (the Texas shard) on se-2025.slice.csv and se-2025-as.slice.csv, not an upstream file. Type indexes point into `types`.","types":["Flash Flood","Flood","Funnel Cloud","Hail","Lightning","Thunderstorm Wind"],"shard":{"state":"48","counties":{"48453":{"2025":{"0":7,"3":15,"5":6}}}}}

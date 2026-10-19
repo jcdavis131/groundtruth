@@ -1,0 +1,22 @@
+{
+ "Table": [
+  [
+   "cokey",
+   "compname",
+   "comppct_r",
+   "majcompflag",
+   "mrulename",
+   "interphr",
+   "interphrc"
+  ],
+  [
+   "26763414",
+   "Water",
+   "100",
+   "Yes",
+   "NCCPI - National Commodity Crop Productivity Index (Ver 3.0)",
+   null,
+   "Not rated"
+  ]
+ ]
+}

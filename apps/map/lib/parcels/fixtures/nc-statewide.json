@@ -1,0 +1,76 @@
+{
+ "adapter": "nc-statewide",
+ "capturedAt": "2026-09-26T15:37:42.515Z",
+ "point": [
+  -78.6391,
+  35.7804
+ ],
+ "county": {
+  "geoid": "37183",
+  "name": "Wake County",
+  "basename": "Wake",
+  "state": "37"
+ },
+ "rows": [
+  {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -78.638183,
+       35.781094
+      ],
+      [
+       -78.639932,
+       35.781154
+      ],
+      [
+       -78.640005,
+       35.779725
+      ],
+      [
+       -78.638257,
+       35.779665
+      ],
+      [
+       -78.638183,
+       35.781094
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "parno": "1703790137",
+    "altparno": "0179249",
+    "ownname": "NORTH CAROLINA STATE OF THE",
+    "ownname2": "",
+    "owntype": "",
+    "mailadd": "STATE PROPERTY OFFICE",
+    "munit": "",
+    "mcity": "116 W JONES ST",
+    "mstate": "",
+    "mzip": "",
+    "siteadd": "1 E EDENTON ST",
+    "sunit": "",
+    "scity": "RALEIGH",
+    "szip": "",
+    "landval": 103135770,
+    "improvval": 4994078,
+    "parval": 108129848,
+    "parvaltype": "Assessed",
+    "saledate": 978325200000,
+    "legdecfull": "CAPITOL SQUARE",
+    "parusecode": "XMT",
+    "parusedesc": "E",
+    "structyear": 1840,
+    "gisacres": 6.20321031,
+    "recareano": 6.19000006,
+    "sourceref": "Deed Book/Page 000000/00000",
+    "cntyname": "Wake",
+    "sourceagnt": "Wake County Assessor",
+    "revdatetx": ""
+   }
+  }
+ ]
+}

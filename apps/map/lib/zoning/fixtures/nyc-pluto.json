@@ -1,0 +1,12 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "BBL": 1008350041
+   }
+  }
+ ]
+}

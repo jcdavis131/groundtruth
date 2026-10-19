@@ -1,0 +1,13 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "SDLBL": "MiD",
+    "SDNAME": "Special Midtown District"
+   }
+  }
+ ]
+}
