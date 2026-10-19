@@ -3,7 +3,9 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { errorResult, toCallResult, createServer } from "./server";
 import { toolByName, type FetchJson, type JsonObject, type ToolReply } from "./tools";
-import { WORLD_MAX_BYTES, worldContext, type WorldItem, type WorldSection } from "./world";
+import { readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { MISSING_NAMES, ringsTouchBox, WORLD_MAX_BYTES, worldContext, type WorldItem, type WorldSection } from "./world";
 
 // Fixtures trimmed from real replies of www.arxiviq.com on 2026-10-18 (shapes only; values shortened).
 
@@ -93,10 +95,23 @@ const NRI = {
   provenance: [prov("fema-nri", "Federal Emergency Management Agency", "https://services.arcgis.com/x/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0")],
 };
 
-const NRI_BOX = {
-  bbox: [-107, 35, -105, 36],
-  data: { level: "county", rows: [{ STCOFIPS: "35049", COUNTY: "Santa Fe", STATEABBRV: "NM" }, { STCOFIPS: "35001", COUNTY: "Bernalillo", STATEABBRV: "NM" }] },
-  provenance: [prov("fema-nri", "Federal Emergency Management Agency", "https://services.arcgis.com/x/nri")],
+// /api/fabric?op=field&kind=county: TIGERweb outlines for a padded box. Shapes are squares here.
+const sq = (w: number, s: number, e: number, n: number) => [[[w, s], [e, s], [e, n], [w, n], [w, s]]];
+const unit = (code: string, name: string, rings: unknown) => ({ id: `county:${code}`, kind: "county", name, code, rings });
+const FIELD = {
+  data: {
+    kind: "county",
+    bbox: [-97.85, 30.15, -97.55, 30.4],
+    units: [
+      unit("48491", "Williamson County, TX", sq(-97.9, 30.35, -97.5, 30.9)),
+      unit("48209", "Hays County, TX", sq(-98.2, 29.8, -97.75, 30.2)),
+      unit("48021", "Bastrop County, TX", sq(-97.55, 30.0, -97.0, 30.5)),
+      // Travis wholly contains the box: no edge crosses it, so only the inside test finds it.
+      unit("48453", "Travis County, TX", sq(-98.2, 30.0, -97.4, 30.6)),
+    ],
+    truncated: false,
+  },
+  provenance: [prov("census-tigerweb", "U.S. Census Bureau")],
 };
 
 const decl = (n: number, title = "SEVERE STORMS") => ({ disasterNumber: 4000 + n, declarationType: "DR", declarationDate: `2024-0${(n % 9) + 1}-01`, incidentType: "Severe Storm", declarationTitle: title, designatedArea: "Travis (County)" });
@@ -186,7 +201,7 @@ const BASE: Array<[string, Answer]> = [
   ["/api/screen?kind=county", screenRow()],
   ["/api/screen?kind=state", STATE_ROW],
   ["/api/hazards?op=nri&fips", NRI],
-  ["/api/hazards?op=nri&bbox", NRI_BOX],
+  ["/api/fabric?op=field", FIELD],
   ["/api/hazards?op=history", HISTORY],
   ["/api/live", LIVE],
   ["/api/civic?op=svi", SVI],
@@ -292,12 +307,14 @@ describe("world_context: shape", () => {
     expect(hz.find((m) => m.what.startsWith("live events"))!.reason).toMatch(/^not asked for a state/);
   });
 
-  it("a box lists the counties FEMA's index returns for it and keeps only records inside it", async () => {
+  it("a box lists the counties whose outlines touch it and keeps only records inside it", async () => {
     const { f, reply } = run({ bbox: [-97.8, 30.2, -97.6, 30.35], topics: ["institutions"] });
     const r = await reply;
-    expect(f.calls).toContain("/api/hazards?op=nri&bbox=-97.8,30.2,-97.6,30.35");
+    expect(f.calls).toContain("/api/fabric?op=field&kind=county&bbox=-97.8,30.2,-97.6,30.35");
+    expect(f.calls.some((c) => c.startsWith("/api/hazards?op=nri&bbox"))).toBe(false);
     expect(f.calls).toContain("/api/companies?op=near&bbox=-97.8,30.2,-97.6,30.35");
-    expect(topicsOf(r).identity.items.filter((i) => i.fact === "county touching the box").map((i) => i.code)).toEqual(["35049", "35001"]);
+    // Only outlines that touch the box; the county under its centre first; Bastrop (in the padded tile only) dropped.
+    expect(topicsOf(r).identity.items.filter((i) => i.fact === "county touching the box").map((i) => i.code)).toEqual(["48453", "48491", "48209"]);
     const inst = topicsOf(r).institutions.items;
     expect(inst.filter((i) => i.fact === "hospital").map((i) => i.value)).toEqual(["DELL SETON MEDICAL CENTER"]);
     expect(inst.find((i) => i.fact === "hospital")!.note).toBe("general acute care; open; CMS overall star rating 4; inside the box");
@@ -342,7 +359,7 @@ describe("world_context: every claim resolves", () => {
   it("an item whose route sent no provenance is listed as missing, not shown uncited", async () => {
     const r = await run({ lon: -97.74, lat: 30.27, topics: ["fabric"] }, { "/api/fabric?op=stack": { ...STACK, provenance: [] } }).reply;
     expect(allItems(r)).toEqual([]);
-    expect(topicsOf(r).identity.missing!.map((m) => m.reason)).toContain("the route sent no provenance for it, so it is left out");
+    expect(topicsOf(r).identity.missing!.map((m) => m.reason)).toContain("census-tigerweb: the route sent no provenance for it, so nothing from it is shown");
   });
 });
 
@@ -522,6 +539,221 @@ describe("world_context: auth refusal", () => {
       expect(toCallResult(r).structuredContent).toMatchObject({ retryable: false, category: "invalid_input" });
       expect(toCallResult(r).structuredContent).not.toMatchObject({ code: "upstream_failure" });
     }
+  });
+});
+
+// ---- the invariant over recorded replies ---------------------------------------
+//
+// Both earlier review failures were one class of bug: a source that is missing turned into a
+// value, or borrowed another source's citation. These replies were recorded from
+// www.arxiviq.com on 2026-10-18 and trimmed to the fields the tool reads.
+
+interface Recorded {
+  input: JsonObject;
+  routes: Record<string, { status: number; body: JsonObject }>;
+}
+
+const FIXTURE_DIR = path.join(__dirname, "__fixtures__", "world");
+const recorded: Array<[string, Recorded]> = readdirSync(FIXTURE_DIR)
+  .filter((f) => f.endsWith(".json"))
+  .sort()
+  .map((f) => [f.replace(/\.json$/, ""), JSON.parse(readFileSync(path.join(FIXTURE_DIR, f), "utf8")) as Recorded]);
+
+function replay(rec: Recorded): FetchJson {
+  return async (p) => {
+    const r = rec.routes[p];
+    if (!r) return { status: 500, body: { error: `not recorded: ${p}` }, url: "http://t" + p };
+    return { status: r.status, body: structuredClone(r.body), url: "http://t" + p };
+  };
+}
+
+const runRecorded = (rec: Recorded) => worldContext(toolByName("world_context")!.inputSchema.parse(rec.input) as never, { fetchJson: replay(rec) });
+
+/** Source ids a route reply names as missing or failed (its own lists), by id. */
+function namedMissing(body: JsonObject): Set<string> {
+  const d = (body.data ?? {}) as JsonObject;
+  const out = new Set<string>();
+  for (const m of [...((d.missing as unknown[]) ?? []), ...((d.failed as unknown[]) ?? [])] as JsonObject[]) {
+    const n = String(m.source ?? m.id ?? "");
+    out.add(MISSING_NAMES[n] ?? n);
+  }
+  return out;
+}
+
+/** Source ids a route reply cites: its provenance, or for the release calendar, the sources it schedules. */
+function citedBy(p: string, body: JsonObject): Set<string> {
+  if (p.startsWith("/api/releases")) return new Set((((body.data as JsonObject)?.releases as JsonObject[]) ?? []).map((x) => String(x.sourceId)));
+  return new Set(((body.provenance as JsonObject[]) ?? []).map((x) => String((x.source as JsonObject)?.id)));
+}
+
+const routeOf = (link: string) => link.replace(/^http:\/\/t/, "");
+
+/**
+ * Which source each fact is about, written here independently of world.ts. An item cited to
+ * any other source has borrowed a citation (the FEMA-to-USDM and Zillow-to-TIGERweb bugs);
+ * a fact not in this table fails until someone says where it comes from.
+ */
+const FACT_SOURCE: Array<[RegExp, string | null]> = [
+  [/^(county|state|metro or micro area \(CBSA\)|city or town|census tract|ZIP code area \(ZCTA\)|county touching the box|school district|congressional district|tribal land)$/, "census-tigerweb"],
+  [/^(time zone|NWS forecast office|NWS alert)$|^Severe or Extreme NWS alerts/, "nws-api"],
+  [/^HUC-12 watershed$/, "usgs-wbd"],
+  [/^(FEMA flood zone|NFIP community)$/, "fema-nfhl"],
+  [/^EPA level III ecoregion$/, "epa-ecoregions"],
+  [/^elevation$/, "usgs-epqs"],
+  [/^FEMA NRI|^NRI hazards|^population \(as carried in FEMA's NRI row\)$/, "fema-nri"],
+  [/^FEMA declaration/, "fema-openfema"],
+  [/^U\.S\. Drought Monitor/, "usdm"],
+  [/^earthquake$|^M4\.5\+ earthquakes/, "usgs-earthquakes"],
+  [/\(BLS QCEW/, "bls-qcew"],
+  [/\(Zillow ZHVI\)$/, "zillow-zhvi"],
+  [/\(Zillow ZORI\)$/, "zillow-zori"],
+  [/^CDC\/ATSDR SVI/, "cdc-svi"],
+  [/^hospitals? /, "hifld-hospitals"],
+  [/^hospital$/, "hifld-hospitals"],
+  [/^dams? /, "usace-nid"],
+  [/^dam$/, "usace-nid"],
+  [/^public compan/, "sec-edgar"],
+  [/^collection$/, "eye-catalog"],
+  [/^next scheduled release$/, null], // the release's own source, checked against the calendar
+];
+
+function checkInvariant(label: string, rec: Recorded, r: ToolReply): void {
+  for (const it of allItems(r)) {
+    const where = `${label}: ${it.fact} (${it.sourceId})`;
+    // (0) the fact is cited to the source it is about, never a neighbour's
+    const rule = FACT_SOURCE.find(([re]) => re.test(it.fact));
+    expect(rule, `${where}: a fact the invariant knows`).toBeDefined();
+    if (rule![1]) expect(it.sourceId, where).toBe(rule![1]);
+    const route = rec.routes[routeOf(it.link)];
+    expect(route, `${where}: link ${it.link} is a route the tool called`).toBeDefined();
+    // (1) the source is cited by the route the item links to
+    expect(citedBy(routeOf(it.link), route.body).has(it.sourceId), `${where}: cited by ${it.link}`).toBe(true);
+    // (2) that route does not list the source as missing or failed
+    expect(namedMissing(route.body).has(it.sourceId), `${where}: listed missing by ${it.link}`).toBe(false);
+    // (3) a 0 or an empty value only with that source's own provenance present
+    if (it.value === 0 || it.value === "" || (Array.isArray(it.value) && !(it.value as unknown[]).length)) {
+      expect(citedBy(routeOf(it.link), route.body).has(it.sourceId), `${where}: a zero with no provenance`).toBe(true);
+    }
+  }
+}
+
+describe("world_context: invariant over recorded live replies", () => {
+  it("has the recorded places", () => {
+    expect(recorded.map(([k]) => k)).toEqual(["ct_09110", "mobile_01097", "nola_smallbox", "ocean_atlantic", "petroleum_30069", "pr_72127"]);
+  });
+
+  for (const [label, rec] of recorded) {
+    it(`${label}: every item is cited by the route it links to, which does not list it missing`, async () => {
+      const r = await runRecorded(rec);
+      expect(allItems(r).length).toBeGreaterThan(0);
+      checkInvariant(label, rec, r);
+      expect(new TextEncoder().encode(JSON.stringify(toCallResult(r).structuredContent)).length).toBeLessThanOrEqual(WORLD_MAX_BYTES);
+    });
+
+    it(`${label}: drop each cited source from its route (provenance gone, named missing) and it becomes a missing entry, never a value`, async () => {
+      const base = await runRecorded(rec);
+      const pairs = new Map<string, Set<string>>();
+      for (const it of allItems(base)) {
+        const p = routeOf(it.link);
+        if (p.startsWith("/api/releases")) continue; // the calendar cites no provenance of its own
+        (pairs.get(p) ?? pairs.set(p, new Set()).get(p)!).add(it.sourceId);
+      }
+      expect(pairs.size).toBeGreaterThan(0);
+      for (const [p, ids] of pairs) {
+        for (const id of ids) {
+          const body = structuredClone(rec.routes[p].body);
+          body.provenance = ((body.provenance as JsonObject[]) ?? []).filter((x) => (x.source as JsonObject)?.id !== id);
+          const data = (body.data ??= {}) as JsonObject;
+          data.missing = [...((data.missing as unknown[]) ?? []), { source: id, reason: "source:failed" }];
+          const mutated: Recorded = { ...rec, routes: { ...rec.routes, [p]: { ...rec.routes[p], body } } };
+          const r = await runRecorded(mutated);
+          const where = `${label}: ${id} dropped from ${p}`;
+          expect(allItems(r).filter((i) => routeOf(i.link) === p && i.sourceId === id), where).toEqual([]);
+          const missing = Object.values(topicsOf(r)).flatMap((s) => s.missing ?? []);
+          expect(missing.some((m) => m.reason.includes(id)), `${where}: a missing entry names it`).toBe(true);
+          checkInvariant(where, mutated, r);
+        }
+      }
+    });
+  }
+
+  it("CT 09110: no FEMA declaration count, and the reason in plain words", async () => {
+    const rec = recorded.find(([k]) => k === "ct_09110")![1];
+    const r = await runRecorded(rec);
+    expect(facts(r, "hazards").some((f) => /FEMA declaration/.test(f))).toBe(false);
+    expect(topicsOf(r).hazards.missing).toContainEqual({ what: "FEMA declarations", reason: expect.stringMatching(/FEMA lists Connecticut under its 8 legacy counties \(09001-09015\), not the planning regions \(09110-09190\).*\(join:legacy_ct_counties\)/) });
+    expect(JSON.stringify(topicsOf(r).hazards.missing)).not.toMatch(/"reason":"join:/);
+  });
+
+  it("PR 72127: FEMA's non-rating words are missing entries, and CAG's reason is in plain words", async () => {
+    const rec = recorded.find(([k]) => k === "pr_72127")![1];
+    const r = await runRecorded(rec);
+    expect(JSON.stringify(allItems(r))).not.toMatch(/Insufficient Data|Data Unavailable/);
+    expect(topicsOf(r).hazards.missing).toContainEqual({ what: "FEMA NRI overall risk rating", reason: expect.stringMatching(/"Insufficient Data" here, which is not a rating/) });
+    expect(topicsOf(r).vulnerability.missing).toContainEqual({ what: "FEMA NRI social vulnerability", reason: expect.stringMatching(/"Data Unavailable"/) });
+    expect(topicsOf(r).hazards.missing).toContainEqual({ what: "NOAA Climate at a Glance (tavg)", reason: "NOAA Climate at a Glance (tavg) does not publish Puerto Rico (source:not_published_for_puerto_rico)" });
+  });
+
+  it("NOLA small box: only the parishes whose outlines touch it, Orleans first", async () => {
+    const rec = recorded.find(([k]) => k === "nola_smallbox")![1];
+    const r = await runRecorded(rec);
+    const touching = topicsOf(r).identity.items.filter((i) => i.fact === "county touching the box").map((i) => i.code);
+    expect(touching[0]).toBe("22071");
+    expect(touching).not.toContain("22007"); // Assumption: in FEMA's 1-degree tile, not near the box
+    expect(touching).not.toContain("22057"); // Lafourche
+  });
+});
+
+describe("world_context: citations never borrow", () => {
+  it("an item asks its own source id; with that id absent it is missing, never cited to the route's first source", async () => {
+    // The CT shape: declarations empty, FEMA named missing, only USDM provenance present.
+    const ct = { ...HISTORY, data: { ...HISTORY.data, declarations: [], missing: [{ source: "FEMA", reason: "join:legacy_ct_counties" }] }, provenance: HISTORY.provenance.filter((p) => p.source.id === "usdm") };
+    const r = await run({ fips: "48453", topics: ["hazards"] }, { "/api/hazards?op=history": ct }).reply;
+    expect(allItems(r).filter((i) => /FEMA declaration/.test(i.fact))).toEqual([]);
+    expect(allItems(r).every((i) => i.sourceId !== "usdm" || i.fact.startsWith("U.S. Drought Monitor"))).toBe(true);
+    expect(topicsOf(r).hazards.missing).toContainEqual({ what: "FEMA declarations", reason: expect.stringMatching(/^fema-openfema: the route lists it as missing: FEMA lists Connecticut/) });
+    // Only provenance absent (FEMA not named missing): still missing, never a 0.
+    const bare = { ...HISTORY, data: { ...HISTORY.data, declarations: [] }, provenance: HISTORY.provenance.filter((p) => p.source.id === "usdm") };
+    const r2 = await run({ fips: "48453", topics: ["hazards"] }, { "/api/hazards?op=history": bare }).reply;
+    expect(allItems(r2).some((i) => i.value === 0 && /FEMA/.test(i.fact))).toBe(false);
+    expect(topicsOf(r2).hazards.missing).toContainEqual({ what: "FEMA declarations", reason: "fema-openfema: the route sent no provenance for it, so nothing from it is shown" });
+  });
+
+  it("a legacy Connecticut county FIPS points to the planning regions", async () => {
+    const r = await run({ fips: "09003" }, { "/api/screen?kind=county": { data: { rows: [], total: 0 }, provenance: [] } }).reply;
+    expect(r.status).toBe(404);
+    expect(String(r.payload.error)).toMatch(/legacy counties \(09001-09015\).*planning regions \(09110-09190\)/);
+  });
+
+  it("the live counts cite their own feeds, say the county box is not the whole county, and honour unmapped", async () => {
+    const quake = { kind: "quake", title: "M 5.0", lon: -97.7, lat: 30.3, time: 1792371480000, url: "https://earthquake.usgs.gov/x" };
+    const live = { ...LIVE, data: { ...LIVE.data, items: [...LIVE.data.items, quake] } };
+    const r = await run({ fips: "48453", topics: ["hazards"] }, { "/api/live": live }).reply;
+    const hz = topicsOf(r).hazards.items;
+    expect(hz.find((i) => i.fact.startsWith("Severe or Extreme NWS alerts"))).toMatchObject({ value: 1, sourceId: "nws-api", note: expect.stringMatching(/0.25 degrees around the county's representative point .*not the whole county/) });
+    expect(hz.find((i) => i.fact.startsWith("M4.5+ earthquakes"))).toMatchObject({ value: 1, sourceId: "usgs-earthquakes" });
+    const r2 = await run({ lon: -97.74, lat: 30.27, topics: ["hazards"] }, { "/api/live": { ...LIVE, data: { ...LIVE.data, unmapped: 2 } } }).reply;
+    expect(topicsOf(r2).hazards.items.some((i) => i.fact.startsWith("Severe or Extreme NWS alerts"))).toBe(false);
+    expect(topicsOf(r2).hazards.missing).toContainEqual({ what: "count of Severe or Extreme NWS alerts touching the box now", reason: expect.stringMatching(/^2 alerts in the national list could not be outlined/) });
+  });
+
+  it("an error reply stays under the cap with its envelope fields", async () => {
+    const long = "Y".repeat(400);
+    const down: Record<string, Answer> = Object.fromEntries(BASE.map(([k]) => [k, { status: 503, body: { error: long } }]));
+    const r = await run({ lon: -97.74, lat: 30.27, max_records: 10 }, down).reply;
+    const sc = toCallResult(r).structuredContent;
+    expect(sc).toMatchObject({ code: "upstream_failure" });
+    expect(new TextEncoder().encode(JSON.stringify(sc)).length).toBeLessThanOrEqual(WORLD_MAX_BYTES);
+  });
+});
+
+describe("world_context: ringsTouchBox", () => {
+  const box: [number, number, number, number] = [0, 0, 1, 1];
+  it("edge crossing, box inside, apart, and a nested multipolygon", () => {
+    expect(ringsTouchBox(sq(-1, 0.5, 0.5, 2), box)).toBe(true);
+    expect(ringsTouchBox(sq(-5, -5, 5, 5), box)).toBe(true);
+    expect(ringsTouchBox(sq(2, 2, 3, 3), box)).toBe(false);
+    expect(ringsTouchBox([sq(2, 2, 3, 3), sq(0.2, 0.2, 0.4, 0.4)], box)).toBe(true);
   });
 });
 

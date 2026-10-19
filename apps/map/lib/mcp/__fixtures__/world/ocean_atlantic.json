@@ -1,0 +1,274 @@
+{
+ "recorded": "2026-10-19T01:59:13.443Z",
+ "from": "https://www.arxiviq.com",
+ "input": {
+  "lon": -60,
+  "lat": 35
+ },
+ "routes": {
+  "/api/fabric?op=stack&lon=-60&lat=35": {
+   "status": 200,
+   "body": {
+    "data": {
+     "point": {},
+     "nodes": [],
+     "failed": [],
+     "answered": [
+      "wikipedia"
+     ],
+     "coverage": "Open ocean or outside every published boundary this layer reads."
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "wikipedia",
+       "publisher": "Wikimedia Foundation",
+       "url": "https://en.wikipedia.org/"
+      },
+      "retrievedAt": "2026-10-19T01:44:05.830Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:44:05.830Z"
+   }
+  },
+  "/api/infra?op=dams&bbox=-60.1,34.9,-59.9,35.1": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "usace-nid",
+       "publisher": "U.S. Army Corps of Engineers",
+       "url": "https://nid.sec.usace.army.mil/"
+      },
+      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+      "retrievedAt": "2026-10-19T01:44:05.993Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:44:05.993Z"
+   }
+  },
+  "/api/releases?op=calendar": {
+   "status": 200,
+   "body": {
+    "data": {
+     "from": "2026-10-19",
+     "to": "2026-11-18",
+     "releases": []
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "bts-border",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
+      "retrievedAt": "2026-10-19T01:36:48.227Z"
+     },
+     {
+      "source": {
+       "id": "usgs-water",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://api.waterdata.usgs.gov/"
+      },
+      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.freddiemac.com/pmms",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "bts-supply-chain",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/news/schedule",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:36:48.228Z"
+   }
+  },
+  "/api/infra?op=hospitals&bbox=-60.1,34.9,-59.9,35.1": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "hifld-hospitals",
+       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
+       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
+      "retrievedAt": "2026-10-19T01:44:06.259Z"
+     },
+     {
+      "source": {
+       "id": "cms-provider-data",
+       "publisher": "Centers for Medicare & Medicaid Services",
+       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+      },
+      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:44:06.259Z"
+   }
+  },
+  "/api/live": {
+   "status": 200,
+   "body": {
+    "data": {
+     "items": [],
+     "failed": [],
+     "unmapped": 0
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T01:59:12.433Z"
+     },
+     {
+      "source": {
+       "id": "usgs-earthquakes",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://earthquake.usgs.gov/"
+      },
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T01:59:12.433Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:59:12.433Z"
+   }
+  }
+ }
+}

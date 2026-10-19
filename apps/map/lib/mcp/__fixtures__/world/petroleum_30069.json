@@ -1,0 +1,1020 @@
+{
+ "recorded": "2026-10-19T01:59:13.348Z",
+ "from": "https://www.arxiviq.com",
+ "input": {
+  "fips": "30069"
+ },
+ "routes": {
+  "/api/screen?kind=county&q=geoid%20%3D%3D%20%2230069%22%20LIMIT%201": {
+   "status": 200,
+   "body": {
+    "data": {
+     "rows": [
+      {
+       "name": "Petroleum County, MT",
+       "geo": [
+        -108.2511781,
+        47.1177802
+       ],
+       "values": {
+        "name": "Petroleum County",
+        "geoid": "30069",
+        "state": "MT",
+        "jobs.emp": 113,
+        "jobs.avgWeeklyWage": 663,
+        "jobs.period": "2026 Q1",
+        "jobs.suppressed": "false",
+        "home.latest": 189963.51043135184,
+        "home.yoyPct": 2.7557057044219726,
+        "home.asOf": "2026-09-30",
+        "rent.latest": null
+       }
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     },
+     {
+      "source": {
+       "id": "bls-qcew",
+       "publisher": "U.S. Bureau of Labor Statistics",
+       "url": "https://www.bls.gov/cew/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     },
+     {
+      "source": {
+       "id": "bls-qcew",
+       "publisher": "U.S. Bureau of Labor Statistics",
+       "url": "https://www.bls.gov/cew/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:26.313Z"
+   }
+  },
+  "/api/civic?op=svi&level=place&fips=30069": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "rpl": [
+       0.0013,
+       0.0255,
+       0.0045,
+       0.0016,
+       0.043
+      ]
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "cdc-svi",
+       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
+       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
+      },
+      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
+      "retrievedAt": "2026-10-19T01:43:26.644Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:26.644Z"
+   }
+  },
+  "/api/fabric?op=stack&lon=-108.2512&lat=47.1178": {
+   "status": 200,
+   "body": {
+    "data": {
+     "point": {
+      "elevationM": 893.4
+     },
+     "nodes": [
+      {
+       "kind": "huc12",
+       "name": "Brush Creek",
+       "code": "100402040708",
+       "source": "usgs-wbd",
+       "facts": {
+        "drains to": "100402040710"
+       }
+      },
+      {
+       "kind": "zcta",
+       "name": "59087",
+       "code": "59087",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "tract",
+       "name": "Census Tract 1",
+       "code": "30069000100",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "school",
+       "name": "Winnett K-12 Schools",
+       "code": "3028470",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "unified"
+       }
+      },
+      {
+       "kind": "county",
+       "name": "Petroleum County, MT",
+       "code": "30069",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "nws-office",
+       "name": "NWS Glasgow, MT",
+       "code": "GGW",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "eco3",
+       "name": "Northwestern Great Plains",
+       "code": "43",
+       "source": "epa-ecoregions",
+       "facts": {}
+      },
+      {
+       "kind": "cd",
+       "name": "MT-02",
+       "code": "3002",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "state",
+       "name": "Montana",
+       "code": "30",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "timezone",
+       "name": "America/Denver",
+       "code": "America/Denver",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "country",
+       "name": "United States",
+       "code": "USA",
+       "source": "natural-earth",
+       "facts": {}
+      }
+     ],
+     "failed": [
+      {
+       "source": "fema-nfhl",
+       "error": "This operation was aborted"
+      }
+     ],
+     "answered": [
+      "natural-earth",
+      "census-tigerweb",
+      "federal-regions",
+      "usgs-wbd",
+      "epa-ecoregions",
+      "nws-api",
+      "usgs-epqs",
+      "wikipedia"
+     ],
+     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "natural-earth",
+       "publisher": "Natural Earth",
+       "url": "https://www.naturalearthdata.com/"
+      },
+      "retrievedAt": "2026-10-19T01:43:37.003Z"
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T01:43:37.003Z"
+     },
+     {
+      "source": {
+       "id": "federal-regions",
+       "publisher": "EPA, FEMA, Federal Reserve System",
+       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
+      },
+      "retrievedAt": "2026-10-19T01:43:37.003Z"
+     },
+     {
+      "source": {
+       "id": "usgs-wbd",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
+      },
+      "retrievedAt": "2026-10-19T01:43:37.003Z"
+     },
+     {
+      "source": {
+       "id": "epa-ecoregions",
+       "publisher": "U.S. Environmental Protection Agency",
+       "url": "https://www.epa.gov/eco-research/ecoregions"
+      },
+      "retrievedAt": "2026-10-19T01:43:37.003Z"
+     },
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "retrievedAt": "2026-10-19T01:43:37.003Z"
+     },
+     {
+      "source": {
+       "id": "usgs-epqs",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://apps.nationalmap.gov/epqs/"
+      },
+      "retrievedAt": "2026-10-19T01:43:37.003Z"
+     },
+     {
+      "source": {
+       "id": "wikipedia",
+       "publisher": "Wikimedia Foundation",
+       "url": "https://en.wikipedia.org/"
+      },
+      "retrievedAt": "2026-10-19T01:43:37.003Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:37.003Z"
+   }
+  },
+  "/api/releases?op=calendar": {
+   "status": 200,
+   "body": {
+    "data": {
+     "from": "2026-10-19",
+     "to": "2026-11-18",
+     "releases": [
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-22",
+        "latest": "2026-10-22",
+        "nominal": "2026-10-22"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-29",
+        "latest": "2026-10-29",
+        "nominal": "2026-10-29"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-05",
+        "latest": "2026-11-05",
+        "nominal": "2026-11-05"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-12",
+        "latest": "2026-11-12",
+        "nominal": "2026-11-12"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "zillow-zhvi",
+       "sourceId": "zillow-zhvi",
+       "title": "Zillow ZHVI typical home value (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-14",
+        "latest": "2026-11-21",
+        "nominal": "2026-11-14"
+       },
+       "scheduleUrl": "https://www.zillow.com/research/data/"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "bts-border",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
+      "retrievedAt": "2026-10-19T01:36:48.227Z"
+     },
+     {
+      "source": {
+       "id": "usgs-water",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://api.waterdata.usgs.gov/"
+      },
+      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.freddiemac.com/pmms",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "bts-supply-chain",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/news/schedule",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:36:48.228Z"
+   }
+  },
+  "/api/companies?op=county&fips=30069": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "pulled": null,
+    "provenance": [
+     {
+      "source": {
+       "id": "sec-edgar",
+       "publisher": "U.S. Securities and Exchange Commission",
+       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+      },
+      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
+     },
+     {
+      "source": {
+       "id": "census-zcta-county",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
+      }
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      }
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:26.543Z"
+   }
+  },
+  "/api/hazards?op=nri&fips=30069": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "STCOFIPS": "30069",
+      "POPULATION": 496,
+      "RISK_SCORE": 1.304071246819339,
+      "RISK_RATNG": "Very Low",
+      "EAL_VALT": 1647225.0975035988,
+      "EAL_RATNG": "Very Low",
+      "SOVI_SCORE": 27.38549618,
+      "SOVI_RATNG": "Relatively Low",
+      "NRI_VER": "December 2025",
+      "AVLN_RISKR": "Not Applicable",
+      "CFLD_RISKR": "Not Applicable",
+      "CWAV_RISKR": "Relatively Low",
+      "DRGT_RISKR": "Very Low",
+      "ERQK_RISKR": "Very Low",
+      "HAIL_RISKR": "Very Low",
+      "HWAV_RISKR": "Very Low",
+      "HRCN_RISKR": "Not Applicable",
+      "ISTM_RISKR": "Very Low",
+      "IFLD_RISKR": "Very Low",
+      "LNDS_RISKR": "Very Low",
+      "LTNG_RISKR": "Relatively Moderate",
+      "SWND_RISKR": "Very Low",
+      "TRND_RISKR": "Very Low",
+      "TSUN_RISKR": "Not Applicable",
+      "VLCN_RISKR": "Not Applicable",
+      "WFIR_RISKR": "Relatively Low",
+      "WNTW_RISKR": "Very Low"
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-nri",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://hazards.fema.gov/nri/"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
+      "retrievedAt": "2026-10-19T01:43:26.630Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:26.630Z"
+   }
+  },
+  "/api/hazards?op=history&fips=30069&years=10&declarations=3": {
+   "status": 200,
+   "body": {
+    "data": {
+     "declarations": [
+      {
+       "disasterNumber": 4801,
+       "declarationType": "DR",
+       "declarationDate": "2024-07-18",
+       "incidentType": "Severe Storm",
+       "declarationTitle": "SEVERE WINTER STORM AND FLOODING"
+      },
+      {
+       "disasterNumber": 4745,
+       "declarationType": "DR",
+       "declarationDate": "2023-10-11",
+       "incidentType": "Flood",
+       "declarationTitle": "FLOODING"
+      },
+      {
+       "disasterNumber": 4508,
+       "declarationType": "DR",
+       "declarationDate": "2020-03-31",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19 PANDEMIC"
+      }
+     ],
+     "droughtNow": {
+      "mapDate": "2026-10-13",
+      "validStart": "2026-10-13",
+      "validEnd": "2026-10-19",
+      "none": 98.51,
+      "d0": 1.49,
+      "d1": 0,
+      "d2": 0,
+      "d3": 0,
+      "d4": 0
+     },
+     "missing": []
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-openfema",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      },
+      "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'30'%20and%20fipsCountyCode%20eq%20'069'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
+      "retrievedAt": "2026-10-19T01:43:26.769Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=30069&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
+      "retrievedAt": "2026-10-19T01:43:27.183Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=30069&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
+      "retrievedAt": "2026-10-19T01:43:27.301Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/MT-069/tavg/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T01:43:26.821Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/MT-069/pcp/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T01:43:27.091Z"
+     },
+     {
+      "source": {
+       "id": "noaa-spc",
+       "publisher": "NOAA National Weather Service, Storm Prediction Center",
+       "url": "https://www.spc.noaa.gov/wcm/"
+      },
+      "upstreamUrl": "https://www.spc.noaa.gov/wcm/data/1950-2025_all_tornadoes.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "usgs-landslide-susc",
+       "publisher": "U.S. Geological Survey (Belair, Jones, Martinez, Mirus and Wood)",
+       "url": "https://doi.org/10.5066/P13KAGU3"
+      },
+      "upstreamUrl": "https://www.sciencebase.gov/catalog/file/get/65ccea5bd34ef4b119cb3bac?name=county_analysis.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "ncei-storm-events",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/stormevents/"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:27.303Z"
+   }
+  },
+  "/api/infra?op=dams&bbox=-108.5012,46.8678,-108.0012,47.3678": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -108.49421211355376,
+         47.33630702216559
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02598",
+        "name": "Dam MT02598",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1960,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.43921210327649,
+         47.34800702855289
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02589",
+        "name": "Dam MT02589",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1960,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.35361208410895,
+         47.35100703701062
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00162",
+        "name": "Dam MT00162",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1964,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.23821205177687,
+         47.32380704534353
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00140",
+        "name": "Dam MT00140",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1961,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.36118204306224,
+         47.14223701585227
+        ]
+       },
+       "properties": {
+        "id": "nid:MT03993",
+        "name": "Ostleer Dam",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "owner type": "Federal"
+        },
+        "extra": {
+         "embedText": "name: Ostleer Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.33901202840966,
+         47.095307013331855
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00138",
+        "name": "Dam MT00138",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1957,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.34581204044449,
+         47.146807017758015
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02720",
+        "name": "Dam MT02720",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1967,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.31071204242713,
+         47.196307025950745
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02722",
+        "name": "Dam MT02722",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1945,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.30023204317631,
+         47.211837028470356
+        ]
+       },
+       "properties": {
+        "id": "nid:MT03823",
+        "name": "Dam MT03823",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1989,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.19641196012776,
+         46.91980700937929
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00136",
+        "name": "Dam MT00136",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1958,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.08661193052208,
+         46.89870701757516
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02719",
+        "name": "Dam MT02719",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1960,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.15591198838328,
+         47.1067070317625
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02682",
+        "name": "Dam MT02682",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1949,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      }
+     ]
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "usace-nid",
+       "publisher": "U.S. Army Corps of Engineers",
+       "url": "https://nid.sec.usace.army.mil/"
+      },
+      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+      "retrievedAt": "2026-10-19T01:43:26.883Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:26.883Z"
+   }
+  },
+  "/api/live": {
+   "status": 200,
+   "body": {
+    "data": {
+     "items": [],
+     "failed": [],
+     "unmapped": 0
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T01:59:12.433Z"
+     },
+     {
+      "source": {
+       "id": "usgs-earthquakes",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://earthquake.usgs.gov/"
+      },
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T01:59:12.433Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:59:12.433Z"
+   }
+  },
+  "/api/infra?op=hospitals&bbox=-108.5012,46.8678,-108.0012,47.3678": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "hifld-hospitals",
+       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
+       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
+      "retrievedAt": "2026-10-19T01:43:27.554Z"
+     },
+     {
+      "source": {
+       "id": "cms-provider-data",
+       "publisher": "Centers for Medicare & Medicaid Services",
+       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+      },
+      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:27.555Z"
+   }
+  }
+ }
+}

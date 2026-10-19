@@ -1,0 +1,1254 @@
+{
+ "recorded": "2026-10-19T01:59:12.003Z",
+ "from": "https://www.arxiviq.com",
+ "input": {
+  "fips": "09110"
+ },
+ "routes": {
+  "/api/screen?kind=county&q=geoid%20%3D%3D%20%2209110%22%20LIMIT%201": {
+   "status": 200,
+   "body": {
+    "data": {
+     "rows": [
+      {
+       "name": "Capitol Planning Region, CT",
+       "geo": [
+        -72.5723612,
+        41.8188944
+       ],
+       "values": {
+        "name": "Capitol Planning Region",
+        "geoid": "09110",
+        "state": "CT",
+        "jobs.emp": 526794,
+        "jobs.avgWeeklyWage": 1874,
+        "jobs.period": "2026 Q1",
+        "jobs.suppressed": "false",
+        "home.latest": null,
+        "home.yoyPct": null,
+        "home.asOf": null,
+        "rent.latest": null
+       }
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     },
+     {
+      "source": {
+       "id": "bls-qcew",
+       "publisher": "U.S. Bureau of Labor Statistics",
+       "url": "https://www.bls.gov/cew/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     },
+     {
+      "source": {
+       "id": "bls-qcew",
+       "publisher": "U.S. Bureau of Labor Statistics",
+       "url": "https://www.bls.gov/cew/"
+      },
+      "retrievedAt": "2026-10-19T01:43:26.251Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:38.640Z"
+   }
+  },
+  "/api/fabric?op=stack&lon=-72.5724&lat=41.8189": {
+   "status": 200,
+   "body": {
+    "data": {
+     "point": {
+      "elevationM": 17.5
+     },
+     "nodes": [
+      {
+       "kind": "flood",
+       "name": "Flood zone X",
+       "code": "X",
+       "source": "fema-nfhl",
+       "facts": {
+        "special flood hazard area": "no",
+        "FIRM panel": "09003C0379F"
+       }
+      },
+      {
+       "kind": "tract",
+       "name": "Census Tract 4875",
+       "code": "09110487500",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc12",
+       "name": "Podunk River",
+       "code": "010802050501",
+       "source": "usgs-wbd",
+       "facts": {
+        "drains to": "010802050502"
+       }
+      },
+      {
+       "kind": "zcta",
+       "name": "06074",
+       "code": "06074",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "school",
+       "name": "South Windsor School District",
+       "code": "0904170",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "unified"
+       }
+      },
+      {
+       "kind": "flood-community",
+       "name": "Town Of South Windsor",
+       "code": "090036",
+       "source": "fema-nfhl",
+       "facts": {}
+      },
+      {
+       "kind": "cd",
+       "name": "CT-01",
+       "code": "0901",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "county",
+       "name": "Capitol Planning Region, CT",
+       "code": "09110",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "cbsa",
+       "name": "Hartford-West Hartford-East Hartford, CT Metro Area",
+       "code": "25540",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "metropolitan"
+       }
+      },
+      {
+       "kind": "state",
+       "name": "Connecticut",
+       "code": "09",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "nws-office",
+       "name": "NWS Boston / Norton, MA",
+       "code": "BOX",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "eco3",
+       "name": "Northeastern Coastal Zone",
+       "code": "59",
+       "source": "epa-ecoregions",
+       "facts": {}
+      },
+      {
+       "kind": "timezone",
+       "name": "America/New York",
+       "code": "America/New_York",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "country",
+       "name": "United States",
+       "code": "USA",
+       "source": "natural-earth",
+       "facts": {}
+      }
+     ],
+     "failed": [],
+     "answered": [
+      "natural-earth",
+      "census-tigerweb",
+      "federal-regions",
+      "usgs-wbd",
+      "epa-ecoregions",
+      "fema-nfhl",
+      "nws-api",
+      "usgs-epqs",
+      "wikipedia"
+     ],
+     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "natural-earth",
+       "publisher": "Natural Earth",
+       "url": "https://www.naturalearthdata.com/"
+      },
+      "retrievedAt": "2026-10-19T01:43:46.622Z"
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T01:43:46.622Z"
+     },
+     {
+      "source": {
+       "id": "federal-regions",
+       "publisher": "EPA, FEMA, Federal Reserve System",
+       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
+      },
+      "retrievedAt": "2026-10-19T01:43:46.622Z"
+     },
+     {
+      "source": {
+       "id": "usgs-wbd",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
+      },
+      "retrievedAt": "2026-10-19T01:43:46.622Z"
+     },
+     {
+      "source": {
+       "id": "epa-ecoregions",
+       "publisher": "U.S. Environmental Protection Agency",
+       "url": "https://www.epa.gov/eco-research/ecoregions"
+      },
+      "retrievedAt": "2026-10-19T01:43:46.622Z"
+     },
+     {
+      "source": {
+       "id": "fema-nfhl",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/flood-maps/national-flood-hazard-layer"
+      },
+      "retrievedAt": "2026-10-19T01:43:46.622Z"
+     },
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "retrievedAt": "2026-10-19T01:43:46.622Z"
+     },
+     {
+      "source": {
+       "id": "usgs-epqs",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://apps.nationalmap.gov/epqs/"
+      },
+      "retrievedAt": "2026-10-19T01:43:46.622Z"
+     },
+     {
+      "source": {
+       "id": "wikipedia",
+       "publisher": "Wikimedia Foundation",
+       "url": "https://en.wikipedia.org/"
+      },
+      "retrievedAt": "2026-10-19T01:43:46.622Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:46.622Z"
+   }
+  },
+  "/api/hazards?op=nri&fips=09110": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "STCOFIPS": "09110",
+      "POPULATION": 975267,
+      "RISK_SCORE": 97.36005089058524,
+      "RISK_RATNG": "Relatively High",
+      "EAL_VALT": 302299864.61157477,
+      "EAL_RATNG": "Relatively High",
+      "SOVI_SCORE": 28.08524173,
+      "SOVI_RATNG": "Relatively Low",
+      "NRI_VER": "December 2025",
+      "AVLN_RISKR": "Not Applicable",
+      "CFLD_RISKR": "Very Low",
+      "CWAV_RISKR": "Relatively High",
+      "DRGT_RISKR": "Relatively Low",
+      "ERQK_RISKR": "Relatively Moderate",
+      "HAIL_RISKR": "Relatively Moderate",
+      "HWAV_RISKR": "Relatively Moderate",
+      "HRCN_RISKR": "Relatively High",
+      "ISTM_RISKR": "Very High",
+      "IFLD_RISKR": "Relatively High",
+      "LNDS_RISKR": "Relatively Moderate",
+      "LTNG_RISKR": "Relatively High",
+      "SWND_RISKR": "Relatively Moderate",
+      "TRND_RISKR": "Relatively High",
+      "TSUN_RISKR": "Insufficient Data",
+      "VLCN_RISKR": "Not Applicable",
+      "WFIR_RISKR": "Very Low",
+      "WNTW_RISKR": "Relatively High"
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-nri",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://hazards.fema.gov/nri/"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
+      "retrievedAt": "2026-10-19T01:43:39.326Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:39.326Z"
+   }
+  },
+  "/api/civic?op=svi&level=place&fips=09110": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "rpl": [
+       0.5877,
+       0.3952,
+       0.427,
+       0.7735,
+       0.7891
+      ]
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "cdc-svi",
+       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
+       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
+      },
+      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
+      "retrievedAt": "2026-10-19T01:43:38.828Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:38.828Z"
+   }
+  },
+  "/api/hazards?op=history&fips=09110&years=10&declarations=3": {
+   "status": 200,
+   "body": {
+    "data": {
+     "declarations": [],
+     "droughtNow": {
+      "mapDate": "2026-10-13",
+      "validStart": "2026-10-13",
+      "validEnd": "2026-10-19",
+      "none": 100,
+      "d0": 0,
+      "d1": 0,
+      "d2": 0,
+      "d3": 0,
+      "d4": 0
+     },
+     "missing": [
+      {
+       "source": "FEMA",
+       "reason": "join:legacy_ct_counties"
+      },
+      {
+       "source": "NOAA Climate at a Glance (tavg)",
+       "reason": "join:legacy_ct_counties"
+      },
+      {
+       "source": "NOAA Climate at a Glance (pcp)",
+       "reason": "join:legacy_ct_counties"
+      },
+      {
+       "source": "SPC",
+       "reason": "join:legacy_ct_counties"
+      },
+      {
+       "source": "USGS landslide susceptibility",
+       "reason": "join:legacy_ct_counties"
+      },
+      {
+       "source": "NCEI Storm Events",
+       "reason": "join:legacy_ct_counties"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=09110&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
+      "retrievedAt": "2026-10-19T01:43:39.298Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=09110&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
+      "retrievedAt": "2026-10-19T01:43:39.377Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:39.379Z"
+   }
+  },
+  "/api/companies?op=county&fips=09110": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "pulled": null,
+    "provenance": [
+     {
+      "source": {
+       "id": "sec-edgar",
+       "publisher": "U.S. Securities and Exchange Commission",
+       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+      },
+      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
+     },
+     {
+      "source": {
+       "id": "census-zcta-county",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
+      }
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      }
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:39.725Z"
+   }
+  },
+  "/api/infra?op=dams&bbox=-72.8224,41.5689,-72.3224,42.0689": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -72.37356098333915,
+         41.73339851056488
+        ]
+       },
+       "properties": {
+        "id": "nid:CT01387",
+        "name": "Dam CT01387",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Not Rated",
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.3698349886786,
+         41.84274753168245
+        ]
+       },
+       "properties": {
+        "id": "nid:CT01344",
+        "name": "Dam CT01344",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Not Rated",
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.36958198990726,
+         41.864555535870494
+        ]
+       },
+       "properties": {
+        "id": "nid:CT01348",
+        "name": "Cider Mill Pond Dam",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Not Rated",
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "name: Cider Mill Pond Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.35655998794286,
+         41.90232654354159
+        ]
+       },
+       "properties": {
+        "id": "nid:CT01347",
+        "name": "Dam CT01347",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Not Rated",
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.35499598943679,
+         41.93555154995131
+        ]
+       },
+       "properties": {
+        "id": "nid:CT01946",
+        "name": "Bradway Reservoir Fc Dike Site #4",
+        "details": {
+         "hazard potential": "Significant",
+         "owner type": "State"
+        },
+        "extra": {
+         "embedText": "name: Bradway Reservoir Fc Dike Site #4"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.39134098241182,
+         41.620888488308644
+        ]
+       },
+       "properties": {
+        "id": "nid:CT00546",
+        "name": "Dam CT00546",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Not Rated",
+         "year completed": 1973,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.33648596495715,
+         41.626940491308744
+        ]
+       },
+       "properties": {
+        "id": "nid:CT01817",
+        "name": "Dam CT01817",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Not Rated",
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.33447396431347,
+         41.62710549140772
+        ]
+       },
+       "properties": {
+        "id": "nid:CT00544",
+        "name": "Dam CT00544",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Satisfactory",
+         "year completed": 1910,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.34305396710131,
+         41.62712549112514
+        ]
+       },
+       "properties": {
+        "id": "nid:CT00989",
+        "name": "Dam CT00989",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Poor",
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.38301398177157,
+         41.65559549527588
+        ]
+       },
+       "properties": {
+        "id": "nid:CT01819",
+        "name": "Dam CT01819",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Not Rated",
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.3743589800228,
+         41.67344749900364
+        ]
+       },
+       "properties": {
+        "id": "nid:CT00545",
+        "name": "Holbrook Pond Dam",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Satisfactory",
+         "year completed": 1920,
+         "owner type": "State"
+        },
+        "extra": {
+         "embedText": "name: Holbrook Pond Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.40023698918142,
+         41.68605950056473
+        ]
+       },
+       "properties": {
+        "id": "nid:CT01818",
+        "name": "Dam CT01818",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Poor",
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      }
+     ]
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "usace-nid",
+       "publisher": "U.S. Army Corps of Engineers",
+       "url": "https://nid.sec.usace.army.mil/"
+      },
+      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+      "retrievedAt": "2026-10-19T01:43:39.139Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:39.140Z"
+   }
+  },
+  "/api/releases?op=calendar": {
+   "status": 200,
+   "body": {
+    "data": {
+     "from": "2026-10-19",
+     "to": "2026-11-18",
+     "releases": [
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-22",
+        "latest": "2026-10-22",
+        "nominal": "2026-10-22"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-29",
+        "latest": "2026-10-29",
+        "nominal": "2026-10-29"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-05",
+        "latest": "2026-11-05",
+        "nominal": "2026-11-05"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-12",
+        "latest": "2026-11-12",
+        "nominal": "2026-11-12"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "bts-border",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
+      "retrievedAt": "2026-10-19T01:36:48.227Z"
+     },
+     {
+      "source": {
+       "id": "usgs-water",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://api.waterdata.usgs.gov/"
+      },
+      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.freddiemac.com/pmms",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "bts-supply-chain",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/news/schedule",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T01:36:48.228Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:36:48.228Z"
+   }
+  },
+  "/api/live": {
+   "status": 200,
+   "body": {
+    "data": {
+     "items": [],
+     "failed": [],
+     "unmapped": 0
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T01:52:58.456Z"
+     },
+     {
+      "source": {
+       "id": "usgs-earthquakes",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://earthquake.usgs.gov/"
+      },
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T01:52:58.456Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:52:58.456Z"
+   }
+  },
+  "/api/infra?op=hospitals&bbox=-72.8224,41.5689,-72.3224,42.0689": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -72.681800100265,
+         41.7536678103088
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003306106",
+        "name": "CONNECTICUT CHILDREN'S MEDICAL CENTER",
+        "details": {
+         "type": "children",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "073300",
+          "rating": null
+         },
+         "embedText": "name: CONNECTICUT CHILDREN'S MEDICAL CENTER"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.8019935695726,
+         41.6891819198297
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003706053",
+        "name": "HOSPITAL FOR SPECIAL CARE",
+        "details": {
+         "type": "chronic disease",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: HOSPITAL FOR SPECIAL CARE"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.6939360199532,
+         41.8000211098147
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003606112",
+        "name": "MOUNT SINAI REHABILITATION HOSPITAL, INC",
+        "details": {
+         "type": "chronic disease",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: MOUNT SINAI REHABILITATION HOSPITAL, INC"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.5256751595547,
+         41.7815081701035
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0002206040",
+        "name": "MANCHESTER MEMORIAL HOSPITAL",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "070027",
+          "rating": 4
+         },
+         "embedText": "name: MANCHESTER MEMORIAL HOSPITAL"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.7877484002074,
+         41.661048669701
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0002806050",
+        "name": "THE HOSPITAL OF CENTRAL CONNECTICUT",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: THE HOSPITAL OF CENTRAL CONNECTICUT"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.7905845198999,
+         41.7307648799892
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0002906032",
+        "name": "JOHN DEMPSEY HOSPITAL OF THE UNIVERSITY OF CONNECTICUT HEALTH CENTER",
+        "details": {
+         "type": "general acute care",
+         "owner type": "GOVERNMENT - STATE"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "070036",
+          "rating": 3
+         },
+         "embedText": "name: JOHN DEMPSEY HOSPITAL OF THE UNIVERSITY OF CONNECTICUT HEALTH CENTER"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.6821331003509,
+         41.7496710001448
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0196784202",
+        "name": "HARTFORD HOSPITAL",
+        "details": {
+         "type": "psychiatric",
+         "owner type": "not published"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: HARTFORD HOSPITAL"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.6986800903423,
+         41.7738138703153
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0000206105",
+        "name": "SAINT FRANCIS HOSPITAL AND MEDICAL CENTER",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: SAINT FRANCIS HOSPITAL AND MEDICAL CENTER"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.390886380042,
+         41.9801016800657
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0000806076",
+        "name": "JOHNSON MEMORIAL HOSPITAL",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "070008",
+          "rating": 3
+         },
+         "embedText": "name: JOHNSON MEMORIAL HOSPITAL"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.4512112903712,
+         41.8666005502998
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0001106066",
+        "name": "ROCKVILLE GENERAL HOSPITAL",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: ROCKVILLE GENERAL HOSPITAL"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.7292715696577,
+         41.8029255197484
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003206117",
+        "name": "HEBREW SENIOR CARE",
+        "details": {
+         "type": "psychiatric",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "074017",
+          "rating": null
+         },
+         "embedText": "name: HEBREW SENIOR CARE"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -72.6803246596317,
+         41.7537468699568
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0196784913",
+        "name": "HARTFORD HOSPITAL",
+        "details": {
+         "type": "general acute care",
+         "owner type": "not published"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: HARTFORD HOSPITAL"
+        }
+       }
+      }
+     ]
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "hifld-hospitals",
+       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
+       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
+      "retrievedAt": "2026-10-19T01:43:38.867Z"
+     },
+     {
+      "source": {
+       "id": "cms-provider-data",
+       "publisher": "Centers for Medicare & Medicaid Services",
+       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+      },
+      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T01:43:38.867Z"
+   }
+  }
+ }
+}
