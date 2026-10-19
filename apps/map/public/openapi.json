@@ -4314,7 +4314,12 @@
             "format": "uri"
           },
           "license": {
-            "type": "string"
+            "type": "string",
+            "description": "Licence or terms in the publisher's words, with any caveats. Always present."
+          },
+          "licenseId": {
+            "type": "string",
+            "description": "Optional. An SPDX id (CC-BY-4.0, CC0-1.0, ...) or a named id (us-gov-work, esri-mla, ...) from LICENCE_TERMS in lib/provenance/licenceTerms.ts, which gives each id's name and terms URL. Absent when the licence doesn't map to an entry with confidence."
           }
         }
       },

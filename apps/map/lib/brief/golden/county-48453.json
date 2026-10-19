@@ -26,7 +26,8 @@
             "name": "Zillow Home Value Index (ZHVI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -55,7 +56,8 @@
             "name": "Zillow Home Value Index (ZHVI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -85,7 +87,8 @@
             "name": "Zillow Home Value Index (ZHVI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -98,7 +101,8 @@
             "name": "Zillow Observed Rent Index (ZORI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -111,7 +115,8 @@
             "name": "Zillow Home Value Index (ZHVI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "estimate",
@@ -142,7 +147,8 @@
             "name": "Zillow Home Value Index (ZHVI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -172,7 +178,8 @@
             "name": "Zillow Home Value Index (ZHVI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -185,7 +192,8 @@
             "name": "Zillow Observed Rent Index (ZORI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -198,7 +206,8 @@
             "name": "Zillow Home Value Index (ZHVI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "estimate",
@@ -229,7 +238,8 @@
             "name": "Zillow Home Value Index (ZHVI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -261,7 +271,8 @@
             "name": "Zillow Home Value Index (ZHVI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -274,7 +285,8 @@
             "name": "Quarterly Census of Employment and Wages",
             "publisher": "U.S. Bureau of Labor Statistics",
             "url": "https://www.bls.gov/cew/",
-            "license": "public domain"
+            "license": "public domain",
+            "licenseId": "us-gov-work"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -287,7 +299,8 @@
             "name": "Zillow Home Value Index (ZHVI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "estimate",
@@ -316,7 +329,8 @@
             "name": "Quarterly Census of Employment and Wages",
             "publisher": "U.S. Bureau of Labor Statistics",
             "url": "https://www.bls.gov/cew/",
-            "license": "public domain"
+            "license": "public domain",
+            "licenseId": "us-gov-work"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -350,7 +364,8 @@
             "name": "Zillow Home Value Index (ZHVI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -380,7 +395,8 @@
             "name": "Quarterly Census of Employment and Wages",
             "publisher": "U.S. Bureau of Labor Statistics",
             "url": "https://www.bls.gov/cew/",
-            "license": "public domain"
+            "license": "public domain",
+            "licenseId": "us-gov-work"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -414,7 +430,8 @@
             "name": "Zillow Observed Rent Index (ZORI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -443,7 +460,8 @@
             "name": "Zillow Home Value Index (ZHVI)",
             "publisher": "Zillow Research",
             "url": "https://www.zillow.com/research/data/",
-            "license": "free for public use with attribution"
+            "license": "free for public use with attribution",
+            "licenseId": "zillow-research-terms"
           },
           "retrievedAt": "2026-08-22T11:58:00.000Z",
           "kind": "published",
@@ -478,7 +496,8 @@
           "name": "Zillow Home Value Index (ZHVI)",
           "publisher": "Zillow Research",
           "url": "https://www.zillow.com/research/data/",
-          "license": "free for public use with attribution"
+          "license": "free for public use with attribution",
+          "licenseId": "zillow-research-terms"
         },
         "retrievedAt": "2026-08-22T11:58:00.000Z",
         "kind": "published",
@@ -491,7 +510,8 @@
           "name": "Quarterly Census of Employment and Wages",
           "publisher": "U.S. Bureau of Labor Statistics",
           "url": "https://www.bls.gov/cew/",
-          "license": "public domain"
+          "license": "public domain",
+          "licenseId": "us-gov-work"
         },
         "retrievedAt": "2026-08-22T11:58:00.000Z",
         "kind": "published",
@@ -504,7 +524,8 @@
           "name": "Zillow Home Value Index (ZHVI)",
           "publisher": "Zillow Research",
           "url": "https://www.zillow.com/research/data/",
-          "license": "free for public use with attribution"
+          "license": "free for public use with attribution",
+          "licenseId": "zillow-research-terms"
         },
         "retrievedAt": "2026-08-22T11:58:00.000Z",
         "kind": "estimate",
@@ -516,7 +537,8 @@
           "name": "Zillow Observed Rent Index (ZORI)",
           "publisher": "Zillow Research",
           "url": "https://www.zillow.com/research/data/",
-          "license": "free for public use with attribution"
+          "license": "free for public use with attribution",
+          "licenseId": "zillow-research-terms"
         },
         "retrievedAt": "2026-08-22T11:58:00.000Z",
         "kind": "published",
@@ -529,7 +551,8 @@
           "name": "Zillow Home Value Index (ZHVI)",
           "publisher": "Zillow Research",
           "url": "https://www.zillow.com/research/data/",
-          "license": "free for public use with attribution"
+          "license": "free for public use with attribution",
+          "licenseId": "zillow-research-terms"
         },
         "retrievedAt": "2026-08-22T11:58:00.000Z",
         "kind": "estimate",
@@ -544,7 +567,8 @@
           "name": "Zillow Home Value Index (ZHVI)",
           "publisher": "Zillow Research",
           "url": "https://www.zillow.com/research/data/",
-          "license": "free for public use with attribution"
+          "license": "free for public use with attribution",
+          "licenseId": "zillow-research-terms"
         },
         "retrievedAt": "2026-08-22T11:58:00.000Z",
         "kind": "estimate",
@@ -572,7 +596,8 @@
         "name": "Zillow Home Value Index (ZHVI)",
         "publisher": "Zillow Research",
         "url": "https://www.zillow.com/research/data/",
-        "license": "free for public use with attribution"
+        "license": "free for public use with attribution",
+        "licenseId": "zillow-research-terms"
       },
       "retrievedAt": "2026-08-22T11:58:00.000Z",
       "kind": "published",
@@ -585,7 +610,8 @@
         "name": "Zillow Observed Rent Index (ZORI)",
         "publisher": "Zillow Research",
         "url": "https://www.zillow.com/research/data/",
-        "license": "free for public use with attribution"
+        "license": "free for public use with attribution",
+        "licenseId": "zillow-research-terms"
       },
       "retrievedAt": "2026-08-22T11:58:00.000Z",
       "kind": "published",
@@ -598,7 +624,8 @@
         "name": "Zillow Home Value Index (ZHVI)",
         "publisher": "Zillow Research",
         "url": "https://www.zillow.com/research/data/",
-        "license": "free for public use with attribution"
+        "license": "free for public use with attribution",
+        "licenseId": "zillow-research-terms"
       },
       "retrievedAt": "2026-08-22T11:58:00.000Z",
       "kind": "estimate",
@@ -613,7 +640,8 @@
         "name": "Quarterly Census of Employment and Wages",
         "publisher": "U.S. Bureau of Labor Statistics",
         "url": "https://www.bls.gov/cew/",
-        "license": "public domain"
+        "license": "public domain",
+        "licenseId": "us-gov-work"
       },
       "retrievedAt": "2026-08-22T11:58:00.000Z",
       "kind": "published",
@@ -626,7 +654,8 @@
         "name": "Zillow Home Value Index (ZHVI)",
         "publisher": "Zillow Research",
         "url": "https://www.zillow.com/research/data/",
-        "license": "free for public use with attribution"
+        "license": "free for public use with attribution",
+        "licenseId": "zillow-research-terms"
       },
       "retrievedAt": "2026-08-22T11:58:00.000Z",
       "kind": "estimate",
@@ -638,7 +667,8 @@
         "name": "Zillow Home Value Index (ZHVI)",
         "publisher": "Zillow Research",
         "url": "https://www.zillow.com/research/data/",
-        "license": "free for public use with attribution"
+        "license": "free for public use with attribution",
+        "licenseId": "zillow-research-terms"
       },
       "retrievedAt": "2026-08-22T11:58:00.000Z",
       "kind": "estimate",

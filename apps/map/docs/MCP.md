@@ -15,6 +15,21 @@ Client setup and curl examples: [examples/README.md](../examples/README.md).
 
 Arguments are validated with zod before any request is made; a bad argument comes back as an `isError` result naming the field, not as a fetch. Every result is the route's JSON as `structuredContent` and as text. Polygon collections (`areas`, `countries`) have their geometry set to null unless `geometry: true`, and any result over 400,000 characters has its feature list halved until it fits, with a `note` saying how many items were dropped.
 
+### Errors
+
+Every `isError` result is a JSON object, as `structuredContent` and as text. `error` is the message string it has always been (the route's own when it sent one). Next to it:
+
+- `code`: a stable id, one of `invalid_arguments`, `bad_request`, `not_found`, `route_not_deployed`, `rate_limited`, `upstream_failure`, `upstream_rejected`, `timeout`, `server_unreachable`, `internal_error`.
+- `category`: `invalid_input`, `unavailable`, `timeout` or `execution_failure`.
+- `retryable`: `true` only when the same call can succeed later unchanged (rate limits, an upstream that did not answer, timeouts, an unreachable server). A bad argument, an unknown id, a route this server does not have and a crash are `false`.
+- `remediation`: one sentence on what to do next.
+
+A route's other fields (`note`, `details`, `upstream`, `status`) stay in the object. The schema is `ERROR_ENVELOPE_SCHEMA` in `lib/mcp/errors.ts`, and the codes with their category and retry answer are `ERROR_CODES` there. The shape follows morluto/rea's error contract (MIT), rewritten smaller.
+
+### Coverage status
+
+A result carries `coverageStatus: { status: "partial", basis: [...] }` only when eye can say so from what it already sends: a place export that lists places whose value is unknown (`data.nullPlaces`, `data.nullCells`: null, not 0), or a list the MCP cut to fit. There is no `"complete"`; a result without `coverageStatus` makes no coverage claim, and its caveats and provenance still say what it covers. It is not called `coverage` because some routes already send a `coverage` array of their own.
+
 <!-- tools:start -->
 | Tool | Arguments | Returns |
 | --- | --- | --- |

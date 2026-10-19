@@ -9,6 +9,8 @@
 // on its own with tsc and run it outside Next.
 
 import { z } from "zod";
+import { replyCoverage } from "./coverage";
+import { InvalidArguments } from "./errors";
 
 /** What a route answered. `body` is the parsed JSON (or a string when the route did not send JSON). */
 export interface JsonReply {
@@ -157,7 +159,9 @@ export async function relay(ctx: ToolCtx, path: string, opts: RelayOptions = {})
   if (r.status === 404 && !isRouteAnswer(r.body)) payload = addNote(payload, NOT_DEPLOYED_NOTE);
   else if (r.status >= 400) payload = addNote(payload, `route answered HTTP ${r.status}`);
   if (opts.dropGeometry) payload = stripGeometry(payload);
-  payload = boundPayload(payload);
+  const bounded = boundPayload(payload);
+  const coverage = replyCoverage(bounded, bounded !== payload);
+  payload = coverage ? { ...bounded, coverageStatus: coverage } : bounded;
   return { status: r.status, payload };
 }
 
@@ -281,7 +285,7 @@ export const TOOLS: ToolDef[] = [
     }),
     handler: (i, ctx) => {
       const level = i.level ?? "county";
-      if (level === "county" && !i.bbox) throw new Error("bbox is required for level=county (pass level: 'state' for all states)");
+      if (level === "county" && !i.bbox) throw new InvalidArguments("bbox is required for level=county (pass level: 'state' for all states)");
       const path = "/api/economy" + (level === "state" ? qs({ op: "areas", level: "state" }) : qs({ op: "areas", bbox: bboxStr(i.bbox!) }));
       return relay(ctx, path, { dropGeometry: !i.geometry });
     },
@@ -384,7 +388,7 @@ export const TOOLS: ToolDef[] = [
     }),
     handler: (i, ctx) => {
       if (i.fields) return relay(ctx, "/api/screen" + qs({ kind: i.kind, fields: 1 }));
-      if (!i.query) throw new Error("query is required (or pass fields: true for the field list)");
+      if (!i.query) throw new InvalidArguments("query is required (or pass fields: true for the field list)");
       return relay(ctx, "/api/screen" + qs({ kind: i.kind, q: i.query }));
     },
   }),
@@ -519,7 +523,7 @@ export const TOOLS: ToolDef[] = [
       geometry: z.boolean().optional().describe("Keep each unit's generalised outline (large). Default false: rings are dropped."),
     }),
     handler: async (i, ctx) => {
-      if (!i.kind && !(i.pov && i.h)) throw new Error("pass kind, or pov and h");
+      if (!i.kind && !(i.pov && i.h)) throw new InvalidArguments("pass kind, or pov and h");
       const reply = await relay(ctx, "/api/fabric" + qs({ op: "field", kind: i.kind, pov: i.kind ? undefined : i.pov, h: i.kind ? undefined : i.h, bbox: bboxStr(i.bbox) }));
       if (!i.geometry) {
         const data = reply.payload.data as { units?: Array<Record<string, unknown>> } | undefined;

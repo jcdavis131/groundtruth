@@ -2,7 +2,23 @@ import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import { PLACE_EXPORTS } from "../catalog/placeExport";
 import { NRI_SOVI_NOTE } from "../hazards/nri";
+import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv";
+import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+import { ERROR_ENVELOPE_SCHEMA, InvalidArguments } from "./errors";
+import { errorResult, toCallResult } from "./server";
 import { asObject, boundPayload, httpFetchJson, NOT_DEPLOYED_NOTE, qs, relay, SOVI_LINEAGE_NOTE, stripGeometry, toolByName, TOOLS, type FetchJson, type JsonReply } from "./tools";
+
+const validateEnvelope = new AjvJsonSchemaValidator().getValidator(ERROR_ENVELOPE_SCHEMA as never);
+
+/** An isError result's envelope, after checking it against the schema and that text and structuredContent agree. */
+function envelopeOf(r: CallToolResult): Record<string, unknown> {
+  expect(r.isError).toBe(true);
+  const text = JSON.parse((r.content[0] as { text: string }).text) as Record<string, unknown>;
+  expect(r.structuredContent).toEqual(text);
+  const v = validateEnvelope(text);
+  expect(v.errorMessage).toBeUndefined();
+  return text;
+}
 
 /** A fetchJson that records the path and answers what the test asked for. */
 function fake(status = 200, body: unknown = { source: "x", data: { ok: true } }): { calls: string[]; fetchJson: FetchJson } {
@@ -203,14 +219,21 @@ describe("input schemas reject bad input", () => {
   for (const [name, input] of bad) {
     it(`${name} ${JSON.stringify(input)}`, async () => {
       const f = fake();
-      await expect(toolByName(name)!.run(input, { fetchJson: f.fetchJson })).rejects.toThrow();
+      const err = await toolByName(name)!.run(input, { fetchJson: f.fetchJson }).then(
+        () => null,
+        (e: unknown) => e,
+      );
+      expect(err).toBeInstanceOf(Error);
       expect(f.calls).toHaveLength(0);
+      // The reply a client sees for it: a schema-valid envelope, bad input, not worth a retry.
+      expect(envelopeOf(errorResult(err))).toMatchObject({ code: "invalid_arguments", category: "invalid_input", retryable: false });
     });
   }
 
   it("areas without bbox at county level is an error, not a fetch", async () => {
     const f = fake();
     await expect(toolByName("areas")!.run({}, { fetchJson: f.fetchJson })).rejects.toThrow(/bbox/);
+    await expect(toolByName("areas")!.run({}, { fetchJson: f.fetchJson })).rejects.toBeInstanceOf(InvalidArguments);
     expect(f.calls).toHaveLength(0);
   });
 
@@ -242,6 +265,7 @@ describe("relay", () => {
     const r = await relay({ fetchJson: f.fetchJson }, "/api/series?op=list");
     expect(r.status).toBe(404);
     expect(r.payload).toEqual({ ...html, note: NOT_DEPLOYED_NOTE });
+    expect(envelopeOf(toCallResult(r))).toMatchObject({ error: "non-JSON reply", code: "route_not_deployed", retryable: false });
   });
 
   it("treats a route's own JSON 404 as an answer, not a missing route", async () => {
@@ -249,6 +273,7 @@ describe("relay", () => {
     const r = await relay({ fetchJson: f.fetchJson }, "/api/companies?op=company&cik=1234567");
     expect(r.status).toBe(404);
     expect(r.payload.note).toBe("route answered HTTP 404");
+    expect(envelopeOf(toCallResult(r))).toMatchObject({ code: "not_found", category: "invalid_input", retryable: false });
   });
 
   it("notes other error statuses", async () => {
@@ -256,6 +281,7 @@ describe("relay", () => {
     const r = await relay({ fetchJson: f.fetchJson }, "/api/water?op=report&lon=0&lat=0");
     expect(r.payload.note).toBe("route answered HTTP 502");
     expect(r.payload.upstream).toBe("usgs-water");
+    expect(envelopeOf(toCallResult(r))).toMatchObject({ error: "upstream failure", code: "upstream_failure", category: "unavailable", retryable: true });
   });
 
   it("wraps non-object bodies so a note can be attached", async () => {

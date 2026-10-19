@@ -9,6 +9,7 @@ describe("source registry", () => {
       publisher: "U.S. Bureau of Labor Statistics",
       url: "https://www.bls.gov/sae/",
       license: "public domain",
+      licenseId: "us-gov-work",
     });
   });
   it("resolves the Census population estimates source", () => {
@@ -18,6 +19,7 @@ describe("source registry", () => {
       publisher: "U.S. Census Bureau",
       url: "https://www.census.gov/programs-surveys/popest.html",
       license: "public domain",
+      licenseId: "us-gov-work",
     });
   });
   it("cites BankFind at its current host", () => {

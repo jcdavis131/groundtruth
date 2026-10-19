@@ -123,8 +123,11 @@ describe("the QCEW fixture", () => {
     expect(s.data.length).toBe(150);
     expect(s.data.filter((d) => d.x !== null && d.y !== null).length).toBe(114);
     expect(s.data.every((d) => d.size !== null && Number.isInteger(d.size))).toBe(true);
+    // The fixture was cut on 2026-10-01, before SourceRef had licenseId (optional);
+    // it must match the registry entry with or without that one field.
+    const withoutId = Object.fromEntries(Object.entries(SOURCES["bls-qcew"]).filter(([k]) => k !== "licenseId"));
     for (const p of Object.values(s.provenance)) {
-      expect(p.source).toEqual(SOURCES["bls-qcew"]);
+      expect(p.source).toEqual(p.source.licenseId === undefined ? withoutId : SOURCES["bls-qcew"]);
       if (p.kind === "published") expect(p.upstreamUrl).toMatch(/^https:\/\/data\.bls\.gov\/cew\/data\/api\/(2019|2023)\/a\/industry\/(10|1011|1012|1013|1023|1024)\.csv$/);
     }
     expect(Object.keys(s.provenance).filter((k) => s.provenance[k].kind === "published").length).toBe(12);

@@ -10,7 +10,8 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
-import { TOOLS, type FetchJson, type ToolDef, type ToolReply } from "./tools";
+import { envelopeForStatus, envelopeForThrown, InvalidArguments } from "./errors";
+import { NOT_DEPLOYED_NOTE, TOOLS, type FetchJson, type ToolDef, type ToolReply } from "./tools";
 
 export const SERVER_NAME = "embedding-atlas-mcp-server";
 export const SERVER_VERSION = "0.1.0";
@@ -152,17 +153,38 @@ function safeDocPath(docsDir: string, name: string): string | null {
 
 // ---- server ----------------------------------------------------------------
 
-function toCallResult(reply: ToolReply): CallToolResult {
-  return {
-    content: [{ type: "text", text: JSON.stringify(reply.payload) }],
-    structuredContent: reply.payload,
-    isError: reply.status >= 400,
-  };
+// Every isError reply carries the typed envelope from ./errors next to its
+// `error` string (see that file for the codes and the credit).
+
+export function toCallResult(reply: ToolReply): CallToolResult {
+  if (reply.status < 400) {
+    return { content: [{ type: "text", text: JSON.stringify(reply.payload) }], structuredContent: reply.payload, isError: false };
+  }
+  const notDeployed = typeof reply.payload.note === "string" && reply.payload.note.includes(NOT_DEPLOYED_NOTE);
+  // The route's payload first, then the envelope; `error` keeps the route's own string when it sent one.
+  const payload = { ...reply.payload, ...envelopeForStatus(reply.status, reply.payload, notDeployed) };
+  return { content: [{ type: "text", text: JSON.stringify(payload) }], structuredContent: payload, isError: true };
 }
 
-function errorResult(err: unknown): CallToolResult {
-  const message = err instanceof z.ZodError ? "invalid arguments: " + err.issues.map((i) => `${i.path.join(".") || "(root)"}: ${i.message}`).join("; ") : err instanceof Error ? err.message : String(err);
-  return { content: [{ type: "text", text: JSON.stringify({ error: message }) }], isError: true };
+export function errorResult(err: unknown): CallToolResult {
+  const payload = { ...envelopeForThrown(err) };
+  return { content: [{ type: "text", text: JSON.stringify(payload) }], structuredContent: payload, isError: true };
+}
+
+/**
+ * The SDK checks arguments against inputSchema before our handler runs, and
+ * answers a failure (or an unknown tool) with plain text from its private
+ * createToolError, so those replies never reached errorResult. Route them
+ * through the envelope too. SDK 1.30: every message that arrives here is an
+ * McpError InvalidParams ("MCP error -32602: ...") because each tool handler
+ * catches its own errors; anything else is classed internal_error. A test
+ * pins this, so an SDK that renames the method fails CI instead of silently
+ * sending plain text again.
+ */
+function envelopeSdkErrors(server: McpServer): void {
+  const s = server as unknown as { createToolError?: (message: string) => CallToolResult };
+  if (typeof s.createToolError !== "function") return;
+  s.createToolError = (message: string) => errorResult(/^MCP error -32602\b/.test(message) ? new InvalidArguments(message) : new Error(message));
 }
 
 /**
@@ -172,6 +194,7 @@ function errorResult(err: unknown): CallToolResult {
 export function createServer(opts: ServerOptions): McpServer {
   const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION });
   const ctx = { fetchJson: opts.fetchJson };
+  envelopeSdkErrors(server);
 
   for (const t of TOOLS) {
     server.registerTool(
