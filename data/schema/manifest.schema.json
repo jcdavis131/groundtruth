@@ -128,6 +128,15 @@
           "why": { "type": "string", "minLength": 1 }
         }
       }
+    },
+    "embeddableFields": {
+      "description": "The details keys eye agrees to embed for this collection, derived by data/schema/embeddable.mjs from eye's EMBED_TEXT (apps/map/lib/catalog/embedFields.ts), never written by hand; validate.mjs fails when it differs. Consumer rule: embed or train on a record's text, these details keys, and its name only as embeddableName allows. Every other details key is for display and citation. Optional in manifest/1 (added 2026-10-19); every committed snapshot carries it.",
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "embeddableName": {
+      "description": "When a record's name may be embedded, derived from eye's PUBLIC_NAME_RULE: when-nameRule-public-name (only a record whose nameRule is public-name; a label-by-id name never) or never. Present exactly when embeddableFields is.",
+      "enum": ["when-nameRule-public-name", "never"]
     }
   },
   "$defs": {

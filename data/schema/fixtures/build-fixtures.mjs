@@ -17,6 +17,7 @@ import { createHash } from "node:crypto";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { embeddableFor } from "../embeddable.mjs";
 import { STATES, validateManifest, validateRecord, verifyFiles } from "../validate.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -173,6 +174,7 @@ async function build({ collection, region }, gitSha) {
     publisherCount,
     files: [{ path: "records.jsonl", format: "jsonl", sha256: sha256(Buffer.from(body)), bytes: Buffer.byteLength(body), records: records.length }],
     ...(cfg.withheld.length ? { withheldFields: cfg.withheld } : {}),
+    ...embeddableFor(collection),
   };
   writeFileSync(path.join(dir, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
   const errs = [...validateManifest(manifest), ...verifyFiles(manifest, dir), ...records.flatMap(validateRecord)];
@@ -182,7 +184,7 @@ async function build({ collection, region }, gitSha) {
 
 const repo = path.resolve(HERE, "../../..");
 const git = (...a) => execFileSync("git", ["-C", repo, ...a], { encoding: "utf8" }).trim();
-if (git("status", "--porcelain", "--", "data/schema/validate.mjs", "data/schema/fixtures/build-fixtures.mjs", "data/schema/record.schema.json", "data/schema/manifest.schema.json"))
+if (git("status", "--porcelain", "--", "data/schema/validate.mjs", "data/schema/embeddable.mjs", "apps/map/lib/catalog/embedFields.ts", "data/schema/fixtures/build-fixtures.mjs", "data/schema/record.schema.json", "data/schema/manifest.schema.json"))
   throw new Error("commit the validator, schemas and this builder first: the manifests name that commit");
 const gitSha = git("rev-parse", "HEAD");
 mkdirSync(path.join(HERE, "record", "valid"), { recursive: true });

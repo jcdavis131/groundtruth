@@ -12,13 +12,16 @@
 //   2. Rules JSON Schema can't say (data/SCHEMA.md, "Checks beyond the schema"): no placeholder values, closed
 //      polygon rings, state and county codes that agree, the snapshot id's parts, the public-name list, no
 //      public-name on a name in label-by-id form, a dam's public-name only under public owner types, no name segment
-//      in a label-by-id record's text, no withheld detail (a dam's published name), the count gap, and the listed files' bytes, sha256 and record counts.
+//      in a label-by-id record's text, no withheld detail (a dam's published name), the count gap, embeddableFields
+//      and embeddableName as embeddable.mjs derives them from eye's embedFields.ts, and the listed files' bytes,
+//      sha256 and record counts.
 // Each problem is {code, path, message}. Exit 0 when every input is valid, 1 otherwise.
 
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { embeddableProblems } from "./embeddable.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const RECORD_SCHEMA = JSON.parse(readFileSync(path.join(HERE, "record.schema.json"), "utf8"));
@@ -255,6 +258,9 @@ export function validateManifest(m) {
   const pc = m.publisherCount;
   if (pc && Number.isInteger(pc.value) && Number.isInteger(m.recordCount) && pc.value !== m.recordCount && !pc.gap)
     out.push({ code: "gap", path: "/publisherCount/gap", message: `publisher counts ${pc.value}, snapshot holds ${m.recordCount}: say why in gap` });
+  if (("embeddableFields" in m) !== ("embeddableName" in m))
+    out.push({ code: "embeddable", path: "embeddableFields" in m ? "/embeddableName" : "/embeddableFields", message: "embeddableFields and embeddableName come together" });
+  out.push(...embeddableProblems(m));
   return out;
 }
 
