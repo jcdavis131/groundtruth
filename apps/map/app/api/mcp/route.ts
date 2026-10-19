@@ -84,7 +84,7 @@ function protectionBypass(req: Request): ProtectionBypass | undefined {
     return undefined;
   }
   const own = [deploymentOrigin(process.env.VERCEL_URL), deploymentOrigin(process.env.VERCEL_BRANCH_URL)];
-  const pinned = own.find((o) => o !== null && o === incoming);
+  const pinned = incoming; // BITE PROOF: origin pin removed on purpose; do not merge
   return pinned ? { secret, requestOrigin: pinned } : undefined;
 }
 
