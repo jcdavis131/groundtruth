@@ -81,12 +81,47 @@ const privateDam = json(path.join(FIX, "record", "valid", "nid-dams.texas-privat
 const publicDam = json(path.join(FIX, "record", "valid", "nid-dams.texas-public.json"));
 check(privateDam.nameRule === "label-by-id" && privateDam.name === `Dam ${privateDam.details["NID id"]}` && privateDam.details["owner type"] === "Private", "the private dam fixture is labelled by its NID id");
 check(publicDam.nameRule === "public-name" && publicDam.details["owner type"] !== "Private", "the public dam fixture keeps its published name");
-check(validateRecord({ ...publicDam, nameRule: "label-by-id" }).length === 0, "a dam may always be labelled by id");
+check(
+  validateRecord({ ...publicDam, nameRule: "label-by-id", text: publicDam.text.replace("; name: Bardwell Dam", "") }).length === 0,
+  "a dam may always be labelled by id (its name out of the record text)",
+);
 check(
   validateRecord({ ...publicDam, name: `Dam ${publicDam.details["NID id"]}` }).some((e) => e.code === "public-name"),
   "a dam named \"Dam <NIDID>\" that says public-name fails with public-name, whatever its owner type",
 );
 check(validateRecord({ ...publicDam, name: "Dam Site 7" }).length === 0, "a published name that starts with \"Dam\" but is not an NID id is not a label by id");
+// A dam keeps its name only under public owner types (eye's damIsNamed): every non-answer is labelled by id.
+const withOwners = (primary, list) => {
+  const d = { ...publicDam.details };
+  if (primary === undefined) delete d["owner type"];
+  else d["owner type"] = primary;
+  if (list !== undefined) d["owner types"] = list;
+  return { ...publicDam, details: d };
+};
+for (const t of ["Federal", "State", "Local Government", "Public Utility", "Tribal Government"])
+  check(validateRecord(withOwners(t, t)).length === 0, `a ${t} dam may keep its published name`);
+check(validateRecord(withOwners("State", "Local Government, State")).length === 0, "a dam whose owner types are all public may keep its name");
+check(validateRecord(withOwners("Federal")).length === 0, "eye's answers before OWNER_TYPES: the primary type alone decides");
+for (const [primary, list, why] of [
+  ["Not Listed", undefined, "Not Listed"],
+  ["not listed", "Not Listed", "Not Listed, any case"],
+  [undefined, undefined, "no owner type"],
+  ["Private", undefined, "Private"],
+  ["Unknown", undefined, "a value NID has never used"],
+  ["Local Government", "Local Government, Private", "Private second in OWNER_TYPES"],
+  ["Local Government", "Private", "OWNER_TYPES contradicting the primary"],
+  ["Federal", "", "an empty OWNER_TYPES"],
+  ["State", "State, Not Listed", "Not Listed in OWNER_TYPES"],
+])
+  check(
+    validateRecord(withOwners(primary, list)).some((e) => e.code === "public-name" && e.path === "/nameRule"),
+    `a dam that says public-name fails with public-name under ${why}`,
+  );
+check(validateRecord({ ...withOwners("Not Listed"), nameRule: "label-by-id", name: `Dam ${publicDam.details["NID id"]}`, text: publicDam.text.replace("; name: Bardwell Dam", "") }).length === 0, "a Not Listed dam labelled by id, its name out of the text, is valid");
+check(
+  validateRecord({ ...publicDam, nameRule: "label-by-id", name: `Dam ${publicDam.details["NID id"]}` }).some((e) => e.code === "public-name" && e.path === "/text"),
+  "a dam labelled by id whose record text keeps \"name: <published name>\" fails with public-name at /text",
+);
 check(
   validateRecord({ ...school, collection: "padus-units", snapshotId: school.snapshotId.replace(/^[^.]+/, "padus-units"), name: "Conservation Easement · PAD-US 41234" }).some(
     (e) => e.code === "public-name" && e.path === "/nameRule",

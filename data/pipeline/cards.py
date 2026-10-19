@@ -63,12 +63,31 @@ def named_state(details: dict, region: dict):
     return f"other:{s}", None
 
 
+# The owner types under which a dam keeps its published name (eye's DAM_NAMED_OWNER_TYPES, lib/infra/features.ts).
+# NID's PRIMARY_OWNER_TYPE values (FeatureServer/0, grouped 2026-10-18): Private, Local Government, State, Federal,
+# Public Utility, Not Listed, Tribal Government and null. Anything not here is labelled by id (fail closed).
+DAM_NAMED_OWNER_TYPES = frozenset({"federal", "state", "local government", "public utility", "tribal government"})
+
+
 def dam_name_rule(details: dict) -> str:
-    """eye's PUBLIC_NAME_RULE for nid-dams (lib/catalog/embedFields.ts, lib/infra/features.ts): a dam keeps its
-    published name only when NID publishes an owner type and it is not Private. A private dam is labelled by its
-    NID id ("Dam TX00028"), and a missing owner type is unknown, not public."""
-    owner = str(details.get("owner type") or "").strip()
-    return "label-by-id" if not owner or owner.lower() == "private" else "public-name"
+    """eye's PUBLIC_NAME_RULE for nid-dams (lib/catalog/embedFields.ts, damIsNamed in lib/infra/features.ts): a dam
+    keeps its published name only when its owner type is Federal, State, Local Government, Public Utility or Tribal
+    Government and so is every entry of its owner types (NID's OWNER_TYPES list, eye's details["owner types"]).
+    Private, Not Listed, a missing or empty owner type and any other value are labelled by NID id ("Dam TX00028"):
+    a non-answer is unknown, not public.
+
+    eye's answers before it requested OWNER_TYPES carry no "owner types" key; then only the primary type decides,
+    and a dam that is Private only in its list is not seen (34 named dams in Texas, NID 2026-10-18). Once eye
+    serves the key, an empty or non-public list labels the dam by id; a dam eye labels by id is never public-name
+    (build.to_record)."""
+    primary = str(details.get("owner type") or "").strip().lower()
+    if primary not in DAM_NAMED_OWNER_TYPES:
+        return "label-by-id"
+    if "owner types" in details:
+        entries = [e.strip().lower() for e in str(details.get("owner types") or "").split(",")]
+        if not all(e in DAM_NAMED_OWNER_TYPES for e in entries):
+            return "label-by-id"
+    return "public-name"
 
 
 def dam_label(details: dict) -> str:
@@ -90,9 +109,11 @@ COLLECTIONS = {
         "withheld": [
             {
                 "field": "published name",
-                "why": "NID's NAME on a privately owned dam can be its owner's name ('<Surname> Pond Dam'); eye shows it on click but never searches or embeds it, labels the dam by NID id, and a training snapshot leaves it out. A dam whose name is allowed carries it in name.",
+                "why": "NID's NAME on a privately owned dam can be its owner's name ('<Surname> Pond Dam'); eye shows it on click but never searches or embeds it, labels the dam by NID id, and a training snapshot leaves it out. The same holds for a dam whose owner type is Not Listed, missing or any value other than Federal, State, Local Government, Public Utility or Tribal Government (a non-answer is unknown, not public). A dam whose name is allowed carries it in name.",
             }
         ],
+        # Said in the manifest when eye named dams this build labels by id (build.withheld_fields).
+        "relabelNote": "This build labelled {n} dams by NID id that eye's answers still named, and took their name out of the record text: eye's rule before 2026-10-19 named Not Listed dams and dams with no owner type. eye's answers here carry no OWNER_TYPES, so a dam that is Private only in NID's OWNER_TYPES list is not seen and keeps its name (34 in Texas per NID's FeatureServer/0 on 2026-10-18); a rebuild from eye's answers after it requests OWNER_TYPES labels them by id.",
         "publisher": {
             "layer": NID,
             "stateWhere": lambda r: f"STATE='{r['stateName']}'",

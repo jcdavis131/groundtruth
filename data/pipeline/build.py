@@ -147,15 +147,28 @@ def to_record(f: dict, env: dict, cfg: dict, collection: str, place: dict, snaps
     }
     text = (p.get("extra") or {}).get("embedText")
     # The name rule is per record (a dam's owner type decides it), read from the source's fields before any is withheld.
-    name_rule = cfg["nameRule"](p.get("details") or {})
-    if name_rule == "label-by-id" and cfg.get("label") and p["name"] != cfg["label"](p.get("details") or {}):
-        raise SystemExit(f"{p['id']}: label-by-id, but eye's name {p['name']!r} is not the label {cfg['label'](p.get('details') or {})!r}")
+    src_details = p.get("details") or {}
+    name_rule = cfg["nameRule"](src_details)
+    name = p["name"]
+    label = cfg["label"](src_details) if cfg.get("label") else None
+    # A record eye already labels by id (no published name, or eye's own rule) is never public-name.
+    if label is not None and name == label:
+        name_rule = "label-by-id"
+    if name_rule == "label-by-id" and label is not None and name != label:
+        # eye named a record this builder labels by id (eye's dam rule before 2026-10-19 named Not Listed dams):
+        # the record takes the label, and eye's name leaves the record text's name segment too.
+        if isinstance(text, str):
+            text = "; ".join(s for s in text.split("; ") if s != f"name: {name}")
+        to_record.relabelled += 1
+        name = label
+    if name_rule == "label-by-id" and label is not None and isinstance(text, str) and any(s.startswith("name: ") for s in text.split("; ")):
+        raise SystemExit(f"{p['id']}: labelled by id, but its record text still has a name segment")
     return {
         "schemaVersion": "record/1",
         "id": p["id"],
         "collection": collection,
         "layer": p["layer"],
-        "name": p["name"],
+        "name": name,
         "nameRule": name_rule,
         **({"kind": p["kind"]} if p.get("kind") else {}),
         "geometry": g,
@@ -165,6 +178,9 @@ def to_record(f: dict, env: dict, cfg: dict, collection: str, place: dict, snaps
         "provenance": provenance,
         "snapshotId": snapshot_id,
     }
+
+
+to_record.relabelled = 0  # records eye named that this builder labelled by id, per build
 
 
 def select(features, cfg: dict, region: dict, outline: geo.Region):
@@ -302,10 +318,19 @@ def dump_manifest(m: dict) -> str:
     return body.replace('"\\u0000REQ\\u0000"', "[\n" + reqs + "\n  ]") + "\n"
 
 
-def build(collection: str, region: dict, data_root: Path, manifests: Path, git_sha: str, smoke_bbox=None) -> dict:
+def withheld_fields(cfg: dict, relabelled: int) -> list[dict]:
+    """The card's withheld fields; the first one's why also says how many records eye named and this build labelled by id."""
+    out = [dict(w) for w in cfg["withheld"]]
+    if relabelled and cfg.get("relabelNote"):
+        out[0]["why"] += " " + cfg["relabelNote"].format(n=relabelled)
+    return out
+
+
+def build(collection: str, region: dict, data_root: Path, manifests: Path, git_sha: str, smoke_bbox=None, offline: bool = False) -> dict:
     cfg = cards.COLLECTIONS[collection]
     t0 = time.monotonic()
-    fx = Fetcher(data_root / "raw")
+    fx = Fetcher(data_root / "raw", offline=offline)
+    to_record.relabelled = 0
     con = geo.connect()
     geometry, outline_entry = region_outline(fx, region)
     outline = geo.Region(con, geometry, cards.BOUNDARY_TOLERANCE_DEG)
@@ -322,6 +347,9 @@ def build(collection: str, region: dict, data_root: Path, manifests: Path, git_s
     snapshot_id = f"{collection}.{region['id']}.{created_at[:10]}"
     records = [to_record(f, env, cfg, collection, place, snapshot_id) for f, env, place in kept]
     records.sort(key=lambda r: r["id"])
+    relabelled = to_record.relabelled
+    if relabelled:
+        log(f"{collection}: {relabelled} records eye named are labelled by id here (the builder's name rule is stricter than eye's answer)")
 
     work = data_root / "work"
     work.mkdir(parents=True, exist_ok=True)
@@ -369,7 +397,7 @@ def build(collection: str, region: dict, data_root: Path, manifests: Path, git_s
         "recordCount": len(records),
         "publisherCount": publisher_count,
         "files": [{"path": "records.parquet", "format": "geoparquet", "sha256": sha256(pq_bytes), "bytes": len(pq_bytes), "records": len(records)}],
-        **({"withheldFields": cfg["withheld"]} if cfg["withheld"] else {}),
+        **({"withheldFields": withheld_fields(cfg, relabelled)} if cfg["withheld"] else {}),
     }
     text = dump_manifest(manifest)
     (folder / "manifest.json").write_bytes(text.encode("utf8"))
@@ -412,6 +440,7 @@ def main(argv=None) -> int:
     ap.add_argument("--manifests", type=Path, default=read.DEFAULT_MANIFESTS)
     ap.add_argument("--bbox", default=None, help="smoke test: only tiles touching w,s,e,n")
     ap.add_argument("--allow-dirty", action="store_true", help="smoke test only: build from uncommitted code")
+    ap.add_argument("--offline", action="store_true", help="build from the raw cache only; a cache miss stops the build")
     a = ap.parse_args(argv)
     data_root = a.data_root or read.default_data_root()
     region = dict(cards.REGIONS[a.region])
@@ -427,7 +456,7 @@ def main(argv=None) -> int:
             raise SystemExit("commit data/pipeline, data/schema and data/pyproject.toml first: the manifest names that commit")
         log("building from uncommitted code (smoke test)")
     git_sha = git("rev-parse", "HEAD")
-    results = [build(c, region, data_root, a.manifests, git_sha, smoke) for c in a.collections]
+    results = [build(c, region, data_root, a.manifests, git_sha, smoke, a.offline) for c in a.collections]
     print(json.dumps(results, indent=2))
     return 0
 

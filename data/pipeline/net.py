@@ -48,8 +48,9 @@ class FetchError(RuntimeError):
 class Fetcher:
     """GET with a minimum interval between network requests (start to start) and a disk cache."""
 
-    def __init__(self, raw_dir: Path, min_interval_s: float = 1.0, timeout_s: float = 90.0, tries: int = 4):
+    def __init__(self, raw_dir: Path, min_interval_s: float = 1.0, timeout_s: float = 90.0, tries: int = 4, offline: bool = False):
         self.raw = Path(raw_dir)
+        self.offline = offline  # True: a cache miss stops the build instead of asking the network
         self.raw.mkdir(parents=True, exist_ok=True)
         self.min_interval_s = min_interval_s
         self.timeout_s = timeout_s
@@ -87,6 +88,8 @@ class Fetcher:
             self.cached += 1
             self.log.append({"purpose": purpose, **{k: meta[k] for k in ("url", "status", "retrievedAt", "bytes", "sha256")}})
             return body
+        if self.offline:
+            raise SystemExit(f"offline: {url} is not in the cache under {self.raw}")
         delay = 5.0
         for attempt in range(1, self.tries + 1):
             self._throttle()

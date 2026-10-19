@@ -42,6 +42,8 @@ The raw cache makes a rerun after a failure cheap. A cached body is checked agai
 data/.venv/Scripts/python data/pipeline/build.py nid-dams nces-public-schools nrhp-listed [--data-root DIR]
 ```
 
+`--offline` builds from the raw cache only: a request that isn't cached stops the build instead of going to the network.
+
 The builder refuses to run when `data/pipeline`, `data/schema` or `data/pyproject.toml` have uncommitted changes, because each manifest names the commit it was built from (`builder.gitSha`).
 
 For each collection:
@@ -66,7 +68,11 @@ For each collection:
    The tolerance is there because the 1:20M outline cuts corners on the coast and along the Red River, the Rio Grande and the Sabine. Between neighbouring states, the source field decides. The rule is written into the manifest's `region.definition`, with the outline response's sha256.
 4. **Records.** Each kept feature is mapped to `record/1` exactly as `build-fixtures.mjs` does it (SCHEMA.md, "From eye's LayerFeature").
    - NRHP property names are withheld, and each record is labelled by its NRIS number.
-   - A dam's `nameRule` is set per record from its owner type, as eye's `PUBLIC_NAME_RULE` does: `label-by-id` when NID's owner type is Private or missing (eye names the dam `Dam <NIDID>`, and the build stops if it doesn't), `public-name` otherwise. NID's `published name` detail is withheld on every dam.
+   - A dam's `nameRule` is set per record from its owner types, as eye's `PUBLIC_NAME_RULE` does (`cards.dam_name_rule`). It's `public-name` only when the owner type is Federal, State, Local Government, Public Utility or Tribal Government, and so is every entry of `owner types`. Anything else is `label-by-id`: Private anywhere, Not Listed, missing, empty or any other value.
+     - **Answers without `owner types`.** eye's answers from before it requested `OWNER_TYPES` don't carry it, so only the primary type decides.
+     - **eye named it, the rule says label by id.** The builder names the record `Dam <NIDID>` and drops the `name: <name>` segment from its text. The count goes into the manifest's `withheldFields` reason.
+     - **eye labelled it by id.** The record is `label-by-id` whatever the owner type says.
+     - NID's `published name` detail is withheld on every dam.
    - `place` comes from the source field:
      - schools: `source-field`, with the county code
      - dams and historic places: `name-lookup`

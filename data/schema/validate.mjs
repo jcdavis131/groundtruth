@@ -11,7 +11,8 @@
 //      Any other keyword in a schema is an error, so the schema can't quietly say more than this checks.
 //   2. Rules JSON Schema can't say (data/SCHEMA.md, "Checks beyond the schema"): no placeholder values, closed
 //      polygon rings, state and county codes that agree, the snapshot id's parts, the public-name list, no
-//      public-name on a name in label-by-id form, no withheld detail (a dam's published name), the count gap, and the listed files' bytes, sha256 and record counts.
+//      public-name on a name in label-by-id form, a dam's public-name only under public owner types, no name segment
+//      in a label-by-id record's text, no withheld detail (a dam's published name), the count gap, and the listed files' bytes, sha256 and record counts.
 // Each problem is {code, path, message}. Exit 0 when every input is valid, 1 otherwise.
 
 import { createHash } from "node:crypto";
@@ -125,6 +126,24 @@ export const LABEL_BY_ID_FORM = {
 };
 
 /**
+ * The owner types under which a dam may keep its published name (eye's DAM_NAMED_OWNER_TYPES, lib/infra/features.ts):
+ * a public-name dam's "owner type" and every entry of its "owner types" must be one of these. Private, Not Listed,
+ * a missing owner type and anything else are labelled by id.
+ */
+export const DAM_NAMED_OWNER_TYPES = new Set(["federal", "state", "local government", "public utility", "tribal government"]);
+
+function damOwnerProblem(details) {
+  const d = details && typeof details === "object" ? details : {};
+  const primary = typeof d["owner type"] === "string" ? d["owner type"].trim().toLowerCase() : "";
+  if (!DAM_NAMED_OWNER_TYPES.has(primary)) return `owner type ${JSON.stringify(d["owner type"] ?? null)} is not public (Not Listed or missing is unknown, not public)`;
+  if (Object.hasOwn(d, "owner types")) {
+    const bad = String(d["owner types"] ?? "").split(",").map((s) => s.trim().toLowerCase()).filter((e) => !DAM_NAMED_OWNER_TYPES.has(e));
+    if (bad.length) return `owner types ${JSON.stringify(d["owner types"])} include a non-public entry`;
+  }
+  return null;
+}
+
+/**
  * Detail keys a snapshot never carries: eye shows them on click, but they hold the published name of a record
  * labelled by id, which can be a person's. The snapshot's manifest lists them under withheldFields.
  */
@@ -193,6 +212,13 @@ export function validateRecord(r) {
   const form = LABEL_BY_ID_FORM[r.collection];
   if (r.nameRule === "public-name" && form && typeof r.name === "string" && form.test(r.name))
     out.push({ code: "public-name", path: "/nameRule", message: `${JSON.stringify(r.name)} is a label by id, so the record's nameRule is label-by-id` });
+  if (r.collection === "nid-dams" && r.nameRule === "public-name") {
+    const why = damOwnerProblem(r.details);
+    if (why) out.push({ code: "public-name", path: "/nameRule", message: `${why}, so the dam is labelled by id` });
+  }
+  // A record labelled by id never carries a name in its record text (eye's "name: <published name>" segment).
+  if (r.nameRule === "label-by-id" && PUBLIC_NAME_COLLECTIONS.has(r.collection) && typeof r.text === "string" && r.text.split("; ").some((s) => s.startsWith("name: ")))
+    out.push({ code: "public-name", path: "/text", message: "a record labelled by id has a name segment in its record text" });
   if (r.details && typeof r.details === "object")
     for (const k of WITHHELD_DETAILS[r.collection] ?? [])
       if (Object.hasOwn(r.details, k))
