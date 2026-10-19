@@ -26,7 +26,7 @@ const yr = (y: number) => Date.UTC(y, 0, 1);
 const series = (id: string, points: Array<[number, number]>) => ({ id: `${id}:${FIPS}`, title: id, unit: "declarations", frequency: "annual", geo, provenance: {}, tags: [], points: points.map(([y, v]) => ({ t: yr(y), v })) });
 const decl = (area: string) => ({ disasterNumber: 4533, declarationType: "DR", declarationDate: "2020-04-09", incidentType: "Biological", declarationTitle: "COVID-19 PANDEMIC", incidentBeginDate: null, incidentEndDate: null, programs: ["PA"], designatedArea: area, placeCode: null, tribalRequest: null });
 
-const CHATHAM = {
+const CHATHAM: HistoryData["missing"][number] = {
   source: "FEMA legacy-code rows",
   reason: "join:filed_under_other_code",
   detail: "Chatham Regional Educational Attendance Area (EM-3446, DR-4585), filed under 02280: FEMA files this area under 02280, Wrangell-Petersburg, though it lies in Hoonah-Angoon. Not attached here, so this county's declarations may be short by 2.",
