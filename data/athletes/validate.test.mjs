@@ -8,7 +8,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { ALLOWLIST, CITABLE, recordKey, validateAthlete } from "./validate.mjs";
+import { ALLOWLIST, CITABLE, recordKey, SOURCE_SHAPES, validateAthlete } from "./validate.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, "../..");
@@ -258,6 +258,80 @@ for (const k of ["sourceId", "url", "retrievedAt", "fields"]) {
   delete r.sources[0][k];
   check(fails(r, "required", `/sources/0/${k}`).ok, `a source entry without ${k} fails with required`);
 }
+// Each source's upstreamId and url have that source's own shape. The list of sources is pinned, like leagues.
+check(
+  JSON.stringify(Object.keys(SOURCE_SHAPES)) ===
+    JSON.stringify(["nba-stats", "nflverse-players", "nflverse-stats", "nflverse-depth", "nflverse-teams", "nflverse-games", "wikidata", "census-gazetteer", "geonames"]),
+  "the sources with a known id and URL shape are the pinned nine",
+  Object.keys(SOURCE_SHAPES).join(", "),
+);
+/** The fixture with its first source entry replaced. */
+const citing = (src) => {
+  const r = valid();
+  r.sources[0] = { ...r.sources[0], ...src };
+  return r;
+};
+const NFLVERSE_DL = "https://github.com/nflverse/nflverse-data/releases/download";
+const GOOD_SOURCES = [
+  ["nba-stats", "1628492", "https://stats.nba.com/stats/playergamelogs?Season=2017-18"],
+  ["nba-stats", "1610612742", "https://stats.nba.com/stats/leaguedashteamstats?Season=2017-18&MeasureType=Base"],
+  ["nflverse-players", "00-0033873", `${NFLVERSE_DL}/players/players.csv`],
+  ["nflverse-players", "BAR591037", `${NFLVERSE_DL}/players/players.csv`],
+  ["nflverse-stats", "00-0033873", `${NFLVERSE_DL}/stats_player/stats_player_week_2001.csv`],
+  ["nflverse-depth", "00-0033873", `${NFLVERSE_DL}/depth_charts/depth_charts_2016.csv`],
+  ["nflverse-teams", "JAX", `${NFLVERSE_DL}/teams/teams_colors_logos.csv`],
+  ["nflverse-teams", "LA", `${NFLVERSE_DL}/teams/teams_colors_logos.csv`],
+  ["nflverse-games", "JAX00", "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv"],
+  ["wikidata", "Q527268", "https://www.wikidata.org/wiki/Q29965061"],
+  ["census-gazetteer", "7210334", "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_place_national.zip"],
+  ["geonames", "2643743", "https://www.geonames.org/2643743"],
+  ["geonames", "US.TX", "https://download.geonames.org/export/dump/admin1CodesASCII.txt"],
+];
+for (const [sourceId, upstreamId, url] of GOOD_SOURCES) {
+  const errs = validateAthlete(citing({ sourceId, upstreamId, url }));
+  check(errs.length === 0, `a ${sourceId} citation of ${upstreamId} at its own URL is valid`, show(errs));
+}
+const BAD_SOURCES = [
+  // [what, entry, code, field]
+  ["a Wikidata id of Q0", { sourceId: "wikidata", upstreamId: "Q0", url: "https://www.wikidata.org/wiki/Q0" }, "pattern", "upstreamId"],
+  ["a Wikidata id with a leading zero", { sourceId: "wikidata", upstreamId: "Q01", url: "https://www.wikidata.org/wiki/Q1" }, "pattern", "upstreamId"],
+  ["a Wikidata id that is a property", { sourceId: "wikidata", upstreamId: "P569", url: "https://www.wikidata.org/wiki/Q1" }, "pattern", "upstreamId"],
+  ["a Wikidata id written as a label", { sourceId: "wikidata", upstreamId: "Caguas", url: "https://www.wikidata.org/wiki/Q527268" }, "pattern", "upstreamId"],
+  ["a date as a Wikidata id", { sourceId: "wikidata", upstreamId: "1990-01-01", url: "https://www.wikidata.org/wiki/Q1" }, "pattern", "upstreamId"],
+  ["a Wikidata URL on another host", { sourceId: "wikidata", upstreamId: "Q527268", url: "https://en.wikipedia.org/wiki/Caguas" }, "pattern", "url"],
+  ["a Wikidata URL carrying a query", { sourceId: "wikidata", upstreamId: "Q527268", url: "https://www.wikidata.org/wiki/Q29965061?dob=1990-01-01&age=35" }, "pattern", "url"],
+  ["a Wikidata URL over http", { sourceId: "wikidata", upstreamId: "Q527268", url: "http://www.wikidata.org/wiki/Q29965061" }, "pattern", "url"],
+  ["a Wikidata URL on a look-alike host", { sourceId: "wikidata", upstreamId: "Q527268", url: "https://www.wikidata.org.example.invalid/wiki/Q1" }, "pattern", "url"],
+  ["an NBA id that is a date", { sourceId: "nba-stats", upstreamId: "19900101-35", url: "https://stats.nba.com/stats/playergamelogs?Season=2017-18" }, "pattern", "upstreamId"],
+  ["an NBA URL off stats.nba.com", { sourceId: "nba-stats", upstreamId: "1628492", url: "https://cdn.nba.com/stats/playergamelogs?Season=2017-18" }, "pattern", "url"],
+  ["an NBA URL with an extra query parameter", { sourceId: "nba-stats", upstreamId: "1628492", url: "https://stats.nba.com/stats/playergamelogs?Season=2017-18&dob=1990-01-01" }, "pattern", "url"],
+  ["an NBA URL for another endpoint", { sourceId: "nba-stats", upstreamId: "1628492", url: "https://stats.nba.com/stats/commonplayerinfo?PlayerID=1628492" }, "pattern", "url"],
+  ["a gsis_id of the wrong shape", { sourceId: "nflverse-players", upstreamId: "00-12345", url: `${NFLVERSE_DL}/players/players.csv` }, "pattern", "upstreamId"],
+  ["an nflverse URL from another repository", { sourceId: "nflverse-stats", upstreamId: "00-0033873", url: "https://github.com/someone/nflverse-data/releases/download/stats_player/stats_player_week_2001.csv" }, "pattern", "url"],
+  ["an nflverse stats citation pointing at the depth charts", { sourceId: "nflverse-stats", upstreamId: "00-0033873", url: `${NFLVERSE_DL}/depth_charts/depth_charts_2016.csv` }, "pattern", "url"],
+  ["a team abbreviation in lower case", { sourceId: "nflverse-teams", upstreamId: "jax", url: `${NFLVERSE_DL}/teams/teams_colors_logos.csv` }, "pattern", "upstreamId"],
+  ["a stadium id written as a name", { sourceId: "nflverse-games", upstreamId: "Alltel Stadium", url: "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv" }, "pattern", "upstreamId"],
+  ["a Census GEOID of the wrong length", { sourceId: "census-gazetteer", upstreamId: "721033", url: "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_place_national.zip" }, "pattern", "upstreamId"],
+  ["a Census citation off census.gov", { sourceId: "census-gazetteer", upstreamId: "7210334", url: "https://example.invalid/2024_Gaz_place_national.zip" }, "pattern", "url"],
+  ["a GeoNames page for another place", { sourceId: "geonames", upstreamId: "2643743", url: "https://www.geonames.org/2988507" }, "pattern", "url"],
+  ["an admin1 code cited at a place page", { sourceId: "geonames", upstreamId: "US.TX", url: "https://www.geonames.org/2643743" }, "pattern", "url"],
+  ["a GeoNames id that is neither a geonameid nor an admin1 code", { sourceId: "geonames", upstreamId: "Texas", url: "https://download.geonames.org/export/dump/admin1CodesASCII.txt" }, "pattern", "upstreamId"],
+];
+for (const [what, src, code, field] of BAD_SOURCES) {
+  const { ok, errs } = fails(citing(src), code, `/sources/0/${field}`);
+  check(ok, `${what} fails with ${code} at ${field}`, show(errs));
+}
+{
+  const { ok, errs } = fails(citing({ sourceId: "espn" }), "enum", "/sources/0/sourceId");
+  check(ok, "a source with no known id and URL shape fails with enum", show(errs));
+}
+{
+  const r = valid();
+  delete r.sources[1].upstreamId;
+  const { ok, errs } = fails(r, "required", "/sources/1/upstreamId");
+  check(ok, "a citation of a known source without its upstreamId fails with required", show(errs));
+}
+
 check(validateAthlete([valid()]).some((e) => e.code === "type"), "an array is not a record");
 check(JSON.stringify(CITABLE) === JSON.stringify(RECORD_FIELDS.filter((k) => !["schemaVersion", "id", "sources"].includes(k))), "every field but schemaVersion, id and sources must be cited");
 
