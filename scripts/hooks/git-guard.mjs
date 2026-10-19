@@ -74,7 +74,7 @@
 // is); git run from a script file; and gh commands that move refs (gh repo sync --force). It is a
 // guardrail against mistakes, not a sandbox.
 //
-// Idea from mattpocock/skills (MIT, (c) 2026 Matt Pocock), misc/git-guardrails-claude-code at 49dd158.
+// Idea from mattpocock/skills (MIT, (c) 2026 Matt Pocock), skills/misc/git-guardrails-claude-code at 49dd158.
 // No code copied. That script reads its input with jq, so it fails open where jq isn't installed, and it
 // blocks every git push. This one needs only Node, fails closed, and allows a push to a feature branch.
 import { spawnSync } from "node:child_process";
