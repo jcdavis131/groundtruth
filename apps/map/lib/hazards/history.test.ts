@@ -47,6 +47,7 @@ import {
   spcPerYear,
   usdmCategoryUrl,
   usdmDsciUrl,
+  USDM_THIS_WEEK,
   yearT,
   type HistoryInputs,
 } from "./history";
@@ -179,25 +180,101 @@ describe("FEMA", () => {
     expect(ch.data.declarations.map((d) => d.disasterNumber)).toEqual(expect.arrayContaining([3446, 4094, 1663, 1669, 4533]));
   });
 
-  it("a split code's row for an area no cited source places is attached to none and listed in missing", () => {
+  it("a split code's row for an area no cited source places is attached to none and listed in missing; an area lying in another county is left to it", () => {
     const row = (area: string, n: number) => ({ fipsStateCode: "02", fipsCountyCode: "280", disasterNumber: n, declarationType: "DR", declarationDate: "2021-02-17T00:00:00.000Z", designatedArea: area });
     const rows = [row("Chatham Regional Educational Attendance Area", 4585), row("Wrangell City School District", 4533), row("Somewhere New", 9999)];
     const w = attachFema(rows, "02275");
     expect(w.rows.map((r) => r.disasterNumber)).toEqual([4533]);
-    expect(w.unplaced.map((u) => [u.area, u.disasterNumber])).toEqual([
-      ["Chatham Regional Educational Attendance Area", 4585],
-      ["Somewhere New", 9999],
-    ]);
-    expect(w.unplaced[0].reason).toMatch(/Hoonah-Angoon Census Area \(02105\)/);
-    expect(w.unplaced[1].reason).toMatch(/not in FEMA_SPLIT_AREAS/);
+    // Chatham lies in Hoonah-Angoon (02105): Wrangell loses nothing, so it lists only the unknown area.
+    expect(w.unplaced.map((u) => [u.area, u.disasterNumber])).toEqual([["Somewhere New", 9999]]);
+    expect(w.unplaced[0].reason).toMatch(/not in FEMA_SPLIT_AREAS/);
+    expect(w.filedElsewhere).toEqual([]);
     const p = attachFema(rows, "02195");
     expect(p.rows).toEqual([]);
     const h = assembleHistory(travis({ fips: "02195", name: "Petersburg Borough", stusab: "AK", fema: ok({ rows, count: 3 }) }));
     expect(h.data.declarations).toEqual([]);
-    expect(h.data.missing.filter((m) => m.reason === "join:area_not_placed").map((m) => m.detail)).toEqual([
-      expect.stringMatching(/^Chatham Regional Educational Attendance Area \(disaster 4585\), filed under 02280: /),
-      expect.stringMatching(/^Somewhere New \(disaster 9999\), filed under 02280: /),
-    ]);
+    expect(h.data.missing.filter((m) => m.source === "FEMA legacy-code rows").map((m) => [m.reason, m.detail])).toEqual([["join:area_not_placed", expect.stringMatching(/^Somewhere New \(disaster 9999\), filed under 02280: /)]]);
+    expect(h.data.missing.map((m) => m.detail ?? "").join(" ")).not.toMatch(/Chatham/);
+  });
+
+  it("Hoonah-Angoon (02105): the Chatham REAA rows FEMA files under 02280 are listed as missing there, never attached, so its count says it may be short", () => {
+    // The 2026-10-19 sweep: Chatham REAA under 02280 carries DR-4585, DR-4533 and EM-3446; 02105 has DR-4533 under its own code.
+    expect((sweep.splitCodeAreas as Record<string, Array<{ area: string; disasters: number[] }>>)["02280"].find((x) => x.area.startsWith("Chatham"))!.disasters.sort()).toEqual([3446, 4533, 4585]);
+    expect(decodeURIComponent(femaUrl("02105"))).toContain("fipsStateCode eq '02' and (fipsCountyCode eq '105' or fipsCountyCode eq '280')");
+    // 02105 is no successor of 02280: no rename/split caveat claims it was.
+    expect(femaCodes("02105")).toEqual(["02105"]);
+    const r = (county: string, area: string, n: number, type = "DR", date = "2021-02-17") => ({ fipsStateCode: "02", fipsCountyCode: county, disasterNumber: n, declarationType: type, declarationDate: `${date}T00:00:00.000Z`, designatedArea: area });
+    const rows = [
+      r("105", "Hoonah-Angoon (Census Area)", 4533, "DR", "2020-04-09"),
+      r("280", "Chatham Regional Educational Attendance Area", 4585),
+      r("280", "Chatham Regional Educational Attendance Area", 4533, "DR", "2020-04-09"),
+      r("280", "Chatham Regional Educational Attendance Area", 3446, "EM", "2018-12-01"),
+      r("280", "Wrangell-Petersburg (Census Area)", 4533, "DR", "2020-04-09"),
+      r("280", "Wrangell City School District", 4533, "DR", "2020-04-09"),
+    ];
+    const a = attachFema(rows, "02105");
+    // Only its own row is attached; the other 02280 rows are neither attached nor "unmatched".
+    expect(a.rows.map((x) => `${x.fipsCountyCode}:${x.disasterNumber}`)).toEqual(["105:4533"]);
+    expect(a.unmatched).toEqual([]);
+    expect(a.unplaced).toEqual([]);
+    expect(a.filedElsewhere).toEqual([expect.objectContaining({ oldFips: "02280", area: "Chatham Regional Educational Attendance Area", disasters: ["EM-3446", "DR-4585"] })]);
+    const h = assembleHistory(travis({ fips: "02105", name: "Hoonah-Angoon Census Area", stusab: "AK", fema: ok({ rows, count: rows.length }) }));
+    expect(h.data.declarationRows).toBe(1);
+    expect(h.data.declarations.map((d) => d.disasterNumber)).toEqual([4533]);
+    const m = h.data.missing.filter((x) => x.reason === "join:filed_under_other_code");
+    expect(m).toHaveLength(1);
+    expect(m[0].source).toBe("FEMA legacy-code rows");
+    expect(m[0].detail).toMatch(/^Chatham Regional Educational Attendance Area \(EM-3446, DR-4585\), filed under 02280: FEMA files this area under 02280, Wrangell-Petersburg, though it lies in Hoonah-Angoon\. Not attached here, so this county's declarations may be short by 2\./);
+    expect(m[0].detail).toMatch(/tiger-check\.json/);
+    expect(h.caveats.join(" ")).toMatch(/This county's FEMA declarations may be short: EM-3446, DR-4585 designate Chatham Regional Educational Attendance Area/);
+    expect(h.caveats.join(" ")).not.toMatch(/former Wrangell-Petersburg/);
+    // FEMA answered: the missing entry is not "FEMA" itself, so the declarations still count.
+    expect(h.data.missing.some((x) => x.source === "FEMA")).toBe(false);
+  });
+
+  it("Prince of Wales-Hyder (02198) reads 02280 too: whole-area rows attach with the caveat, each disaster once across its own code, 02201 and 02280", () => {
+    expect(femaCodes("02198")).toEqual(["02198", "02201", "02280"]);
+    expect(decodeURIComponent(femaUrl("02198"))).toContain("(fipsCountyCode eq '198' or fipsCountyCode eq '201' or fipsCountyCode eq '280')");
+    const r = (county: string, area: string, n: number, date = "2020-04-09") => ({ fipsStateCode: "02", fipsCountyCode: county, disasterNumber: n, declarationType: "DR", declarationDate: `${date}T00:00:00.000Z`, designatedArea: area });
+    const rows = [
+      r("280", "Wrangell-Petersburg (Census Area)", 4533),
+      r("201", "Prince of Wales-Outer Ketchikan (Census Area)", 4533),
+      r("198", "Prince of Wales-Hyder (Census Area)", 4122, "2013-06-01"),
+      r("280", "Wrangell-Petersburg (Census Area)", 4122, "2013-06-01"),
+      r("280", "Wrangell-Petersburg (Census Area)", 1234, "2005-01-01"),
+      r("201", "Southeast Islands Regional Educational Attendance Ar", 1234, "2005-01-01"),
+      r("201", "Prince of Wales-Outer Ketchikan (Census Area)", 1234, "2005-01-01"),
+      r("280", "Wrangell City School District", 4700),
+      r("280", "Chatham Regional Educational Attendance Area", 4585),
+    ];
+    const a = attachFema(rows, "02198");
+    // 4122: own code only. 4533 and 1234: from 02201 (first in femaCodes) only, both of its area rows kept. 4700, Chatham: not 02198's.
+    expect(a.rows.map((x) => `${x.fipsCountyCode}:${x.disasterNumber}`)).toEqual(["198:4122", "201:4533", "201:1234", "201:1234"]);
+    expect(a.unplaced).toEqual([]);
+    expect(a.filedElsewhere).toEqual([]);
+    // A disaster filed only under 02280 attaches to 02198 as a whole-area row.
+    const only280 = attachFema([r("280", "Wrangell-Petersburg (Census Area)", 4533)], "02198");
+    expect(only280.rows.map((x) => x.disasterNumber)).toEqual([4533]);
+    const h = assembleHistory(travis({ fips: "02198", name: "Prince of Wales-Hyder Census Area", stusab: "AK", fema: ok({ rows, count: rows.length }) }));
+    const dr = h.data.series.find((s) => s.id === "fema:dr:02198")!;
+    expect(sum(dr.points)).toBe(3);
+    expect(h.data.declarations.find((d) => d.disasterNumber === 4533)!.filedUnder).toBe("02201");
+    const note = h.caveats.join(" ");
+    expect(note).toMatch(/former Wrangell-Petersburg Census Area, AK \(02280\)/);
+    expect(note).toMatch(/Prince of Wales-Hyder Census Area added part of the former Petersburg Census Area/);
+    expect(FEMA_LEGACY.find((l) => l.oldFips === "02280")!.citation).toMatch(/county-changes\.2010\.html/);
+  });
+
+  it("meta.notCounty and meta.unmatched are counted only when FEMA answered: null when it failed or was skipped, never 0", () => {
+    const failed = assembleHistory(travis({ fema: { error: "fema-openfema 503", url: "https://x" } }));
+    expect(failed.meta.notCounty).toBeNull();
+    expect(failed.meta.unmatched).toBeNull();
+    const skipped = assembleHistory(travis({ fips: "09110", name: "Capitol Planning Region", stusab: "CT", fema: { skip: "join:legacy_ct_counties" } }));
+    expect(skipped.meta.notCounty).toBeNull();
+    expect(skipped.meta.unmatched).toBeNull();
+    const answered = assembleHistory(travis());
+    expect(typeof answered.meta.notCounty).toBe("number");
+    expect(Array.isArray(answered.meta.unmatched)).toBe(true);
   });
 
   it("every designatedArea FEMA uses under a split code is placed by FEMA_SPLIT_AREAS or deliberately unplaced", () => {
@@ -212,6 +289,15 @@ describe("FEMA", () => {
       expect(rules.map((r) => r.area).sort(), code).toEqual(used);
       for (const r of rules) {
         for (const s of r.to) expect(legacy.successors, `${code} ${r.area}`).toContain(s);
+        // An area lying outside the successors names the county it lies in, a current one, never a successor, with the why.
+        if (r.liesIn) {
+          expect(r.to, `${code} ${r.area}`).toEqual([]);
+          expect(r.why, `${code} ${r.area}`).toBeTruthy();
+          for (const c of r.liesIn) {
+            expect(counties.rows.some((x) => x.geoid === c), c).toBe(true);
+            expect(legacy.successors).not.toContain(c);
+          }
+        }
         expect(r.basis, `${code} ${r.area}`).toMatch(/census\.gov|TIGERweb/);
       }
       // the whole former area goes to every successor
@@ -242,7 +328,7 @@ describe("FEMA", () => {
       "02270": ["02158"],
       "02261": ["02063", "02066"],
       "02201": ["02198", "02130", "02275"],
-      "02280": ["02275", "02195"],
+      "02280": ["02275", "02195", "02198"],
       "51515": ["51019"],
     });
   });
@@ -395,6 +481,17 @@ describe("the answer", () => {
     expect(a.data.series.some((s) => s.id.startsWith("fema:"))).toBe(false);
     expect(a.data.missing[0]).toMatchObject({ source: "FEMA", reason: "source:failed" });
     expect(a.caveats.join(" ")).toMatch(/FEMA did not answer this time/);
+  });
+  it("USDM's categorical call failing while the weekly index answers is a missing entry and a caveat, not 'no week published'", () => {
+    const a = assembleHistory(travis({ droughtNow: { error: "usdm 503", url: "https://x" } }));
+    expect(a.data.droughtNow).toBeNull();
+    expect(a.data.series.some((s) => s.id === "usdm:dsci:48453")).toBe(true);
+    expect(a.data.missing).toEqual([{ source: USDM_THIS_WEEK, reason: "source:failed", detail: "usdm 503" }]);
+    expect(a.caveats.join(" ")).toMatch(/USDM this week did not answer this time \(usdm 503\)/);
+    // USDM answering with no week is "no week published": nothing missing.
+    expect(assembleHistory(travis({ droughtNow: ok(null) })).data.missing).toEqual([]);
+    // A 404 is a skip with its reason.
+    expect(assembleHistory(travis({ droughtNow: { skip: "source:not_in_release" } })).data.missing).toEqual([{ source: USDM_THIS_WEEK, reason: "source:not_in_release" }]);
   });
   it("Los Angeles' answer stays far under 4.5 MB", () => {
     const a = assembleHistory(travis({ fips: "06037", name: "Los Angeles County", stusab: "CA", fema: ok(parseFema(femaLa)) }));

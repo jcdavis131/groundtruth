@@ -30,6 +30,8 @@ export const STORM_NAME_CHECK_NOTE =
   "A row is attached only when its county code and its county name agree with the county: NCEI files some rows under codes that are not this county's (Puerto Rico's multi-municipio areas in the early years, Oklahoma in 1996 and Georgia in 2025 under forecast-zone numbers), and those are listed in the bake, never attached.";
 export const STORM_ALASKA_LINE =
   "NCEI files Alaska's storm events under its own areas (\"Middle Tanana Valley\", \"Susitna Valley\") and forecast zones, none of which is a borough or census area by code and name, so no storm events are shown for Alaska.";
+export const STORM_TOTAL_NOTE =
+  "A type's total adds its county-coded reports in the drawn years only: a blank (zone-coded) year adds nothing, so a type with blank years (listed in its blank) is short by an unknown amount, not complete.";
 export const STORM_CT_LINE = "NCEI files Connecticut's storm events under its old counties, so no storm events are shown for planning regions.";
 
 export type StormGate = { drawn: true; share: number } | { drawn: false; reason: "zone-coded" | "not-recorded"; share: number | null };
@@ -49,6 +51,7 @@ export interface StormTypeSeries {
   points: Array<[number, number]>;
   /** Years blanked by the gate, with the reason; never 0. */
   blank: Array<[number, "zone-coded"]>;
+  /** Sum of `points` only: county-coded reports in the drawn years. A blank year adds nothing (STORM_TOTAL_NOTE). */
   total: number;
 }
 

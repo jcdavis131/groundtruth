@@ -864,6 +864,24 @@ describe("world_context: FEMA zeros, duplicates and the cut order", () => {
     expect(topicsOf(r).hazards.coverageStatus!.basis).toContain("FEMA declarations: the latest 3 distinct shown, any date (FEMA files 14 rows for this county; a disaster can have one row per designated area)");
   });
 
+  it("Hoonah-Angoon: rows FEMA files under another code for an area lying here say the count may be short, and the declarations stay cited", async () => {
+    const detail = "Chatham Regional Educational Attendance Area (EM-3446, DR-4585), filed under 02280: FEMA files this area under 02280, Wrangell-Petersburg, though it lies in Hoonah-Angoon. Not attached here, so this county's declarations may be short by 2.";
+    const h = { ...HISTORY, data: { ...HISTORY.data, fips: "02105", declarations: [{ ...decl(1), disasterNumber: 4533 }], declarationRows: 1, missing: [{ source: "FEMA legacy-code rows", reason: "join:filed_under_other_code", detail }] } };
+    const r = await run({ fips: "48453", topics: ["hazards"] }, { "/api/hazards?op=history": h }).reply;
+    expect(topicsOf(r).hazards.items.filter((i) => i.fact === "FEMA declaration").map((i) => i.code)).toEqual(["DR-4533"]);
+    const m = topicsOf(r).hazards.missing!.find((x) => x.what === "FEMA legacy-code rows")!;
+    expect(m.reason).toMatch(/this county's FEMA count may be short \(join:filed_under_other_code\): Chatham Regional Educational Attendance Area \(EM-3446, DR-4585\)/);
+  });
+
+  it("USDM's this-week call failing is a missing entry in plain words, not 'not in the reply'; the weekly index's citation is untouched", async () => {
+    const h = { ...HISTORY, data: { ...HISTORY.data, droughtNow: null, missing: [{ source: "USDM this week", reason: "source:failed", detail: "usdm 503" }] } };
+    const r = await run({ fips: "48453", topics: ["hazards"] }, { "/api/hazards?op=history": h }).reply;
+    const hz = topicsOf(r).hazards;
+    expect(hz.items.some((i) => i.fact.startsWith("U.S. Drought Monitor this week"))).toBe(false);
+    expect(hz.missing).toContainEqual({ what: "U.S. Drought Monitor this week", reason: "USDM failed on this call (source:failed): usdm 503" });
+    expect(hz.missing!.some((x) => x.what === "USDM this week")).toBe(false);
+  });
+
   it("the byte cap cuts list rows (declarations past the first, hospitals) before the drought reading and the live counts", async () => {
     const long = "Z".repeat(190);
     const many = (n: number) => Array.from({ length: n }, (_, i) => feature(-97.74 + i * 0.001, 30.27, { id: `hifld-hosp:${i}`, name: `${long}${i}`, details: { type: long }, extra: { status: long, embedText: `name: ${long}${i}` } }));

@@ -186,6 +186,7 @@ function provOf(body: JsonObject, id: string, pick?: (p: Prov) => boolean): Prov
 export const MISSING_NAMES: Record<string, string> = {
   FEMA: "fema-openfema",
   USDM: "usdm",
+  "USDM this week": "usdm",
   SPC: "noaa-spc",
   "NCEI Storm Events": "ncei-storm-events",
   "USGS landslide susceptibility": "usgs-landslide-susc",
@@ -202,6 +203,7 @@ const REASONS: Record<string, (who: string) => string> = {
   "join:ncei_areas_not_counties": (who) => `${who} files Alaska by forecast zones and areas, not by county`,
   "source:failed": (who) => `${who} failed on this call`,
   "join:area_not_placed": (who) => `${who}: FEMA filed a row under a former, split county code for a designated area that no cited source places in this county, so it is not attached here`,
+  "join:filed_under_other_code": (who) => `${who}: FEMA files declarations for an area lying in this county under another county's code, and they are not attached here, so this county's FEMA count may be short`,
 };
 
 export function explainReason(code: string, who: string, detail?: string | null): string {
@@ -728,7 +730,13 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
           const usdm = cite(h, "usdm", (p) => String(p.upstreamUrl ?? "").includes("Severity"));
           const shares = ["d0", "d1", "d2", "d3", "d4"].map((k) => `${k.toUpperCase()} ${num(dn[k]) ?? "?"}%`).join(", ");
           push(s, item(usdm, "U.S. Drought Monitor this week (share of county area per class)", shares, { period: str(dn.mapDate) ?? undefined, note: `none ${num(dn.none) ?? "?"}%; shares as published` }));
-        } else miss(s, "U.S. Drought Monitor this week", "not in the hazard history reply");
+        } else {
+          // The route's own entry for this week's call (it failed, or USDM has no week here), else plain absence.
+          const nowGap = arr(d.missing)
+            .map(obj)
+            .find((m) => str(m.source) === "USDM this week");
+          miss(s, "U.S. Drought Monitor this week", nowGap ? explainReason(str(nowGap.reason) ?? "", "USDM", str(nowGap.detail)) : "not in the hazard history reply");
+        }
         // The route's other gaps (sources this tool does not read), in plain words.
         for (const m of arr(d.missing).map(obj)) {
           const who = str(m.source);
