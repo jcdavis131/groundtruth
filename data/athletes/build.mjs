@@ -530,6 +530,13 @@ export function birthFields(res, graph, retrievedAt) {
   } else {
     sources.push({ sourceId: "geonames", upstreamId: rec.upstreamId, url: URLS.geonamesPlace(rec.upstreamId), retrievedAt: retrievedAt.geonames, fields: ["birthCity", ...rest] });
   }
+  // A territory GeoNames files as a country (Puerto Rico): the region is the P131_REGIONS item the settlement's
+  // P131 chain reaches, cited to that item. Only when the place record gave no region.
+  const regionLabel = res.regionQid ? graph.get(res.regionQid)?.label : null;
+  if (!("birthRegion" in f) && present(regionLabel ?? "")) {
+    f.birthRegion = regionLabel;
+    sources.push({ sourceId: "wikidata", upstreamId: res.regionQid, url: URLS.wikidataItem(res.regionQid), retrievedAt: retrievedAt.wikidata, fields: ["birthRegion"] });
+  }
   return { fields: f, sources };
 }
 

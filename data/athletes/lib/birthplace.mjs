@@ -17,6 +17,24 @@
 
 export const MAX_WALK = 4;
 
+// Puerto Rico (Q1183) is a US territory with its own Census place records (GEOID 72xxxxx), but GeoNames files it
+// as a country of its own, so its places have no US admin1 name and no region. A matched settlement whose
+// "located in" (P131) chain reaches one of these items, one parent at a time, takes the item as its region.
+// Nothing else changes: every other region still comes from the place record.
+export const P131_REGIONS = new Set(["Q1183"]);
+
+/** The P131_REGIONS item a settlement's single-parent P131 chain reaches within MAX_WALK levels, or null. */
+export function regionByP131(settlement, graph) {
+  let q = settlement;
+  for (let depth = 0; depth < MAX_WALK; depth++) {
+    const node = graph.get(q);
+    if (!node || node.parents.length !== 1) return null;
+    q = node.parents[0];
+    if (P131_REGIONS.has(q)) return q;
+  }
+  return null;
+}
+
 export const OUTCOMES = {
   "matched-direct": "P19 itself is a settlement whose external id matches one place record",
   "matched-after-walk": "P19 is finer than a city; P131 led to one settlement whose external id matches one place record",
@@ -85,7 +103,7 @@ export function resolveBirthplace(p19s, graph, places) {
       const { rec, via } = m[0];
       if (node.iso.length > 0 && !node.iso.includes(rec.cc)) return { outcome: "dropped-country-mismatch", path };
       if (!node.label) return { outcome: "dropped-no-label", path };
-      return { outcome: depth === 0 ? "matched-direct" : "matched-after-walk", path, settlement: q, placeId: rec.placeId, via, rec };
+      return { outcome: depth === 0 ? "matched-direct" : "matched-after-walk", path, settlement: q, placeId: rec.placeId, via, rec, regionQid: regionByP131(q, graph) };
     }
     if (node.finer) {
       if (node.parents.length === 0) return { outcome: "dropped-no-parent", path };
@@ -128,6 +146,12 @@ export function traceProblems(record, trace, graph, places) {
     if (m.length !== 1) out.push(`${trace.settlement}'s external ids match ${m.length} place records`);
     else if (m[0].rec.placeId !== trace.placeId) out.push(`${trace.settlement}'s external id points at ${m[0].rec.placeId}, the trace says ${trace.placeId}`);
     if (node.label !== record.birthCity) out.push(`birthCity ${JSON.stringify(record.birthCity)} is not ${trace.settlement}'s label`);
+  }
+  const region = record.sources.find((s) => s.sourceId === "wikidata" && s.fields.includes("birthRegion"));
+  if (region) {
+    const reached = regionByP131(trace.settlement, graph);
+    if (region.upstreamId !== reached) out.push(`the wikidata region citation names ${region.upstreamId}, the settlement's P131 chain reaches ${reached ?? "no region item"}`);
+    else if (graph.get(reached)?.label !== record.birthRegion) out.push(`birthRegion ${JSON.stringify(record.birthRegion)} is not ${reached}'s label`);
   }
   const place = record.sources.find((s) => (s.sourceId === "census-gazetteer" || s.sourceId === "geonames") && s.fields.includes("birthCity"));
   if (!place) out.push("no place-record source cites birthCity");

@@ -6,7 +6,7 @@
 // a state, a hospital, two cities called Portland).
 import { Readable } from "node:stream";
 import { project, readTable, splitCsvLine } from "./lib/csv.mjs";
-import { fipsToGeoid, gnisToAnsi, resolveBirthplace, traceProblems } from "./lib/birthplace.mjs";
+import { fipsToGeoid, gnisToAnsi, P131_REGIONS, regionByP131, resolveBirthplace, traceProblems } from "./lib/birthplace.mjs";
 import { arenaHold, ARENA_HOLDS, covers, nameFor, teamItems, venueFor, withOccupantMoves } from "./lib/arena.mjs";
 import { refuseNeverList } from "./lib/net.mjs";
 import { birthFields, eraAbbr, homeArenas, present } from "./build.mjs";
@@ -56,7 +56,9 @@ check(gnisToAnsi("2395220") === "02395220", "GNIS ids become 8-digit ANSICODEs")
 // Fixture QIDs, shaped like Wikidata's so validate.mjs accepts the records built from them (they are not the real
 // items): Q9000001 Los Angeles, 02 Hollywood, 03 Northridge, 04 Los Angeles County, 05 a state, 06 and 07 the two
 // Portlands, 08 St Mary's Hospital, 09 Paddington, 10 London, 11 Paris, 12 a village, 13 a town in the wrong
-// country, 14 a non-settlement, 15 an item Wikidata returned nothing for, 16 the player.
+// country, 14 a non-settlement, 15 an item Wikidata returned nothing for, 16 the player, 17 Caguas, 18 a Puerto
+// Rico barrio inside 17, 19 a Puerto Rico town whose P131 has two parents. Q1183 is the real Puerto Rico item,
+// because the region rule names it.
 const node = (qid, o) => ({ qid, label: null, settle: false, finer: false, coarse: false, parents: [], fips: [], gnis: [], geonames: [], iso: [], ...o });
 const graph = new Map(
   [
@@ -74,14 +76,21 @@ const graph = new Map(
     node("Q9000012", { label: "Fixture Village", settle: true, geonames: ["999"], iso: ["FR"] }),
     node("Q9000013", { label: "Fixture Town", settle: true, geonames: ["2643743"], iso: ["FR"] }),
     node("Q9000014", { label: "Fixture Thing", geonames: ["2988507"], iso: ["FR"] }),
+    node("Q1183", { label: "Puerto Rico", coarse: true, gnis: ["1779808"], geonames: ["4566966"], parents: ["Q30"], iso: ["US"] }),
+    node("Q9000017", { label: "Caguas", settle: true, fips: ["72-10334"], parents: ["Q1183"], iso: ["US"] }),
+    node("Q9000018", { label: "Fixture Barrio", settle: true, finer: true, parents: ["Q9000017"], iso: ["US"] }),
+    node("Q9000019", { label: "Fixture Pueblo", settle: true, fips: ["72-99999"], parents: ["Q1183", "Q9000004"], iso: ["US"] }),
   ].map((n) => [n.qid, n]),
 );
 const gaz = (geoid, ansi, region) => ({ placeId: `census-place:${geoid}`, source: "census-gazetteer", upstreamId: geoid, cc: "US", regionCode: "US.XX", region, country: "United States" });
 const la = gaz("0644000", "02410877", "California");
 const pdxOr = gaz("4159000", "02411471", "Oregon");
 const pdxMe = gaz("2360545", "02396221", "Maine");
+// GeoNames has no US.PR admin1 line, so a Puerto Rico Gazetteer place has a country and no region.
+const caguas = { ...gaz("7210334", "02414015", null), regionCode: "US.PR" };
+const pueblo = { ...gaz("7299999", "09999999", null), regionCode: "US.PR" };
 const places = {
-  gazByGeoid: new Map([["0644000", la], ["4159000", pdxOr], ["2360545", pdxMe]]),
+  gazByGeoid: new Map([["0644000", la], ["4159000", pdxOr], ["2360545", pdxMe], ["7210334", caguas], ["7299999", pueblo]]),
   gazByAnsi: new Map([["02410877", la]]),
   geonames: new Map([
     ["2643743", { placeId: "geonames:2643743", source: "geonames", upstreamId: "2643743", cc: "GB", regionCode: "GB.ENG", region: "England", country: "United Kingdom" }],
@@ -156,6 +165,28 @@ for (const p of ["Q9000001", "Q9000002", "Q9000008", "Q9000011"]) {
   const rec2 = { ...rec, sources: rec.sources.map((s) => (s.sourceId === "wikidata" ? { ...s, upstreamId: "Q9000003" } : s)) };
   check(traceProblems(rec2, viaNorthridge, graph, places).some((p) => /more than one P131 parent/.test(p)), "a trace through a level with two parents fails");
 }
+
+// Puerto Rico: a territory GeoNames files as a country, so the place record has no region. The region comes from
+// the settlement's P131 chain reaching Q1183, by id, one parent at a time.
+check(JSON.stringify([...P131_REGIONS]) === JSON.stringify(["Q1183"]), "the only region taken from P131 is Puerto Rico (Q1183)");
+{
+  const { rec, trace } = shipped(["Q9000017"]);
+  check(rec.birthCity === "Caguas" && rec.birthRegion === "Puerto Rico" && rec.birthCountry === "United States", "a Caguas birth gets Puerto Rico as its region", JSON.stringify(rec));
+  check(rec.sources.some((s) => s.sourceId === "wikidata" && s.upstreamId === "Q1183" && s.url === "https://www.wikidata.org/wiki/Q1183" && s.fields.join() === "birthRegion"), "the region is cited to Q1183 itself");
+  check(rec.sources.some((s) => s.sourceId === "geonames" && s.fields.join() === "birthCountry"), "GeoNames still cites the country, and no longer a region");
+  check(validateAthlete(rec).length === 0, "a Caguas record passes validate.mjs", JSON.stringify(validateAthlete(rec)));
+  check(traceProblems(rec, trace, graph, places).length === 0, "a Caguas record passes the A5a trace check", traceProblems(rec, trace, graph, places).join("; "));
+  const wrongRegion = { ...rec, sources: rec.sources.map((s) => (s.fields.join() === "birthRegion" ? { ...s, upstreamId: "Q9000004", url: "https://www.wikidata.org/wiki/Q9000004" } : s)) };
+  check(traceProblems(wrongRegion, trace, graph, places).some((p) => /region citation/.test(p)), "a region citation that is not where the P131 chain leads fails the trace");
+  check(traceProblems({ ...rec, birthRegion: "Fixture Region" }, trace, graph, places).some((p) => /birthRegion/.test(p)), "a birthRegion that is not Q1183's label fails the trace");
+}
+{
+  const x = r(["Q9000018"]);
+  check(x.outcome === "matched-after-walk" && x.settlement === "Q9000017" && x.regionQid === "Q1183", "a barrio walks up to Caguas, and Caguas's chain reaches Puerto Rico", JSON.stringify(x));
+}
+check(regionByP131("Q9000019", graph) === null && !("birthRegion" in shipped(["Q9000019"]).rec), "a settlement whose P131 has two parents gets no region from the chain");
+check(regionByP131("Q9000001", graph) === null && shipped(["Q9000001"]).rec.birthRegion === "California", "a mainland place keeps its region from the place record");
+check(regionByP131("Q1183", graph) === null, "Puerto Rico itself is not inside Puerto Rico");
 
 // ---------------------------------------------------------------- NFL arenas
 
