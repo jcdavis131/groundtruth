@@ -14,6 +14,7 @@ import SpaceWeatherPanel from "./SpaceWeatherPanel";
 import MeasurePanel from "./MeasurePanel";
 import AreaPanel from "./AreaPanel";
 import WhatsHerePanel from "./WhatsHerePanel";
+import AskJevOverlay from "./AskJevOverlay";
 import IndicatorsPanel from "./IndicatorsPanel";
 import ReleasesPanel from "./ReleasesPanel";
 import WatchlistPanel from "./WatchlistPanel";
@@ -202,6 +203,7 @@ export default function Cockpit({ initialMobile = false }: { initialMobile?: boo
               <MeasurePanel />
               <AreaPanel />
               <WhatsHerePanel />
+              <AskJevOverlay />
               <WaterReportPanel />
               <MarketReportPanel />
               <SpaceWeatherPanel />
@@ -240,6 +242,7 @@ export default function Cockpit({ initialMobile = false }: { initialMobile?: boo
             <MeasurePanel />
             <AreaPanel />
             <WhatsHerePanel />
+            <AskJevOverlay />
             <WaterReportPanel />
             <MarketReportPanel />
             <SpaceWeatherPanel />

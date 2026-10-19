@@ -3,7 +3,7 @@
 // sources it already uses (lib/whatshere/here.ts). Opened by a right-click on
 // the globe, or from ⌘K for the camera target.
 
-import { Crosshair, Droplets, Landmark, MapPin, X } from "lucide-react";
+import { Crosshair, Droplets, Landmark, MapPin, MessageCircleQuestionMark, X } from "lucide-react";
 import { useHere, closeHere, hereNearest, type HereState, type SurveyAnswer } from "@/lib/whatshere/here";
 import { useGlobe } from "@/lib/store/globe";
 import { flyTo, flyToSelection } from "@/lib/globe/camera";
@@ -11,6 +11,8 @@ import { formatDistance, formatLatLon } from "@/lib/globe/geo";
 import { LAYER_BY_ID } from "@/lib/layers";
 import { ageRange, type GeologyAnswer } from "@/lib/infra/geology";
 import { useNow } from "@/lib/hooks/useNow";
+import { askJevAboutPoint } from "@/lib/jev/store";
+import { useJevOn } from "./AskJevOverlay";
 
 const ACCENT = "#7DD3FC";
 
@@ -33,6 +35,7 @@ function Part<T>({ title, who, state, children }: { title: string; who: string; 
 
 export default function WhatsHerePanel() {
   const pick = useHere((s) => s.pick);
+  const jev = useJevOn();
   // Re-read the loaded layers every few seconds while the panel is open.
   useNow(4000);
   if (!pick) return null;
@@ -70,6 +73,18 @@ export default function WhatsHerePanel() {
           <Landmark className="size-3" /> Market report
         </button>
       </div>
+
+      {jev && (
+        <div className="px-3 pb-2">
+          <button
+            type="button"
+            onClick={() => void askJevAboutPoint(pick.lon, pick.lat)}
+            className="flex w-full items-center justify-center gap-1 border border-border px-1.5 py-1 text-[9px] uppercase tracking-widest text-foreground/80 hover:bg-accent hover:text-primary"
+          >
+            <MessageCircleQuestionMark className="size-3" /> Ask Jev about this place
+          </button>
+        </div>
+      )}
 
       <Part title="Place" who="Census TIGERweb, USGS WBD, NWS, Natural Earth (the constructs stack)" state={pick.parts.place as HereState<Array<{ kind: string; name: string; code?: string }>> | undefined}>
         {(lines) =>
