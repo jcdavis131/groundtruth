@@ -97,5 +97,22 @@ class DamRuleParityTest(unittest.TestCase):
             self.assertEqual(cards.dam_name_rule(details), want, c)
 
 
+class RegionTest(unittest.TestCase):
+    def test_each_region_reads_its_own_state_outline(self):
+        for key, r in cards.REGIONS.items():
+            self.assertEqual(r["id"], key)
+            self.assertRegex(r["stateFips"], r"^\d{2}$", key)
+            self.assertRegex(r["stateUsps"], r"^[A-Z]{2}$", key)
+            self.assertEqual(r["boundaryId"], f"state:{r['stateFips']}", key)
+
+    def test_notes_written_into_every_region_name_none(self):
+        # A collection's notes go into every region's manifest, so a state's own figures don't belong in them.
+        for name, cfg in cards.COLLECTIONS.items():
+            for field in ("relabelNote",):
+                text = cfg.get(field) or ""
+                for r in cards.REGIONS.values():
+                    self.assertNotIn(r["stateName"], text, f"{name}.{field} names {r['stateName']}")
+
+
 if __name__ == "__main__":
     unittest.main()
