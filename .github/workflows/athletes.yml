@@ -37,3 +37,7 @@ jobs:
         run: node data/athletes/validate.test.mjs
       - name: athlete fixture
         run: node data/athletes/validate.mjs data/athletes/fixtures/athlete.fixture.json
+      - name: athlete builder (rule A5a trace, arenas, never-list requests; no network)
+        run: node data/athletes/build.test.mjs
+      - name: committed athlete manifests stay small and carry no never-list key
+        run: node data/athletes/manifest.check.mjs
