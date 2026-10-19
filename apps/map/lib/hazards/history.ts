@@ -138,7 +138,7 @@ export const FEMA_LEGACY: ReadonlyArray<FemaLegacyCode> = [
     name: "Wrangell-Petersburg Census Area, AK",
     successors: ["02275", "02195", "02198"],
     change: "split",
-    what: "Wrangell-Petersburg Census Area, AK, split in 2008 into Wrangell City and Borough and Petersburg Census Area; on 2013-01-03 Prince of Wales-Hyder Census Area added part of the former Petersburg Census Area (the Kake and Port Alexander area) and the rest became Petersburg Borough",
+    what: "Wrangell-Petersburg Census Area, AK, split in 2008 into Wrangell City and Borough and Petersburg Census Area; on 2013-01-03 Prince of Wales-Hyder Census Area added part of the former Petersburg Census Area (estimated added population 613) and the rest became Petersburg Borough",
     citation: `${CENSUS_CHANGES_2000}; ${CENSUS_CHANGES_2010}`,
   },
   { oldFips: "51515", name: "Bedford city, VA", successors: ["51019"], change: "merged", what: "the independent city of Bedford, VA, became part of Bedford County (2013-07-01)", citation: CENSUS_CHANGES_2010 },

@@ -34,7 +34,6 @@ const pct = (v: number | null | undefined) => (v == null ? "not published" : `${
 
 export default function HazardHistoryAside({ fips }: { fips: string }) {
   const [st, setSt] = useState<State>({});
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     let live = true;
@@ -52,8 +51,14 @@ export default function HazardHistoryAside({ fips }: { fips: string }) {
 
   if (st.error) return <div className="border-t border-border px-3 py-2 text-[10px] text-alert">Hazard history did not answer: {st.error.slice(0, 80)} (unknown, not missing)</div>;
   if (!st.data) return <div className="border-t border-border px-3 py-2 text-[10px] text-muted-foreground">asking FEMA, the Drought Monitor, NOAA and USGS for this county&apos;s hazard history…</div>;
-  const d = st.data;
-  const s = (id: string): Series | undefined => d.series.find((x) => x.id === `${id}:${fips}`);
+  return <HazardHistoryView fips={fips} data={st.data} caveats={st.caveats} />;
+}
+
+/** The answer as drawn, from the route's reply (no fetch): what the tests render. */
+export function HazardHistoryView({ fips, data: d, caveats }: { fips: string; data: HistoryData; caveats?: string[] }) {
+  const [open, setOpen] = useState(false);
+  const st = { caveats };
+  const s =(id: string): Series | undefined => d.series.find((x) => x.id === `${id}:${fips}`);
   const miss = (src: string) => d.missing.find((m) => m.source === src || m.source.startsWith(src));
   // FEMA itself, exactly: "FEMA legacy-code rows" is a gap in an answer FEMA did give, not FEMA missing.
   const femaMiss = d.missing.find((m) => m.source === "FEMA");
@@ -65,6 +70,7 @@ export default function HazardHistoryAside({ fips }: { fips: string }) {
   const em = s("fema:em");
   const fm = s("fema:fm");
   const total = (x?: Series) => (x ? x.points.reduce((a, p) => a + (p.v ?? 0), 0) : 0);
+  const distinctDecl = new Set(d.declarations.map((x) => `${x.declarationType}-${x.disasterNumber}`)).size;
   const dsci = s("usdm:dsci");
   const tavg = s("cag:tavg");
   const pcp = s("cag:pcp");
@@ -95,6 +101,11 @@ export default function HazardHistoryAside({ fips }: { fips: string }) {
               {total(dr)} major disaster · {total(em)} emergency · {total(fm)} fire management
               {femaShort.length > 0 && " (may be short)"}
             </div>
+            {distinctDecl < d.declarations.length && (
+              <div className="text-[9px] text-muted-foreground">
+                {d.declarations.length} rows for {distinctDecl} disasters: FEMA lists one row per designated area
+              </div>
+            )}
             {femaShort.map((m, i) => (
               <div key={i} className="text-[9px] leading-snug text-muted-foreground">
                 {m.reason === "join:filed_under_other_code" ? "not counted here, though it lies in this county: " : "not placed in any county: "}
@@ -106,6 +117,7 @@ export default function HazardHistoryAside({ fips }: { fips: string }) {
                 <li key={`${x.disasterNumber}:${i}`} className="leading-snug">
                   {x.declarationType}-{x.disasterNumber} · {x.declarationDate} · {x.incidentType} · {x.declarationTitle}
                   {x.programs.length ? ` · ${x.programs.join(", ")}` : ""}
+                  {x.designatedArea ? ` · ${x.designatedArea}` : ""}
                 </li>
               ))}
             </ul>
