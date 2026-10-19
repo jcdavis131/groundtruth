@@ -1,0 +1,29 @@
+# The data spec's own test: every valid record and manifest fixture passes,
+# every invalid one fails for its stated reason, and each fixture snapshot's
+# files hash to what its manifest says. Plain Node, no install, no network.
+name: data
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: schema and fixture tests
+        run: node data/schema/validate.test.mjs
+      - name: validate the fixture snapshots from the command line
+        run: node data/schema/validate.mjs manifest data/schema/fixtures/snapshots/*/manifest.json

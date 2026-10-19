@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jcdavis131/groundtruth/data/schema/record.schema.json",
+  "title": "groundtruth record, version record/1",
+  "description": "One record of one collection, as a snapshot stores it: eye's LayerFeature properties plus the provenance envelope, written down. data/SCHEMA.md says what each field means. A field with no value is absent, never null and never a placeholder. validate.mjs adds the checks JSON Schema can't say: placeholders, closed rings, state and county agreement, the snapshot id's collection, the public-name list.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "collection", "layer", "name", "nameRule", "geometry", "place", "details", "provenance", "snapshotId"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "record/1" },
+    "id": {
+      "description": "eye's feature id: a source prefix, a colon, then the upstream's own id. Stable across fetches; unique inside the collection.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*:[^\\s]+$",
+      "maxLength": 200
+    },
+    "collection": { "$ref": "#/$defs/slug" },
+    "layer": { "$ref": "#/$defs/slug" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 300 },
+    "nameRule": {
+      "description": "public-name: the record's published name, allowed only on a collection with a public-name rule. label-by-id: a label built from the record's id and category, never a name that could be a person's.",
+      "enum": ["public-name", "label-by-id"]
+    },
+    "kind": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "geometry": { "$ref": "#/$defs/geometry" },
+    "place": {
+      "type": "object",
+      "required": ["stateFips", "stateUsps", "method"],
+      "additionalProperties": false,
+      "properties": {
+        "stateFips": { "type": "string", "pattern": "^[0-9]{2}$" },
+        "stateUsps": { "type": "string", "pattern": "^[A-Z]{2}$" },
+        "countyFips": { "type": "string", "pattern": "^[0-9]{5}$" },
+        "method": {
+          "description": "How the join was made. source-field: read from the upstream's own fields. point-in-polygon: the geometry tested against a named boundary file. name-lookup: a place name matched to a code table.",
+          "enum": ["source-field", "point-in-polygon", "name-lookup"]
+        }
+      }
+    },
+    "details": {
+      "description": "The source's own fields, as eye shows them on click, minus any the manifest lists as withheld. Values are strings, numbers or booleans; a field with no value is left out.",
+      "type": "object",
+      "additionalProperties": { "type": ["string", "number", "boolean"] }
+    },
+    "text": {
+      "description": "The record text (eye's recordText, B0). Absent when the record has none.",
+      "type": "string",
+      "pattern": "^collection: ",
+      "maxLength": 4000
+    },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "snapshotId": { "$ref": "#/$defs/snapshotId" }
+  },
+  "$defs": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 64 },
+    "snapshotId": {
+      "description": "<collection>.<region id>.<UTC date YYYY-MM-DD>",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*\\.[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "utc": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,6})?Z$" },
+    "url": { "type": "string", "pattern": "^https?://[^\\s]+$", "maxLength": 2000 },
+    "provenance": {
+      "type": "object",
+      "required": ["sourceId", "sourceName", "publisher", "licence", "upstreamUrl", "retrievedAt", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceId": { "$ref": "#/$defs/slug" },
+        "sourceName": { "type": "string", "minLength": 1 },
+        "publisher": { "type": "string", "minLength": 1 },
+        "licence": { "type": "string", "minLength": 1 },
+        "seriesId": { "type": "string", "minLength": 1 },
+        "upstreamUrl": { "$ref": "#/$defs/url" },
+        "period": { "type": "string", "minLength": 1 },
+        "releasedAt": { "type": "string", "minLength": 4 },
+        "retrievedAt": { "$ref": "#/$defs/utc" },
+        "kind": { "enum": ["published", "estimate", "snapshot"] },
+        "method": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "minLength": 1 },
+        "notes": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "position": {
+      "description": "[longitude, latitude] or [longitude, latitude, height], WGS84 degrees, longitude first.",
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 3,
+      "prefixItems": [
+        { "type": "number", "minimum": -180, "maximum": 180 },
+        { "type": "number", "minimum": -90, "maximum": 90 },
+        { "type": "number" }
+      ]
+    },
+    "line": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/position" } },
+    "ring": { "type": "array", "minItems": 4, "items": { "$ref": "#/$defs/position" } },
+    "polygon": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/ring" } },
+    "geometry": {
+      "description": "GeoJSON (RFC 7946) geometry in WGS84.",
+      "type": "object",
+      "required": ["type", "coordinates"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["Point", "MultiPoint", "LineString", "MultiLineString", "Polygon", "MultiPolygon"] },
+        "coordinates": { "type": "array" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "Point" } } }, "then": { "properties": { "coordinates": { "$ref": "#/$defs/position" } } } },
+        { "if": { "properties": { "type": { "const": "MultiPoint" } } }, "then": { "properties": { "coordinates": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/position" } } } } },
+        { "if": { "properties": { "type": { "const": "LineString" } } }, "then": { "properties": { "coordinates": { "$ref": "#/$defs/line" } } } },
+        { "if": { "properties": { "type": { "const": "MultiLineString" } } }, "then": { "properties": { "coordinates": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/line" } } } } },
+        { "if": { "properties": { "type": { "const": "Polygon" } } }, "then": { "properties": { "coordinates": { "$ref": "#/$defs/polygon" } } } },
+        { "if": { "properties": { "type": { "const": "MultiPolygon" } } }, "then": { "properties": { "coordinates": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/polygon" } } } } }
+      ]
+    }
+  }
+}

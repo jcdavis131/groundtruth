@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jcdavis131/groundtruth/data/schema/manifest.schema.json",
+  "title": "groundtruth snapshot manifest, version manifest/1",
+  "description": "What one snapshot holds and how it was made: one collection, one region, one UTC day. data/SCHEMA.md says what each field means. validate.mjs adds the checks JSON Schema can't say: the snapshot id agrees with its parts, the record count agrees with the files, a count gap is explained, and the listed files hash to what the manifest says.",
+  "type": "object",
+  "required": ["schemaVersion", "snapshotId", "collection", "region", "createdAt", "builder", "recordSchemaVersion", "sources", "requests", "recordCount", "publisherCount", "files"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "manifest/1" },
+    "snapshotId": { "$ref": "#/$defs/snapshotId" },
+    "collection": { "$ref": "#/$defs/slug" },
+    "region": {
+      "type": "object",
+      "required": ["id", "name", "bbox", "rule"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/slug" },
+        "name": { "type": "string", "minLength": 1 },
+        "bbox": {
+          "description": "[west, south, east, north], WGS84 degrees.",
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "prefixItems": [
+            { "type": "number", "minimum": -180, "maximum": 180 },
+            { "type": "number", "minimum": -90, "maximum": 90 },
+            { "type": "number", "minimum": -180, "maximum": 180 },
+            { "type": "number", "minimum": -90, "maximum": 90 }
+          ]
+        },
+        "rule": {
+          "description": "point-in-bbox: a Point record is in when it lies inside the box, edges included. intersects-bbox: any geometry that touches the box.",
+          "enum": ["point-in-bbox", "intersects-bbox"]
+        },
+        "definition": { "type": "string", "minLength": 1 }
+      }
+    },
+    "createdAt": { "$ref": "#/$defs/utc" },
+    "builder": {
+      "type": "object",
+      "required": ["name", "version", "gitSha"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "gitSha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "repo": { "type": "string", "minLength": 1 }
+      }
+    },
+    "recordSchemaVersion": { "const": "record/1" },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["sourceId", "licence"],
+        "additionalProperties": false,
+        "properties": {
+          "sourceId": { "$ref": "#/$defs/slug" },
+          "licence": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "requests": {
+      "description": "Every request the builder made, in order.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["purpose", "url", "status", "retrievedAt", "bytes", "sha256"],
+        "additionalProperties": false,
+        "properties": {
+          "purpose": {
+            "description": "records: the rows the snapshot holds. count: the publisher's count. gap: the publisher's ids, to explain a count gap.",
+            "enum": ["records", "count", "gap"]
+          },
+          "url": { "$ref": "#/$defs/url" },
+          "status": { "type": "integer", "minimum": 100, "maximum": 599 },
+          "retrievedAt": { "$ref": "#/$defs/utc" },
+          "bytes": { "type": "integer", "minimum": 0 },
+          "sha256": { "$ref": "#/$defs/sha256" }
+        }
+      }
+    },
+    "recordCount": { "type": "integer", "minimum": 0 },
+    "publisherCount": {
+      "description": "The publisher's own count for the region, and how it was asked for. gap is required when value differs from recordCount.",
+      "type": "object",
+      "required": ["value", "method", "url", "countedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "type": "integer", "minimum": 0 },
+        "method": { "type": "string", "minLength": 1 },
+        "url": { "$ref": "#/$defs/url" },
+        "countedAt": { "$ref": "#/$defs/utc" },
+        "gap": { "type": "string", "minLength": 1 }
+      }
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "format", "sha256", "bytes", "records"],
+        "additionalProperties": false,
+        "properties": {
+          "path": { "type": "string", "pattern": "^[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$" },
+          "format": { "enum": ["jsonl"] },
+          "sha256": { "$ref": "#/$defs/sha256" },
+          "bytes": { "type": "integer", "minimum": 0 },
+          "records": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "withheldFields": {
+      "description": "Source fields eye shows that this snapshot leaves out, and why. Absent when none are withheld.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field", "why"],
+        "additionalProperties": false,
+        "properties": {
+          "field": { "type": "string", "minLength": 1 },
+          "why": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 64 },
+    "snapshotId": {
+      "description": "<collection>.<region id>.<UTC date YYYY-MM-DD>",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.[a-z0-9]+(?:-[a-z0-9]+)*\\.[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "utc": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,6})?Z$" },
+    "url": { "type": "string", "pattern": "^https?://[^\\s]+$", "maxLength": 2000 },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}
