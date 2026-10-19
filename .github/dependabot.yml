@@ -25,3 +25,9 @@ updates:
         patterns:
           - react
           - react-dom
+      # vitest and @vitest/coverage-v8 pin each other as exact peers, so a
+      # vitest bump alone fails `npm ci` with ERESOLVE (#41, 2026-10-19).
+      vitest:
+        patterns:
+          - vitest
+          - "@vitest/*"
