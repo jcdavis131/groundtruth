@@ -232,6 +232,7 @@ export function httpFetchJson(baseUrl = DEFAULT_BASE_URL, fetchImpl: typeof fetc
     // reply: status 502 (so the tool envelope treats it as an error, not a
     // success), the 3xx status in a plain message, and no Location value.
     const init: RequestInit = { headers, signal: AbortSignal.timeout(timeoutMs) };
+    if (withBypass) init.redirect = "manual";
     const res = await fetchImpl(url, init);
     if (withBypass && (res.type === "opaqueredirect" || (res.status >= 300 && res.status < 400))) {
       void res.body?.cancel().catch(() => undefined);
