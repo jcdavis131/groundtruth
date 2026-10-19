@@ -27,8 +27,13 @@ const FIXTURES = NAMES.map((name) => ({ name, bundle: load(name) }));
 function unesc(s: string): string {
   return s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&amp;/g, "&");
 }
-/** What a reader sees: tags stripped, entities read. */
-const visible = (html: string) => unesc(html.replace(/<[^>]*>/g, ""));
+/**
+ * What a reader sees: tags stripped, entities read. Block ends (and the
+ * source link) become a space, so words in separate elements never run
+ * together ("source" + "FEMA" is not "sourceFEMA"); inline tags (an <abbr>,
+ * a first-use span) vanish, so "FEMA's" stays one piece of text.
+ */
+const visible = (html: string) => unesc(html.replace(/<\/(?:li|div|section|h3|ul|a)>/g, " ").replace(/<[^>]*>/g, ""));
 const titlesOf = (html: string) => [...html.matchAll(/\btitle="([^"]*)"/g)].map((m) => unesc(m[1]));
 
 function panel(bundle: JevBundle | null, status: "loading" | "done" | "error" = "done"): string {
@@ -187,8 +192,9 @@ describe("cuts at max_records and a trimmed reply (Mobile County)", () => {
   it("shows a private dam's NID id on its line", () => {
     const html = panel(mobile);
     const dams = [...html.matchAll(/<li data-jev-line=""[\s\S]*?<\/li>/g)].map((m) => m[0]).filter((l) => l.includes("data-jev-id"));
-    const ids = dams.map((l) => visible(/<span data-jev-id=""[^>]*>([\s\S]*?)<\/span>/.exec(l)![1]).replace(/^NID \([^)]*\)/, "NID"));
-    expect(ids).toEqual(["NID id AL00011", "NID id MS06238"]);
+    const ids = dams.map((l) => visible(/<span data-jev-id=""[^>]*>([\s\S]*?)<\/span> <span data-jev-value/.exec(l)![1]).replace(/^NID \([^)]*\)/, "NID"));
+    // The recorded Mobile reply's three private dams (fixture items with a null value and an nid: code).
+    expect(ids).toEqual(["NID id AL00011", "NID id MS06238", "NID id MS06239"]);
   });
 });
 
