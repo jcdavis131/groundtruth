@@ -17,6 +17,12 @@
 //              c:\users\<name>, /c/Users/<name>, /C/Users/<name> (internal machine paths stay out of a public
 //              repo). A literal <placeholder> right after Users is not a path, so docs can show the shape.
 //   submodule  a tracked directory (gitlink); this repo has none
+//   pin        a "uses:" line in .github/workflows/*.yml or *.yaml whose action isn't pinned to a full
+//              40-hex commit sha. A tag or branch can be moved under us; a sha can't. Local ./ actions are
+//              exempt. Write the tag as a trailing comment (@<sha> # v4) so Dependabot can bump both.
+//              Idea: trimstray/the-book-of-secret-knowledge (MIT, reviewed at 7d37069), which points to
+//              GitHub's supply-chain hardening; the trivy-action tag force-push (GHSA-69fq-xp46-6x23) is
+//              the case it guards. No text or code copied.
 // Exit 0 when clean, 1 with one line per finding. No file is exempt, the guard's own included: its
 // patterns and test fixtures are written so they never match themselves.
 //
@@ -51,6 +57,19 @@ const SECRETS = [
 // is accepted as a miss: Git Bash itself prints /c/Users.
 const HOME_PATH = /[A-Za-z]:(?:\\+|\/+)Users(?:\\+|\/+)[^\\/\s"'<>]+|(?:(?<![\w/.-])|(?<=\/mnt|\/cygdrive))\/[A-Za-z]\/Users\/[^/\s"'<>]+/i;
 const GITBASH_CASE = /\/[A-Za-z]\/Users\//;
+const WORKFLOW = /^\.github\/workflows\/[^/]+\.ya?ml$/;
+const USES = /^\s*(?:-\s+)?uses:\s*["']?([^"'\s#]+)/;
+const SHA_PIN = /@[0-9a-f]{40}$/;
+
+// Every unpinned "uses:" in one workflow's text, as [line number, value].
+function unpinned(text) {
+  const out = [];
+  text.split("\n").forEach((line, i) => {
+    const m = USES.exec(line);
+    if (m && !m[1].startsWith("./") && !SHA_PIN.test(m[1])) out.push([i + 1, m[1]]);
+  });
+  return out;
+}
 
 function textOf(buf) {
   if (buf[0] === 0xff && buf[1] === 0xfe) return buf.subarray(2).toString("utf16le");
@@ -94,6 +113,7 @@ for (const f of files) {
     (h) => /^[A-Za-z]:/.test(h[0]) || GITBASH_CASE.test(h[0]),
   );
   if (m) findings.push(`path     ${f}  (${m[0].slice(0, 40)})`);
+  if (WORKFLOW.test(f)) for (const [n, v] of unpinned(text)) findings.push(`pin      ${f}  line ${n}: ${v}`);
 }
 const tracked = new Set(files);
 for (const p of ALLOW.keys()) if (!tracked.has(p)) findings.push(`allow    ${p}  listed in guard.allow.json but not tracked`);
