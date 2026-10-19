@@ -82,8 +82,8 @@ jobs:
       - name: vitest
         run: npx vitest run
 
-      # Changed files only: the app has a lint script but no record of a clean
-      # full run, so this holds new code to it without failing on old code.
+      # Changed files only, on every pull request: cheap, and it holds new code to
+      # the rules. The whole-app run below covers changes that touch no source.
       # --relative keeps the paths relative to apps/map, where eslint runs.
       - name: eslint (changed files)
         if: github.event_name == 'pull_request'
@@ -97,11 +97,11 @@ jobs:
 
       # A dependency or lint-config change can change what eslint says about code
       # nobody touched; eslint 9 -> 10 (#44) was never linted, because the step
-      # above saw no changed source files. Report only: with no record of a clean
-      # full run this measures, it doesn't gate. public/ is skipped as above.
-      - name: eslint (whole app, report only, on dependency or CI changes)
+      # above saw no changed source files. The whole app has linted clean since
+      # lint/zero (2026-10-19; it was 14 problems in #49's run), so this gates.
+      # public/ is skipped as above.
+      - name: eslint (whole app, on dependency or CI changes)
         if: github.event_name == 'pull_request'
-        continue-on-error: true
         env:
           BASE: ${{ github.event.pull_request.base.sha }}
         run: |

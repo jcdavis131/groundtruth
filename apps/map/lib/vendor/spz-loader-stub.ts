@@ -13,4 +13,5 @@ export function loadSpz(): never {
   throw new Error("Gaussian splat (.spz) loading is disabled in Embedding Atlas (see lib/vendor/spz-loader-stub.ts)");
 }
 
-export default { loadSpz };
+const spzLoader = { loadSpz };
+export default spzLoader;

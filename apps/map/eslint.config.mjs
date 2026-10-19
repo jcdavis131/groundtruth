@@ -18,6 +18,16 @@ const eslintConfig = defineConfig([
     ".tmp-turb/**",
     ".tmp-mcp/**",
   ]),
+  // Frozen eval evidence: the 2026-10-18 panel write-ups cite these scripts as run, so they are
+  // never edited to satisfy a rule. Some are CommonJS (.cjs), where require() is the only import.
+  {
+    files: ["lib/embed/__eval__/**"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

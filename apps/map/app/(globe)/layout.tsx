@@ -45,7 +45,6 @@ export default function GlobeLayout({ children }: { children: React.ReactNode })
       <head>
         {/* Apply the stored chrome theme before first paint so there is no flash.
             `?theme=dark|light` overrides the stored preference for the session. */}
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
         {/* Cesium widget CSS, served from the assets copied by scripts/copy-cesium.mjs.
             Linked rather than imported so its relative image URLs resolve against

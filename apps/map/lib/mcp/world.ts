@@ -550,8 +550,6 @@ const FABRIC_KINDS: Record<string, string> = {
 };
 /** Facts copied from a fabric node, by kind: published codes only, never free text. */
 const FABRIC_FACTS: Record<string, string[]> = { flood: ["special flood hazard area", "FIRM panel"], huc12: ["drains to"], cbsa: ["type"] };
-/** Kinds that hold for a whole county, so they can be read at its representative point. */
-const COUNTY_WIDE = new Set(["county", "state", "cbsa"]);
 
 interface Node {
   kind: string;

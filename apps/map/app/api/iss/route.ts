@@ -3,11 +3,10 @@
 //
 //   /api/iss    live position of the ISS (NORAD 25544)
 
-import type { NextRequest } from "next/server";
 import { cached } from "@/lib/server/cache";
 import { jsonError, proxied, upstreamJson } from "@/lib/server/upstream";
 
-export async function GET(_req: NextRequest) {
+export async function GET() {
   try {
     const r = await cached("iss:25544", 10_000, () =>
       upstreamJson("wheretheiss", "https://api.wheretheiss.at/v1/satellites/25544"),
