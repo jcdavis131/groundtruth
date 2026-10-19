@@ -25,6 +25,16 @@ const unit = (id: string, rings: number[][][], areaKm2?: number): ConstructNode 
 const pt = (layer: string, id: string, lon: number, lat: number, extra: Record<string, unknown> = {}) =>
   ({ type: "Feature", geometry: { type: "Point", coordinates: [lon, lat, 0] }, properties: { id, layer, name: id, source: "t", ...extra } }) as unknown as LayerFeature;
 
+// The dashed box a near-only layer loaded (lib/layers/civicBox.ts), with what the answer left out.
+const box = (layer: string, w: number, s: number, e: number, n: number, extra: Record<string, unknown> = {}) =>
+  ({
+    type: "Feature",
+    geometry: { type: "Polygon", coordinates: [[[w, s], [e, s], [e, n], [w, n], [w, s]]] },
+    properties: { id: `${layer}:loaded-box`, layer, name: "Loaded area", kind: "loaded-box", source: "this app", extra },
+  }) as unknown as LayerFeature;
+// Every counted layer in these fixtures loaded for a box around all the units, so their counts are totals.
+const loadedEverywhere = ["water", "aircraft", "companies", "fires", "schools"].map((l) => box(l, -10, -10, 10, 10));
+
 describe("the scale ladder", () => {
   it("lets finer constructs emerge as the camera descends", () => {
     expect(kindForScale("hydrologic", 12_000_000)).toBe("huc2");
@@ -115,6 +125,7 @@ describe("emergence", () => {
     pt("weather", "wx", 0.5, 0.5),
     pt("constructs", "here", 0.5, 0.5),
     { type: "Feature", geometry: { type: "Polygon", coordinates: [] }, properties: { id: "p", layer: "realestate", name: "p", source: "t", anchor: [0.5, 0.5] } } as unknown as LayerFeature,
+    ...loadedEverywhere,
   ];
   it("counts only physical points, never simulated ones", () => {
     expect(features.filter(isPhysical).map((f) => f.properties.id)).toEqual(["g1", "g2", "ac1", "g3", "co1", "ac2"]);
@@ -145,7 +156,7 @@ describe("emergence", () => {
     const v = computeVitals([a, b, c], [...features, binned, single], "fires", "count");
     expect(v.get("county:a")).toMatchObject({ value: 121, byLayer: { water: 2, aircraft: 1, fires: 121 }, total: 124 });
     // Only fires carries a count; the same field on another layer is not read.
-    const other = computeVitals([a], [pt("water", "odd", 0.5, 0.5, { extra: { count: 50 } })], "all", "count");
+    const other = computeVitals([a], [pt("water", "odd", 0.5, 0.5, { extra: { count: 50 } }), ...loadedEverywhere], "all", "count");
     expect(other.get("county:a")?.total).toBe(1);
   });
   it("fingerprints only what is drawn and ramps colour with heat", () => {
@@ -160,13 +171,6 @@ describe("emergence", () => {
 
 // Missing means missing: a unit the counted layers did not load gets no number.
 describe("emergence coverage", () => {
-  // The dashed box a near-only layer loaded (lib/layers/civicBox.ts), with what the answer left out.
-  const box = (layer: string, w: number, s: number, e: number, n: number, extra: Record<string, unknown> = {}) =>
-    ({
-      type: "Feature",
-      geometry: { type: "Polygon", coordinates: [[[w, s], [e, s], [e, n], [w, n], [w, s]]] },
-      properties: { id: `${layer}:loaded-box`, layer, name: "Loaded area", kind: "loaded-box", source: "this app", extra },
-    }) as unknown as LayerFeature;
   const a = unit("county:a", sq(0, 0, 1), 1000);
   const b = unit("county:b", sq(2, 0, 1), 1000);
   const c = unit("county:c", sq(4, 0, 1), 1000);
@@ -205,11 +209,37 @@ describe("emergence coverage", () => {
 
   it("is the same whatever order the units and features arrive in", () => {
     // a and b tie, so a rank that leaned on input order would show here.
-    const fs = [pt("water", "g1", 0.5, 0.5), pt("water", "g2", 2.5, 0.5), pt("water", "g3", 2.6, 0.5), pt("schools", "s1", 0.4, 0.4), box("schools", -0.5, -0.5, 3.5, 1.5)];
+    const fs = [pt("water", "g1", 0.5, 0.5), pt("water", "g2", 2.5, 0.5), pt("water", "g3", 2.6, 0.5), pt("schools", "s1", 0.4, 0.4), box("schools", -0.5, -0.5, 3.5, 1.5), box("water", -10, -10, 10, 10)];
     const strip = (m: Map<string, unknown>) => Object.fromEntries([...m.entries()].sort(([x], [y]) => (x < y ? -1 : 1)));
     const one = strip(computeVitals([a, b, c], fs, "all", "density"));
     const two = strip(computeVitals([c, b, a], [...fs].reverse(), "all", "density"));
     expect(two).toEqual(one);
+  });
+
+  // computeVitals with the layers turned on, typed loosely so an older signature fails the assertion, not the compile.
+  const vitalsShown = (...args: unknown[]) => (computeVitals as unknown as (...x: unknown[]) => Map<string, unknown>)(...args);
+
+  it("never calls a unit complete for a view-loaded layer that reports no loaded box", () => {
+    // Gauges load for the view (none above a height), so a box-less water answer is not a total anywhere.
+    const v = cov(computeVitals([a], [pt("water", "g1", 0.5, 0.5)], "water", "count").get("county:a"));
+    expect(v.coverage).not.toBe("complete");
+    expect(v.value).toBeNull();
+    expect(v.reason).toMatch(/water doesn't report what it loaded/);
+    // A layer turned on with nothing loaded in view is not "none here" either.
+    const empty = cov(vitalsShown([a], [], "all", "count", undefined, ["water", "aircraft"]).get("county:a"));
+    expect(empty.value).toBeNull();
+    expect(empty.reason).toMatch(/aircraft doesn't report what it loaded/);
+    // The world feed of the day's earthquakes is complete without a box.
+    expect(cov(computeVitals([a], [pt("earthquakes", "q", 0.5, 0.5)], "earthquakes", "count").get("county:a"))).toMatchObject({ value: 1, coverage: "complete" });
+  });
+
+  it("calls a size floor or a missing part partial, naming the floor", () => {
+    const plants = cov(computeVitals([a], [pt("plants", "p1", 0.5, 0.5), box("plants", -5, -5, 5, 5, { floorMw: 50 })], "plants", "count").get("county:a"));
+    expect(plants).toMatchObject({ value: null, coverage: "partial" });
+    expect(plants.reason).toMatch(/50 MW/);
+    const gap = cov(computeVitals([a], [pt("airports", "x", 0.5, 0.5), box("airports", -5, -5, 5, 5, { missing: ["heliports"] })], "airports", "count").get("county:a"));
+    expect(gap).toMatchObject({ value: null, coverage: "partial" });
+    expect(gap.reason).toMatch(/heliports/);
   });
 
   it("does not let a partly loaded unit move a complete unit's heat", () => {
