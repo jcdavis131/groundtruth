@@ -31,13 +31,14 @@ export const GAP_RULES: readonly GapRule[] = [
   },
   {
     id: "fabric-per-point",
-    test: /the fabric is per point; call world_context with lon\/lat/,
-    say: () => "Point details (elevation, flood zone, watershed) need a spot on the map. Click inside the county.",
+    test: /the fabric is per point; call world_context with lon\/lat(?: \(the (county|state)'s point)?/,
+    // The reason names the kind of place asked about: a state is a state, not a county.
+    say: (_p, m) => `Point details (elevation, flood zone, watershed) need a spot on the map. Click inside the ${m[1] ?? "county or state"}.`,
   },
   {
     id: "upstream-failed",
     test: /^(?:(.*?) )?failed on this call/,
-    say: (p) => `${p} didn't answer just now. Try again in a minute.`,
+    say: (p) => `${capitalize(p)} didn't answer just now. Try again in a minute.`,
   },
   {
     id: "ct-legacy-counties",
@@ -97,6 +98,49 @@ export const GAP_RULES: readonly GapRule[] = [
   },
 ];
 
+function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+/** Parameter codes some sources carry in brackets ("NOAA Climate at a Glance (tavg)"), as words. */
+const PARAM_CODES: Readonly<Record<string, string>> = { tavg: "average temperature", pcp: "precipitation" };
+
+/** A trailing lowercase code in brackets: "(tavg)", "(pcp)". */
+const TRAILING_CODE = /\s*\(([a-z][a-z0-9_]*)\)$/;
+
+/** The place fabric's upstream ids (and the names some reasons use for them), as the publisher a person knows. */
+const UPSTREAM_NAMES: Readonly<Record<string, string>> = {
+  "census-tigerweb": "the Census Bureau",
+  "census tigerweb": "the Census Bureau",
+  "usgs-wbd": "USGS",
+  "usgs wbd": "USGS",
+  "fema-nfhl": "FEMA",
+  "fema nfhl": "FEMA",
+};
+const SOME_SOURCE = "One of the sources";
+
+/** The publisher for an upstream id or name, else "One of the sources": an id is never shown. */
+export function upstreamName(idOrName: string | null | undefined): string {
+  const k = (idOrName ?? "").trim().toLowerCase();
+  return Object.hasOwn(UPSTREAM_NAMES, k) ? UPSTREAM_NAMES[k] : SOME_SOURCE;
+}
+
+/** A gap's `what` as a person reads it: no upstream ids, parameter codes as words, other trailing codes dropped. */
+export function plainWhat(what: string): string {
+  const w = what.trim();
+  const fabric = /^place fabric: (.+)$/.exec(w);
+  if (fabric) {
+    const name = upstreamName(fabric[1]);
+    return `place details from ${name === SOME_SOURCE ? "one of the sources" : name}`;
+  }
+  return w.replace(TRAILING_CODE, (_all, code: string) => (Object.hasOwn(PARAM_CODES, code) ? ` (${PARAM_CODES[code]})` : ""));
+}
+
+/** A publisher's name with a trailing lowercase code dropped: "NOAA Climate at a Glance (tavg)" is "NOAA Climate at a Glance". */
+function dropCode(p: string): string {
+  return p.replace(TRAILING_CODE, "").trim();
+}
+
 /** The publisher a reason names, read from the reason itself, else from the gap's `what`. */
 export function reasonPublisher(rule: string, reason: string, what: string): string {
   const r = leadName(reason);
@@ -109,9 +153,10 @@ export function reasonPublisher(rule: string, reason: string, what: string): str
   else if (rule === "upstream-failed") {
     p = pick(/^(.+?) failed on this call/, r);
     if (!p || /^that upstream$/i.test(p)) p = pick(/^place fabric: (.+)$/, what);
+    return upstreamName(p);
   }
   if (!p) return "The source";
-  return p;
+  return dropCode(p);
 }
 
 export interface PlainGap {
@@ -135,8 +180,19 @@ export function plainReason(what: string, reason: string): PlainGap {
 /** Whole clauses (a note splits on "; ") that are only for agents: dropped. */
 const DROP_CLAUSES = [/^not every registrant$/];
 
-/** Phrase rewrites inside a note, in order. */
+/** Four numbers in brackets: a search box's corners, "(-88.4466,30.4346,-87.9466,30.9346)". */
+const BOX_TUPLE = /\s*\(-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?\)/g;
+
+/** Phrase rewrites inside a note (one clause at a time), in order. */
 const NOTE_REWRITES: readonly [RegExp, string][] = [
+  // Live counts in a search box: say where they were counted, without the box's corners or the route.
+  [/^the box ([\d.]+) degrees around the county's Census internal point \([^)]*\)/, "counted within $1 degrees of the county's Census internal point"],
+  [/^the box ([\d.]+) degrees around the point \([^)]*\)/, "counted within $1 degrees of the spot you picked"],
+  [/^within ([\d.]+) degrees of the point$/, "within $1 degrees of the spot you picked"],
+  [/^no record-level URL: a count of the route's records inside this box$/, "counted inside that area"],
+  [/^no record-level URL: a count over (.+?), matched to this box here$/, "counted from $1, inside that area"],
+  [/^.+? has no URL for exactly this box$/, "the source link opens the whole list, not this count"],
+  [BOX_TUPLE, ""],
   [/within eye's SEC bundle \(a committed fixture, pulled: null\)/g, "from the sample of SEC filers we hold, not every company"],
   [/^no record-level URL:\s*/, ""],
   [/upstreamUrl is the publisher's own schedule for this release/g, "the source link is the publisher's own schedule for this release"],
@@ -160,7 +216,7 @@ export function plainNote(note: string): string {
 
 /** A publisher's name without the agent-facing ids some carry in brackets ("(FEMA_HQ_Preparedness_NIC)"). */
 export function plainPublisher(p: string): string {
-  return p.replace(/\s*\([A-Za-z0-9]+(?:_[A-Za-z0-9]+)+\)/g, "").trim();
+  return dropCode(p.replace(/\s*\([A-Za-z0-9]+(?:_[A-Za-z0-9]+)+\)/g, "").trim());
 }
 
 /** The place's point basis, as the subtitle says it. */

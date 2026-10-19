@@ -21,7 +21,7 @@
 //     for that record), else link (the eye route that reproduces it).
 
 import type { WorldItem, WorldSection } from "@/lib/mcp/world";
-import { cutSentences, plainBasis, plainNote, plainPublisher, plainReason, truncatedSentence } from "./plain";
+import { cutSentences, plainBasis, plainNote, plainPublisher, plainReason, plainWhat, truncatedSentence } from "./plain";
 
 /** The sections the panel shows, in order. world_context's fabric and collections topics are not asked for. */
 export const JEV_SECTIONS = ["identity", "hazards", "economy", "vulnerability", "institutions", "water", "freshness"] as const;
@@ -78,6 +78,7 @@ export interface JevLine {
 }
 
 export interface JevGap {
+  /** What is missing, in plain words (lib/jev/plain.ts plainWhat). */
   what: string;
   reason: string;
   /** The pattern that wrote the sentence (lib/jev/plain.ts), or null when the reason is shown as written. */
@@ -126,7 +127,8 @@ export function toLine(it: WorldItem): JevLine {
 
 export function toGap(m: { what: string; reason: string }): JevGap {
   const p = plainReason(m.what, m.reason);
-  return { what: m.what, reason: m.reason, rule: p.rule, sentence: `${m.what}: ${p.text}` };
+  const what = plainWhat(m.what);
+  return { what, reason: m.reason, rule: p.rule, sentence: `${what}: ${p.text}` };
 }
 
 export function gapSentence(m: { what: string; reason: string }): string {
@@ -167,6 +169,13 @@ export function jevStatusLine(status: "idle" | "loading" | "done" | "error", b: 
   const gaps = secs.reduce((n, s) => n + s.gaps.length, 0);
   return `Answer loaded: ${facts} ${facts === 1 ? "fact" : "facts"}, ${gaps} ${gaps === 1 ? "gap" : "gaps"}`;
 }
+
+/**
+ * What the panel says when the call fails, whatever the reason. The raw reason
+ * (a tool or server message) is for us, not the visitor: it goes to the console
+ * and a data attribute only.
+ */
+export const JEV_ERROR_SENTENCE = "Jev couldn't reach its sources just now. Try again in a minute.";
 
 /** The panel's heading for a reply: the place's name from the reply itself, else its point. */
 export function placeTitle(b: JevBundle): string {

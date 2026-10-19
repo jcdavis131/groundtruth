@@ -16,6 +16,15 @@ export function isCloseKey(key: string): boolean {
   return key === "Escape";
 }
 
+/** The panel's keydown handler: Escape closes it and stops the event there, so the cockpit's own Escape does not also fire. */
+export function closeOnEscape(onClose: () => void): (e: { key: string; stopPropagation: () => void }) => void {
+  return (e) => {
+    if (!isCloseKey(e.key)) return;
+    e.stopPropagation();
+    onClose();
+  };
+}
+
 export function scrollOptions(reducedMotion: boolean): ScrollIntoViewOptions {
   return { block: "nearest", behavior: reducedMotion ? "auto" : "smooth" };
 }

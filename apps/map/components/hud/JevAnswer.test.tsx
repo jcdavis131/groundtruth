@@ -10,7 +10,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import type { WorldItem, WorldSection } from "@/lib/mcp/world";
 import { JEV_SECTIONS, gapSentence, type JevBundle } from "@/lib/jev/format";
-import { plainNote } from "@/lib/jev/plain";
+import { plainNote, plainWhat } from "@/lib/jev/plain";
 import { GLOSSARY } from "@/lib/jev/glossary";
 import JevAnswer, { JEV_FADE_CLASS } from "./JevAnswer";
 
@@ -65,13 +65,13 @@ describe.each(FIXTURES)("JevAnswer over $name", ({ bundle }) => {
     expect(secs.has("fabric")).toBe(false);
   });
 
-  it("renders every missing[] entry as a gap sentence (what, then the plain why), never as a 0", () => {
+  it("renders every missing[] entry as a gap sentence (what, then the plain why, both in plain words), never as a 0", () => {
     for (const [k, t] of shownTopics(bundle)) {
       const gaps = gapsOf(secs.get(k)!).map(plainOf);
       const missing = t.missing ?? [];
       expect(gaps, k).toEqual(missing.map((m) => gapSentence(m)));
       for (const [i, g] of gaps.entries()) {
-        expect(g.startsWith(`${missing[i].what}: `)).toBe(true);
+        expect(g.startsWith(`${plainWhat(missing[i].what)}: `)).toBe(true);
         expect(g.trim()).not.toBe("0");
       }
       // A topic with gaps and no items draws no value at all, so nothing can read as 0.

@@ -12,9 +12,9 @@
 import { useEffect, useRef, useSyncExternalStore, type KeyboardEvent, type RefObject } from "react";
 import { MessageCircleQuestionMark, X } from "lucide-react";
 import { closeJev, useJev, type JevState } from "@/lib/jev/store";
-import { jevStatusLine, placeSubtitle, placeTitle } from "@/lib/jev/format";
+import { JEV_ERROR_SENTENCE, jevStatusLine, placeSubtitle, placeTitle } from "@/lib/jev/format";
 import { Glosser } from "@/lib/jev/glossary";
-import { isCloseKey, scrollOptions, scrollsOnOpen } from "@/lib/jev/focus";
+import { closeOnEscape, scrollOptions, scrollsOnOpen } from "@/lib/jev/focus";
 import JevAnswer, { Gl, JevResting } from "./JevAnswer";
 
 const ACCENT = "#A5B4FC";
@@ -47,12 +47,8 @@ export function JevPanelView({
   const g = new Glosser();
   const sub = bundle ? placeSubtitle(bundle) : null;
   const subSegs = sub ? g.gloss(sub) : null;
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (!isCloseKey(e.key)) return;
-    // Stops here: the cockpit's window-level Escape (deselect) does not also fire.
-    e.stopPropagation();
-    onClose();
-  };
+  // Escape closes and stops here: the cockpit's window-level Escape (deselect) does not also fire.
+  const onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => void = closeOnEscape(onClose);
   return (
     <div
       ref={panelRef}
@@ -88,7 +84,12 @@ export function JevPanelView({
         {jevStatusLine(status, bundle)}
       </div>
       {status === "loading" && <JevResting />}
-      {status === "error" && <div className="px-3 py-2 text-[10px] text-muted-foreground">Jev couldn&apos;t get an answer for this place: {(state.error ?? "").slice(0, 200)}</div>}
+      {status === "error" && (
+        // One plain sentence; the raw reason is kept for us in the attribute (and the console, lib/jev/store.ts).
+        <div data-jev-error="" data-jev-error-detail={(state.error ?? "").slice(0, 300)} className="px-3 py-2 text-[10px] text-muted-foreground">
+          {JEV_ERROR_SENTENCE}
+        </div>
+      )}
       {status === "done" && bundle && <JevAnswer bundle={bundle} reducedMotion={reducedMotion} seen={[...g.seen]} />}
     </div>
   );

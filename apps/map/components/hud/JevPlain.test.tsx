@@ -12,10 +12,10 @@ import path from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { WorldItem } from "@/lib/mcp/world";
-import { JEV_SECTIONS, jevSections, jevStatusLine, type JevBundle } from "@/lib/jev/format";
-import { GAP_RULES, cutSentences, plainNote, plainReason } from "@/lib/jev/plain";
+import { JEV_ERROR_SENTENCE, JEV_SECTIONS, jevSections, jevStatusLine, toGap, type JevBundle } from "@/lib/jev/format";
+import { GAP_RULES, cutSentences, plainNote, plainPublisher, plainReason, plainWhat, upstreamName } from "@/lib/jev/plain";
 import { ACRONYM_TOKEN, GLOSSARY, Glosser, segText, unglossed } from "@/lib/jev/glossary";
-import { isCloseKey, restoreFocus, scrollOptions, scrollsOnOpen } from "@/lib/jev/focus";
+import { closeOnEscape, isCloseKey, restoreFocus, scrollOptions, scrollsOnOpen } from "@/lib/jev/focus";
 import { JEV_FIPS_TYPES, JEV_PLACE_TYPES, fipsTarget, targetForPick } from "@/lib/jev/ask";
 import { JevPanelView } from "./AskJevPanel";
 
@@ -50,23 +50,76 @@ function ownWords(html: string): string {
   return visible(cut);
 }
 
-/** Lines a fixture shows a reader, one per element we draw text into. */
-const AGENT_WORDS = ["pass a county FIPS", "call world_context", "/api/", "failed[]", "join:", "fixture", "pulled: null", "max_records", "world_context", "upstreamUrl", "hifld-hosp"];
+/** Words written for agents, which a reader must never see: tool names, routes, ids, a search box's corners. */
+const AGENT_WORDS: readonly (string | RegExp)[] = [
+  "pass a county FIPS",
+  "call world_context",
+  "/api/",
+  "failed[]",
+  "join:",
+  "fixture",
+  "pulled: null",
+  "max_records",
+  "world_context",
+  "upstreamUrl",
+  "hifld-hosp",
+  "census-tigerweb",
+  "usgs-wbd",
+  "fema-nfhl",
+  "this box",
+  /\broute\b/,
+  // A search box's four corners: "(-88.4466,30.4346,-87.9466,30.9346)".
+  /\(-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?\)/,
+  /\((?:tavg|pcp)\)/,
+];
+
+/** The first agent word in `s`, with its surroundings, or null. */
+function leak(s: string): string | null {
+  for (const w of AGENT_WORDS) {
+    const at = typeof w === "string" ? s.indexOf(w) : s.search(w);
+    if (at >= 0) return `${String(w)} at: ${s.slice(Math.max(0, at - 80), at + 80)}`;
+  }
+  return null;
+}
 
 describe("gap reasons in plain words", () => {
+  // Every topic, the fabric's too (the panel doesn't show it today, but its reasons are mapped all the same).
   const reasons = new Map<string, { what: string; where: string }>();
   for (const f of FIXTURES)
-    for (const k of JEV_SECTIONS) for (const m of f.bundle.topics?.[k]?.missing ?? []) if (!reasons.has(m.reason)) reasons.set(m.reason, { what: m.what, where: `${f.name}/${k}` });
+    for (const [k, t] of Object.entries(f.bundle.topics ?? {})) for (const m of t?.missing ?? []) if (!reasons.has(m.reason)) reasons.set(m.reason, { what: m.what, where: `${f.name}/${k}` });
 
-  it("covers every distinct reason in the six fixtures (24 today)", () => {
-    expect(reasons.size).toBeGreaterThanOrEqual(24);
+  it("covers every distinct reason in the six fixtures (24 shown, 30 with the fabric's)", () => {
+    expect(reasons.size).toBeGreaterThanOrEqual(30);
   });
 
   it.each([...reasons].map(([reason, w]) => ({ reason, ...w })))("maps a reason from $where to a template", ({ reason, what }) => {
     const p = plainReason(what, reason);
     // An unmatched reason fails here and the message prints it, so it gets a row in lib/jev/plain.ts.
     expect(p.rule, `no pattern for reason: ${reason}`).not.toBeNull();
-    for (const w of AGENT_WORDS) expect(p.text, `${p.rule} leaks "${w}"`).not.toContain(w);
+    expect(leak(toGap({ what, reason }).sentence), p.rule ?? "").toBeNull();
+  });
+
+  // One sample per row, so breaking any row's pattern fails here even where no shown fixture hits it.
+  const SAMPLES: Record<string, [what: string, reason: string]> = {
+    "state-or-county-only": ["water", "a state has no single water system; pass a county FIPS, a point or a box"],
+    "fabric-per-point": ["place fabric", "the fabric is per point; call world_context with lon/lat (the county's point is -88.1966, 30.6846)"],
+    "upstream-failed": ["place fabric: usgs-wbd", "that upstream failed on this call (listed in /api/fabric failed[])"],
+    "ct-legacy-counties": ["SPC", "SPC lists Connecticut under its 8 legacy counties (09001-09015), not the planning regions (09110-09190) Census now uses, so it has nothing filed under this region (join:legacy_ct_counties)"],
+    "alaska-forecast-zones": ["NCEI Storm Events", "NCEI Storm Events files Alaska by forecast zones and areas, not by county (join:ncei_areas_not_counties)"],
+    "boundary-changed": ["x", "this county's boundary changed after 2010, so USGS landslide susceptibility's 2010-based row is not attached to it"],
+    "sec-sample": ["SEC", "eye's SEC bundle is a committed fixture (pulled: null), not a full pull of EDGAR registrants"],
+    "no-county": ["x", "no county resolved"],
+    "no-water-service-area": ["water", "no EPA community water system service area contains the point: it may be served by a private well"],
+    "no-value-or-rent-index": ["rent", "Zillow publishes no rent index for this place"],
+    "no-metro": ["metro", "none: this county is in no metropolitan or micropolitan statistical area (Census TIGERweb answered and returned no CBSA here)"],
+    "no-scheduled-release": ["next releases", "none of the sources cited here has a scheduled release on eye's calendar (2026-10-19 to 2026-11-18)"],
+    "no-elevation": ["elevation", "USGS 3DEP gave no elevation for this point"],
+    "ct-planning-regions": ["Connecticut county id", "Census uses planning regions (09110-09190) as county equivalents; some sources publish only legacy counties (09001-09015), so a county-keyed fact can be absent here for that reason alone"],
+  };
+
+  it("has a sample for every row, and each sample hits its own row", () => {
+    expect(Object.keys(SAMPLES).sort()).toEqual(GAP_RULES.map((r) => r.id).sort());
+    for (const [id, [what, reason]] of Object.entries(SAMPLES)) expect(plainReason(what, reason).rule, id).toBe(id);
   });
 
   it("names the publisher the reason names", () => {
@@ -78,8 +131,50 @@ describe("gap reasons in plain words", () => {
       "This county's boundary changed after 2010, so USGS landslide susceptibility's older figures don't fit it.",
     );
     expect(plainReason("typical asking rent (Zillow ZORI)", "Zillow publishes no rent index for this place").text).toBe("Zillow publishes no figure for this place.");
-    expect(plainReason("place fabric: census-tigerweb", "that upstream failed on this call (listed in /api/fabric failed[])").text).toBe("census-tigerweb didn't answer just now. Try again in a minute.");
-    expect(plainReason("x", "Census TIGERweb failed on this call (/api/fabric failed[]: timeout)").text).toBe("Census TIGERweb didn't answer just now. Try again in a minute.");
+    expect(plainReason("x", "Census TIGERweb failed on this call (/api/fabric failed[]: timeout)").text).toBe("The Census Bureau didn't answer just now. Try again in a minute.");
+  });
+
+  it("names an upstream that failed by its publisher, never its id", () => {
+    const failed = "that upstream failed on this call (listed in /api/fabric failed[])";
+    expect(plainReason("place fabric: census-tigerweb", failed).text).toBe("The Census Bureau didn't answer just now. Try again in a minute.");
+    expect(plainReason("place fabric: usgs-wbd", failed).text).toBe("USGS didn't answer just now. Try again in a minute.");
+    expect(plainReason("place fabric: fema-nfhl", failed).text).toBe("FEMA didn't answer just now. Try again in a minute.");
+    expect(plainReason("place fabric: some-new-id", failed).text).toBe("One of the sources didn't answer just now. Try again in a minute.");
+    expect(plainReason("place fabric", failed).text).toBe("One of the sources didn't answer just now. Try again in a minute.");
+    expect(upstreamName("nws-alerts")).toBe("One of the sources");
+    expect(plainWhat("place fabric: usgs-wbd")).toBe("place details from USGS");
+    expect(plainWhat("place fabric: some-new-id")).toBe("place details from one of the sources");
+    // The recorded Austin point: both fabric gaps, as a person reads them.
+    const austin = load("austin-pt").topics?.fabric?.missing ?? [];
+    expect(austin.map((m) => toGap(m).sentence)).toEqual([
+      "place details from USGS: USGS didn't answer just now. Try again in a minute.",
+      "place details from FEMA: FEMA didn't answer just now. Try again in a minute.",
+    ]);
+  });
+
+  it("says county or state by the kind of place asked (Texas is a state)", () => {
+    const sayFor = (n: string) => plainReason("place fabric", load(n).topics!.fabric!.missing![0].reason).text;
+    expect(sayFor("texas")).toBe("Point details (elevation, flood zone, watershed) need a spot on the map. Click inside the state.");
+    expect(sayFor("mobile")).toBe("Point details (elevation, flood zone, watershed) need a spot on the map. Click inside the county.");
+    expect(plainReason("place fabric", "the fabric is per point; call world_context with lon/lat").text).toBe("Point details (elevation, flood zone, watershed) need a spot on the map. Click inside the county or state.");
+  });
+
+  it("writes parameter codes as words and drops other trailing codes (Connecticut's Capitol region)", () => {
+    expect(plainWhat("NOAA Climate at a Glance (tavg)")).toBe("NOAA Climate at a Glance (average temperature)");
+    expect(plainWhat("NOAA Climate at a Glance (pcp)")).toBe("NOAA Climate at a Glance (precipitation)");
+    expect(plainWhat("NOAA Climate at a Glance (zndx)")).toBe("NOAA Climate at a Glance");
+    expect(plainWhat("metro area (CBSA)")).toBe("metro area (CBSA)");
+    expect(plainPublisher("NOAA Climate at a Glance (tavg)")).toBe("NOAA Climate at a Glance");
+    const hazards = jevSections(load("ct-capitol")).find((s) => s.key === "hazards")!;
+    const noaa = hazards.gaps.filter((g) => g.what.startsWith("NOAA"));
+    expect(noaa.map((g) => g.sentence)).toEqual([
+      "NOAA Climate at a Glance (average temperature): NOAA Climate at a Glance still files Connecticut under its 8 old counties, not the planning regions Census uses now, so nothing is filed under this region.",
+      "NOAA Climate at a Glance (precipitation): NOAA Climate at a Glance still files Connecticut under its 8 old counties, not the planning regions Census uses now, so nothing is filed under this region.",
+    ]);
+    expect(hazards.marker).toContain("NOAA Climate at a Glance (average temperature); NOAA Climate at a Glance (precipitation)");
+    const shown = visible(panel(load("ct-capitol")));
+    expect(shown).not.toMatch(/\((?:tavg|pcp)\)/);
+    expect(shown).toContain("Climate at a Glance (average temperature)");
   });
 
   it("has the spec's rows, including the ones no fixture hits", () => {
@@ -99,7 +194,7 @@ describe.each(FIXTURES)("the panel over $name, as a person reads it", ({ name, b
 
   it("never shows words written for agents", () => {
     const shown = [text, ...titlesOf(html)].join("\n");
-    for (const w of AGENT_WORDS) expect(shown.includes(w), `"${w}" in ${name}: ${shown.slice(Math.max(0, shown.indexOf(w) - 80), shown.indexOf(w) + 80)}`).toBe(false);
+    expect(leak(shown), name).toBeNull();
   });
 
   it("has a glossary entry for every acronym in its own words", () => {
@@ -140,6 +235,42 @@ describe.each(FIXTURES)("the panel over $name, as a person reads it", ({ name, b
     const fold = (t: string) => Object.entries(GLOSSARY).reduce((acc, [a, f]) => acc.split(`${a} (${f})`).join(a), t);
     expect(shown.map(fold)).toEqual(noted.map((it) => plainNote(it.note!)));
     expect(html).not.toMatch(/<li data-jev-line=""[^>]*title=/);
+  });
+});
+
+describe("notes about live counts in a search box", () => {
+  it("say where the count was made, without the route or the box's corners", () => {
+    expect(
+      plainNote(
+        "the box 0.25 degrees around the county's Census internal point (-88.4466,30.4346,-87.9466,30.9346), not the whole county; no record-level URL: a count over NWS's national list of active alerts, matched to this box here; NWS has no URL for exactly this box",
+      ),
+    ).toBe("counted within 0.25 degrees of the county's Census internal point, not the whole county; counted from NWS's national list of active alerts, inside that area; the source link opens the whole list, not this count");
+    expect(plainNote("the box 0.1 degrees around the point (-97.8431,30.1672,-97.6431,30.3672); no record-level URL: a count over USGS's past-day M4.5+ feed, matched to this box here; the feed has no URL for exactly this box")).toBe(
+      "counted within 0.1 degrees of the spot you picked; counted from USGS's past-day M4.5+ feed, inside that area; the source link opens the whole list, not this count",
+    );
+    expect(plainNote("within 0.1 degrees of the point; no record-level URL: a count of the route's records inside this box; the publisher has no URL for exactly this box")).toBe(
+      "within 0.1 degrees of the spot you picked; counted inside that area; the source link opens the whole list, not this count",
+    );
+    // Any other box tuple is dropped too.
+    expect(plainNote("matched in (-1.5,2,-3,4.25) only")).toBe("matched in only");
+  });
+});
+
+describe("the panel when the call fails", () => {
+  const RAW = ["world_context could not answer for this place", "HTTP 500: the reply was not JSON", "Internal error: upstream timeout at /api/mcp"];
+
+  it.each(RAW)("shows one plain sentence, never the raw reason (%s)", (raw) => {
+    const html = renderToStaticMarkup(<JevPanelView state={{ asked: "Mobile County, AL", status: "error", bundle: null, error: raw }} reducedMotion onClose={() => {}} />);
+    const shown = visible(html);
+    const err = /<div data-jev-error=""[^>]*>([\s\S]*?)<\/div>/.exec(html);
+    expect(err, "the error line").not.toBeNull();
+    expect(visible(err![1])).toBe(JEV_ERROR_SENTENCE);
+    expect(JEV_ERROR_SENTENCE).toBe("Jev couldn't reach its sources just now. Try again in a minute.");
+    expect(shown).not.toContain(raw);
+    expect(shown).not.toMatch(/world_context|HTTP|JSON|error/i);
+    expect([shown, ...titlesOf(html)].join("\n")).not.toContain(raw);
+    // Kept for us in a data attribute (and the console, lib/jev/store.ts).
+    expect(html).toContain(`data-jev-error-detail="${raw.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}"`);
   });
 });
 
@@ -219,6 +350,19 @@ describe("keyboard, focus and scroll", () => {
     expect(restoreFocus({ isConnected: false, focus })).toBe(false);
     expect(restoreFocus(null)).toBe(false);
     expect(focus).toHaveBeenCalledOnce();
+  });
+
+  it("closes on Escape and stops the event there, so the cockpit's Escape does not also fire", () => {
+    const onClose = vi.fn();
+    const handle = closeOnEscape(onClose);
+    const esc = { key: "Escape", stopPropagation: vi.fn() };
+    handle(esc);
+    expect(esc.stopPropagation).toHaveBeenCalledOnce();
+    expect(onClose).toHaveBeenCalledOnce();
+    const enter = { key: "Enter", stopPropagation: vi.fn() };
+    handle(enter);
+    expect(enter.stopPropagation).not.toHaveBeenCalled();
+    expect(onClose).toHaveBeenCalledOnce();
   });
 
   it("makes the panel focusable and closes from inside it", () => {

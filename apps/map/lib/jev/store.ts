@@ -35,6 +35,12 @@ function captureOpener(): void {
   if (el instanceof HTMLElement && el !== document.body && !el.closest("[data-jev-panel]")) opener = el;
 }
 
+/** A failed ask: the panel shows one plain sentence; the raw reason goes to the console (and the panel's data attribute) for us. */
+function failed(raw: string): void {
+  console.warn("Ask Jev: no answer:", raw);
+  useJev.getState().set({ status: "error", error: raw });
+}
+
 async function run(label: string, origin: JevOrigin, target: (signal: AbortSignal) => Promise<JevTarget>): Promise<void> {
   captureOpener();
   inflight?.abort();
@@ -49,11 +55,11 @@ async function run(label: string, origin: JevOrigin, target: (signal: AbortSigna
     const r = await askJev(t, ctrl.signal);
     if (!mine()) return;
     if (r.ok) useJev.getState().set({ status: "done", bundle: r.bundle });
-    else useJev.getState().set({ status: "error", error: r.error });
+    else failed(r.error);
   } catch (err) {
     if (!mine()) return;
     const aborted = err instanceof DOMException && err.name === "AbortError";
-    useJev.getState().set({ status: "error", error: aborted ? "no answer within a minute" : err instanceof Error ? err.message : String(err) });
+    failed(aborted ? "no answer within a minute" : err instanceof Error ? err.message : String(err));
   } finally {
     clearTimeout(timer);
     if (inflight === ctrl) inflight = null;
