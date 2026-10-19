@@ -15,8 +15,11 @@
 //   placeholder  a filler value: empty, null, n/a, tbd, unknown-as-filler and the rest of data/SCHEMA.md's list
 //   shape        a value shaped like a date, a year standing alone, an age, an email, a phone number, a street
 //                line, a PO box, a ZIP code or a coordinate (season, ids, URLs and retrievedAt excepted)
-//   enum         league is not a professional league on the list
-//   pattern      id, season, url or retrievedAt is malformed
+//   enum         league is not a professional league on the list, or a source entry names a source with no
+//                known shape (SOURCE_SHAPES)
+//   pattern      id, season, url or retrievedAt is malformed, or a source entry's upstreamId and url are not
+//                the shape its source uses (a Wikidata Q-id and a www.wikidata.org item URL, a gsis_id and an
+//                nflverse-data file, and so on); a listed source must also name its upstreamId (required)
 //   needs        teamCity, arena or season without a team
 //   uncited      a field no source entry lists, or a source listing a field the record does not carry
 //   duplicate    (CLI, per file) the same id, season and team twice; one id across seasons or teams is fine
@@ -61,6 +64,50 @@ const ID = /^[a-z][a-z0-9-]*:[A-Za-z0-9][A-Za-z0-9_.-]*$/;
 const SEASON = /^\d{4}(?:-\d{2})?$/;
 const URL_RE = /^https:\/\/[^\s]+$/;
 const UTC = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/;
+
+// What each source's upstreamId and url look like: the id the source itself uses, and a URL on the source's own
+// host that names nothing but the file or item read. A source entry must match one of its source's shapes, both
+// parts together. A source not listed here fails, so a new source arrives with its shape and a test.
+const NFLVERSE_DATA = "https://github\\.com/nflverse/nflverse-data/releases/download/";
+const GSIS = /^(?:\d{2}-\d{7}|[A-Z]{3}\d{6})$/;
+const QID = /^Q[1-9]\d*$/;
+const shapeOf = (id, url, what) => ({ id, url: new RegExp(`^${url}$`), what });
+export const SOURCE_SHAPES = {
+  "nba-stats": [shapeOf(/^\d+$/, "https://stats\\.nba\\.com/stats/(?:playergamelogs\\?Season=\\d{4}-\\d{2}|leaguedashteamstats\\?Season=\\d{4}-\\d{2}&MeasureType=Base)", "a stats.nba.com PERSON_ID or TEAM_ID (digits) and a stats.nba.com playergamelogs or leaguedashteamstats URL for one season")],
+  "nflverse-players": [shapeOf(GSIS, `${NFLVERSE_DATA}players/players\\.csv`, "a gsis_id and nflverse-data's players.csv")],
+  "nflverse-stats": [shapeOf(GSIS, `${NFLVERSE_DATA}stats_player/stats_player_week_\\d{4}\\.csv`, "a gsis_id and nflverse-data's stats_player_week_<year>.csv")],
+  "nflverse-depth": [shapeOf(GSIS, `${NFLVERSE_DATA}depth_charts/depth_charts_\\d{4}\\.csv`, "a gsis_id and nflverse-data's depth_charts_<year>.csv")],
+  "nflverse-teams": [shapeOf(/^[A-Z]{2,3}$/, `${NFLVERSE_DATA}teams/teams_colors_logos\\.csv`, "a team abbreviation and nflverse-data's teams_colors_logos.csv")],
+  "nflverse-games": [shapeOf(/^[A-Z]{3}\d{2}$/, "https://raw\\.githubusercontent\\.com/nflverse/nfldata/master/data/games\\.csv", "a stadium_id (ABC00) and nfldata's games.csv")],
+  wikidata: [shapeOf(QID, "https://www\\.wikidata\\.org/wiki/Q[1-9]\\d*", "a Q-id and a www.wikidata.org/wiki/Q… item URL")],
+  "census-gazetteer": [shapeOf(/^\d{7}$/, "https://www2\\.census\\.gov/geo/docs/maps-data/data/gazetteer/\\d{4}_Gazetteer/\\d{4}_Gaz_place_national\\.zip", "a 7-digit place GEOID and the Census Gazetteer national places file")],
+  geonames: [
+    { id: /^[1-9]\d*$/, url: (id) => new RegExp(`^https://www\\.geonames\\.org/${id}$`), what: "a geonameid and its own www.geonames.org/<geonameid> page" },
+    shapeOf(/^[A-Z]{2}\.[A-Z0-9]+$/, "https://download\\.geonames\\.org/export/dump/admin1CodesASCII\\.txt", "an admin1 code (US.TX) and GeoNames' admin1CodesASCII.txt"),
+  ],
+};
+
+/** Problems with a source entry's upstreamId and url against its source's shapes; run once both are strings. */
+function sourceShapeProblems(src, at, out) {
+  const shapes = SOURCE_SHAPES[src.sourceId];
+  if (!shapes) {
+    out.push({ code: "enum", path: `${at}/sourceId`, message: `${JSON.stringify(src.sourceId)} is not a source with a known id and URL shape (${Object.keys(SOURCE_SHAPES).join(", ")})` });
+    return;
+  }
+  if (!("upstreamId" in src)) {
+    out.push({ code: "required", path: `${at}/upstreamId`, message: `a ${src.sourceId} citation names the id it read` });
+    return;
+  }
+  const { upstreamId: id, url } = src;
+  if (typeof id !== "string" || typeof url !== "string") return;
+  const byId = shapes.filter((s) => s.id.test(id));
+  if (byId.length === 0) {
+    out.push({ code: "pattern", path: `${at}/upstreamId`, message: `not a ${src.sourceId} id; expected ${shapes.map((s) => s.what).join(", or ")}` });
+    return;
+  }
+  if (!byId.some((s) => (typeof s.url === "function" ? s.url(id) : s.url).test(url)))
+    out.push({ code: "pattern", path: `${at}/url`, message: `not a ${src.sourceId} URL for this id; expected ${byId.map((s) => s.what).join(", or ")}` });
+}
 
 const isObject = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
 /** True when a timestamp's date is a day that exists (Date.parse rolls 02-31 over to March). */
@@ -143,12 +190,14 @@ export function validateAthlete(rec) {
           return;
         }
         keyProblems(src, SOURCE_FIELDS, at, out);
+        const beforeIds = out.length;
         for (const k of ["sourceId", "upstreamId"]) if (k in src) valueProblems(src[k], `${at}/${k}`, out, { shapes: false });
         if ("url" in src) {
           const before = out.length;
           valueProblems(src.url, `${at}/url`, out, { shapes: false });
           if (out.length === before && !URL_RE.test(src.url)) out.push({ code: "pattern", path: `${at}/url`, message: "expected an https URL" });
         }
+        if (out.length === beforeIds && typeof src.sourceId === "string") sourceShapeProblems(src, at, out);
         if ("retrievedAt" in src) {
           const before = out.length;
           valueProblems(src.retrievedAt, `${at}/retrievedAt`, out, { shapes: false });

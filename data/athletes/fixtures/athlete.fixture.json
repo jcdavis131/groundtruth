@@ -14,15 +14,15 @@
   "sources": [
     {
       "sourceId": "nba-stats",
-      "upstreamId": "fixture-1",
-      "url": "https://example.invalid/fixture/roster",
+      "upstreamId": "0",
+      "url": "https://stats.nba.com/stats/playergamelogs?Season=2025-26",
       "retrievedAt": "2026-10-18T12:00:00Z",
       "fields": ["name", "league", "team", "teamCity", "arena", "season", "school"]
     },
     {
       "sourceId": "wikidata",
-      "upstreamId": "Q0",
-      "url": "https://example.invalid/fixture/place-of-birth",
+      "upstreamId": "Q4115189",
+      "url": "https://www.wikidata.org/wiki/Q4115189",
       "retrievedAt": "2026-10-18T12:00:00Z",
       "fields": ["birthCity", "birthRegion", "birthCountry"]
     }

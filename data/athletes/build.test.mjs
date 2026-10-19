@@ -53,23 +53,27 @@ check(!throws(() => refuseNeverList("?p wdt:P19 ?pl . ?pl wdt:P131 ?up . ?st pq:
 check(fipsToGeoid("06-44000") === "0644000" && fipsToGeoid("3651000") === "3651000" && fipsToGeoid("123") === null, "FIPS 55-3 values become 7-digit GEOIDs");
 check(gnisToAnsi("2395220") === "02395220", "GNIS ids become 8-digit ANSICODEs");
 
+// Fixture QIDs, shaped like Wikidata's so validate.mjs accepts the records built from them (they are not the real
+// items): Q9000001 Los Angeles, 02 Hollywood, 03 Northridge, 04 Los Angeles County, 05 a state, 06 and 07 the two
+// Portlands, 08 St Mary's Hospital, 09 Paddington, 10 London, 11 Paris, 12 a village, 13 a town in the wrong
+// country, 14 a non-settlement, 15 an item Wikidata returned nothing for, 16 the player.
 const node = (qid, o) => ({ qid, label: null, settle: false, finer: false, coarse: false, parents: [], fips: [], gnis: [], geonames: [], iso: [], ...o });
 const graph = new Map(
   [
-    node("QLA", { label: "Los Angeles", settle: true, fips: ["06-44000"], gnis: ["1662328", "2410877"], iso: ["US"] }),
-    node("QHOLLY", { label: "Hollywood", settle: true, finer: true, parents: ["QLA"], gnis: ["1660757"], iso: ["US"] }),
-    node("QNORTH", { label: "Northridge", settle: true, finer: true, parents: ["QLA", "QLACOUNTY"], iso: ["US"] }),
-    node("QLACOUNTY", { label: "Los Angeles County", coarse: true, iso: ["US"] }),
-    node("QSTATE", { label: "Fixture State", coarse: true, gnis: ["1779778"], iso: ["US"] }),
-    node("QPDXOR", { label: "Portland", settle: true, fips: ["4159000"], iso: ["US"] }),
-    node("QPDXME", { label: "Portland", settle: true, fips: ["2360545"], iso: ["US"] }),
-    node("QHOSP", { label: "St Mary's Hospital", finer: true, parents: ["QPADD"], iso: ["GB"] }),
-    node("QPADD", { label: "Paddington", settle: true, finer: true, parents: ["QLON"], iso: ["GB"] }),
-    node("QLON", { label: "London", settle: true, geonames: ["2643743"], iso: ["GB"] }),
-    node("QPARIS", { label: "Paris", settle: true, finer: true, geonames: ["2988507", "2968815"], iso: ["FR"] }),
-    node("QVILLAGE", { label: "Fixture Village", settle: true, geonames: ["999"], iso: ["FR"] }),
-    node("QWRONG", { label: "Fixture Town", settle: true, geonames: ["2643743"], iso: ["FR"] }),
-    node("QNOTSET", { label: "Fixture Thing", geonames: ["2988507"], iso: ["FR"] }),
+    node("Q9000001", { label: "Los Angeles", settle: true, fips: ["06-44000"], gnis: ["1662328", "2410877"], iso: ["US"] }),
+    node("Q9000002", { label: "Hollywood", settle: true, finer: true, parents: ["Q9000001"], gnis: ["1660757"], iso: ["US"] }),
+    node("Q9000003", { label: "Northridge", settle: true, finer: true, parents: ["Q9000001", "Q9000004"], iso: ["US"] }),
+    node("Q9000004", { label: "Los Angeles County", coarse: true, iso: ["US"] }),
+    node("Q9000005", { label: "Fixture State", coarse: true, gnis: ["1779778"], iso: ["US"] }),
+    node("Q9000006", { label: "Portland", settle: true, fips: ["4159000"], iso: ["US"] }),
+    node("Q9000007", { label: "Portland", settle: true, fips: ["2360545"], iso: ["US"] }),
+    node("Q9000008", { label: "St Mary's Hospital", finer: true, parents: ["Q9000009"], iso: ["GB"] }),
+    node("Q9000009", { label: "Paddington", settle: true, finer: true, parents: ["Q9000010"], iso: ["GB"] }),
+    node("Q9000010", { label: "London", settle: true, geonames: ["2643743"], iso: ["GB"] }),
+    node("Q9000011", { label: "Paris", settle: true, finer: true, geonames: ["2988507", "2968815"], iso: ["FR"] }),
+    node("Q9000012", { label: "Fixture Village", settle: true, geonames: ["999"], iso: ["FR"] }),
+    node("Q9000013", { label: "Fixture Town", settle: true, geonames: ["2643743"], iso: ["FR"] }),
+    node("Q9000014", { label: "Fixture Thing", geonames: ["2988507"], iso: ["FR"] }),
   ].map((n) => [n.qid, n]),
 );
 const gaz = (geoid, ansi, region) => ({ placeId: `census-place:${geoid}`, source: "census-gazetteer", upstreamId: geoid, cc: "US", regionCode: "US.XX", region, country: "United States" });
@@ -87,26 +91,26 @@ const places = {
 
 const r = (p19) => resolveBirthplace(p19, graph, places);
 {
-  const x = r(["QLA"]);
+  const x = r(["Q9000001"]);
   check(x.outcome === "matched-direct" && x.placeId === "census-place:0644000", "a city matched by FIPS and GNIS to one Gazetteer place is the birth city", JSON.stringify(x));
 }
 {
-  const x = r(["QHOLLY"]);
-  check(x.outcome === "matched-after-walk" && x.settlement === "QLA" && x.path.join(">") === "QHOLLY>QLA", "Hollywood walks P131 up to Los Angeles", JSON.stringify(x));
+  const x = r(["Q9000002"]);
+  check(x.outcome === "matched-after-walk" && x.settlement === "Q9000001" && x.path.join(">") === "Q9000002>Q9000001", "Hollywood walks P131 up to Los Angeles", JSON.stringify(x));
 }
-check(r(["QNORTH"]).outcome === "dropped-multiple-parents", "Northridge, with two P131 parents, is left out");
-check(r(["QSTATE"]).outcome === "dropped-coarser", "a state is left out, even though it has a GNIS id");
-check(r(["QPDXOR"]).placeId === "census-place:4159000" && r(["QPDXME"]).placeId === "census-place:2360545", "two places labelled Portland resolve to two different records by FIPS");
+check(r(["Q9000003"]).outcome === "dropped-multiple-parents", "Northridge, with two P131 parents, is left out");
+check(r(["Q9000005"]).outcome === "dropped-coarser", "a state is left out, even though it has a GNIS id");
+check(r(["Q9000006"]).placeId === "census-place:4159000" && r(["Q9000007"]).placeId === "census-place:2360545", "two places labelled Portland resolve to two different records by FIPS");
 {
-  const x = r(["QHOSP"]);
-  check(x.outcome === "matched-after-walk" && x.settlement === "QLON" && x.path.length === 3, "a hospital walks up through Paddington to London", JSON.stringify(x));
+  const x = r(["Q9000008"]);
+  check(x.outcome === "matched-after-walk" && x.settlement === "Q9000010" && x.path.length === 3, "a hospital walks up through Paddington to London", JSON.stringify(x));
 }
-check(r(["QPARIS"]).outcome === "matched-direct", "a city that matches a place record stays, even if a subclass path calls it finer");
-check(r(["QVILLAGE"]).outcome === "dropped-no-external-id-match", "a settlement whose GeoNames id is not a cities500 city is left out");
-check(r(["QWRONG"]).outcome === "dropped-country-mismatch", "a GeoNames match in another country than P17 is left out");
-check(r(["QNOTSET"]).outcome === "dropped-not-settlement-by-p31", "an id match on an item that is not a settlement by P31 is left out");
-check(r(["QLA", "QLON"]).outcome === "dropped-multiple-p19", "two places of birth are left out");
-check(r(["QMISSING"]).outcome === "dropped-no-place-data", "a place Wikidata returned nothing for is left out");
+check(r(["Q9000011"]).outcome === "matched-direct", "a city that matches a place record stays, even if a subclass path calls it finer");
+check(r(["Q9000012"]).outcome === "dropped-no-external-id-match", "a settlement whose GeoNames id is not a cities500 city is left out");
+check(r(["Q9000013"]).outcome === "dropped-country-mismatch", "a GeoNames match in another country than P17 is left out");
+check(r(["Q9000014"]).outcome === "dropped-not-settlement-by-p31", "an id match on an item that is not a settlement by P31 is left out");
+check(r(["Q9000001", "Q9000010"]).outcome === "dropped-multiple-p19", "two places of birth are left out");
+check(r(["Q9000015"]).outcome === "dropped-no-place-data", "a place Wikidata returned nothing for is left out");
 
 // The trace check, on records built the way build.mjs builds them.
 const at = { wikidata: "2026-10-19T00:00:00Z", gazetteer: "2026-10-19T00:00:00Z", geonames: "2026-10-19T00:00:00Z", admin1: "2026-10-19T00:00:00Z" };
@@ -117,39 +121,39 @@ const base = () => ({
   league: "NBA",
   team: "Fixture City Testers",
   season: "2025-26",
-  sources: [{ sourceId: "nba-stats", upstreamId: "fixture-1", url: "https://example.invalid/roster", retrievedAt: "2026-10-18T12:00:00Z", fields: ["name", "league", "team", "season"] }],
+  sources: [{ sourceId: "nba-stats", upstreamId: "0", url: "https://stats.nba.com/stats/playergamelogs?Season=2025-26", retrievedAt: "2026-10-18T12:00:00Z", fields: ["name", "league", "team", "season"] }],
 });
 const shipped = (p19) => {
-  const res = { ...r(p19), playerQid: "QPLAYER" };
+  const res = { ...r(p19), playerQid: "Q9000016" };
   const rec = base();
   const b = birthFields(res, graph, at);
   Object.assign(rec, b.fields);
   rec.sources.push(...b.sources);
   return { rec, trace: { id: rec.id, p19: res.path[0], path: res.path, settlement: res.settlement, placeId: res.placeId, via: res.via } };
 };
-for (const p of ["QLA", "QHOLLY", "QHOSP", "QPARIS"]) {
+for (const p of ["Q9000001", "Q9000002", "Q9000008", "Q9000011"]) {
   const { rec, trace } = shipped([p]);
   check(validateAthlete(rec).length === 0, `a record born at ${p} passes validate.mjs`, JSON.stringify(validateAthlete(rec)));
   check(traceProblems(rec, trace, graph, places).length === 0, `a record born at ${p} passes the A5a trace check`, traceProblems(rec, trace, graph, places).join("; "));
 }
 {
-  const { rec, trace } = shipped(["QHOLLY"]);
-  check(rec.birthCity === "Los Angeles" && rec.sources.some((s) => s.sourceId === "wikidata" && s.upstreamId === "QHOLLY"), "the citation carries the P19 QID; the city shown is the settlement's");
+  const { rec, trace } = shipped(["Q9000002"]);
+  check(rec.birthCity === "Los Angeles" && rec.sources.some((s) => s.sourceId === "wikidata" && s.upstreamId === "Q9000002"), "the citation carries the P19 QID; the city shown is the settlement's");
   check(rec.sources.some((s) => s.sourceId === "census-gazetteer" && s.upstreamId === "0644000"), "the citation carries the place record's id");
   const relabelled = { ...rec, birthCity: "Hollywood" };
   check(traceProblems(relabelled, trace, graph, places).some((p) => /label/.test(p)), "a birthCity that is not the settlement's label fails the trace");
-  const otherPortland = { ...trace, settlement: "QPDXME", path: ["QHOLLY", "QPDXME"], placeId: "census-place:2360545" };
+  const otherPortland = { ...trace, settlement: "Q9000007", path: ["Q9000002", "Q9000007"], placeId: "census-place:2360545" };
   check(traceProblems(rec, otherPortland, graph, places).length > 0, "a trace through a P131 link that does not exist fails");
   const wrongRecord = { ...trace, placeId: "census-place:4159000" };
   check(traceProblems(rec, wrongRecord, graph, places).some((p) => /points at/.test(p)), "a trace whose place id is not the settlement's external id fails");
   check(traceProblems(rec, undefined, graph, places).length === 1, "a birthCity with no trace fails");
-  const noP19 = { ...rec, sources: rec.sources.map((s) => (s.sourceId === "wikidata" ? { ...s, upstreamId: "QLA" } : s)) };
+  const noP19 = { ...rec, sources: rec.sources.map((s) => (s.sourceId === "wikidata" ? { ...s, upstreamId: "Q9000001" } : s)) };
   check(traceProblems(noP19, trace, graph, places).some((p) => /wikidata citation/.test(p)), "a citation that names the settlement instead of the P19 QID fails");
 }
 {
-  const { rec, trace } = shipped(["QLA"]);
-  const viaNorthridge = { ...trace, p19: "QNORTH", path: ["QNORTH", "QLA"] };
-  const rec2 = { ...rec, sources: rec.sources.map((s) => (s.sourceId === "wikidata" ? { ...s, upstreamId: "QNORTH" } : s)) };
+  const { rec, trace } = shipped(["Q9000001"]);
+  const viaNorthridge = { ...trace, p19: "Q9000003", path: ["Q9000003", "Q9000001"] };
+  const rec2 = { ...rec, sources: rec.sources.map((s) => (s.sourceId === "wikidata" ? { ...s, upstreamId: "Q9000003" } : s)) };
   check(traceProblems(rec2, viaNorthridge, graph, places).some((p) => /more than one P131 parent/.test(p)), "a trace through a level with two parents fails");
 }
 
