@@ -74,7 +74,6 @@ function deploymentOrigin(host: string | undefined): string | null {
  * taken from the Host header alone. Read per request so tests can stub it.
  */
 function protectionBypass(req: Request): ProtectionBypass | undefined {
-  if (process.env.VERCEL_ENV !== "preview") return undefined;
   const secret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET?.trim();
   if (!secret) return undefined;
   let incoming: string;
