@@ -185,6 +185,505 @@
     "generatedAt": "2026-10-19T02:32:36.311Z"
    }
   },
+  "/api/screen?kind=county&q=geoid%20%3D%3D%20%2212127%22%20LIMIT%201": {
+   "status": 200,
+   "body": {
+    "data": {
+     "rows": [
+      {
+       "name": "Volusia County, FL",
+       "geo": [
+        -81.1819979,
+        29.0587206
+       ],
+       "values": {
+        "name": "Volusia County",
+        "geoid": "12127",
+        "state": "FL",
+        "jobs.emp": 192323,
+        "jobs.avgWeeklyWage": 1144,
+        "jobs.period": "2026 Q1",
+        "jobs.suppressed": "false",
+        "home.latest": 324665.4460656089,
+        "home.yoyPct": -0.3365373863704447,
+        "home.asOf": "2026-09-30",
+        "rent.latest": 1736.3835777440506
+       }
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     },
+     {
+      "source": {
+       "id": "bls-qcew",
+       "publisher": "U.S. Bureau of Labor Statistics",
+       "url": "https://www.bls.gov/cew/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     },
+     {
+      "source": {
+       "id": "bls-qcew",
+       "publisher": "U.S. Bureau of Labor Statistics",
+       "url": "https://www.bls.gov/cew/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:42.385Z"
+   }
+  },
+  "/api/hazards?op=nri&fips=12127": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "STCOFIPS": "12127",
+      "POPULATION": 551829,
+      "RISK_SCORE": 96.2150127226463,
+      "RISK_RATNG": "Relatively High",
+      "EAL_VALT": 195696118.9567276,
+      "EAL_RATNG": "Relatively High",
+      "SOVI_SCORE": 56.67938931,
+      "SOVI_RATNG": "Relatively Moderate",
+      "NRI_VER": "December 2025",
+      "AVLN_RISKR": "Not Applicable",
+      "CFLD_RISKR": "Relatively High",
+      "CWAV_RISKR": "Relatively Low",
+      "DRGT_RISKR": "Relatively Low",
+      "ERQK_RISKR": "Relatively Low",
+      "HAIL_RISKR": "Relatively Low",
+      "HWAV_RISKR": "Relatively Moderate",
+      "HRCN_RISKR": "Very High",
+      "ISTM_RISKR": "Not Applicable",
+      "IFLD_RISKR": "Relatively High",
+      "LNDS_RISKR": "Very Low",
+      "LTNG_RISKR": "Very High",
+      "SWND_RISKR": "Relatively High",
+      "TRND_RISKR": "Relatively High",
+      "TSUN_RISKR": "Insufficient Data",
+      "VLCN_RISKR": "Not Applicable",
+      "WFIR_RISKR": "Relatively Moderate",
+      "WNTW_RISKR": "No Rating"
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-nri",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://hazards.fema.gov/nri/"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
+      "retrievedAt": "2026-10-19T02:32:36.697Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:36.697Z"
+   }
+  },
+  "/api/hazards?op=history&fips=12127&years=10&declarations=15": {
+   "status": 200,
+   "body": {
+    "data": {
+     "declarations": [
+      {
+       "disasterNumber": 4834,
+       "declarationType": "DR",
+       "declarationDate": "2024-10-11",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE MILTON"
+      },
+      {
+       "disasterNumber": 3622,
+       "declarationType": "EM",
+       "declarationDate": "2024-10-07",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE MILTON"
+      },
+      {
+       "disasterNumber": 4806,
+       "declarationType": "DR",
+       "declarationDate": "2024-08-10",
+       "incidentType": "Tropical Storm",
+       "declarationTitle": "HURRICANE DEBBY"
+      },
+      {
+       "disasterNumber": 3605,
+       "declarationType": "EM",
+       "declarationDate": "2024-08-03",
+       "incidentType": "Tropical Storm",
+       "declarationTitle": "TROPICAL STORM DEBBY"
+      },
+      {
+       "disasterNumber": 4734,
+       "declarationType": "DR",
+       "declarationDate": "2023-08-31",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE IDALIA"
+      },
+      {
+       "disasterNumber": 3596,
+       "declarationType": "EM",
+       "declarationDate": "2023-08-28",
+       "incidentType": "Tropical Storm",
+       "declarationTitle": "TROPICAL STORM IDALIA"
+      },
+      {
+       "disasterNumber": 4680,
+       "declarationType": "DR",
+       "declarationDate": "2022-12-13",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE NICOLE"
+      },
+      {
+       "disasterNumber": 3587,
+       "declarationType": "EM",
+       "declarationDate": "2022-11-08",
+       "incidentType": "Tropical Storm",
+       "declarationTitle": "TROPICAL STORM NICOLE"
+      },
+      {
+       "disasterNumber": 4673,
+       "declarationType": "DR",
+       "declarationDate": "2022-09-29",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE IAN"
+      },
+      {
+       "disasterNumber": 3584,
+       "declarationType": "EM",
+       "declarationDate": "2022-09-24",
+       "incidentType": "Hurricane",
+       "declarationTitle": "TROPICAL STORM IAN"
+      },
+      {
+       "disasterNumber": 3533,
+       "declarationType": "EM",
+       "declarationDate": "2020-08-01",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE ISAIAS"
+      },
+      {
+       "disasterNumber": 4486,
+       "declarationType": "DR",
+       "declarationDate": "2020-03-25",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19 PANDEMIC"
+      },
+      {
+       "disasterNumber": 3432,
+       "declarationType": "EM",
+       "declarationDate": "2020-03-13",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19"
+      },
+      {
+       "disasterNumber": 4468,
+       "declarationType": "DR",
+       "declarationDate": "2019-10-21",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE DORIAN"
+      },
+      {
+       "disasterNumber": 3419,
+       "declarationType": "EM",
+       "declarationDate": "2019-08-30",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE DORIAN"
+      }
+     ],
+     "declarationRows": 44,
+     "droughtNow": {
+      "mapDate": "2026-10-13",
+      "validStart": "2026-10-13",
+      "validEnd": "2026-10-19",
+      "none": 80.71,
+      "d0": 19.29,
+      "d1": 0,
+      "d2": 0,
+      "d3": 0,
+      "d4": 0
+     },
+     "missing": []
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-openfema",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      },
+      "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'12'%20and%20fipsCountyCode%20eq%20'127'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
+      "retrievedAt": "2026-10-19T02:32:36.713Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=12127&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
+      "retrievedAt": "2026-10-19T02:32:37.520Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=12127&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
+      "retrievedAt": "2026-10-19T02:32:37.449Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/FL-127/tavg/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T02:32:36.845Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/FL-127/pcp/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T02:32:37.008Z"
+     },
+     {
+      "source": {
+       "id": "noaa-spc",
+       "publisher": "NOAA National Weather Service, Storm Prediction Center",
+       "url": "https://www.spc.noaa.gov/wcm/"
+      },
+      "upstreamUrl": "https://www.spc.noaa.gov/wcm/data/1950-2025_all_tornadoes.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "usgs-landslide-susc",
+       "publisher": "U.S. Geological Survey (Belair, Jones, Martinez, Mirus and Wood)",
+       "url": "https://doi.org/10.5066/P13KAGU3"
+      },
+      "upstreamUrl": "https://www.sciencebase.gov/catalog/file/get/65ccea5bd34ef4b119cb3bac?name=county_analysis.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "ncei-storm-events",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/stormevents/"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:37.524Z"
+   }
+  },
+  "/api/live": {
+   "status": 200,
+   "body": {
+    "data": {
+     "items": [
+      {
+       "kind": "alert",
+       "title": "Flood Warning",
+       "subtitle": "Lake, FL; Volusia, FL",
+       "lon": -81.55066666650087,
+       "lat": 29.220666666608103,
+       "bbox": [
+        -81.69,
+        29.08,
+        -81.42,
+        29.35
+       ],
+       "time": 1792371480000,
+       "until": 1792425600000,
+       "url": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.ae8e54e11e9105fc7e4866ee9a809176c3d3d8bf.001.1"
+      }
+     ],
+     "failed": [],
+     "unmapped": 0
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     },
+     {
+      "source": {
+       "id": "usgs-earthquakes",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://earthquake.usgs.gov/"
+      },
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:49.835Z"
+   }
+  },
+  "/api/civic?op=svi&level=place&fips=12127": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "rpl": [
+       0.6987,
+       0.5966,
+       0.6914,
+       0.678,
+       0.6863
+      ]
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "cdc-svi",
+       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
+       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
+      },
+      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
+      "retrievedAt": "2026-10-19T02:32:39.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:39.000Z"
+   }
+  },
+  "/api/infra?op=hospitals&bbox=-81.6507,29.1207,-81.4507,29.3207": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "hifld-hospitals",
+       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
+       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
+      "retrievedAt": "2026-10-19T02:32:36.640Z"
+     },
+     {
+      "source": {
+       "id": "cms-provider-data",
+       "publisher": "Centers for Medicare & Medicaid Services",
+       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+      },
+      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:36.640Z"
+   }
+  },
+  "/api/infra?op=dams&bbox=-81.6507,29.1207,-81.4507,29.3207": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "usace-nid",
+       "publisher": "U.S. Army Corps of Engineers",
+       "url": "https://nid.sec.usace.army.mil/"
+      },
+      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+      "retrievedAt": "2026-10-19T02:32:36.743Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:36.743Z"
+   }
+  },
+  "/api/companies?op=county&fips=12127": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "pulled": null,
+    "provenance": [
+     {
+      "source": {
+       "id": "sec-edgar",
+       "publisher": "U.S. Securities and Exchange Commission",
+       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+      },
+      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
+     },
+     {
+      "source": {
+       "id": "census-zcta-county",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
+      }
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      }
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:36.503Z"
+   }
+  },
   "/api/releases?op=calendar": {
    "status": 200,
    "body": {
@@ -415,504 +914,70 @@
     "generatedAt": "2026-10-19T02:31:47.351Z"
    }
   },
-  "/api/live": {
+  "/api/water?op=pfas&bbox=-81.56,29.22,-81.54,29.24&polygons=1": {
    "status": 200,
    "body": {
-    "data": {
-     "items": [
-      {
-       "kind": "alert",
-       "title": "Flood Warning",
-       "subtitle": "Lake, FL; Volusia, FL",
-       "lon": -81.55066666650087,
-       "lat": 29.220666666608103,
-       "bbox": [
-        -81.69,
-        29.08,
-        -81.42,
-        29.35
-       ],
-       "time": 1792371480000,
-       "until": 1792425600000,
-       "url": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.ae8e54e11e9105fc7e4866ee9a809176c3d3d8bf.001.1"
-      }
-     ],
-     "failed": [],
-     "unmapped": 0
-    },
+    "generatedAt": "2026-10-19T04:55:18.566Z",
     "provenance": [
      {
       "source": {
-       "id": "nws-api",
-       "publisher": "NOAA National Weather Service",
-       "url": "https://www.weather.gov/documentation/services-web-api"
+       "id": "epa-cws-boundaries",
+       "publisher": "U.S. EPA; the original data provider of each polygon (a state agency, the system, or EPA's Office of Research and Development for modelled boundaries)",
+       "url": "https://www.epa.gov/ground-water-and-drinking-water"
       },
-      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0",
+      "retrievedAt": "2026-10-19T04:55:18.565Z"
      },
      {
       "source": {
-       "id": "usgs-earthquakes",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://earthquake.usgs.gov/"
+       "id": "epa-ucmr5-pat",
+       "publisher": "U.S. EPA Office of Enforcement and Compliance Assurance (ECHO PFAS Analytic Tools); data from EPA's Office of Ground Water and Drinking Water, UCMR 5",
+       "url": "https://www.epa.gov/dwucmr/fifth-unregulated-contaminant-monitoring-rule"
       },
-      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/PFAS_Analytic_Tools_Layers/FeatureServer/1",
+      "retrievedAt": "2026-10-19T04:55:18.565Z"
      }
     ],
-    "generatedAt": "2026-10-19T02:31:49.835Z"
-   }
-  },
-  "/api/companies?op=county&fips=12127": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": []
-    },
-    "pulled": null,
-    "provenance": [
+    "coverage": [
      {
-      "source": {
-       "id": "sec-edgar",
-       "publisher": "U.S. Securities and Exchange Commission",
-       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
-      },
-      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
+      "id": "service-areas",
+      "name": "EPA community water system service areas",
+      "state": "covered",
+      "count": 0
      },
      {
-      "source": {
-       "id": "census-zcta-county",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
-      }
+      "id": "estimated-locations",
+      "name": "EPA UCMR 5 systems placed by estimated location",
+      "state": "covered",
+      "count": 0
      },
      {
-      "source": {
-       "id": "census-tigerweb",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://tigerweb.geo.census.gov/"
-      }
+      "id": "results",
+      "name": "EPA UCMR 5 results",
+      "state": "covered",
+      "count": 0
      }
     ],
-    "generatedAt": "2026-10-19T02:32:36.503Z"
-   }
-  },
-  "/api/infra?op=hospitals&bbox=-81.6507,29.1207,-81.4507,29.3207": {
-   "status": 200,
-   "body": {
+    "bbox": [
+     -81.56,
+     29.22,
+     -81.54,
+     29.24
+    ],
+    "polygons": true,
     "data": {
      "features": []
-    },
-    "truncated": false,
-    "provenance": [
-     {
-      "source": {
-       "id": "hifld-hospitals",
-       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
-       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
-      },
-      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
-      "retrievedAt": "2026-10-19T02:32:36.640Z"
-     },
-     {
-      "source": {
-       "id": "cms-provider-data",
-       "publisher": "Centers for Medicare & Medicaid Services",
-       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
-      },
-      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:36.640Z"
-   }
-  },
-  "/api/hazards?op=nri&fips=12127": {
-   "status": 200,
-   "body": {
-    "data": {
-     "row": {
-      "STCOFIPS": "12127",
-      "POPULATION": 551829,
-      "RISK_SCORE": 96.2150127226463,
-      "RISK_RATNG": "Relatively High",
-      "EAL_VALT": 195696118.9567276,
-      "EAL_RATNG": "Relatively High",
-      "SOVI_SCORE": 56.67938931,
-      "SOVI_RATNG": "Relatively Moderate",
-      "NRI_VER": "December 2025",
-      "AVLN_RISKR": "Not Applicable",
-      "CFLD_RISKR": "Relatively High",
-      "CWAV_RISKR": "Relatively Low",
-      "DRGT_RISKR": "Relatively Low",
-      "ERQK_RISKR": "Relatively Low",
-      "HAIL_RISKR": "Relatively Low",
-      "HWAV_RISKR": "Relatively Moderate",
-      "HRCN_RISKR": "Very High",
-      "ISTM_RISKR": "Not Applicable",
-      "IFLD_RISKR": "Relatively High",
-      "LNDS_RISKR": "Very Low",
-      "LTNG_RISKR": "Very High",
-      "SWND_RISKR": "Relatively High",
-      "TRND_RISKR": "Relatively High",
-      "TSUN_RISKR": "Insufficient Data",
-      "VLCN_RISKR": "Not Applicable",
-      "WFIR_RISKR": "Relatively Moderate",
-      "WNTW_RISKR": "No Rating"
-     }
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "fema-nri",
-       "publisher": "Federal Emergency Management Agency",
-       "url": "https://hazards.fema.gov/nri/"
-      },
-      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
-      "retrievedAt": "2026-10-19T02:32:36.697Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:36.697Z"
-   }
-  },
-  "/api/infra?op=dams&bbox=-81.6507,29.1207,-81.4507,29.3207": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": []
-    },
-    "truncated": false,
-    "provenance": [
-     {
-      "source": {
-       "id": "usace-nid",
-       "publisher": "U.S. Army Corps of Engineers",
-       "url": "https://nid.sec.usace.army.mil/"
-      },
-      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
-      "retrievedAt": "2026-10-19T02:32:36.743Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:36.743Z"
-   }
-  },
-  "/api/hazards?op=history&fips=12127&years=10&declarations=15": {
-   "status": 200,
-   "body": {
-    "data": {
-     "declarations": [
-      {
-       "disasterNumber": 4834,
-       "declarationType": "DR",
-       "declarationDate": "2024-10-11",
-       "incidentType": "Hurricane",
-       "declarationTitle": "HURRICANE MILTON"
-      },
-      {
-       "disasterNumber": 3622,
-       "declarationType": "EM",
-       "declarationDate": "2024-10-07",
-       "incidentType": "Hurricane",
-       "declarationTitle": "HURRICANE MILTON"
-      },
-      {
-       "disasterNumber": 4806,
-       "declarationType": "DR",
-       "declarationDate": "2024-08-10",
-       "incidentType": "Tropical Storm",
-       "declarationTitle": "HURRICANE DEBBY"
-      },
-      {
-       "disasterNumber": 3605,
-       "declarationType": "EM",
-       "declarationDate": "2024-08-03",
-       "incidentType": "Tropical Storm",
-       "declarationTitle": "TROPICAL STORM DEBBY"
-      },
-      {
-       "disasterNumber": 4734,
-       "declarationType": "DR",
-       "declarationDate": "2023-08-31",
-       "incidentType": "Hurricane",
-       "declarationTitle": "HURRICANE IDALIA"
-      },
-      {
-       "disasterNumber": 3596,
-       "declarationType": "EM",
-       "declarationDate": "2023-08-28",
-       "incidentType": "Tropical Storm",
-       "declarationTitle": "TROPICAL STORM IDALIA"
-      },
-      {
-       "disasterNumber": 4680,
-       "declarationType": "DR",
-       "declarationDate": "2022-12-13",
-       "incidentType": "Hurricane",
-       "declarationTitle": "HURRICANE NICOLE"
-      },
-      {
-       "disasterNumber": 3587,
-       "declarationType": "EM",
-       "declarationDate": "2022-11-08",
-       "incidentType": "Tropical Storm",
-       "declarationTitle": "TROPICAL STORM NICOLE"
-      },
-      {
-       "disasterNumber": 4673,
-       "declarationType": "DR",
-       "declarationDate": "2022-09-29",
-       "incidentType": "Hurricane",
-       "declarationTitle": "HURRICANE IAN"
-      },
-      {
-       "disasterNumber": 3584,
-       "declarationType": "EM",
-       "declarationDate": "2022-09-24",
-       "incidentType": "Hurricane",
-       "declarationTitle": "TROPICAL STORM IAN"
-      },
-      {
-       "disasterNumber": 3533,
-       "declarationType": "EM",
-       "declarationDate": "2020-08-01",
-       "incidentType": "Hurricane",
-       "declarationTitle": "HURRICANE ISAIAS"
-      },
-      {
-       "disasterNumber": 4486,
-       "declarationType": "DR",
-       "declarationDate": "2020-03-25",
-       "incidentType": "Biological",
-       "declarationTitle": "COVID-19 PANDEMIC"
-      },
-      {
-       "disasterNumber": 3432,
-       "declarationType": "EM",
-       "declarationDate": "2020-03-13",
-       "incidentType": "Biological",
-       "declarationTitle": "COVID-19"
-      },
-      {
-       "disasterNumber": 4468,
-       "declarationType": "DR",
-       "declarationDate": "2019-10-21",
-       "incidentType": "Hurricane",
-       "declarationTitle": "HURRICANE DORIAN"
-      },
-      {
-       "disasterNumber": 3419,
-       "declarationType": "EM",
-       "declarationDate": "2019-08-30",
-       "incidentType": "Hurricane",
-       "declarationTitle": "HURRICANE DORIAN"
-      }
-     ],
-     "declarationRows": 44,
-     "droughtNow": {
-      "mapDate": "2026-10-13",
-      "validStart": "2026-10-13",
-      "validEnd": "2026-10-19",
-      "none": 80.71,
-      "d0": 19.29,
-      "d1": 0,
-      "d2": 0,
-      "d3": 0,
-      "d4": 0
-     },
-     "missing": []
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "fema-openfema",
-       "publisher": "Federal Emergency Management Agency",
-       "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
-      },
-      "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'12'%20and%20fipsCountyCode%20eq%20'127'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
-      "retrievedAt": "2026-10-19T02:32:36.713Z"
-     },
-     {
-      "source": {
-       "id": "usdm",
-       "publisher": "National Drought Mitigation Center, USDA, NOAA",
-       "url": "https://droughtmonitor.unl.edu/"
-      },
-      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=12127&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
-      "retrievedAt": "2026-10-19T02:32:37.520Z"
-     },
-     {
-      "source": {
-       "id": "usdm",
-       "publisher": "National Drought Mitigation Center, USDA, NOAA",
-       "url": "https://droughtmonitor.unl.edu/"
-      },
-      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=12127&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
-      "retrievedAt": "2026-10-19T02:32:37.449Z"
-     },
-     {
-      "source": {
-       "id": "noaa-cag",
-       "publisher": "NOAA National Centers for Environmental Information",
-       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
-      },
-      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/FL-127/tavg/12/12/1895-2026/data.json",
-      "retrievedAt": "2026-10-19T02:32:36.845Z"
-     },
-     {
-      "source": {
-       "id": "noaa-cag",
-       "publisher": "NOAA National Centers for Environmental Information",
-       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
-      },
-      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/FL-127/pcp/12/12/1895-2026/data.json",
-      "retrievedAt": "2026-10-19T02:32:37.008Z"
-     },
-     {
-      "source": {
-       "id": "noaa-spc",
-       "publisher": "NOAA National Weather Service, Storm Prediction Center",
-       "url": "https://www.spc.noaa.gov/wcm/"
-      },
-      "upstreamUrl": "https://www.spc.noaa.gov/wcm/data/1950-2025_all_tornadoes.csv",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
-     },
-     {
-      "source": {
-       "id": "usgs-landslide-susc",
-       "publisher": "U.S. Geological Survey (Belair, Jones, Martinez, Mirus and Wood)",
-       "url": "https://doi.org/10.5066/P13KAGU3"
-      },
-      "upstreamUrl": "https://www.sciencebase.gov/catalog/file/get/65ccea5bd34ef4b119cb3bac?name=county_analysis.csv",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
-     },
-     {
-      "source": {
-       "id": "ncei-storm-events",
-       "publisher": "NOAA National Centers for Environmental Information",
-       "url": "https://www.ncei.noaa.gov/stormevents/"
-      },
-      "upstreamUrl": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:37.524Z"
-   }
-  },
-  "/api/civic?op=svi&level=place&fips=12127": {
-   "status": 200,
-   "body": {
-    "data": {
-     "row": {
-      "rpl": [
-       0.6987,
-       0.5966,
-       0.6914,
-       0.678,
-       0.6863
-      ]
-     }
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "cdc-svi",
-       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
-       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
-      },
-      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
-      "retrievedAt": "2026-10-19T02:32:39.000Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:39.000Z"
-   }
-  },
-  "/api/screen?kind=county&q=geoid%20%3D%3D%20%2212127%22%20LIMIT%201": {
-   "status": 200,
-   "body": {
-    "data": {
-     "rows": [
-      {
-       "name": "Volusia County, FL",
-       "geo": [
-        -81.1819979,
-        29.0587206
-       ],
-       "values": {
-        "name": "Volusia County",
-        "geoid": "12127",
-        "state": "FL",
-        "jobs.emp": 192323,
-        "jobs.avgWeeklyWage": 1144,
-        "jobs.period": "2026 Q1",
-        "jobs.suppressed": "false",
-        "home.latest": 324665.4460656089,
-        "home.yoyPct": -0.3365373863704447,
-        "home.asOf": "2026-09-30",
-        "rent.latest": 1736.3835777440506
-       }
-      }
-     ]
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "census-tigerweb",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://tigerweb.geo.census.gov/"
-      },
-      "retrievedAt": "2026-10-19T02:32:42.301Z"
-     },
-     {
-      "source": {
-       "id": "zillow-zhvi",
-       "publisher": "Zillow Research",
-       "url": "https://www.zillow.com/research/data/"
-      },
-      "retrievedAt": "2026-10-19T02:32:42.301Z"
-     },
-     {
-      "source": {
-       "id": "zillow-zori",
-       "publisher": "Zillow Research",
-       "url": "https://www.zillow.com/research/data/"
-      },
-      "retrievedAt": "2026-10-19T02:32:42.301Z"
-     },
-     {
-      "source": {
-       "id": "bls-qcew",
-       "publisher": "U.S. Bureau of Labor Statistics",
-       "url": "https://www.bls.gov/cew/"
-      },
-      "retrievedAt": "2026-10-19T02:32:42.301Z"
-     },
-     {
-      "source": {
-       "id": "zillow-zhvi",
-       "publisher": "Zillow Research",
-       "url": "https://www.zillow.com/research/data/"
-      },
-      "retrievedAt": "2026-10-19T02:32:42.301Z"
-     },
-     {
-      "source": {
-       "id": "zillow-zhvi",
-       "publisher": "Zillow Research",
-       "url": "https://www.zillow.com/research/data/"
-      },
-      "retrievedAt": "2026-10-19T02:32:42.301Z"
-     },
-     {
-      "source": {
-       "id": "bls-qcew",
-       "publisher": "U.S. Bureau of Labor Statistics",
-       "url": "https://www.bls.gov/cew/"
-      },
-      "retrievedAt": "2026-10-19T02:32:42.301Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:42.385Z"
+    }
    }
   }
- }
+ },
+ "filled": [
+  {
+   "at": "2026-10-19T05:10:03.372Z",
+   "from": "https://www.arxiviq.com",
+   "routes": [
+    "/api/water?op=pfas&bbox=-81.56,29.22,-81.54,29.24&polygons=1"
+   ]
+  }
+ ]
 }

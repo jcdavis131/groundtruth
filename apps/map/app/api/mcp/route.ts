@@ -14,6 +14,7 @@ import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/
 import path from "node:path";
 import { createServer, describeServer } from "@/lib/mcp/server";
 import { httpFetchJson } from "@/lib/mcp/tools";
+import { countyPoint } from "@/lib/places/registry";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -72,6 +73,7 @@ export async function POST(req: Request) {
 
   const server = createServer({
     fetchJson: httpFetchJson(baseUrl(req)),
+    countyPoint,
     docsDir: path.join(process.cwd(), "docs"),
     openapiPath: path.join(process.cwd(), "public", "openapi.json"),
   });

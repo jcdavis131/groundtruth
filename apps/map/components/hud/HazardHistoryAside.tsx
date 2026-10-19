@@ -58,7 +58,7 @@ export default function HazardHistoryAside({ fips }: { fips: string }) {
 export function HazardHistoryView({ fips, data: d, caveats }: { fips: string; data: HistoryData; caveats?: string[] }) {
   const [open, setOpen] = useState(false);
   const st = { caveats };
-  const s =(id: string): Series | undefined => d.series.find((x) => x.id === `${id}:${fips}`);
+  const s = (id: string): Series | undefined => d.series.find((x) => x.id === `${id}:${fips}`);
   const miss = (src: string) => d.missing.find((m) => m.source === src || m.source.startsWith(src));
   // FEMA itself, exactly: "FEMA legacy-code rows" is a gap in an answer FEMA did give, not FEMA missing.
   const femaMiss = d.missing.find((m) => m.source === "FEMA");
@@ -103,7 +103,7 @@ export function HazardHistoryView({ fips, data: d, caveats }: { fips: string; da
             </div>
             {distinctDecl < d.declarations.length && (
               <div className="text-[9px] text-muted-foreground">
-                {d.declarations.length} rows for {distinctDecl} disasters: FEMA lists one row per designated area
+                {d.declarations.length} rows for {distinctDecl} {distinctDecl === 1 ? "disaster" : "disasters"}: FEMA lists one row per designated area
               </div>
             )}
             {femaShort.map((m, i) => (

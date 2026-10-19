@@ -111,7 +111,7 @@ describe("toolManifest", () => {
     expect(table).toContain("| `pulse` | (none) |");
     // An array of enum values reads as its choices, not as the bbox shape.
     const world = toolManifest().find((t) => t.name === "world_context")!;
-    expect(argsSummary(world.inputSchema)).toContain("topics?: (fabric | hazards | economy | vulnerability | institutions | freshness | collections)[]");
+    expect(argsSummary(world.inputSchema)).toContain("topics?: (fabric | hazards | economy | vulnerability | institutions | water | freshness | collections)[]");
     expect(argsSummary(world.inputSchema)).toContain("bbox?: number[4]");
   });
 });

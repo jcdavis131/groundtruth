@@ -1,0 +1,2136 @@
+{
+ "recorded": "2026-10-19T04:53:16.293Z",
+ "from": "https://www.arxiviq.com",
+ "input": {
+  "lon": -75.4516,
+  "lat": 40.1856
+ },
+ "routes": {
+  "/api/fabric?op=stack&lon=-75.4516&lat=40.1856": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:53:12.951Z",
+    "provenance": [
+     {
+      "source": {
+       "id": "natural-earth",
+       "publisher": "Natural Earth",
+       "url": "https://www.naturalearthdata.com/"
+      },
+      "retrievedAt": "2026-10-19T04:53:12.951Z"
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T04:53:12.951Z"
+     },
+     {
+      "source": {
+       "id": "federal-regions",
+       "publisher": "EPA, FEMA, Federal Reserve System",
+       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
+      },
+      "retrievedAt": "2026-10-19T04:53:12.951Z"
+     },
+     {
+      "source": {
+       "id": "usgs-wbd",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
+      },
+      "retrievedAt": "2026-10-19T04:53:12.951Z"
+     },
+     {
+      "source": {
+       "id": "epa-ecoregions",
+       "publisher": "U.S. Environmental Protection Agency",
+       "url": "https://www.epa.gov/eco-research/ecoregions"
+      },
+      "retrievedAt": "2026-10-19T04:53:12.951Z"
+     },
+     {
+      "source": {
+       "id": "fema-nfhl",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/flood-maps/national-flood-hazard-layer"
+      },
+      "retrievedAt": "2026-10-19T04:53:12.951Z"
+     },
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "retrievedAt": "2026-10-19T04:53:12.951Z"
+     },
+     {
+      "source": {
+       "id": "usgs-epqs",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://apps.nationalmap.gov/epqs/"
+      },
+      "retrievedAt": "2026-10-19T04:53:12.951Z"
+     },
+     {
+      "source": {
+       "id": "wikipedia",
+       "publisher": "Wikimedia Foundation",
+       "url": "https://en.wikipedia.org/"
+      },
+      "retrievedAt": "2026-10-19T04:53:12.951Z"
+     }
+    ],
+    "data": {
+     "point": {
+      "elevationM": 45.9
+     },
+     "nodes": [
+      {
+       "kind": "flood",
+       "name": "Flood zone X",
+       "code": "X",
+       "source": "fema-nfhl",
+       "facts": {
+        "special flood hazard area": "no",
+        "FIRM panel": "42091C0237G"
+       }
+      },
+      {
+       "kind": "tract",
+       "name": "Census Tract 2063",
+       "code": "42091206300",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "place",
+       "name": "Collegeville borough",
+       "code": "4215192",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "school",
+       "name": "Perkiomen Valley School District",
+       "code": "4218930",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "unified"
+       }
+      },
+      {
+       "kind": "zcta",
+       "name": "19426",
+       "code": "19426",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc12",
+       "name": "Lower Perkiomen Creek",
+       "code": "020402030809",
+       "source": "usgs-wbd",
+       "facts": {
+        "drains to": "020402031006"
+       }
+      },
+      {
+       "kind": "sldl",
+       "name": "Pennsylvania State House District 150",
+       "code": "42150",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "flood-community",
+       "name": "Collegeville, Borough Of",
+       "code": "421900",
+       "source": "fema-nfhl",
+       "facts": {}
+      },
+      {
+       "kind": "sldu",
+       "name": "Pennsylvania State Senate District 24",
+       "code": "42024",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc10",
+       "name": "Perkiomen Creek",
+       "code": "0204020308",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "county",
+       "name": "Montgomery County, PA",
+       "code": "42091",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "cd",
+       "name": "PA-04",
+       "code": "4204",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "nws-zone",
+       "name": "Western Montgomery (PAZ103)",
+       "code": "PAZ103",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "urban",
+       "name": "Philadelphia, PA--NJ--DE--MD Urban Area",
+       "code": "69076",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc8",
+       "name": "Schuylkill",
+       "code": "02040203",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "eco4",
+       "name": "Triassic Lowlands",
+       "code": "64a",
+       "source": "epa-ecoregions",
+       "facts": {}
+      },
+      {
+       "kind": "cbsa",
+       "name": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD Metro Area",
+       "code": "37980",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "metropolitan"
+       }
+      },
+      {
+       "kind": "huc6",
+       "name": "Lower Delaware",
+       "code": "020402",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "csa",
+       "name": "Philadelphia-Reading-Camden, PA-NJ-DE-MD CSA",
+       "code": "428",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc4",
+       "name": "Delaware-Mid Atlantic Coastal",
+       "code": "0204",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "nws-office",
+       "name": "NWS Philadelphia/Mt Holly",
+       "code": "PHI",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "eco3",
+       "name": "Northern Piedmont",
+       "code": "64",
+       "source": "epa-ecoregions",
+       "facts": {}
+      },
+      {
+       "kind": "state",
+       "name": "Pennsylvania",
+       "code": "42",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "census-division",
+       "name": "Middle Atlantic Division",
+       "code": "2",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc2",
+       "name": "Mid Atlantic Region",
+       "code": "02",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "census-region",
+       "name": "Northeast Region",
+       "code": "1",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "epa-region",
+       "name": "EPA Region 3 (Philadelphia)",
+       "code": "3",
+       "source": "federal-regions",
+       "facts": {}
+      },
+      {
+       "kind": "fema-region",
+       "name": "FEMA Region III (Philadelphia)",
+       "code": "3",
+       "source": "federal-regions",
+       "facts": {}
+      },
+      {
+       "kind": "fed-district",
+       "name": "Fed district 3 (Philadelphia) or 4 (Cleveland)",
+       "code": "3-4",
+       "source": "federal-regions",
+       "facts": {}
+      },
+      {
+       "kind": "timezone",
+       "name": "America/New York",
+       "code": "America/New_York",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "country",
+       "name": "United States",
+       "code": "USA",
+       "source": "natural-earth",
+       "facts": {}
+      },
+      {
+       "kind": "continent",
+       "name": "North America",
+       "code": "north-america",
+       "source": "natural-earth",
+       "facts": {}
+      }
+     ],
+     "failed": [],
+     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
+    }
+   }
+  },
+  "/api/screen?kind=county&q=geoid%20%3D%3D%20%2242091%22%20LIMIT%201": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:53:13.097Z",
+    "provenance": [
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T04:38:56.495Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T04:38:56.495Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T04:38:56.495Z"
+     },
+     {
+      "source": {
+       "id": "bls-qcew",
+       "publisher": "U.S. Bureau of Labor Statistics",
+       "url": "https://www.bls.gov/cew/"
+      },
+      "retrievedAt": "2026-10-19T04:38:56.495Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T04:38:56.495Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T04:38:56.495Z"
+     },
+     {
+      "source": {
+       "id": "bls-qcew",
+       "publisher": "U.S. Bureau of Labor Statistics",
+       "url": "https://www.bls.gov/cew/"
+      },
+      "retrievedAt": "2026-10-19T04:38:56.495Z"
+     }
+    ],
+    "data": {
+     "rows": [
+      {
+       "name": "Montgomery County, PA",
+       "geo": [
+        -75.3653041,
+        40.2104026
+       ],
+       "values": {
+        "name": "Montgomery County",
+        "geoid": "42091",
+        "state": "PA",
+        "metro": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
+        "home.latest": 492974.7512810255,
+        "home.yoyPct": 2.587515556699107,
+        "home.asOf": "2026-09-30",
+        "rent.latest": 2073.0887557077626,
+        "jobs.emp": 502556,
+        "jobs.avgWeeklyWage": 2064,
+        "jobs.period": "2026 Q1",
+        "jobs.suppressed": "false"
+       }
+      }
+     ]
+    }
+   }
+  },
+  "/api/hazards?op=nri&fips=42091": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:53:14.575Z",
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-nri",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://hazards.fema.gov/nri/"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
+      "retrievedAt": "2026-10-19T04:53:14.575Z"
+     }
+    ],
+    "data": {
+     "row": {
+      "STATEABBRV": "PA",
+      "COUNTY": "Montgomery",
+      "STCOFIPS": "42091",
+      "POPULATION": 856020,
+      "RISK_SCORE": 96.81933842239185,
+      "RISK_RATNG": "Relatively High",
+      "EAL_VALT": 296651817.7759489,
+      "EAL_RATNG": "Relatively High",
+      "SOVI_SCORE": 19.81552163,
+      "SOVI_RATNG": "Very Low",
+      "NRI_VER": "December 2025",
+      "AVLN_RISKR": "Not Applicable",
+      "CFLD_RISKR": "No Rating",
+      "CWAV_RISKR": "Relatively High",
+      "DRGT_RISKR": "Relatively Low",
+      "ERQK_RISKR": "Relatively Moderate",
+      "HAIL_RISKR": "Relatively Low",
+      "HWAV_RISKR": "Relatively High",
+      "HRCN_RISKR": "Relatively Moderate",
+      "ISTM_RISKR": "Relatively Moderate",
+      "IFLD_RISKR": "Relatively High",
+      "LNDS_RISKR": "Relatively Low",
+      "LTNG_RISKR": "Relatively Moderate",
+      "SWND_RISKR": "Very High",
+      "TRND_RISKR": "Relatively High",
+      "TSUN_RISKR": "Not Applicable",
+      "VLCN_RISKR": "Not Applicable",
+      "WFIR_RISKR": "Very Low",
+      "WNTW_RISKR": "Very High"
+     }
+    }
+   }
+  },
+  "/api/hazards?op=history&fips=42091&years=10&declarations=15": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:53:14.895Z",
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-openfema",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      },
+      "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'42'%20and%20fipsCountyCode%20eq%20'091'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
+      "retrievedAt": "2026-10-19T04:53:14.503Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=42091&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
+      "retrievedAt": "2026-10-19T04:53:14.889Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=42091&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
+      "retrievedAt": "2026-10-19T04:53:14.882Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/PA-091/tavg/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T04:53:14.501Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/PA-091/pcp/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T04:53:14.704Z"
+     },
+     {
+      "source": {
+       "id": "noaa-spc",
+       "publisher": "NOAA National Weather Service, Storm Prediction Center",
+       "url": "https://www.spc.noaa.gov/wcm/"
+      },
+      "upstreamUrl": "https://www.spc.noaa.gov/wcm/data/1950-2025_all_tornadoes.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "usgs-landslide-susc",
+       "publisher": "U.S. Geological Survey (Belair, Jones, Martinez, Mirus and Wood)",
+       "url": "https://doi.org/10.5066/P13KAGU3"
+      },
+      "upstreamUrl": "https://www.sciencebase.gov/catalog/file/get/65ccea5bd34ef4b119cb3bac?name=county_analysis.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "ncei-storm-events",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/stormevents/"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "data": {
+     "fips": "42091",
+     "declarationRows": 29,
+     "droughtNow": {
+      "mapDate": "2026-10-13",
+      "validStart": "2026-10-13",
+      "validEnd": "2026-10-19",
+      "none": 90.65,
+      "d0": 9.35,
+      "d1": 0,
+      "d2": 0,
+      "d3": 0,
+      "d4": 0
+     },
+     "missing": [],
+     "declarations": [
+      {
+       "disasterNumber": 4618,
+       "declarationType": "DR",
+       "declarationDate": "2021-09-10",
+       "incidentType": "Hurricane",
+       "declarationTitle": "REMNANTS OF HURRICANE IDA",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 4506,
+       "declarationType": "DR",
+       "declarationDate": "2020-03-30",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19 PANDEMIC",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 3441,
+       "declarationType": "EM",
+       "declarationDate": "2020-03-13",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 4267,
+       "declarationType": "DR",
+       "declarationDate": "2016-03-23",
+       "incidentType": "Snowstorm",
+       "declarationTitle": "SEVERE WINTER STORM AND SNOWSTORM",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 3367,
+       "declarationType": "EM",
+       "declarationDate": "2014-02-06",
+       "incidentType": "Severe Ice Storm",
+       "declarationTitle": "SEVERE WINTER STORM",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 4099,
+       "declarationType": "DR",
+       "declarationDate": "2013-01-10",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE SANDY",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 3356,
+       "declarationType": "EM",
+       "declarationDate": "2012-10-29",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE SANDY",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 4030,
+       "declarationType": "DR",
+       "declarationDate": "2011-09-12",
+       "incidentType": "Flood",
+       "declarationTitle": "TROPICAL STORM LEE",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 3340,
+       "declarationType": "EM",
+       "declarationDate": "2011-09-08",
+       "incidentType": "Flood",
+       "declarationTitle": "REMNANTS OF TROPICAL STORM LEE",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 4025,
+       "declarationType": "DR",
+       "declarationDate": "2011-09-03",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE IRENE",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 3339,
+       "declarationType": "EM",
+       "declarationDate": "2011-08-29",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE IRENE",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 1898,
+       "declarationType": "DR",
+       "declarationDate": "2010-04-16",
+       "incidentType": "Snowstorm",
+       "declarationTitle": "SEVERE WINTER STORMS AND SNOWSTORMS",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 1649,
+       "declarationType": "DR",
+       "declarationDate": "2006-06-30",
+       "incidentType": "Severe Storm",
+       "declarationTitle": "SEVERE STORMS, FLOODING, AND MUDSLIDES",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 3235,
+       "declarationType": "EM",
+       "declarationDate": "2005-09-10",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE KATRINA",
+       "designatedArea": "Montgomery (County)"
+      },
+      {
+       "disasterNumber": 1557,
+       "declarationType": "DR",
+       "declarationDate": "2004-09-19",
+       "incidentType": "Hurricane",
+       "declarationTitle": "TROPICAL DEPRESSION IVAN",
+       "designatedArea": "Montgomery (County)"
+      }
+     ]
+    }
+   }
+  },
+  "/api/live": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:53:16.313Z",
+    "provenance": [
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T04:53:16.313Z"
+     },
+     {
+      "source": {
+       "id": "usgs-earthquakes",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://earthquake.usgs.gov/"
+      },
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T04:53:16.313Z"
+     }
+    ],
+    "data": {
+     "items": [],
+     "failed": [],
+     "unmapped": 0
+    }
+   }
+  },
+  "/api/civic?op=svi&level=place&fips=42091": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:53:14.071Z",
+    "provenance": [
+     {
+      "source": {
+       "id": "cdc-svi",
+       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
+       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
+      },
+      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
+      "retrievedAt": "2026-10-19T04:53:14.071Z"
+     }
+    ],
+    "data": {
+     "row": {
+      "fips": "42091",
+      "rpl": [
+       0.2119,
+       0.1012,
+       0.2224,
+       0.6233,
+       0.454
+      ]
+     }
+    }
+   }
+  },
+  "/api/infra?op=hospitals&bbox=-75.5516,40.0856,-75.3516,40.2856": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:53:14.311Z",
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "hifld-hospitals",
+       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
+       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
+      "retrievedAt": "2026-10-19T04:53:14.298Z"
+     },
+     {
+      "source": {
+       "id": "cms-provider-data",
+       "publisher": "Centers for Medicare & Medicaid Services",
+       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+      },
+      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -75.4125307003943,
+         40.1557119398262
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0005219408",
+        "name": "EAGLEVILLE HOSPITAL",
+        "details": {
+         "type": "rehabilitation",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: EAGLEVILLE HOSPITAL; city: EAGLEVILLE; state: PA; hospital type: REHABILITATION; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -75.3675458099289,
+         40.1586616501259
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0014819403",
+        "name": "AVENUES RECOVERY MEDICAL CENTER AT VALLEY FORGE, LLC",
+        "details": {
+         "type": "rehabilitation",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "390272",
+          "rating": null,
+          "ratingFootnote": "16",
+          "cmsType": "Acute Care Hospitals",
+          "ownership": "Proprietary",
+          "emergency": "No",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: AVENUES RECOVERY MEDICAL CENTER AT VALLEY FORGE, LLC; city: NORRISTOWN; state: PA; hospital type: REHABILITATION; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -75.5150849999032,
+         40.1237890000667
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0020619468",
+        "name": "PHOENIXVILLE HOSPITAL",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "390127",
+          "rating": 3,
+          "ratingFootnote": null,
+          "cmsType": "Acute Care Hospitals",
+          "ownership": "Voluntary non-profit - Private",
+          "emergency": "Yes",
+          "birthingFriendly": "Y"
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: PHOENIXVILLE HOSPITAL; city: PHOENIXVILLE; state: PA; hospital type: GENERAL ACUTE CARE; helipad: yes"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -75.3558729996174,
+         40.135967000075
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0010219403",
+        "name": "MONTGOMERY COUNTY MH/MR EMERGENCY SERVICES, INC",
+        "details": {
+         "type": "psychiatric",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: MONTGOMERY COUNTY MH/MR EMERGENCY SERVICES, INC; city: NORRISTOWN; state: PA; hospital type: PSYCHIATRIC; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -75.4077706381965,
+         40.0872075742617
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0196785590",
+        "name": "CHILDREN’S HOSPITAL OF PHILADELPHIA, KING OF PRUSSIA CAMPUS",
+        "details": {
+         "type": "children",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: CHILDREN’S HOSPITAL OF PHILADELPHIA, KING OF PRUSSIA CAMPUS; city: KING OF PRUSSIA; state: PA; hospital type: CHILDREN; helipad: no"
+        }
+       }
+      }
+     ]
+    }
+   }
+  },
+  "/api/infra?op=dams&bbox=-75.5516,40.0856,-75.3516,40.2856": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:53:14.217Z",
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "usace-nid",
+       "publisher": "U.S. Army Corps of Engineers",
+       "url": "https://nid.sec.usace.army.mil/"
+      },
+      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+      "retrievedAt": "2026-10-19T04:53:14.217Z"
+     }
+    ],
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -75.43583520410075,
+         40.227230329703495
+        ]
+       },
+       "properties": {
+        "id": "nid:PA01242",
+        "name": "Graterford Sewage Lagoons",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Fair",
+         "year completed": 1986,
+         "owner type": "State"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Graterford Sewage Lagoons; county: Montgomery, Pennsylvania; state: Pennsylvania; dam purpose: Other; dam type: Earth; hazard potential: Significant; condition assessment: Fair; year completed: 1986"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -75.4930574455512,
+         40.12000808646332
+        ]
+       },
+       "properties": {
+        "id": "nid:PA00622",
+        "name": "Dam PA00622",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Fair",
+         "year completed": 1928,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Chester, Pennsylvania; state: Pennsylvania; dam purpose: Water Supply; dam type: Concrete; hazard potential: High; condition assessment: Fair; year completed: 1928"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -75.42083519426997,
+         40.145563654149186
+        ]
+       },
+       "properties": {
+        "id": "nid:PA01499",
+        "name": "Estates of Audubon",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Poor",
+         "year completed": 1992,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Estates of Audubon; county: Montgomery, Pennsylvania; state: Pennsylvania; dam purpose: Recreation; dam type: Earth; hazard potential: Significant; condition assessment: Poor; year completed: 1992"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -75.5063907815162,
+         40.14806365151206
+        ]
+       },
+       "properties": {
+        "id": "nid:PA00884",
+        "name": "Dam PA00884",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Satisfactory",
+         "year completed": 1900,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Montgomery, Pennsylvania; state: Pennsylvania; dam purpose: Water Supply; dam type: Timber Crib; hazard potential: Low; condition assessment: Satisfactory; year completed: 1900"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -75.48083521422001,
+         40.16084142496906
+        ]
+       },
+       "properties": {
+        "id": "nid:PA01611",
+        "name": "Dam PA01611",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Poor",
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Montgomery, Pennsylvania; state: Pennsylvania; dam purpose: Flood Risk Reduction; dam type: Earth; hazard potential: Low; condition assessment: Poor"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -75.5330574650227,
+         40.229174776518235
+        ]
+       },
+       "properties": {
+        "id": "nid:PA01571",
+        "name": "Dam PA01571",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Fair",
+         "year completed": 1996,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Montgomery, Pennsylvania; state: Pennsylvania; dam purpose: Recreation; dam type: Earth; hazard potential: High; condition assessment: Fair; year completed: 1996"
+        }
+       }
+      }
+     ]
+    }
+   }
+  },
+  "/api/companies?op=county&fips=42091": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:53:13.434Z",
+    "pulled": null,
+    "provenance": [
+     {
+      "source": {
+       "id": "sec-edgar",
+       "publisher": "U.S. Securities and Exchange Commission",
+       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+      },
+      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
+     },
+     {
+      "source": {
+       "id": "census-zcta-county",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
+      }
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      }
+     }
+    ],
+    "data": {
+     "features": []
+    }
+   }
+  },
+  "/api/releases?op=calendar": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:37:24.496Z",
+    "provenance": [
+     {
+      "source": {
+       "id": "bts-border",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "usgs-water",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://api.waterdata.usgs.gov/"
+      },
+      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.freddiemac.com/pmms",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "bts-supply-chain",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/news/schedule",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T04:37:24.496Z"
+     }
+    ],
+    "data": {
+     "from": "2026-10-19",
+     "to": "2026-11-18",
+     "releases": [
+      {
+       "id": "bts-border",
+       "sourceId": "bts-border",
+       "title": "BTS Border Crossing Entry Data (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-10",
+        "latest": "2026-10-30",
+        "nominal": "2026-10-20"
+       },
+       "scheduleUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2"
+      },
+      {
+       "id": "usgs-water",
+       "sourceId": "usgs-water",
+       "title": "USGS instantaneous and daily water values (continuous)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-19",
+        "latest": "2026-10-19",
+        "nominal": "2026-10-19"
+       },
+       "scheduleUrl": "https://waterdata.usgs.gov/nwis"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-19",
+        "latest": "2026-10-19",
+        "nominal": "2026-10-19"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:MSPUS",
+       "sourceId": "fred",
+       "title": "Median sales price of houses sold (Census, quarterly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-20",
+        "latest": "2026-10-30",
+        "nominal": "2026-10-25"
+       },
+       "scheduleUrl": "https://www.census.gov/construction/nrs/index.html"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-20",
+        "latest": "2026-10-20",
+        "nominal": "2026-10-20"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-21",
+        "latest": "2026-10-21",
+        "nominal": "2026-10-21"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:MORTGAGE30US",
+       "sourceId": "fred",
+       "title": "30-year fixed mortgage rate (Freddie Mac PMMS, weekly)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-22",
+        "latest": "2026-10-22",
+        "nominal": "2026-10-22"
+       },
+       "scheduleUrl": "https://www.freddiemac.com/pmms"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-22",
+        "latest": "2026-10-22",
+        "nominal": "2026-10-22"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-22",
+        "latest": "2026-10-22",
+        "nominal": "2026-10-22"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "bts-supply-chain",
+       "sourceId": "bts-supply-chain",
+       "title": "BTS Supply Chain and Freight Indicators (rolling)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-23",
+        "latest": "2026-10-23",
+        "nominal": "2026-10-23"
+       },
+       "scheduleUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-23",
+        "latest": "2026-10-23",
+        "nominal": "2026-10-23"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:CSUSHPINSA",
+       "sourceId": "fred",
+       "title": "Case-Shiller US home price index (S&P, monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-26",
+        "latest": "2026-10-28",
+        "nominal": "2026-10-27"
+       },
+       "scheduleUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-26",
+        "latest": "2026-10-26",
+        "nominal": "2026-10-26"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-27",
+        "latest": "2026-10-27",
+        "nominal": "2026-10-27"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-28",
+        "latest": "2026-10-28",
+        "nominal": "2026-10-28"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:MORTGAGE30US",
+       "sourceId": "fred",
+       "title": "30-year fixed mortgage rate (Freddie Mac PMMS, weekly)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-29",
+        "latest": "2026-10-29",
+        "nominal": "2026-10-29"
+       },
+       "scheduleUrl": "https://www.freddiemac.com/pmms"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-29",
+        "latest": "2026-10-29",
+        "nominal": "2026-10-29"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-29",
+        "latest": "2026-10-29",
+        "nominal": "2026-10-29"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "bts-supply-chain",
+       "sourceId": "bts-supply-chain",
+       "title": "BTS Supply Chain and Freight Indicators (rolling)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-30",
+        "latest": "2026-10-30",
+        "nominal": "2026-10-30"
+       },
+       "scheduleUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt"
+      },
+      {
+       "id": "fred:UNRATE",
+       "sourceId": "fred",
+       "title": "Unemployment rate (BLS Employment Situation, monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-30",
+        "latest": "2026-11-13",
+        "nominal": "2026-11-06"
+       },
+       "scheduleUrl": "https://www.bls.gov/schedule/news_release/empsit.htm"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-30",
+        "latest": "2026-10-30",
+        "nominal": "2026-10-30"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:TOTALSA",
+       "sourceId": "fred",
+       "title": "Vehicle sales, annual rate (BEA, monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-10-31",
+        "latest": "2026-11-06",
+        "nominal": "2026-11-03"
+       },
+       "scheduleUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles"
+      },
+      {
+       "id": "fred:BOPGSTB",
+       "sourceId": "fred",
+       "title": "Trade balance (BEA/Census International Trade in Goods and Services)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-02",
+        "latest": "2026-11-10",
+        "nominal": "2026-11-06"
+       },
+       "scheduleUrl": "https://www.bea.gov/news/schedule"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-02",
+        "latest": "2026-11-02",
+        "nominal": "2026-11-02"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-03",
+        "latest": "2026-11-03",
+        "nominal": "2026-11-03"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-04",
+        "latest": "2026-11-04",
+        "nominal": "2026-11-04"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:MORTGAGE30US",
+       "sourceId": "fred",
+       "title": "30-year fixed mortgage rate (Freddie Mac PMMS, weekly)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-05",
+        "latest": "2026-11-05",
+        "nominal": "2026-11-05"
+       },
+       "scheduleUrl": "https://www.freddiemac.com/pmms"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-05",
+        "latest": "2026-11-05",
+        "nominal": "2026-11-05"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-05",
+        "latest": "2026-11-05",
+        "nominal": "2026-11-05"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "bts-supply-chain",
+       "sourceId": "bts-supply-chain",
+       "title": "BTS Supply Chain and Freight Indicators (rolling)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-06",
+        "latest": "2026-11-06",
+        "nominal": "2026-11-06"
+       },
+       "scheduleUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-06",
+        "latest": "2026-11-06",
+        "nominal": "2026-11-06"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-09",
+        "latest": "2026-11-09",
+        "nominal": "2026-11-09"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-10",
+        "latest": "2026-11-10",
+        "nominal": "2026-11-10"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-11",
+        "latest": "2026-11-11",
+        "nominal": "2026-11-11"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:MORTGAGE30US",
+       "sourceId": "fred",
+       "title": "30-year fixed mortgage rate (Freddie Mac PMMS, weekly)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-12",
+        "latest": "2026-11-12",
+        "nominal": "2026-11-12"
+       },
+       "scheduleUrl": "https://www.freddiemac.com/pmms"
+      },
+      {
+       "id": "fred:RSXFS",
+       "sourceId": "fred",
+       "title": "Retail sales ex food services (Census Advance Monthly Retail Trade)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-12",
+        "latest": "2026-11-18",
+        "nominal": "2026-11-15"
+       },
+       "scheduleUrl": "https://www.census.gov/retail/release_schedule.html"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-12",
+        "latest": "2026-11-12",
+        "nominal": "2026-11-12"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-12",
+        "latest": "2026-11-12",
+        "nominal": "2026-11-12"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "bts-supply-chain",
+       "sourceId": "bts-supply-chain",
+       "title": "BTS Supply Chain and Freight Indicators (rolling)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-13",
+        "latest": "2026-11-13",
+        "nominal": "2026-11-13"
+       },
+       "scheduleUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-13",
+        "latest": "2026-11-13",
+        "nominal": "2026-11-13"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "zillow-zhvi",
+       "sourceId": "zillow-zhvi",
+       "title": "Zillow ZHVI typical home value (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-14",
+        "latest": "2026-11-21",
+        "nominal": "2026-11-14"
+       },
+       "scheduleUrl": "https://www.zillow.com/research/data/"
+      },
+      {
+       "id": "zillow-zori",
+       "sourceId": "zillow-zori",
+       "title": "Zillow ZORI typical rent (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-14",
+        "latest": "2026-11-21",
+        "nominal": "2026-11-14"
+       },
+       "scheduleUrl": "https://www.zillow.com/research/data/"
+      },
+      {
+       "id": "fred:PERMIT",
+       "sourceId": "fred",
+       "title": "Building permits (Census New Residential Construction, monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-16",
+        "latest": "2026-11-20",
+        "nominal": "2026-11-18"
+       },
+       "scheduleUrl": "https://www.census.gov/construction/nrc/index.html"
+      },
+      {
+       "id": "fred:HOUST",
+       "sourceId": "fred",
+       "title": "Housing starts (Census New Residential Construction, monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-16",
+        "latest": "2026-11-20",
+        "nominal": "2026-11-18"
+       },
+       "scheduleUrl": "https://www.census.gov/construction/nrc/index.html"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-16",
+        "latest": "2026-11-16",
+        "nominal": "2026-11-16"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-17",
+        "latest": "2026-11-17",
+        "nominal": "2026-11-17"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      },
+      {
+       "id": "fred:DCOILWTICO",
+       "sourceId": "fred",
+       "title": "WTI crude spot (EIA, daily)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-18",
+        "latest": "2026-11-18",
+        "nominal": "2026-11-18"
+       },
+       "scheduleUrl": "https://www.eia.gov/petroleum/data.php"
+      }
+     ]
+    }
+   }
+  },
+  "/api/water?op=pfas&bbox=-75.46,40.18,-75.44,40.2&polygons=1": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:40:00.897Z",
+    "provenance": [
+     {
+      "source": {
+       "id": "epa-cws-boundaries",
+       "publisher": "U.S. EPA; the original data provider of each polygon (a state agency, the system, or EPA's Office of Research and Development for modelled boundaries)",
+       "url": "https://www.epa.gov/ground-water-and-drinking-water"
+      },
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0",
+      "retrievedAt": "2026-10-19T04:40:00.897Z"
+     },
+     {
+      "source": {
+       "id": "epa-ucmr5-pat",
+       "publisher": "U.S. EPA Office of Enforcement and Compliance Assurance (ECHO PFAS Analytic Tools); data from EPA's Office of Ground Water and Drinking Water, UCMR 5",
+       "url": "https://www.epa.gov/dwucmr/fifth-unregulated-contaminant-monitoring-rule"
+      },
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/PFAS_Analytic_Tools_Layers/FeatureServer/1",
+      "retrievedAt": "2026-10-19T04:40:00.897Z"
+     }
+    ],
+    "coverage": [
+     {
+      "id": "service-areas",
+      "name": "EPA community water system service areas",
+      "state": "covered",
+      "count": 3
+     },
+     {
+      "id": "estimated-locations",
+      "name": "EPA UCMR 5 systems placed by estimated location",
+      "state": "covered",
+      "count": 0
+     },
+     {
+      "id": "results",
+      "name": "EPA UCMR 5 results",
+      "state": "covered",
+      "count": 3
+     }
+    ],
+    "bbox": [
+     -75.46,
+     40.18,
+     -75.44,
+     40.2
+    ],
+    "polygons": true,
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+         [
+          [
+           -75.45249,
+           40.2016
+          ],
+          [
+           -75.45017,
+           40.20018
+          ],
+          [
+           -75.45078,
+           40.19641
+          ],
+          [
+           -75.44752,
+           40.18261
+          ],
+          [
+           -75.44886,
+           40.17935
+          ],
+          [
+           -75.44835,
+           40.17714
+          ],
+          [
+           -75.44986,
+           40.17405
+          ],
+          [
+           -75.45133,
+           40.17327
+          ],
+          [
+           -75.45799,
+           40.17719
+          ],
+          [
+           -75.46041,
+           40.17649
+          ],
+          [
+           -75.49546,
+           40.19725
+          ],
+          [
+           -75.49289,
+           40.20046
+          ],
+          [
+           -75.49168,
+           40.1998
+          ],
+          [
+           -75.47297,
+           40.21318
+          ],
+          [
+           -75.46157,
+           40.20619
+          ],
+          [
+           -75.4588,
+           40.20194
+          ],
+          [
+           -75.45249,
+           40.2016
+          ]
+         ]
+        ]
+       },
+       "properties": {
+        "id": "pfas:PA1460022",
+        "details": {
+         "population served": 8470
+        },
+        "extra": {
+         "state": "detected",
+         "pwsid": "PA1460022",
+         "maxNgL": 235,
+         "modelled": false,
+         "placement": "service-area",
+         "results": [
+          {
+           "contaminant": "PFOA",
+           "maxNgL": 235,
+           "detections": 13,
+           "results": 13
+          },
+          {
+           "contaminant": "PFBS",
+           "maxNgL": 15.3,
+           "detections": 13,
+           "results": 13
+          },
+          {
+           "contaminant": "PFOS",
+           "maxNgL": 15,
+           "detections": 13,
+           "results": 13
+          },
+          {
+           "contaminant": "PFHxA",
+           "maxNgL": 10.9,
+           "detections": 13,
+           "results": 13
+          },
+          {
+           "contaminant": "PFPeA",
+           "maxNgL": 8.4,
+           "detections": 13,
+           "results": 13
+          },
+          {
+           "contaminant": "PFBA",
+           "maxNgL": 6.6,
+           "detections": 5,
+           "results": 13
+          },
+          {
+           "contaminant": "PFHpA",
+           "maxNgL": 6.2,
+           "detections": 10,
+           "results": 13
+          },
+          {
+           "contaminant": "PFHxS",
+           "maxNgL": 4.2,
+           "detections": 3,
+           "results": 13
+          },
+          {
+           "contaminant": "11Cl-PF3OUdS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "4:2 FTS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "6:2 FTS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "8:2 FTS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "9Cl-PF3ONS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "ADONA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "HFPO-DA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "NEtFOSAA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "NFDHA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "NMeFOSAA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "PFDA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "PFDoA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "PFEESA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "PFHpS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "PFMBA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "PFMPA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "PFNA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "PFPeS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "PFTA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "PFTrDA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          },
+          {
+           "contaminant": "PFUnA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 13
+          }
+         ]
+        }
+       }
+      }
+     ]
+    }
+   }
+  }
+ },
+ "filled": [
+  {
+   "at": "2026-10-19T05:09:34.944Z",
+   "from": "https://www.arxiviq.com",
+   "routes": [
+    "/api/water?op=pfas&bbox=-75.46,40.18,-75.44,40.2&polygons=1"
+   ]
+  }
+ ]
+}

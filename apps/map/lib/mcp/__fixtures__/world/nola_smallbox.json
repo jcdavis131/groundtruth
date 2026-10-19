@@ -291,265 +291,52 @@
     "generatedAt": "2026-10-19T02:32:23.557Z"
    }
   },
-  "/api/releases?op=calendar": {
+  "/api/hazards?op=nri&fips=22071": {
    "status": 200,
    "body": {
     "data": {
-     "from": "2026-10-19",
-     "to": "2026-11-18",
-     "releases": [
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-10-22",
-        "latest": "2026-10-22",
-        "nominal": "2026-10-22"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-10-29",
-        "latest": "2026-10-29",
-        "nominal": "2026-10-29"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-11-05",
-        "latest": "2026-11-05",
-        "nominal": "2026-11-05"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-11-12",
-        "latest": "2026-11-12",
-        "nominal": "2026-11-12"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "zillow-zhvi",
-       "sourceId": "zillow-zhvi",
-       "title": "Zillow ZHVI typical home value (monthly)",
-       "precision": "approximate",
-       "window": {
-        "earliest": "2026-11-14",
-        "latest": "2026-11-21",
-        "nominal": "2026-11-14"
-       },
-       "scheduleUrl": "https://www.zillow.com/research/data/"
-      },
-      {
-       "id": "zillow-zori",
-       "sourceId": "zillow-zori",
-       "title": "Zillow ZORI typical rent (monthly)",
-       "precision": "approximate",
-       "window": {
-        "earliest": "2026-11-14",
-        "latest": "2026-11-21",
-        "nominal": "2026-11-14"
-       },
-       "scheduleUrl": "https://www.zillow.com/research/data/"
-      }
-     ]
+     "row": {
+      "STCOFIPS": "22071",
+      "POPULATION": 383606,
+      "RISK_SCORE": 98.25063613231552,
+      "RISK_RATNG": "Relatively High",
+      "EAL_VALT": 304070271.15578395,
+      "EAL_RATNG": "Relatively High",
+      "SOVI_SCORE": 77.51272265,
+      "SOVI_RATNG": "Relatively High",
+      "NRI_VER": "December 2025",
+      "AVLN_RISKR": "Not Applicable",
+      "CFLD_RISKR": "Relatively Moderate",
+      "CWAV_RISKR": "Relatively High",
+      "DRGT_RISKR": "Relatively Low",
+      "ERQK_RISKR": "Relatively Low",
+      "HAIL_RISKR": "Relatively Moderate",
+      "HWAV_RISKR": "Relatively High",
+      "HRCN_RISKR": "Very High",
+      "ISTM_RISKR": "Relatively Moderate",
+      "IFLD_RISKR": "Relatively High",
+      "LNDS_RISKR": "Very Low",
+      "LTNG_RISKR": "Very High",
+      "SWND_RISKR": "Relatively Low",
+      "TRND_RISKR": "Relatively Moderate",
+      "TSUN_RISKR": "Insufficient Data",
+      "VLCN_RISKR": "Not Applicable",
+      "WFIR_RISKR": "Very Low",
+      "WNTW_RISKR": "Relatively Moderate"
+     }
     },
     "provenance": [
      {
       "source": {
-       "id": "bts-border",
-       "publisher": "U.S. Bureau of Transportation Statistics",
-       "url": "https://data.bts.gov/"
+       "id": "fema-nri",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://hazards.fema.gov/nri/"
       },
-      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "usgs-water",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://api.waterdata.usgs.gov/"
-      },
-      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.freddiemac.com/pmms",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "usdm",
-       "publisher": "National Drought Mitigation Center, USDA, NOAA",
-       "url": "https://droughtmonitor.unl.edu/"
-      },
-      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "bts-supply-chain",
-       "publisher": "U.S. Bureau of Transportation Statistics",
-       "url": "https://data.bts.gov/"
-      },
-      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.bea.gov/news/schedule",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "zillow-zhvi",
-       "publisher": "Zillow Research",
-       "url": "https://www.zillow.com/research/data/"
-      },
-      "upstreamUrl": "https://www.zillow.com/research/data/",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "zillow-zori",
-       "publisher": "Zillow Research",
-       "url": "https://www.zillow.com/research/data/"
-      },
-      "upstreamUrl": "https://www.zillow.com/research/data/",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
+      "retrievedAt": "2026-10-19T02:32:23.968Z"
      }
     ],
-    "generatedAt": "2026-10-19T02:31:47.351Z"
-   }
-  },
-  "/api/live": {
-   "status": 200,
-   "body": {
-    "data": {
-     "items": [],
-     "failed": [],
-     "unmapped": 0
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "nws-api",
-       "publisher": "NOAA National Weather Service",
-       "url": "https://www.weather.gov/documentation/services-web-api"
-      },
-      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
-     },
-     {
-      "source": {
-       "id": "usgs-earthquakes",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://earthquake.usgs.gov/"
-      },
-      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:31:49.835Z"
+    "generatedAt": "2026-10-19T02:32:23.968Z"
    }
   },
   "/api/fabric?op=field&kind=county&bbox=-90.08,29.94,-90.05,29.97": {
@@ -2525,193 +2312,6 @@
     "generatedAt": "2026-10-19T02:32:23.705Z"
    }
   },
-  "/api/civic?op=svi&level=place&fips=22071": {
-   "status": 200,
-   "body": {
-    "data": {
-     "row": {
-      "rpl": [
-       0.8381,
-       0.9115,
-       0.3595,
-       0.9567,
-       0.7381
-      ]
-     }
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "cdc-svi",
-       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
-       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
-      },
-      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
-      "retrievedAt": "2026-10-19T02:32:23.741Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:23.741Z"
-   }
-  },
-  "/api/companies?op=near&bbox=-90.08,29.94,-90.05,29.97": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": []
-    },
-    "pulled": null,
-    "bundle": {
-     "companies": 25,
-     "geocoded": 25,
-     "withFacts": 0
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "sec-edgar",
-       "publisher": "U.S. Securities and Exchange Commission",
-       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
-      },
-      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
-     },
-     {
-      "source": {
-       "id": "census-zcta-county",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
-      }
-     },
-     {
-      "source": {
-       "id": "census-tigerweb",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://tigerweb.geo.census.gov/"
-      }
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:23.757Z"
-   }
-  },
-  "/api/infra?op=dams&bbox=-90.08,29.94,-90.05,29.97": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": []
-    },
-    "truncated": false,
-    "provenance": [
-     {
-      "source": {
-       "id": "usace-nid",
-       "publisher": "U.S. Army Corps of Engineers",
-       "url": "https://nid.sec.usace.army.mil/"
-      },
-      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
-      "retrievedAt": "2026-10-19T02:32:23.902Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:23.902Z"
-   }
-  },
-  "/api/infra?op=hospitals&bbox=-90.08,29.94,-90.05,29.97": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": [
-      {
-       "geometry": {
-        "coordinates": [
-         -90.0769039100374,
-         29.9548001098785
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0020170112",
-        "name": "TULANE MEDICAL CENTER",
-        "details": {
-         "type": "general acute care",
-         "owner type": "PROPRIETARY"
-        },
-        "extra": {
-         "status": "OPEN",
-         "embedText": "name: TULANE MEDICAL CENTER"
-        }
-       }
-      }
-     ]
-    },
-    "truncated": false,
-    "provenance": [
-     {
-      "source": {
-       "id": "hifld-hospitals",
-       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
-       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
-      },
-      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
-      "retrievedAt": "2026-10-19T02:32:23.944Z"
-     },
-     {
-      "source": {
-       "id": "cms-provider-data",
-       "publisher": "Centers for Medicare & Medicaid Services",
-       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
-      },
-      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:23.945Z"
-   }
-  },
-  "/api/hazards?op=nri&fips=22071": {
-   "status": 200,
-   "body": {
-    "data": {
-     "row": {
-      "STCOFIPS": "22071",
-      "POPULATION": 383606,
-      "RISK_SCORE": 98.25063613231552,
-      "RISK_RATNG": "Relatively High",
-      "EAL_VALT": 304070271.15578395,
-      "EAL_RATNG": "Relatively High",
-      "SOVI_SCORE": 77.51272265,
-      "SOVI_RATNG": "Relatively High",
-      "NRI_VER": "December 2025",
-      "AVLN_RISKR": "Not Applicable",
-      "CFLD_RISKR": "Relatively Moderate",
-      "CWAV_RISKR": "Relatively High",
-      "DRGT_RISKR": "Relatively Low",
-      "ERQK_RISKR": "Relatively Low",
-      "HAIL_RISKR": "Relatively Moderate",
-      "HWAV_RISKR": "Relatively High",
-      "HRCN_RISKR": "Very High",
-      "ISTM_RISKR": "Relatively Moderate",
-      "IFLD_RISKR": "Relatively High",
-      "LNDS_RISKR": "Very Low",
-      "LTNG_RISKR": "Very High",
-      "SWND_RISKR": "Relatively Low",
-      "TRND_RISKR": "Relatively Moderate",
-      "TSUN_RISKR": "Insufficient Data",
-      "VLCN_RISKR": "Not Applicable",
-      "WFIR_RISKR": "Very Low",
-      "WNTW_RISKR": "Relatively Moderate"
-     }
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "fema-nri",
-       "publisher": "Federal Emergency Management Agency",
-       "url": "https://hazards.fema.gov/nri/"
-      },
-      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
-      "retrievedAt": "2026-10-19T02:32:23.968Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:23.968Z"
-   }
-  },
   "/api/hazards?op=history&fips=22071&years=10&declarations=15": {
    "status": 200,
    "body": {
@@ -2913,6 +2513,1114 @@
     ],
     "generatedAt": "2026-10-19T02:32:24.453Z"
    }
+  },
+  "/api/live": {
+   "status": 200,
+   "body": {
+    "data": {
+     "items": [],
+     "failed": [],
+     "unmapped": 0
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     },
+     {
+      "source": {
+       "id": "usgs-earthquakes",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://earthquake.usgs.gov/"
+      },
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:49.835Z"
+   }
+  },
+  "/api/civic?op=svi&level=place&fips=22071": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "rpl": [
+       0.8381,
+       0.9115,
+       0.3595,
+       0.9567,
+       0.7381
+      ]
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "cdc-svi",
+       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
+       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
+      },
+      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
+      "retrievedAt": "2026-10-19T02:32:23.741Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:23.741Z"
+   }
+  },
+  "/api/infra?op=hospitals&bbox=-90.08,29.94,-90.05,29.97": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -90.0769039100374,
+         29.9548001098785
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0020170112",
+        "name": "TULANE MEDICAL CENTER",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: TULANE MEDICAL CENTER"
+        }
+       }
+      }
+     ]
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "hifld-hospitals",
+       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
+       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
+      "retrievedAt": "2026-10-19T02:32:23.944Z"
+     },
+     {
+      "source": {
+       "id": "cms-provider-data",
+       "publisher": "Centers for Medicare & Medicaid Services",
+       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+      },
+      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:23.945Z"
+   }
+  },
+  "/api/infra?op=dams&bbox=-90.08,29.94,-90.05,29.97": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "usace-nid",
+       "publisher": "U.S. Army Corps of Engineers",
+       "url": "https://nid.sec.usace.army.mil/"
+      },
+      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+      "retrievedAt": "2026-10-19T02:32:23.902Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:23.902Z"
+   }
+  },
+  "/api/companies?op=near&bbox=-90.08,29.94,-90.05,29.97": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "pulled": null,
+    "bundle": {
+     "companies": 25,
+     "geocoded": 25,
+     "withFacts": 0
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "sec-edgar",
+       "publisher": "U.S. Securities and Exchange Commission",
+       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+      },
+      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
+     },
+     {
+      "source": {
+       "id": "census-zcta-county",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
+      }
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      }
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:23.757Z"
+   }
+  },
+  "/api/releases?op=calendar": {
+   "status": 200,
+   "body": {
+    "data": {
+     "from": "2026-10-19",
+     "to": "2026-11-18",
+     "releases": [
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-22",
+        "latest": "2026-10-22",
+        "nominal": "2026-10-22"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-29",
+        "latest": "2026-10-29",
+        "nominal": "2026-10-29"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-05",
+        "latest": "2026-11-05",
+        "nominal": "2026-11-05"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-12",
+        "latest": "2026-11-12",
+        "nominal": "2026-11-12"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "zillow-zhvi",
+       "sourceId": "zillow-zhvi",
+       "title": "Zillow ZHVI typical home value (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-14",
+        "latest": "2026-11-21",
+        "nominal": "2026-11-14"
+       },
+       "scheduleUrl": "https://www.zillow.com/research/data/"
+      },
+      {
+       "id": "zillow-zori",
+       "sourceId": "zillow-zori",
+       "title": "Zillow ZORI typical rent (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-14",
+        "latest": "2026-11-21",
+        "nominal": "2026-11-14"
+       },
+       "scheduleUrl": "https://www.zillow.com/research/data/"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "bts-border",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "usgs-water",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://api.waterdata.usgs.gov/"
+      },
+      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.freddiemac.com/pmms",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "bts-supply-chain",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/news/schedule",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:47.351Z"
+   }
+  },
+  "/api/water?op=pfas&bbox=-90.08,29.94,-90.06,29.96&polygons=1": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:54:50.695Z",
+    "provenance": [
+     {
+      "source": {
+       "id": "epa-cws-boundaries",
+       "publisher": "U.S. EPA; the original data provider of each polygon (a state agency, the system, or EPA's Office of Research and Development for modelled boundaries)",
+       "url": "https://www.epa.gov/ground-water-and-drinking-water"
+      },
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0",
+      "retrievedAt": "2026-10-19T04:54:50.695Z"
+     },
+     {
+      "source": {
+       "id": "epa-ucmr5-pat",
+       "publisher": "U.S. EPA Office of Enforcement and Compliance Assurance (ECHO PFAS Analytic Tools); data from EPA's Office of Ground Water and Drinking Water, UCMR 5",
+       "url": "https://www.epa.gov/dwucmr/fifth-unregulated-contaminant-monitoring-rule"
+      },
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/PFAS_Analytic_Tools_Layers/FeatureServer/1",
+      "retrievedAt": "2026-10-19T04:54:50.695Z"
+     }
+    ],
+    "coverage": [
+     {
+      "id": "service-areas",
+      "name": "EPA community water system service areas",
+      "state": "covered",
+      "count": 1
+     },
+     {
+      "id": "estimated-locations",
+      "name": "EPA UCMR 5 systems placed by estimated location",
+      "state": "covered",
+      "count": 0
+     },
+     {
+      "id": "results",
+      "name": "EPA UCMR 5 results",
+      "state": "covered",
+      "count": 1
+     }
+    ],
+    "bbox": [
+     -90.08,
+     29.94,
+     -90.06,
+     29.96
+    ],
+    "polygons": true,
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+         [
+          [
+           -90.11685,
+           30.02769
+          ],
+          [
+           -90.11321,
+           30.02809
+          ],
+          [
+           -90.1125,
+           30.02581
+          ],
+          [
+           -90.11281,
+           30.02731
+          ],
+          [
+           -90.1122,
+           30.02598
+          ],
+          [
+           -90.10804,
+           30.02738
+          ],
+          [
+           -90.10496,
+           30.02645
+          ],
+          [
+           -90.10334,
+           30.02785
+          ],
+          [
+           -90.09737,
+           30.02785
+          ],
+          [
+           -90.09194,
+           30.02989
+          ],
+          [
+           -90.09014,
+           30.02911
+          ],
+          [
+           -90.0876,
+           30.02645
+          ],
+          [
+           -90.0829,
+           30.02629
+          ],
+          [
+           -90.07947,
+           30.03161
+          ],
+          [
+           -90.07621,
+           30.03193
+          ],
+          [
+           -90.07531,
+           30.03067
+          ],
+          [
+           -90.07422,
+           30.03193
+          ],
+          [
+           -90.05831,
+           30.03302
+          ],
+          [
+           -90.04601,
+           30.036
+          ],
+          [
+           -90.04258,
+           30.03459
+          ],
+          [
+           -90.0386,
+           30.0313
+          ],
+          [
+           -90.02106,
+           30.03709
+          ],
+          [
+           -90.02015,
+           30.03647
+          ],
+          [
+           -90.00171,
+           30.04351
+          ],
+          [
+           -89.98362,
+           30.05228
+          ],
+          [
+           -89.96337,
+           30.06464
+          ],
+          [
+           -89.96048,
+           30.06824
+          ],
+          [
+           -89.95867,
+           30.06824
+          ],
+          [
+           -89.9489,
+           30.07622
+          ],
+          [
+           -89.94583,
+           30.07325
+          ],
+          [
+           -89.93444,
+           30.06871
+          ],
+          [
+           -89.92612,
+           30.06308
+          ],
+          [
+           -89.92919,
+           30.05541
+          ],
+          [
+           -89.93462,
+           30.05697
+          ],
+          [
+           -89.9348,
+           30.04617
+          ],
+          [
+           -89.9263,
+           30.0457
+          ],
+          [
+           -89.92341,
+           30.04445
+          ],
+          [
+           -89.91418,
+           30.04664
+          ],
+          [
+           -89.91111,
+           30.04054
+          ],
+          [
+           -89.90388,
+           30.0432
+          ],
+          [
+           -89.88416,
+           30.05588
+          ],
+          [
+           -89.8744,
+           30.06308
+          ],
+          [
+           -89.87187,
+           30.07372
+          ],
+          [
+           -89.86789,
+           30.07747
+          ],
+          [
+           -89.86138,
+           30.07826
+          ],
+          [
+           -89.85179,
+           30.07794
+          ],
+          [
+           -89.84709,
+           30.07466
+          ],
+          [
+           -89.84709,
+           30.07106
+          ],
+          [
+           -89.85288,
+           30.07653
+          ],
+          [
+           -89.8668,
+           30.0756
+          ],
+          [
+           -89.87024,
+           30.07247
+          ],
+          [
+           -89.87024,
+           30.06824
+          ],
+          [
+           -89.87223,
+           30.06261
+          ],
+          [
+           -89.87982,
+           30.05635
+          ],
+          [
+           -89.88507,
+           30.05337
+          ],
+          [
+           -89.88507,
+           30.05259
+          ],
+          [
+           -89.88796,
+           30.05134
+          ],
+          [
+           -89.88796,
+           30.0493
+          ],
+          [
+           -89.8914,
+           30.04742
+          ],
+          [
+           -89.89302,
+           30.04789
+          ],
+          [
+           -89.90243,
+           30.04054
+          ],
+          [
+           -89.9008,
+           30.03506
+          ],
+          [
+           -89.89664,
+           30.02817
+          ],
+          [
+           -89.88073,
+           30.03427
+          ],
+          [
+           -89.87783,
+           30.02864
+          ],
+          [
+           -89.87982,
+           30.0266
+          ],
+          [
+           -89.88217,
+           30.0302
+          ],
+          [
+           -89.88905,
+           30.02723
+          ],
+          [
+           -89.88905,
+           30.02097
+          ],
+          [
+           -89.8914,
+           30.02097
+          ],
+          [
+           -89.89158,
+           30.02645
+          ],
+          [
+           -89.9048,
+           30.02047
+          ],
+          [
+           -89.90532,
+           30.01704
+          ],
+          [
+           -89.91581,
+           30.01197
+          ],
+          [
+           -89.93251,
+           30.01034
+          ],
+          [
+           -89.93715,
+           30.01555
+          ],
+          [
+           -89.94283,
+           30.01123
+          ],
+          [
+           -89.94404,
+           30.00631
+          ],
+          [
+           -89.94609,
+           30.00536
+          ],
+          [
+           -90.00856,
+           29.99629
+          ],
+          [
+           -90.01968,
+           29.99629
+          ],
+          [
+           -90.0175,
+           29.99148
+          ],
+          [
+           -90.01823,
+           29.98373
+          ],
+          [
+           -90.02064,
+           29.98017
+          ],
+          [
+           -90.01025,
+           29.97787
+          ],
+          [
+           -90.0001,
+           29.97431
+          ],
+          [
+           -90.01194,
+           29.95086
+          ],
+          [
+           -90.01919,
+           29.95274
+          ],
+          [
+           -90.02016,
+           29.95463
+          ],
+          [
+           -90.02693,
+           29.95777
+          ],
+          [
+           -90.04965,
+           29.96217
+          ],
+          [
+           -90.05666,
+           29.96133
+          ],
+          [
+           -90.06029,
+           29.95819
+          ],
+          [
+           -90.06343,
+           29.95128
+          ],
+          [
+           -90.06101,
+           29.93368
+          ],
+          [
+           -90.06294,
+           29.92865
+          ],
+          [
+           -90.07261,
+           29.92258
+          ],
+          [
+           -90.08107,
+           29.91839
+          ],
+          [
+           -90.0905,
+           29.91839
+          ],
+          [
+           -90.09969,
+           29.91336
+          ],
+          [
+           -90.10911,
+           29.91525
+          ],
+          [
+           -90.12023,
+           29.91378
+          ],
+          [
+           -90.12652,
+           29.91378
+          ],
+          [
+           -90.13063,
+           29.91713
+          ],
+          [
+           -90.13256,
+           29.92258
+          ],
+          [
+           -90.13474,
+           29.95128
+          ],
+          [
+           -90.13643,
+           29.95169
+          ],
+          [
+           -90.12313,
+           29.97159
+          ],
+          [
+           -90.12338,
+           29.97871
+          ],
+          [
+           -90.11975,
+           30.02769
+          ],
+          [
+           -90.11685,
+           30.02769
+          ]
+         ]
+        ]
+       },
+       "properties": {
+        "id": "pfas:LA1071009",
+        "details": {
+         "population served": 334903
+        },
+        "extra": {
+         "state": "detected",
+         "pwsid": "LA1071009",
+         "maxNgL": 9.1,
+         "modelled": false,
+         "placement": "service-area",
+         "results": [
+          {
+           "contaminant": "PFBA",
+           "maxNgL": 9.1,
+           "detections": 10,
+           "results": 12
+          },
+          {
+           "contaminant": "PFPeA",
+           "maxNgL": 8.8,
+           "detections": 1,
+           "results": 12
+          },
+          {
+           "contaminant": "HFPO-DA",
+           "maxNgL": 5.4,
+           "detections": 1,
+           "results": 12
+          },
+          {
+           "contaminant": "PFOS",
+           "maxNgL": 4.2,
+           "detections": 2,
+           "results": 12
+          },
+          {
+           "contaminant": "PFOA",
+           "maxNgL": 4.1,
+           "detections": 2,
+           "results": 12
+          },
+          {
+           "contaminant": "PFHxA",
+           "maxNgL": 3,
+           "detections": 1,
+           "results": 12
+          },
+          {
+           "contaminant": "11Cl-PF3OUdS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "4:2 FTS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "6:2 FTS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "8:2 FTS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "9Cl-PF3ONS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "ADONA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "NEtFOSAA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "NFDHA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "NMeFOSAA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFBS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFDA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFDoA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFEESA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFHpA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFHpS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFHxS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFMBA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFMPA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFNA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFPeS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFTA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFTrDA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFUnA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          }
+         ]
+        }
+       }
+      }
+     ]
+    }
+   }
   }
- }
+ },
+ "filled": [
+  {
+   "at": "2026-10-19T05:09:46.989Z",
+   "from": "https://www.arxiviq.com",
+   "routes": [
+    "/api/water?op=pfas&bbox=-90.08,29.94,-90.06,29.96&polygons=1"
+   ]
+  }
+ ]
 }

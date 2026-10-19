@@ -93,756 +93,306 @@
     "generatedAt": "2026-10-19T02:31:53.060Z"
    }
   },
-  "/api/live": {
+  "/api/fabric?op=stack&lon=-88.1966&lat=30.6846": {
    "status": 200,
    "body": {
-    "data": {
-     "items": [],
-     "failed": [],
-     "unmapped": 0
-    },
+    "generatedAt": "2026-10-19T04:54:45.377Z",
     "provenance": [
      {
       "source": {
-       "id": "nws-api",
-       "publisher": "NOAA National Weather Service",
-       "url": "https://www.weather.gov/documentation/services-web-api"
+       "id": "natural-earth",
+       "publisher": "Natural Earth",
+       "url": "https://www.naturalearthdata.com/"
       },
-      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
-     },
-     {
-      "source": {
-       "id": "usgs-earthquakes",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://earthquake.usgs.gov/"
-      },
-      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:31:49.835Z"
-   }
-  },
-  "/api/releases?op=calendar": {
-   "status": 200,
-   "body": {
-    "data": {
-     "from": "2026-10-19",
-     "to": "2026-11-18",
-     "releases": [
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-10-22",
-        "latest": "2026-10-22",
-        "nominal": "2026-10-22"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-10-29",
-        "latest": "2026-10-29",
-        "nominal": "2026-10-29"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-11-05",
-        "latest": "2026-11-05",
-        "nominal": "2026-11-05"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-11-12",
-        "latest": "2026-11-12",
-        "nominal": "2026-11-12"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "zillow-zhvi",
-       "sourceId": "zillow-zhvi",
-       "title": "Zillow ZHVI typical home value (monthly)",
-       "precision": "approximate",
-       "window": {
-        "earliest": "2026-11-14",
-        "latest": "2026-11-21",
-        "nominal": "2026-11-14"
-       },
-       "scheduleUrl": "https://www.zillow.com/research/data/"
-      },
-      {
-       "id": "zillow-zori",
-       "sourceId": "zillow-zori",
-       "title": "Zillow ZORI typical rent (monthly)",
-       "precision": "approximate",
-       "window": {
-        "earliest": "2026-11-14",
-        "latest": "2026-11-21",
-        "nominal": "2026-11-14"
-       },
-       "scheduleUrl": "https://www.zillow.com/research/data/"
-      }
-     ]
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "bts-border",
-       "publisher": "U.S. Bureau of Transportation Statistics",
-       "url": "https://data.bts.gov/"
-      },
-      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "usgs-water",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://api.waterdata.usgs.gov/"
-      },
-      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.freddiemac.com/pmms",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "usdm",
-       "publisher": "National Drought Mitigation Center, USDA, NOAA",
-       "url": "https://droughtmonitor.unl.edu/"
-      },
-      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "bts-supply-chain",
-       "publisher": "U.S. Bureau of Transportation Statistics",
-       "url": "https://data.bts.gov/"
-      },
-      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.bea.gov/news/schedule",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "zillow-zhvi",
-       "publisher": "Zillow Research",
-       "url": "https://www.zillow.com/research/data/"
-      },
-      "upstreamUrl": "https://www.zillow.com/research/data/",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "zillow-zori",
-       "publisher": "Zillow Research",
-       "url": "https://www.zillow.com/research/data/"
-      },
-      "upstreamUrl": "https://www.zillow.com/research/data/",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:31:47.351Z"
-   }
-  },
-  "/api/companies?op=county&fips=01097": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": []
-    },
-    "pulled": null,
-    "provenance": [
-     {
-      "source": {
-       "id": "sec-edgar",
-       "publisher": "U.S. Securities and Exchange Commission",
-       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
-      },
-      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
-     },
-     {
-      "source": {
-       "id": "census-zcta-county",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
-      }
+      "retrievedAt": "2026-10-19T04:54:45.377Z"
      },
      {
       "source": {
        "id": "census-tigerweb",
        "publisher": "U.S. Census Bureau",
        "url": "https://tigerweb.geo.census.gov/"
-      }
-     }
-    ],
-    "generatedAt": "2026-10-19T02:31:53.262Z"
-   }
-  },
-  "/api/civic?op=svi&level=place&fips=01097": {
-   "status": 200,
-   "body": {
-    "data": {
-     "row": {
-      "rpl": [
-       0.8304,
-       0.8629,
-       0.623,
-       0.8212,
-       0.7095
-      ]
-     }
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "cdc-svi",
-       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
-       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
       },
-      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
-      "retrievedAt": "2026-10-19T02:31:53.286Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:31:53.286Z"
-   }
-  },
-  "/api/infra?op=dams&bbox=-88.4585,30.5343,-87.9585,31.0343": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": [
-      {
-       "geometry": {
-        "coordinates": [
-         -88.23333515556435,
-         31.02333570805605
-        ]
-       },
-       "properties": {
-        "id": "nid:AL01687",
-        "name": "Dam AL01687",
-        "details": {
-         "hazard potential": "Low",
-         "condition assessment": "Not Rated",
-         "year completed": 1950,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.23000515448867,
-         31.02000570744451
-        ]
-       },
-       "properties": {
-        "id": "nid:AL01686",
-        "name": "Dam AL01686",
-        "details": {
-         "hazard potential": "Low",
-         "condition assessment": "Not Rated",
-         "year completed": 1960,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.07500510641393,
-         30.908335688340472
-        ]
-       },
-       "properties": {
-        "id": "nid:AL00011",
-        "name": "Dam AL00011",
-        "details": {
-         "hazard potential": "Low",
-         "condition assessment": "Not Rated",
-         "year completed": 1966,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.13333512532363,
-         30.968335699467623
-        ]
-       },
-       "properties": {
-        "id": "nid:AL01682",
-        "name": "Dam AL01682",
-        "details": {
-         "hazard potential": "Low",
-         "condition assessment": "Not Rated",
-         "year completed": 1975,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.0400050994279,
-         30.968335702626902
-        ]
-       },
-       "properties": {
-        "id": "nid:AL01683",
-        "name": "Cold Creek",
-        "details": {
-         "hazard potential": "Low",
-         "condition assessment": "Not Rated",
-         "year completed": 1968,
-         "owner type": "Local Government"
-        },
-        "extra": {
-         "embedText": "name: Cold Creek"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.13000512668587,
-         31.01833571048176
-        ]
-       },
-       "properties": {
-        "id": "nid:AL00148",
-        "name": "Dam AL00148",
-        "details": {
-         "hazard potential": "Low",
-         "condition assessment": "Not Rated",
-         "year completed": 1969,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.43653122092249,
-         30.78414345905265
-        ]
-       },
-       "properties": {
-        "id": "nid:MS06238",
-        "name": "Dam MS06238",
-        "details": {
-         "hazard potential": "Undetermined",
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.43121967010973,
-         30.798672252401023
-        ]
-       },
-       "properties": {
-        "id": "nid:MS06239",
-        "name": "Dam MS06239",
-        "details": {
-         "hazard potential": "Undetermined",
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.42852907561762,
-         30.936305152478294
-        ]
-       },
-       "properties": {
-        "id": "nid:MS03172",
-        "name": "Dam MS03172",
-        "details": {
-         "hazard potential": "Low",
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.42245362355142,
-         30.927856410845884
-        ]
-       },
-       "properties": {
-        "id": "nid:MS03147",
-        "name": "Dam MS03147",
-        "details": {
-         "hazard potential": "Low",
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.31333517155778,
-         30.888335675931188
-        ]
-       },
-       "properties": {
-        "id": "nid:AL00144",
-        "name": "Dam AL00144",
-        "details": {
-         "hazard potential": "Low",
-         "condition assessment": "Not Rated",
-         "year completed": 1965,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.43711519780933,
-         30.71130563312979
-        ]
-       },
-       "properties": {
-        "id": "nid:MS04085",
-        "name": "Dam MS04085",
-        "details": {
-         "hazard potential": "Low",
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      }
-     ]
-    },
-    "truncated": false,
-    "provenance": [
-     {
-      "source": {
-       "id": "usace-nid",
-       "publisher": "U.S. Army Corps of Engineers",
-       "url": "https://nid.sec.usace.army.mil/"
-      },
-      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
-      "retrievedAt": "2026-10-19T02:31:53.497Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:31:53.497Z"
-   }
-  },
-  "/api/infra?op=hospitals&bbox=-88.4585,30.5343,-87.9585,31.0343": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": [
-      {
-       "geometry": {
-        "coordinates": [
-         -88.1780081300293,
-         30.6248084900161
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0000436693",
-        "name": "BAYPOINTE BEHAVIORAL HEALTH",
-        "details": {
-         "type": "psychiatric",
-         "owner type": "NON-PROFIT"
-        },
-        "extra": {
-         "status": "OPEN",
-         "cms": {
-          "ccn": "014014",
-          "rating": null
-         },
-         "embedText": "name: BAYPOINTE BEHAVIORAL HEALTH"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.0802905702158,
-         30.6969006897976
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0003136607",
-        "name": "INFIRMARY LTAC HOSPITAL",
-        "details": {
-         "type": "long term care",
-         "owner type": "PROPRIETARY"
-        },
-        "extra": {
-         "status": "OPEN",
-         "embedText": "name: INFIRMARY LTAC HOSPITAL"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.0797761903925,
-         30.695724959904
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0013636652",
-        "name": "MOBILE INFIRMARY MEDICAL CENTER",
-        "details": {
-         "type": "general acute care",
-         "owner type": "NON-PROFIT"
-        },
-        "extra": {
-         "status": "OPEN",
-         "embedText": "name: MOBILE INFIRMARY MEDICAL CENTER"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.1990793699648,
-         30.67932766033
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0010136685",
-        "name": "PROVIDENCE HOSPITAL",
-        "details": {
-         "type": "general acute care",
-         "owner type": "NON-PROFIT"
-        },
-        "extra": {
-         "status": "OPEN",
-         "embedText": "name: PROVIDENCE HOSPITAL"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.1313362896986,
-         30.684517489704
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0011136608",
-        "name": "SPRINGHILL MEMORIAL HOSPITAL",
-        "details": {
-         "type": "general acute care",
-         "owner type": "PROPRIETARY"
-        },
-        "extra": {
-         "status": "OPEN",
-         "cms": {
-          "ccn": "010144",
-          "rating": 3
-         },
-         "embedText": "name: SPRINGHILL MEMORIAL HOSPITAL"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.0778076402452,
-         30.6976838197074
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0090736604",
-        "name": "USA HEALTH CHILDREN'S AND WOMEN'S HOSPITAL",
-        "details": {
-         "type": "children",
-         "owner type": "GOVERNMENT - STATE"
-        },
-        "extra": {
-         "status": "OPEN",
-         "cms": {
-          "ccn": "013301",
-          "rating": null
-         },
-         "embedText": "name: USA HEALTH CHILDREN'S AND WOMEN'S HOSPITAL"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -88.0983348604447,
-         30.7070619801315
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0009836617",
-        "name": "USA HEALTH UNIVERSITY HOSPITAL",
-        "details": {
-         "type": "general acute care",
-         "owner type": "GOVERNMENT - STATE"
-        },
-        "extra": {
-         "status": "OPEN",
-         "cms": {
-          "ccn": "010087",
-          "rating": 2
-         },
-         "embedText": "name: USA HEALTH UNIVERSITY HOSPITAL"
-        }
-       }
-      }
-     ]
-    },
-    "truncated": false,
-    "provenance": [
-     {
-      "source": {
-       "id": "hifld-hospitals",
-       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
-       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
-      },
-      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
-      "retrievedAt": "2026-10-19T02:31:53.565Z"
+      "retrievedAt": "2026-10-19T04:54:45.377Z"
      },
      {
       "source": {
-       "id": "cms-provider-data",
-       "publisher": "Centers for Medicare & Medicaid Services",
-       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+       "id": "federal-regions",
+       "publisher": "EPA, FEMA, Federal Reserve System",
+       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
       },
-      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
+      "retrievedAt": "2026-10-19T04:54:45.377Z"
+     },
+     {
+      "source": {
+       "id": "usgs-wbd",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
+      },
+      "retrievedAt": "2026-10-19T04:54:45.377Z"
+     },
+     {
+      "source": {
+       "id": "epa-ecoregions",
+       "publisher": "U.S. Environmental Protection Agency",
+       "url": "https://www.epa.gov/eco-research/ecoregions"
+      },
+      "retrievedAt": "2026-10-19T04:54:45.377Z"
+     },
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "retrievedAt": "2026-10-19T04:54:45.377Z"
+     },
+     {
+      "source": {
+       "id": "usgs-epqs",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://apps.nationalmap.gov/epqs/"
+      },
+      "retrievedAt": "2026-10-19T04:54:45.377Z"
+     },
+     {
+      "source": {
+       "id": "wikipedia",
+       "publisher": "Wikimedia Foundation",
+       "url": "https://en.wikipedia.org/"
+      },
+      "retrievedAt": "2026-10-19T04:54:45.377Z"
      }
     ],
-    "generatedAt": "2026-10-19T02:31:53.565Z"
+    "data": {
+     "point": {
+      "elevationM": 56.5
+     },
+     "nodes": [
+      {
+       "kind": "tract",
+       "name": "Census Tract 36.07",
+       "code": "01097003607",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc12",
+       "name": "Toulmins Spring Branch-Three Mile Creek",
+       "code": "031602040504",
+       "source": "usgs-wbd",
+       "facts": {
+        "drains to": "031602040505"
+       }
+      },
+      {
+       "kind": "sldl",
+       "name": "Alabama State House District 101",
+       "code": "01101",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "zcta",
+       "name": "36608",
+       "code": "36608",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "place",
+       "name": "Mobile city",
+       "code": "0150000",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc10",
+       "name": "Bay Minette Creek-Frontal Mobile Bay",
+       "code": "0316020405",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "urban",
+       "name": "Mobile, AL Urban Area",
+       "code": "57925",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "sldu",
+       "name": "Alabama State Senate District 34",
+       "code": "01034",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc8",
+       "name": "Mobile-Tensaw",
+       "code": "03160204",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "nws-zone",
+       "name": "Mobile Central (ALZ263)",
+       "code": "ALZ263",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "school",
+       "name": "Mobile County School District",
+       "code": "0102370",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "unified"
+       }
+      },
+      {
+       "kind": "county",
+       "name": "Mobile County, AL",
+       "code": "01097",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "cbsa",
+       "name": "Mobile, AL Metro Area",
+       "code": "33660",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "metropolitan"
+       }
+      },
+      {
+       "kind": "csa",
+       "name": "Mobile-Daphne-Fairhope, AL CSA",
+       "code": "380",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "eco4",
+       "name": "Southern Pine Plains and Hills",
+       "code": "65f",
+       "source": "epa-ecoregions",
+       "facts": {}
+      },
+      {
+       "kind": "cd",
+       "name": "AL-01",
+       "code": "0101",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc6",
+       "name": "Mobile Bay-Tombigbee",
+       "code": "031602",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "huc4",
+       "name": "Mobile-Tombigbee",
+       "code": "0316",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "nws-office",
+       "name": "NWS Mobile/Pensacola",
+       "code": "MOB",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "eco3",
+       "name": "Southeastern Plains",
+       "code": "65",
+       "source": "epa-ecoregions",
+       "facts": {}
+      },
+      {
+       "kind": "state",
+       "name": "Alabama",
+       "code": "01",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "census-division",
+       "name": "East South Central Division",
+       "code": "6",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc2",
+       "name": "South Atlantic-Gulf Region",
+       "code": "03",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "epa-region",
+       "name": "EPA Region 4 (Atlanta)",
+       "code": "4",
+       "source": "federal-regions",
+       "facts": {}
+      },
+      {
+       "kind": "fema-region",
+       "name": "FEMA Region IV (Atlanta)",
+       "code": "4",
+       "source": "federal-regions",
+       "facts": {}
+      },
+      {
+       "kind": "fed-district",
+       "name": "Fed district 6 (Atlanta)",
+       "code": "6",
+       "source": "federal-regions",
+       "facts": {}
+      },
+      {
+       "kind": "census-region",
+       "name": "South Region",
+       "code": "3",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "timezone",
+       "name": "America/Chicago",
+       "code": "America/Chicago",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "country",
+       "name": "United States",
+       "code": "USA",
+       "source": "natural-earth",
+       "facts": {}
+      },
+      {
+       "kind": "continent",
+       "name": "North America",
+       "code": "north-america",
+       "source": "natural-earth",
+       "facts": {}
+      }
+     ],
+     "failed": [
+      {
+       "source": "fema-nfhl",
+       "error": "fetch failed"
+      }
+     ],
+     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
+    }
    }
   },
   "/api/hazards?op=nri&fips=01097": {
@@ -1095,191 +645,2418 @@
     "generatedAt": "2026-10-19T02:31:54.673Z"
    }
   },
-  "/api/fabric?op=stack&lon=-88.2085&lat=30.7843": {
+  "/api/live": {
    "status": 200,
    "body": {
     "data": {
-     "point": {
-      "elevationM": 58.9
-     },
-     "nodes": [
-      {
-       "kind": "tract",
-       "name": "Census Tract 61.02",
-       "code": "01097006102",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "huc12",
-       "name": "Red Creek-Eightmile Creek",
-       "code": "031602040304",
-       "source": "usgs-wbd",
-       "facts": {
-        "drains to": "031602040305"
-       }
-      },
-      {
-       "kind": "zcta",
-       "name": "36613",
-       "code": "36613",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "school",
-       "name": "Mobile County School District",
-       "code": "0102370",
-       "source": "census-tigerweb",
-       "facts": {
-        "type": "unified"
-       }
-      },
-      {
-       "kind": "county",
-       "name": "Mobile County, AL",
-       "code": "01097",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "cbsa",
-       "name": "Mobile, AL Metro Area",
-       "code": "33660",
-       "source": "census-tigerweb",
-       "facts": {
-        "type": "metropolitan"
-       }
-      },
-      {
-       "kind": "cd",
-       "name": "AL-01",
-       "code": "0101",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "nws-office",
-       "name": "NWS Mobile/Pensacola",
-       "code": "MOB",
-       "source": "nws-api",
-       "facts": {}
-      },
-      {
-       "kind": "eco3",
-       "name": "Southeastern Plains",
-       "code": "65",
-       "source": "epa-ecoregions",
-       "facts": {}
-      },
-      {
-       "kind": "state",
-       "name": "Alabama",
-       "code": "01",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "timezone",
-       "name": "America/Chicago",
-       "code": "America/Chicago",
-       "source": "nws-api",
-       "facts": {}
-      },
-      {
-       "kind": "country",
-       "name": "United States",
-       "code": "USA",
-       "source": "natural-earth",
-       "facts": {}
-      }
-     ],
-     "failed": [
-      {
-       "source": "fema-nfhl",
-       "error": "This operation was aborted"
-      }
-     ],
-     "answered": [
-      "natural-earth",
-      "census-tigerweb",
-      "federal-regions",
-      "usgs-wbd",
-      "epa-ecoregions",
-      "nws-api",
-      "usgs-epqs",
-      "wikipedia"
-     ],
-     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
+     "items": [],
+     "failed": [],
+     "unmapped": 0
     },
     "provenance": [
-     {
-      "source": {
-       "id": "natural-earth",
-       "publisher": "Natural Earth",
-       "url": "https://www.naturalearthdata.com/"
-      },
-      "retrievedAt": "2026-10-19T02:32:03.721Z"
-     },
-     {
-      "source": {
-       "id": "census-tigerweb",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://tigerweb.geo.census.gov/"
-      },
-      "retrievedAt": "2026-10-19T02:32:03.721Z"
-     },
-     {
-      "source": {
-       "id": "federal-regions",
-       "publisher": "EPA, FEMA, Federal Reserve System",
-       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
-      },
-      "retrievedAt": "2026-10-19T02:32:03.721Z"
-     },
-     {
-      "source": {
-       "id": "usgs-wbd",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
-      },
-      "retrievedAt": "2026-10-19T02:32:03.721Z"
-     },
-     {
-      "source": {
-       "id": "epa-ecoregions",
-       "publisher": "U.S. Environmental Protection Agency",
-       "url": "https://www.epa.gov/eco-research/ecoregions"
-      },
-      "retrievedAt": "2026-10-19T02:32:03.721Z"
-     },
      {
       "source": {
        "id": "nws-api",
        "publisher": "NOAA National Weather Service",
        "url": "https://www.weather.gov/documentation/services-web-api"
       },
-      "retrievedAt": "2026-10-19T02:32:03.721Z"
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
      },
      {
       "source": {
-       "id": "usgs-epqs",
+       "id": "usgs-earthquakes",
        "publisher": "U.S. Geological Survey",
-       "url": "https://apps.nationalmap.gov/epqs/"
+       "url": "https://earthquake.usgs.gov/"
       },
-      "retrievedAt": "2026-10-19T02:32:03.721Z"
-     },
-     {
-      "source": {
-       "id": "wikipedia",
-       "publisher": "Wikimedia Foundation",
-       "url": "https://en.wikipedia.org/"
-      },
-      "retrievedAt": "2026-10-19T02:32:03.721Z"
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
      }
     ],
-    "generatedAt": "2026-10-19T02:32:03.722Z"
+    "generatedAt": "2026-10-19T02:31:49.835Z"
+   }
+  },
+  "/api/civic?op=svi&level=place&fips=01097": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "rpl": [
+       0.8304,
+       0.8629,
+       0.623,
+       0.8212,
+       0.7095
+      ]
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "cdc-svi",
+       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
+       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
+      },
+      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
+      "retrievedAt": "2026-10-19T02:31:53.286Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:53.286Z"
+   }
+  },
+  "/api/infra?op=hospitals&bbox=-88.4466,30.4346,-87.9466,30.9346": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:54:42.897Z",
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "hifld-hospitals",
+       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
+       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
+      "retrievedAt": "2026-10-19T04:54:42.897Z"
+     },
+     {
+      "source": {
+       "id": "cms-provider-data",
+       "publisher": "Centers for Medicare & Medicaid Services",
+       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+      },
+      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -88.1780081300293,
+         30.6248084900161
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0000436693",
+        "name": "BAYPOINTE BEHAVIORAL HEALTH",
+        "details": {
+         "type": "psychiatric",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "014014",
+          "rating": null,
+          "ratingFootnote": "19",
+          "cmsType": "Psychiatric",
+          "ownership": "Voluntary non-profit - Other",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: BAYPOINTE BEHAVIORAL HEALTH; city: MOBILE; state: AL; hospital type: PSYCHIATRIC; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.0802905702158,
+         30.6969006897976
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003136607",
+        "name": "INFIRMARY LTAC HOSPITAL",
+        "details": {
+         "type": "long term care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: INFIRMARY LTAC HOSPITAL; city: MOBILE; state: AL; hospital type: LONG TERM CARE; helipad: yes"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.0797761903925,
+         30.695724959904
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0013636652",
+        "name": "MOBILE INFIRMARY MEDICAL CENTER",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: MOBILE INFIRMARY MEDICAL CENTER; city: MOBILE; state: AL; hospital type: GENERAL ACUTE CARE; trauma center level: LEVEL III; helipad: yes"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.1990793699648,
+         30.67932766033
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0010136685",
+        "name": "PROVIDENCE HOSPITAL",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: PROVIDENCE HOSPITAL; city: MOBILE; state: AL; hospital type: GENERAL ACUTE CARE; trauma center level: LEVEL III; helipad: yes"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.1313362896986,
+         30.684517489704
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0011136608",
+        "name": "SPRINGHILL MEMORIAL HOSPITAL",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "010144",
+          "rating": 3,
+          "ratingFootnote": null,
+          "cmsType": "Acute Care Hospitals",
+          "ownership": "Proprietary",
+          "emergency": "Yes",
+          "birthingFriendly": "Y"
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: SPRINGHILL MEMORIAL HOSPITAL; city: MOBILE; state: AL; hospital type: GENERAL ACUTE CARE; trauma center level: LEVEL III; helipad: yes"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.0778076402452,
+         30.6976838197074
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0090736604",
+        "name": "USA HEALTH CHILDREN'S AND WOMEN'S HOSPITAL",
+        "details": {
+         "type": "children",
+         "owner type": "GOVERNMENT - STATE"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "013301",
+          "rating": null,
+          "ratingFootnote": "19",
+          "cmsType": "Childrens",
+          "ownership": "Government - State",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: USA HEALTH CHILDREN'S AND WOMEN'S HOSPITAL; city: MOBILE; state: AL; hospital type: CHILDREN; trauma center level: LEVEL III; helipad: yes"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.0983348604447,
+         30.7070619801315
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0009836617",
+        "name": "USA HEALTH UNIVERSITY HOSPITAL",
+        "details": {
+         "type": "general acute care",
+         "owner type": "GOVERNMENT - STATE"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "010087",
+          "rating": 2,
+          "ratingFootnote": null,
+          "cmsType": "Acute Care Hospitals",
+          "ownership": "Government - State",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: USA HEALTH UNIVERSITY HOSPITAL; city: MOBILE; state: AL; hospital type: GENERAL ACUTE CARE; trauma center level: LEVEL I; helipad: yes"
+        }
+       }
+      }
+     ]
+    }
+   }
+  },
+  "/api/infra?op=dams&bbox=-88.4466,30.4346,-87.9466,30.9346": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:54:43.059Z",
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "usace-nid",
+       "publisher": "U.S. Army Corps of Engineers",
+       "url": "https://nid.sec.usace.army.mil/"
+      },
+      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+      "retrievedAt": "2026-10-19T04:54:43.059Z"
+     }
+    ],
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -88.07500510641393,
+         30.908335688340472
+        ]
+       },
+       "properties": {
+        "id": "nid:AL00011",
+        "name": "Dam AL00011",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1966,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Other; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 1966"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.43653122092249,
+         30.78414345905265
+        ]
+       },
+       "properties": {
+        "id": "nid:MS06238",
+        "name": "Dam MS06238",
+        "details": {
+         "hazard potential": "Undetermined",
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: George, Mississippi; state: Mississippi; dam purpose: Recreation; dam type: Earth; hazard potential: Undetermined"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.43121967010973,
+         30.798672252401023
+        ]
+       },
+       "properties": {
+        "id": "nid:MS06239",
+        "name": "Dam MS06239",
+        "details": {
+         "hazard potential": "Undetermined",
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: George, Mississippi; state: Mississippi; dam purpose: Recreation; dam type: Earth; hazard potential: Undetermined"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.42245362355142,
+         30.927856410845884
+        ]
+       },
+       "properties": {
+        "id": "nid:MS03147",
+        "name": "Dam MS03147",
+        "details": {
+         "hazard potential": "Low",
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: George, Mississippi; state: Mississippi; dam purpose: Recreation; dam type: Earth; hazard potential: Low"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.31333517155778,
+         30.888335675931188
+        ]
+       },
+       "properties": {
+        "id": "nid:AL00144",
+        "name": "Dam AL00144",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1965,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Recreation; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 1965"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.43711519780933,
+         30.71130563312979
+        ]
+       },
+       "properties": {
+        "id": "nid:MS04085",
+        "name": "Dam MS04085",
+        "details": {
+         "hazard potential": "Low",
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Jackson, Mississippi; state: Mississippi; dam purpose: Recreation; dam type: Earth; hazard potential: Low"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.42457519167598,
+         30.6516256205014
+        ]
+       },
+       "properties": {
+        "id": "nid:MS04080",
+        "name": "Dam MS04080",
+        "details": {
+         "hazard potential": "Low",
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Jackson, Mississippi; state: Mississippi; dam purpose: Recreation; dam type: Earth; hazard potential: Low"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.42248519065188,
+         30.641605618378897
+        ]
+       },
+       "properties": {
+        "id": "nid:MS04138",
+        "name": "Dam MS04138",
+        "details": {
+         "hazard potential": "Low",
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Jackson, Mississippi; state: Mississippi; dam purpose: Recreation; dam type: Earth; hazard potential: Low"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.41533519028116,
+         30.67760562649156
+        ]
+       },
+       "properties": {
+        "id": "nid:MS04079",
+        "name": "Dam MS04079",
+        "details": {
+         "hazard potential": "Low",
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Jackson, Mississippi; state: Mississippi; dam purpose: Recreation; dam type: Earth; hazard potential: Low"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.41133518449416,
+         30.57231560357846
+        ]
+       },
+       "properties": {
+        "id": "nid:MS04139",
+        "name": "Dam MS04139",
+        "details": {
+         "hazard potential": "Low",
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Jackson, Mississippi; state: Mississippi; dam purpose: Recreation; dam type: Earth; hazard potential: Low"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.4072751823601,
+         30.549425598696555
+        ]
+       },
+       "properties": {
+        "id": "nid:MS04176",
+        "name": "Dam MS04176",
+        "details": {
+         "hazard potential": "Low",
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Jackson, Mississippi; state: Mississippi; dam purpose: Recreation; dam type: Earth; hazard potential: Low"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.38000517257211,
+         30.49833558839135
+        ]
+       },
+       "properties": {
+        "id": "nid:AL00015",
+        "name": "Dam AL00015",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1968,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Other; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 1968"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.33969417091161,
+         30.712232636589636
+        ]
+       },
+       "properties": {
+        "id": "nid:AL00017",
+        "name": "J.B. Converse Reservoir Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Not Rated",
+         "year completed": 1952,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: J.B. Converse Reservoir Dam; county: Mobile, Alabama; state: Alabama; dam purpose: Water Supply; dam type: Earth; hazard potential: High; condition assessment: Not Rated; year completed: 1952"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.33334516452665,
+         30.60833561405679
+        ]
+       },
+       "properties": {
+        "id": "nid:AL00142",
+        "name": "Dam AL00142",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1972,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Fish and Wildlife Pond; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 1972"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.33333516445025,
+         30.606675613693344
+        ]
+       },
+       "properties": {
+        "id": "nid:AL00141",
+        "name": "Dam AL00141",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1964,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Recreation; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 1964"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.32667515760801,
+         30.49333558905028
+        ]
+       },
+       "properties": {
+        "id": "nid:AL00146",
+        "name": "Dam AL00146",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1967,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Recreation; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 1967"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.30600515983835,
+         30.673005629130184
+        ]
+       },
+       "properties": {
+        "id": "nid:AL02569",
+        "name": "Dam AL02569",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 2000,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Fish and Wildlife Pond; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 2000"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.24693714129005,
+         30.623525620252835
+        ]
+       },
+       "properties": {
+        "id": "nid:AL83487",
+        "name": "Dam AL83487",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Not Rated",
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Recreation; dam type: Earth; hazard potential: High; condition assessment: Not Rated"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.2466751390702,
+         30.57500560961838
+        ]
+       },
+       "properties": {
+        "id": "nid:AL00012",
+        "name": "Dam AL00012",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1961,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Other; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 1961"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.2416751373185,
+         30.566675607955432
+        ]
+       },
+       "properties": {
+        "id": "nid:AL00013",
+        "name": "Dam AL00013",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1962,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Recreation; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 1962"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.23833513934389,
+         30.633335622689067
+        ]
+       },
+       "properties": {
+        "id": "nid:AL01678",
+        "name": "Dam AL01678",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Not Rated",
+         "year completed": 1973,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Fish and Wildlife Pond; dam type: Earth; hazard potential: Significant; condition assessment: Not Rated; year completed: 1973"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.20500514094924,
+         30.875005676678505
+        ]
+       },
+       "properties": {
+        "id": "nid:AL00152",
+        "name": "Dam AL00152",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1965,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Recreation; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 1965"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.17833512162052,
+         30.608335619194015
+        ]
+       },
+       "properties": {
+        "id": "nid:AL00149",
+        "name": "Bermuda Run Dam",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Not Rated",
+         "year completed": 1970,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Bermuda Run Dam; county: Mobile, Alabama; state: Alabama; dam purpose: Fish and Wildlife Pond; dam type: Earth; hazard potential: Significant; condition assessment: Not Rated; year completed: 1970"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.16500512214814,
+         30.70333564046958
+        ]
+       },
+       "properties": {
+        "id": "nid:AL00016",
+        "name": "Municipal Park Lake No 1",
+        "details": {
+         "hazard potential": "Significant",
+         "condition assessment": "Not Rated",
+         "year completed": 1957,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Municipal Park Lake No 1; county: Mobile, Alabama; state: Alabama; dam purpose: Other; dam type: Earth; hazard potential: Significant; condition assessment: Not Rated; year completed: 1957"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.16500511279341,
+         30.491675594001105
+        ]
+       },
+       "properties": {
+        "id": "nid:AL01684",
+        "name": "Dam AL01684",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1967,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Recreation; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 1967"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.1550051238566,
+         30.803335662696547
+        ]
+       },
+       "properties": {
+        "id": "nid:AL00140",
+        "name": "Dam AL00140",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1965,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Recreation; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 1965"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.14167511814136,
+         30.75833565329475
+        ]
+       },
+       "properties": {
+        "id": "nid:AL01689",
+        "name": "Dam AL01689",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1946,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Recreation; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 1946"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -88.10139511304232,
+         30.89305568411252
+        ]
+       },
+       "properties": {
+        "id": "nid:AL02331",
+        "name": "Dam AL02331",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1986,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Mobile, Alabama; state: Alabama; dam purpose: Fish and Wildlife Pond; dam type: Earth; hazard potential: Low; condition assessment: Not Rated; year completed: 1986"
+        }
+       }
+      }
+     ]
+    }
+   }
+  },
+  "/api/companies?op=county&fips=01097": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "pulled": null,
+    "provenance": [
+     {
+      "source": {
+       "id": "sec-edgar",
+       "publisher": "U.S. Securities and Exchange Commission",
+       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+      },
+      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
+     },
+     {
+      "source": {
+       "id": "census-zcta-county",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
+      }
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      }
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:53.262Z"
+   }
+  },
+  "/api/releases?op=calendar": {
+   "status": 200,
+   "body": {
+    "data": {
+     "from": "2026-10-19",
+     "to": "2026-11-18",
+     "releases": [
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-22",
+        "latest": "2026-10-22",
+        "nominal": "2026-10-22"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-29",
+        "latest": "2026-10-29",
+        "nominal": "2026-10-29"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-05",
+        "latest": "2026-11-05",
+        "nominal": "2026-11-05"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-12",
+        "latest": "2026-11-12",
+        "nominal": "2026-11-12"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "zillow-zhvi",
+       "sourceId": "zillow-zhvi",
+       "title": "Zillow ZHVI typical home value (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-14",
+        "latest": "2026-11-21",
+        "nominal": "2026-11-14"
+       },
+       "scheduleUrl": "https://www.zillow.com/research/data/"
+      },
+      {
+       "id": "zillow-zori",
+       "sourceId": "zillow-zori",
+       "title": "Zillow ZORI typical rent (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-14",
+        "latest": "2026-11-21",
+        "nominal": "2026-11-14"
+       },
+       "scheduleUrl": "https://www.zillow.com/research/data/"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "bts-border",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "usgs-water",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://api.waterdata.usgs.gov/"
+      },
+      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.freddiemac.com/pmms",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "bts-supply-chain",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/news/schedule",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:47.351Z"
+   }
+  },
+  "/api/water?op=pfas&bbox=-88.2,30.68,-88.18,30.7&polygons=1": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:54:44.016Z",
+    "provenance": [
+     {
+      "source": {
+       "id": "epa-cws-boundaries",
+       "publisher": "U.S. EPA; the original data provider of each polygon (a state agency, the system, or EPA's Office of Research and Development for modelled boundaries)",
+       "url": "https://www.epa.gov/ground-water-and-drinking-water"
+      },
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0",
+      "retrievedAt": "2026-10-19T04:54:44.016Z"
+     },
+     {
+      "source": {
+       "id": "epa-ucmr5-pat",
+       "publisher": "U.S. EPA Office of Enforcement and Compliance Assurance (ECHO PFAS Analytic Tools); data from EPA's Office of Ground Water and Drinking Water, UCMR 5",
+       "url": "https://www.epa.gov/dwucmr/fifth-unregulated-contaminant-monitoring-rule"
+      },
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/PFAS_Analytic_Tools_Layers/FeatureServer/1",
+      "retrievedAt": "2026-10-19T04:54:44.016Z"
+     }
+    ],
+    "coverage": [
+     {
+      "id": "service-areas",
+      "name": "EPA community water system service areas",
+      "state": "covered",
+      "count": 1
+     },
+     {
+      "id": "estimated-locations",
+      "name": "EPA UCMR 5 systems placed by estimated location",
+      "state": "covered",
+      "count": 0
+     },
+     {
+      "id": "results",
+      "name": "EPA UCMR 5 results",
+      "state": "covered",
+      "count": 1
+     }
+    ],
+    "bbox": [
+     -88.2,
+     30.68,
+     -88.18,
+     30.7
+    ],
+    "polygons": true,
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+         [
+          [
+           -88.04694,
+           30.73962
+          ],
+          [
+           -88.0439,
+           30.73858
+          ],
+          [
+           -88.04088,
+           30.74174
+          ],
+          [
+           -88.04263,
+           30.72915
+          ],
+          [
+           -88.03701,
+           30.69982
+          ],
+          [
+           -88.02547,
+           30.69724
+          ],
+          [
+           -88.02484,
+           30.69305
+          ],
+          [
+           -88.00964,
+           30.68735
+          ],
+          [
+           -87.98902,
+           30.6869
+          ],
+          [
+           -87.989,
+           30.68428
+          ],
+          [
+           -87.99006,
+           30.68213
+          ],
+          [
+           -87.91804,
+           30.67002
+          ],
+          [
+           -87.91863,
+           30.66557
+          ],
+          [
+           -87.99285,
+           30.67705
+          ],
+          [
+           -88.07306,
+           30.53706
+          ],
+          [
+           -88.07345,
+           30.53008
+          ],
+          [
+           -88.07817,
+           30.52812
+          ],
+          [
+           -88.08164,
+           30.52205
+          ],
+          [
+           -88.12174,
+           30.52205
+          ],
+          [
+           -88.12246,
+           30.49676
+          ],
+          [
+           -88.12157,
+           30.49308
+          ],
+          [
+           -88.11622,
+           30.48233
+          ],
+          [
+           -88.11231,
+           30.48216
+          ],
+          [
+           -88.113,
+           30.47625
+          ],
+          [
+           -88.11394,
+           30.47633
+          ],
+          [
+           -88.11373,
+           30.47834
+          ],
+          [
+           -88.12254,
+           30.47858
+          ],
+          [
+           -88.12247,
+           30.45832
+          ],
+          [
+           -88.11484,
+           30.45815
+          ],
+          [
+           -88.11511,
+           30.45458
+          ],
+          [
+           -88.11117,
+           30.4546
+          ],
+          [
+           -88.1114,
+           30.45139
+          ],
+          [
+           -88.1149,
+           30.4506
+          ],
+          [
+           -88.11516,
+           30.44798
+          ],
+          [
+           -88.11441,
+           30.44673
+          ],
+          [
+           -88.11591,
+           30.44583
+          ],
+          [
+           -88.11668,
+           30.44817
+          ],
+          [
+           -88.11632,
+           30.45182
+          ],
+          [
+           -88.11439,
+           30.45183
+          ],
+          [
+           -88.11326,
+           30.4534
+          ],
+          [
+           -88.11642,
+           30.45344
+          ],
+          [
+           -88.11615,
+           30.45629
+          ],
+          [
+           -88.11735,
+           30.45619
+          ],
+          [
+           -88.11729,
+           30.45683
+          ],
+          [
+           -88.12473,
+           30.45691
+          ],
+          [
+           -88.12478,
+           30.47864
+          ],
+          [
+           -88.12581,
+           30.47901
+          ],
+          [
+           -88.12621,
+           30.49839
+          ],
+          [
+           -88.12677,
+           30.49839
+          ],
+          [
+           -88.12649,
+           30.51201
+          ],
+          [
+           -88.14374,
+           30.51221
+          ],
+          [
+           -88.14419,
+           30.52516
+          ],
+          [
+           -88.14956,
+           30.52829
+          ],
+          [
+           -88.15758,
+           30.52658
+          ],
+          [
+           -88.16129,
+           30.52317
+          ],
+          [
+           -88.16889,
+           30.52153
+          ],
+          [
+           -88.16875,
+           30.50095
+          ],
+          [
+           -88.18009,
+           30.50053
+          ],
+          [
+           -88.18527,
+           30.49657
+          ],
+          [
+           -88.1866,
+           30.49431
+          ],
+          [
+           -88.18676,
+           30.49234
+          ],
+          [
+           -88.18188,
+           30.4923
+          ],
+          [
+           -88.18163,
+           30.48007
+          ],
+          [
+           -88.1928,
+           30.48001
+          ],
+          [
+           -88.19324,
+           30.49493
+          ],
+          [
+           -88.19259,
+           30.49712
+          ],
+          [
+           -88.18833,
+           30.50107
+          ],
+          [
+           -88.1812,
+           30.50358
+          ],
+          [
+           -88.17154,
+           30.50385
+          ],
+          [
+           -88.17238,
+           30.52509
+          ],
+          [
+           -88.17499,
+           30.52508
+          ],
+          [
+           -88.18359,
+           30.54406
+          ],
+          [
+           -88.19109,
+           30.54571
+          ],
+          [
+           -88.19193,
+           30.54994
+          ],
+          [
+           -88.19693,
+           30.55265
+          ],
+          [
+           -88.19802,
+           30.55266
+          ],
+          [
+           -88.19801,
+           30.55129
+          ],
+          [
+           -88.20117,
+           30.55133
+          ],
+          [
+           -88.20123,
+           30.55572
+          ],
+          [
+           -88.19877,
+           30.55573
+          ],
+          [
+           -88.19981,
+           30.55779
+          ],
+          [
+           -88.20845,
+           30.55943
+          ],
+          [
+           -88.22196,
+           30.55947
+          ],
+          [
+           -88.2215,
+           30.56288
+          ],
+          [
+           -88.1939,
+           30.57417
+          ],
+          [
+           -88.19065,
+           30.57588
+          ],
+          [
+           -88.1892,
+           30.57828
+          ],
+          [
+           -88.18385,
+           30.58155
+          ],
+          [
+           -88.18383,
+           30.58327
+          ],
+          [
+           -88.18646,
+           30.58326
+          ],
+          [
+           -88.18642,
+           30.58573
+          ],
+          [
+           -88.1838,
+           30.58571
+          ],
+          [
+           -88.18375,
+           30.59001
+          ],
+          [
+           -88.17755,
+           30.59004
+          ],
+          [
+           -88.17741,
+           30.59286
+          ],
+          [
+           -88.17497,
+           30.59287
+          ],
+          [
+           -88.17304,
+           30.59725
+          ],
+          [
+           -88.16962,
+           30.59741
+          ],
+          [
+           -88.16769,
+           30.60137
+          ],
+          [
+           -88.16659,
+           30.60644
+          ],
+          [
+           -88.1736,
+           30.60697
+          ],
+          [
+           -88.179,
+           30.60976
+          ],
+          [
+           -88.18306,
+           30.60876
+          ],
+          [
+           -88.19252,
+           30.61012
+          ],
+          [
+           -88.19064,
+           30.60779
+          ],
+          [
+           -88.19069,
+           30.6068
+          ],
+          [
+           -88.19383,
+           30.60649
+          ],
+          [
+           -88.19596,
+           30.60886
+          ],
+          [
+           -88.19926,
+           30.60624
+          ],
+          [
+           -88.19845,
+           30.60348
+          ],
+          [
+           -88.19855,
+           30.59802
+          ],
+          [
+           -88.20018,
+           30.59801
+          ],
+          [
+           -88.20143,
+           30.60407
+          ],
+          [
+           -88.20423,
+           30.60709
+          ],
+          [
+           -88.20426,
+           30.61146
+          ],
+          [
+           -88.20537,
+           30.61291
+          ],
+          [
+           -88.20584,
+           30.60441
+          ],
+          [
+           -88.20769,
+           30.60325
+          ],
+          [
+           -88.2078,
+           30.59958
+          ],
+          [
+           -88.22475,
+           30.59937
+          ],
+          [
+           -88.22463,
+           30.58858
+          ],
+          [
+           -88.23409,
+           30.58867
+          ],
+          [
+           -88.23407,
+           30.58644
+          ],
+          [
+           -88.2322,
+           30.58236
+          ],
+          [
+           -88.22852,
+           30.58233
+          ],
+          [
+           -88.22848,
+           30.57697
+          ],
+          [
+           -88.23122,
+           30.57695
+          ],
+          [
+           -88.23617,
+           30.57892
+          ],
+          [
+           -88.23819,
+           30.58128
+          ],
+          [
+           -88.23769,
+           30.58881
+          ],
+          [
+           -88.24979,
+           30.58857
+          ],
+          [
+           -88.24977,
+           30.58291
+          ],
+          [
+           -88.25834,
+           30.58284
+          ],
+          [
+           -88.25831,
+           30.58464
+          ],
+          [
+           -88.25031,
+           30.58479
+          ],
+          [
+           -88.25037,
+           30.58904
+          ],
+          [
+           -88.22569,
+           30.58981
+          ],
+          [
+           -88.22587,
+           30.59521
+          ],
+          [
+           -88.22921,
+           30.5952
+          ],
+          [
+           -88.2292,
+           30.59618
+          ],
+          [
+           -88.2259,
+           30.59619
+          ],
+          [
+           -88.22603,
+           30.60004
+          ],
+          [
+           -88.23292,
+           30.60472
+          ],
+          [
+           -88.23441,
+           30.60839
+          ],
+          [
+           -88.23433,
+           30.61539
+          ],
+          [
+           -88.23845,
+           30.61675
+          ],
+          [
+           -88.23839,
+           30.6109
+          ],
+          [
+           -88.23716,
+           30.61057
+          ],
+          [
+           -88.23787,
+           30.60763
+          ],
+          [
+           -88.24197,
+           30.60758
+          ],
+          [
+           -88.24183,
+           30.60958
+          ],
+          [
+           -88.24016,
+           30.61112
+          ],
+          [
+           -88.2398,
+           30.61697
+          ],
+          [
+           -88.24947,
+           30.61691
+          ],
+          [
+           -88.24928,
+           30.60934
+          ],
+          [
+           -88.25339,
+           30.60931
+          ],
+          [
+           -88.25434,
+           30.60643
+          ],
+          [
+           -88.27965,
+           30.6064
+          ],
+          [
+           -88.27977,
+           30.61286
+          ],
+          [
+           -88.28086,
+           30.61286
+          ],
+          [
+           -88.28092,
+           30.62004
+          ],
+          [
+           -88.27989,
+           30.62005
+          ],
+          [
+           -88.28014,
+           30.63418
+          ],
+          [
+           -88.27563,
+           30.63421
+          ],
+          [
+           -88.27565,
+           30.63742
+          ],
+          [
+           -88.26131,
+           30.63762
+          ],
+          [
+           -88.26126,
+           30.63977
+          ],
+          [
+           -88.27005,
+           30.64003
+          ],
+          [
+           -88.27011,
+           30.64772
+          ],
+          [
+           -88.26689,
+           30.64778
+          ],
+          [
+           -88.26698,
+           30.64487
+          ],
+          [
+           -88.26201,
+           30.64555
+          ],
+          [
+           -88.24987,
+           30.65135
+          ],
+          [
+           -88.25321,
+           30.65432
+          ],
+          [
+           -88.25322,
+           30.65576
+          ],
+          [
+           -88.25448,
+           30.65755
+          ],
+          [
+           -88.25802,
+           30.65889
+          ],
+          [
+           -88.28318,
+           30.65837
+          ],
+          [
+           -88.28598,
+           30.66173
+          ],
+          [
+           -88.28718,
+           30.66821
+          ],
+          [
+           -88.28678,
+           30.68019
+          ],
+          [
+           -88.28354,
+           30.68218
+          ],
+          [
+           -88.27726,
+           30.68188
+          ],
+          [
+           -88.27703,
+           30.73948
+          ],
+          [
+           -88.28362,
+           30.74053
+          ],
+          [
+           -88.28363,
+           30.74124
+          ],
+          [
+           -88.28676,
+           30.74119
+          ],
+          [
+           -88.28698,
+           30.7467
+          ],
+          [
+           -88.2776,
+           30.74682
+          ],
+          [
+           -88.27783,
+           30.77453
+          ],
+          [
+           -88.28961,
+           30.77491
+          ],
+          [
+           -88.28979,
+           30.77757
+          ],
+          [
+           -88.28704,
+           30.77762
+          ],
+          [
+           -88.28772,
+           30.78419
+          ],
+          [
+           -88.29172,
+           30.78558
+          ],
+          [
+           -88.2921,
+           30.79136
+          ],
+          [
+           -88.27896,
+           30.78756
+          ],
+          [
+           -88.27406,
+           30.78758
+          ],
+          [
+           -88.27381,
+           30.77336
+          ],
+          [
+           -88.25972,
+           30.77345
+          ],
+          [
+           -88.25885,
+           30.77774
+          ],
+          [
+           -88.26052,
+           30.78342
+          ],
+          [
+           -88.25252,
+           30.78262
+          ],
+          [
+           -88.25117,
+           30.77624
+          ],
+          [
+           -88.25145,
+           30.77074
+          ],
+          [
+           -88.24884,
+           30.77075
+          ],
+          [
+           -88.2488,
+           30.76596
+          ],
+          [
+           -88.2457,
+           30.7657
+          ],
+          [
+           -88.24419,
+           30.76092
+          ],
+          [
+           -88.24337,
+           30.76031
+          ],
+          [
+           -88.24307,
+           30.76895
+          ],
+          [
+           -88.23796,
+           30.76892
+          ],
+          [
+           -88.23905,
+           30.76456
+          ],
+          [
+           -88.23892,
+           30.75911
+          ],
+          [
+           -88.23542,
+           30.75935
+          ],
+          [
+           -88.23545,
+           30.76417
+          ],
+          [
+           -88.22947,
+           30.76421
+          ],
+          [
+           -88.2304,
+           30.76486
+          ],
+          [
+           -88.23045,
+           30.76638
+          ],
+          [
+           -88.2295,
+           30.76636
+          ],
+          [
+           -88.22959,
+           30.77224
+          ],
+          [
+           -88.20288,
+           30.77239
+          ],
+          [
+           -88.19084,
+           30.76504
+          ],
+          [
+           -88.19086,
+           30.75875
+          ],
+          [
+           -88.19316,
+           30.7587
+          ],
+          [
+           -88.19311,
+           30.75166
+          ],
+          [
+           -88.17233,
+           30.74993
+          ],
+          [
+           -88.16944,
+           30.74224
+          ],
+          [
+           -88.1439,
+           30.74215
+          ],
+          [
+           -88.14061,
+           30.74329
+          ],
+          [
+           -88.13734,
+           30.74288
+          ],
+          [
+           -88.13714,
+           30.74213
+          ],
+          [
+           -88.10818,
+           30.74202
+          ],
+          [
+           -88.09673,
+           30.72722
+          ],
+          [
+           -88.09287,
+           30.72801
+          ],
+          [
+           -88.09003,
+           30.72709
+          ],
+          [
+           -88.08736,
+           30.72744
+          ],
+          [
+           -88.08122,
+           30.72418
+          ],
+          [
+           -88.07788,
+           30.7287
+          ],
+          [
+           -88.06377,
+           30.73154
+          ],
+          [
+           -88.06879,
+           30.74057
+          ],
+          [
+           -88.06994,
+           30.74802
+          ],
+          [
+           -88.07195,
+           30.74939
+          ],
+          [
+           -88.07199,
+           30.75579
+          ],
+          [
+           -88.07502,
+           30.76728
+          ],
+          [
+           -88.07506,
+           30.77409
+          ],
+          [
+           -88.07267,
+           30.78144
+          ],
+          [
+           -88.07045,
+           30.81657
+          ],
+          [
+           -88.05066,
+           30.81631
+          ],
+          [
+           -88.05686,
+           30.75961
+          ],
+          [
+           -88.04764,
+           30.75756
+          ],
+          [
+           -88.04761,
+           30.75219
+          ],
+          [
+           -88.04879,
+           30.74537
+          ],
+          [
+           -88.04694,
+           30.73962
+          ]
+         ]
+        ]
+       },
+       "properties": {
+        "id": "pfas:AL0001005",
+        "details": {
+         "population served": 279000
+        },
+        "extra": {
+         "state": "not-detected",
+         "pwsid": "AL0001005",
+         "maxNgL": null,
+         "modelled": false,
+         "placement": "service-area",
+         "results": [
+          {
+           "contaminant": "11Cl-PF3OUdS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "4:2 FTS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "6:2 FTS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "8:2 FTS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "9Cl-PF3ONS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "ADONA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "HFPO-DA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "NEtFOSAA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "NFDHA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "NMeFOSAA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFBA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFBS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFDA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFDoA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFEESA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFHpA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFHpS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFHxA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFHxS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFMBA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFMPA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFNA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFOA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFOS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFPeA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFPeS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFTA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFTrDA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          },
+          {
+           "contaminant": "PFUnA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 8
+          }
+         ]
+        }
+       }
+      }
+     ]
+    }
    }
   }
- }
+ },
+ "filled": [
+  {
+   "at": "2026-10-19T04:54:45.316Z",
+   "from": "https://www.arxiviq.com",
+   "routes": [
+    "/api/fabric?op=stack&lon=-88.1966&lat=30.6846",
+    "/api/infra?op=hospitals&bbox=-88.4466,30.4346,-87.9466,30.9346",
+    "/api/infra?op=dams&bbox=-88.4466,30.4346,-87.9466,30.9346"
+   ]
+  },
+  {
+   "at": "2026-10-19T05:09:42.979Z",
+   "from": "https://www.arxiviq.com",
+   "routes": [
+    "/api/water?op=pfas&bbox=-88.2,30.68,-88.18,30.7&polygons=1"
+   ]
+  }
+ ]
 }

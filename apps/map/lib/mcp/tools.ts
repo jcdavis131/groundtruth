@@ -23,8 +23,22 @@ export interface JsonReply {
 
 export type FetchJson = (pathWithQuery: string) => Promise<JsonReply>;
 
+/** A county's Census internal point (INTPTLON/INTPTLAT) from the bundled county table (lib/places/registry). */
+export interface CountyPoint {
+  lon: number;
+  lat: number;
+  /** When the table was pulled from TIGERweb (YYYY-MM-DD), null if unrecorded. */
+  pulled: string | null;
+}
+
 export interface ToolCtx {
   fetchJson: FetchJson;
+  /**
+   * The county table's point for a 5-digit FIPS, or null when the table has no such county.
+   * Injected (not imported) because this directory compiles alone for the stdio server; the
+   * Next route and scripts/mcp-stdio.mjs both pass it from lib/places/data/counties.json.
+   */
+  countyPoint?: (fips: string) => CountyPoint | null;
 }
 
 export type JsonObject = Record<string, unknown>;
@@ -661,7 +675,7 @@ export const TOOLS: ToolDef[] = [
     name: "world_context",
     title: "Cited world context for a place, before you act",
     description:
-      `One small bundle for an agent about to do anything place-related: pass exactly one of lon+lat, fips (5-digit county, or a state as 2 digits or SS000) or bbox (at most ${WORLD_MAX_BOX_DEG} degrees a side). Returns place (kind, name, countyFips, stateFips, point and its basis, searchBox) and topics: identity always (county, state, CBSA metro code, city, tract, ZCTA from Census TIGERweb), then fabric (time zone, NWS office, HUC-12 and where it drains, FEMA flood zone and NFIP community, school and congressional district, ecoregion, 3DEP elevation), hazards (FEMA NRI rating, expected annual loss and top hazards; newest FEMA declarations; this week's Drought Monitor; Severe/Extreme NWS alerts and quakes touching the place now), economy (BLS QCEW jobs and weekly wage, withheld as null not 0; Zillow home value and rent; population as FEMA's NRI row carries it), vulnerability (CDC/ATSDR SVI and FEMA's NRI social vulnerability, side by side), institutions (hospitals and dams in the search box, named only where the record's card allows; public companies by ticker and CIK), freshness (next scheduled releases of the sources cited) and, with about, collections (catalog_search). Each item: fact, value, unit, period, note, sourceId, publisher, upstreamUrl, retrievedAt and link (the eye route that returns it). topics[t].missing lists what is absent and why; coverageStatus is partial whenever anything is missing, cut by max_records (default ${WORLD_DEFAULT_RECORDS}, max ${WORLD_MAX_RECORDS}) or cut to the ${WORLD_MAX_BYTES}-byte cap (truncated says how many). A sub-route that fails costs only its own items; the call errors only when nothing answered. Composes this server's own routes; no new upstream.`,
+      `One small bundle for an agent about to do anything place-related: pass exactly one of lon+lat, fips (5-digit county, or a state as 2 digits or SS000) or bbox (at most ${WORLD_MAX_BOX_DEG} degrees a side). Returns place (kind, name, countyFips, stateFips, point and its basis, searchBox; a county's point is Census's internal point from eye's county table, cited with its TIGERweb record) and topics: identity always (county, state, CBSA metro code, city, tract, ZCTA from Census TIGERweb), then fabric (time zone, NWS office, HUC-12 and where it drains, FEMA flood zone and NFIP community, school and congressional district, ecoregion, 3DEP elevation), hazards (FEMA NRI rating, expected annual loss and top hazards; newest FEMA declarations; this week's Drought Monitor; Severe/Extreme NWS alerts and quakes touching the place now), economy (BLS QCEW jobs and weekly wage, withheld as null not 0; Zillow home value and rent; population as FEMA's NRI row carries it), vulnerability (CDC/ATSDR SVI and FEMA's NRI social vulnerability, side by side), institutions (hospitals and dams in the search box, named only where the record's card allows; public companies by ticker and CIK; CMS star ratings as CMS's own items), water (the EPA community water system whose service area holds the point, by PWSID, and its UCMR 5 PFAS status and detections in ng/L), freshness (next scheduled releases of the sources cited; a schedule page that refuses automated clients is said to) and, with about, collections (catalog_search). Each item: fact, value, unit, period, note, sourceId, publisher, upstreamUrl, upstreamRecordUrl (the publisher's own keyless URL for exactly that record; where none exists the note says "no record-level URL"), retrievedAt, link (the eye route that reproduces it) and, for claims about eye's own catalogue, kind "about-eye". Cite upstreamRecordUrl (or upstreamUrl) for the fact, and use link to reproduce it. topics[t].missing lists what is absent and why; coverageStatus is partial whenever anything is missing, cut by max_records (default ${WORLD_DEFAULT_RECORDS}, max ${WORLD_MAX_RECORDS}) or cut to the ${WORLD_MAX_BYTES}-byte cap (truncated says how many). A sub-route that fails costs only its own items; the call errors only when nothing answered. Composes this server's own routes; no new upstream.`,
     inputSchema: z
       .object({
         lon: lon.optional(),

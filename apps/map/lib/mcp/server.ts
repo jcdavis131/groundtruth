@@ -11,13 +11,15 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
 import { envelopeForStatus, envelopeForThrown, InvalidArguments } from "./errors";
-import { NOT_DEPLOYED_NOTE, TOOLS, type FetchJson, type ToolDef, type ToolReply } from "./tools";
+import { NOT_DEPLOYED_NOTE, TOOLS, type FetchJson, type ToolCtx, type ToolDef, type ToolReply } from "./tools";
 
 export const SERVER_NAME = "embedding-atlas-mcp-server";
 export const SERVER_VERSION = "0.1.0";
 
 export interface ServerOptions {
   fetchJson: FetchJson;
+  /** The county table's Census internal point by FIPS (world_context's place.point for a county). */
+  countyPoint?: ToolCtx["countyPoint"];
   /** Directory whose *.md files become gev://docs/<name> resources. Missing dir = no doc resources. */
   docsDir?: string;
   /** Path of the OpenAPI document served as gev://openapi.json. */
@@ -200,7 +202,7 @@ function envelopeSdkErrors(server: McpServer): void {
  */
 export function createServer(opts: ServerOptions): McpServer {
   const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION });
-  const ctx = { fetchJson: opts.fetchJson };
+  const ctx: ToolCtx = { fetchJson: opts.fetchJson, ...(opts.countyPoint ? { countyPoint: opts.countyPoint } : {}) };
   envelopeSdkErrors(server);
 
   for (const t of TOOLS) {

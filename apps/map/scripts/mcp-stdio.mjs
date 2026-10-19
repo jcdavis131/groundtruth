@@ -63,8 +63,17 @@ if (process.argv.includes("--doc-table")) {
 
 const { StdioServerTransport } = await import("@modelcontextprotocol/sdk/server/stdio.js");
 const base = (process.env.GEV_BASE_URL || DEFAULT_BASE_URL).replace(/\/+$/, "");
+// world_context centres a county on the Census internal point in the bundled county table, the
+// same table lib/places/registry.ts reads (lib/mcp compiles alone, so it is read here and injected).
+const counties = JSON.parse(readFileSync(path.join(root, "lib", "places", "data", "counties.json"), "utf8"));
+const countyRows = new Map(counties.rows.map((c) => [c.geoid, c]));
+const countyPoint = (fips) => {
+  const c = countyRows.get(fips);
+  return c ? { lon: c.lon, lat: c.lat, pulled: counties.meta.pulled ?? null } : null;
+};
 const server = createServer({
   fetchJson: httpFetchJson(base),
+  countyPoint,
   docsDir: path.join(root, "docs"),
   openapiPath: path.join(root, "public", "openapi.json"),
 });

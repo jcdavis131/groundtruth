@@ -6,7 +6,9 @@ import { toolByName, type FetchJson, type JsonObject, type ToolReply } from "./t
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { BOUNDARY_CHANGED_SINCE_2010, femaCodes } from "../hazards/history";
-import { ringsTouchBox, WORLD_MAX_BYTES, worldContext, type WorldItem, type WorldSection } from "./world";
+import { countyByFips, countyPoint } from "../places/registry";
+import { RELEASE_CALENDAR } from "../releases/calendar";
+import { ringsContain, ringsTouchBox, SCHEDULE_BLOCKED_NOTE, waterBox, WORLD_MAX_BYTES, worldContext, type WorldItem, type WorldSection } from "./world";
 
 // Fixtures trimmed from real replies of www.arxiviq.com on 2026-10-18 (shapes only; values shortened).
 
@@ -156,7 +158,7 @@ const HOSPITALS = {
     ],
   },
   truncated: false,
-  provenance: [prov("hifld-hospitals", "Homeland Infrastructure Foundation-Level Data", "https://services.arcgis.com/x/Hospitals_RAPT/FeatureServer/6")],
+  provenance: [prov("hifld-hospitals", "Homeland Infrastructure Foundation-Level Data", "https://services.arcgis.com/x/Hospitals_RAPT/FeatureServer/6"), prov("cms-provider-data", "Centers for Medicare & Medicaid Services", "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0")],
 };
 
 const DAMS = {
@@ -193,6 +195,33 @@ const CALENDAR = {
   generatedAt: T,
 };
 
+// /api/water?op=pfas&polygons=1 for the cell holding -97.74,30.27: one service area holds the point, one does not.
+const WATER = {
+  bbox: [-97.74, 30.26, -97.72, 30.28],
+  coverage: [
+    { id: "service-areas", state: "covered", count: 2 },
+    { id: "estimated-locations", state: "covered", count: 0 },
+    { id: "results", state: "covered", count: 2 },
+  ],
+  data: {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: { type: "Polygon", coordinates: sq(-97.8, 30.2, -97.7, 30.3) },
+        properties: { id: "pfas:TX2270001", details: { "water system (as EPA lists it)": "CITY OF EXAMPLE", "population served": 1000000 }, extra: { state: "detected", pwsid: "TX2270001", modelled: false, placement: "service-area", results: [{ contaminant: "PFOA", maxNgL: 4.1, detections: 2, results: 8 }, { contaminant: "4:2 FTS", maxNgL: null, detections: 0, results: 8 }] } },
+      },
+      {
+        type: "Feature",
+        geometry: { type: "Polygon", coordinates: sq(-97.735, 30.275, -97.725, 30.279) },
+        properties: { id: "pfas:TX2270999", details: { "population served": 40 }, extra: { state: "not-detected", pwsid: "TX2270999", modelled: true, placement: "service-area", results: [{ contaminant: "PFOA", maxNgL: null, detections: 0, results: 2 }] } },
+      },
+    ],
+  },
+  provenance: [prov("epa-cws-boundaries", "U.S. EPA", "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0"), prov("epa-ucmr5-pat", "U.S. EPA", "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/PFAS_Analytic_Tools_Layers/FeatureServer/1")],
+  generatedAt: T,
+};
+
 const CATALOG = { data: { hits: [{ id: "nid-dams", title: "Dams (USACE National Inventory of Dams)", score: 0.62 }], matched: true }, provenance: [{ source: { id: "eye-catalog", publisher: "Embedding Atlas", url: "https://www.arxiviq.com/catalog" }, upstreamUrl: "https://www.arxiviq.com/catalog", retrievedAt: T, kind: "estimate" }], generatedAt: T };
 
 type Answer = JsonObject | { status: number; body: unknown } | "hang" | "throw";
@@ -211,6 +240,7 @@ const BASE: Array<[string, Answer]> = [
   ["/api/companies", COMPANIES],
   ["/api/releases?op=calendar", CALENDAR],
   ["/api/catalog?op=search", CATALOG],
+  ["/api/water?op=pfas", WATER],
 ];
 
 function router(over: Record<string, Answer> = {}): { calls: string[]; fetchJson: FetchJson } {
@@ -233,7 +263,7 @@ const run = (input: unknown, over: Record<string, Answer> = {}, stepMs?: number)
   const f = router(over);
   const tool = toolByName("world_context")!;
   const parsed = tool.inputSchema.parse(input) as never;
-  return { f, reply: worldContext(parsed, { fetchJson: f.fetchJson }, { stepMs }) };
+  return { f, reply: worldContext(parsed, { fetchJson: f.fetchJson, countyPoint }, { stepMs }) };
 };
 
 const topicsOf = (r: ToolReply) => r.payload.topics as Record<string, WorldSection>;
@@ -257,10 +287,11 @@ describe("world_context: shape", () => {
         "/api/infra?op=dams&bbox=-97.84,30.17,-97.64,30.37",
         "/api/companies?op=county&fips=48453",
         "/api/releases?op=calendar",
+        "/api/water?op=pfas&bbox=-97.74,30.26,-97.72,30.28&polygons=1",
       ].sort(),
     );
     expect(r.payload.place).toMatchObject({ kind: "point", name: "Travis County, TX", countyFips: "48453", stateFips: "48", point: { lon: -97.74, lat: 30.27 } });
-    expect(Object.keys(topicsOf(r))).toEqual(["identity", "fabric", "hazards", "economy", "vulnerability", "institutions", "freshness"]);
+    expect(Object.keys(topicsOf(r))).toEqual(["identity", "fabric", "hazards", "economy", "vulnerability", "institutions", "water", "freshness"]);
     const ident = topicsOf(r).identity.items;
     expect(ident.find((i) => i.fact === "county")).toMatchObject({ value: "Travis County, TX", code: "48453" });
     expect(ident.find((i) => i.fact.startsWith("metro"))).toMatchObject({ code: "12420" });
@@ -285,12 +316,13 @@ describe("world_context: shape", () => {
     const { f, reply } = run({ fips: "48453" });
     const r = await reply;
     expect(f.calls[0]).toBe('/api/screen?kind=county&q=geoid%20%3D%3D%20%2248453%22%20LIMIT%201');
-    expect(f.calls).toContain("/api/fabric?op=stack&lon=-97.6911&lat=30.2395");
+    // Census's internal point from the county table (-97.6913, 30.2395), not the screener's anchor (-97.6910527, 30.2395263).
+    expect(f.calls).toContain("/api/fabric?op=stack&lon=-97.6913&lat=30.2395");
     expect(r.payload.place).toMatchObject({ kind: "county", name: "Travis County, TX", countyFips: "48453", usps: "TX" });
     expect(facts(r, "identity").sort()).toEqual(["county", "metro or micro area (CBSA)", "state"]);
     expect(topicsOf(r).identity.items.find((i) => i.fact === "county")).toMatchObject({ code: "48453", sourceId: "census-tigerweb" });
     expect(topicsOf(r).fabric.items).toEqual([]);
-    expect(topicsOf(r).fabric.missing![0].reason).toMatch(/per point; call world_context with lon\/lat \(the county's point is -97.6911, 30.2395\)/);
+    expect(topicsOf(r).fabric.missing![0].reason).toMatch(/per point; call world_context with lon\/lat \(the county's point is -97.6913, 30.2395\)/);
     expect(topicsOf(r).institutions.items.every((i) => i.fact !== "hospital" || /not the whole county/.test(String(i.note)))).toBe(true);
   });
 
@@ -322,7 +354,9 @@ describe("world_context: shape", () => {
     expect(topicsOf(wide).identity.coverageStatus?.basis ?? []).not.toContain(expect.stringMatching(/counties touching the box: \d+ of/));
     const inst = topicsOf(r).institutions.items;
     expect(inst.filter((i) => i.fact === "hospital").map((i) => i.value)).toEqual(["DELL SETON MEDICAL CENTER"]);
-    expect(inst.find((i) => i.fact === "hospital")!.note).toBe("general acute care; open; CMS overall star rating 4; inside the box");
+    expect(inst.find((i) => i.fact === "hospital")!.note).toBe("general acute care; open; inside the box");
+    // CMS's rating is CMS's own item, cited to CMS, with CMS's row for the CCN.
+    expect(inst.find((i) => i.fact === "CMS overall hospital star rating")).toMatchObject({ value: 4, code: "450124", sourceId: "cms-provider-data", upstreamRecordUrl: expect.stringMatching(/^https:\/\/data\.cms\.gov\/provider-data\/api\/1\/datastore\/query\/xubh-q36u\/0\?.*=450124&/) });
   });
 
   it("collections only with about, ranked by catalog_search, each linking to its card", async () => {
@@ -330,7 +364,10 @@ describe("world_context: shape", () => {
     const r = await reply;
     expect(f.calls).toContain("/api/catalog?op=search&q=dams%20near%20the%20river&limit=3");
     // Cited to the catalogue's own provenance on the search route it came from; the card is named in the note.
-    expect(topicsOf(r).collections.items[0]).toMatchObject({ value: "Dams (USACE National Inventory of Dams)", code: "nid-dams", sourceId: "eye-catalog", publisher: "Embedding Atlas", link: "http://t/api/catalog?op=search&q=dams%20near%20the%20river&limit=3", note: expect.stringMatching(/card: \/api\/catalog\?id=nid-dams/) });
+    expect(topicsOf(r).collections.items[0]).toMatchObject({ value: "Dams (USACE National Inventory of Dams)", code: "nid-dams", sourceId: "eye-catalog", publisher: "Embedding Atlas", link: "http://t/api/catalog?op=search&q=dams%20near%20the%20river&limit=3", note: expect.stringMatching(/card: \/api\/catalog\?id=nid-dams/), kind: "about-eye" });
+    // A catalogue item is eye's own claim: no publisher record, and it says so.
+    expect(topicsOf(r).collections.items[0].upstreamRecordUrl).toBeUndefined();
+    expect(topicsOf(r).collections.items[0].note).toMatch(/no record-level URL: a claim about eye's own catalogue/);
     // A search route that sends no provenance gives no collection item, only the reason.
     const bare = await run({ lon: -97.74, lat: 30.27, topics: ["collections"], about: "dams near the river" }, { "/api/catalog?op=search": { ...CATALOG, provenance: [] } }).reply;
     expect(topicsOf(bare).collections.items).toEqual([]);
@@ -351,7 +388,7 @@ describe("world_context: shape", () => {
 });
 
 describe("world_context: every claim resolves", () => {
-  it("every item carries sourceId, publisher, upstreamUrl, retrievedAt and an eye route link", async () => {
+  it("every item carries sourceId, publisher, upstreamUrl, retrievedAt, an eye route link, and a record-level URL or says it has none", async () => {
     for (const input of [{ lon: -97.74, lat: 30.27 }, { fips: "48453" }, { bbox: [-97.8, 30.2, -97.6, 30.35] }, { lon: -97.74, lat: 30.27, topics: ["collections"], about: "dams" }]) {
       const r = await run(input).reply;
       const items = allItems(r);
@@ -362,6 +399,11 @@ describe("world_context: every claim resolves", () => {
         expect(i.upstreamUrl, i.fact).toMatch(/^https?:\/\//);
         expect(Number.isNaN(Date.parse(i.retrievedAt)), i.fact).toBe(false);
         expect(i.link, i.fact).toMatch(/^http:\/\/t\/api\//);
+        // exactly one of: the publisher's record URL, or a note saying there is none and why
+        if (i.upstreamRecordUrl) {
+          expect(i.upstreamRecordUrl, i.fact).toMatch(/^https:\/\//);
+          expect(String(i.note ?? ""), i.fact).not.toMatch(/no record-level URL/);
+        } else expect(i.note, i.fact).toMatch(/no record-level URL: \S/);
       }
     }
   });
@@ -429,7 +471,7 @@ describe("world_context: byte cap", () => {
     expect(size).toBeLessThanOrEqual(WORLD_MAX_BYTES);
     const t = r.payload.truncated as { droppedItems: number };
     expect(t.droppedItems).toBeGreaterThan(0);
-    expect((r.payload.coverageStatus as { basis: string[] }).basis.some((b) => /cut to 24000 bytes/.test(b))).toBe(true);
+    expect((r.payload.coverageStatus as { basis: string[] }).basis.some((b) => b.includes(`cut to ${WORLD_MAX_BYTES} bytes`))).toBe(true);
     // Identity is the last thing cut.
     expect(topicsOf(r).identity.items.length).toBeGreaterThan(3);
   });
@@ -461,7 +503,7 @@ describe("world_context: identity gaps", () => {
     const r = await run({ fips: "48453", topics: ["economy"] }, { "/api/fabric?op=stack": offshore }).reply;
     const id = topicsOf(r).identity;
     expect(id.items.map((i) => i.fact)).toEqual(["county"]);
-    expect(id.missing).toContainEqual({ what: "state and metro area (CBSA)", reason: expect.stringMatching(/no county polygon at the county's representative point \(-97.6911, 30.2395\): it is offshore/) });
+    expect(id.missing).toContainEqual({ what: "state and metro area (CBSA)", reason: expect.stringMatching(/no county polygon at the county's Census internal point \(-97.6913, 30.2395\): it is offshore/) });
     expect(id.coverageStatus).toMatchObject({ status: "partial" });
   });
 
@@ -515,7 +557,7 @@ describe("world_context: companies are counted only within the bundle", () => {
   it("a full pull may say 0, still within the bundle", async () => {
     const full = { ...COMPANIES, pulled: "2026-10-01", bundle: { companies: 6000, geocoded: 5900, withFacts: 5000 }, data: { type: "FeatureCollection", features: [] } };
     const r = await run({ bbox: [-97.8, 30.2, -97.6, 30.35], topics: ["institutions"] }, { "/api/companies": full }).reply;
-    expect(topicsOf(r).institutions.items.find((i) => i.fact.startsWith("public companies"))).toMatchObject({ value: 0, note: "within eye's SEC bundle of 6000 companies pulled 2026-10-01; not every registrant" });
+    expect(topicsOf(r).institutions.items.find((i) => i.fact.startsWith("public companies"))).toMatchObject({ value: 0, note: "within eye's SEC bundle of 6000 companies pulled 2026-10-01; not every registrant; no record-level URL: a count within eye's SEC bundle; SEC has no URL for it" });
   });
 });
 
@@ -579,7 +621,7 @@ function replay(rec: Recorded): FetchJson {
   };
 }
 
-const runRecorded = (rec: Recorded) => worldContext(toolByName("world_context")!.inputSchema.parse(rec.input) as never, { fetchJson: replay(rec) });
+const runRecorded = (rec: Recorded) => worldContext(toolByName("world_context")!.inputSchema.parse(rec.input) as never, { fetchJson: replay(rec), countyPoint });
 
 /**
  * The names lib/hazards/history.ts writes in `missing`, by source id: a second copy, kept here on
@@ -654,6 +696,9 @@ const FACT_SOURCE: Array<[RegExp, string | null, RegExp?]> = [
   [/^dams? /, "usace-nid"],
   [/^dam$/, "usace-nid"],
   [/^public compan/, "sec-edgar"],
+  [/^CMS overall hospital star rating$/, "cms-provider-data"],
+  [/^community water system serving the point/, "epa-cws-boundaries"],
+  [/^UCMR 5 /, "epa-ucmr5-pat"],
   [/^collection$/, "eye-catalog"],
   [/^next scheduled release$/, null], // the release's own source, checked against the calendar
 ];
@@ -682,14 +727,114 @@ function checkInvariant(label: string, rec: Recorded, r: ToolReply): void {
       const own = entries.filter((x) => (x.source as JsonObject).publisher === it.publisher);
       expect(own.length, `${where}: publisher ${it.publisher} is that source's`).toBeGreaterThan(0);
       const urls = new Set(own.map((x) => String(x.upstreamUrl ?? (x.source as JsonObject).url ?? "")));
-      if (/^(NWS alert|earthquake)$/.test(it.fact)) for (const x of (d.items as JsonObject[]) ?? []) if (x.title === it.value && typeof x.url === "string") urls.add(x.url);
       expect(urls.has(it.upstreamUrl), `${where}: upstreamUrl ${it.upstreamUrl} is one of ${[...urls].join(" | ")}`).toBe(true);
+      // an event's record is the event itself, as the live list gives it
+      if (/^(NWS alert|earthquake)$/.test(it.fact)) expect(((d.items as JsonObject[]) ?? []).some((x) => x.title === it.value && x.url === it.upstreamRecordUrl), `${where}: record is the event's own URL`).toBe(true);
     }
     // (2) that route does not list the source as missing or failed
     expect(namedMissing(route.body).has(it.sourceId), `${where}: listed missing by ${it.link}`).toBe(false);
     // (3) a 0 only where the route itself says the answer is complete
     if (it.value === 0) expect(zeroIsComplete(it.fact, route.body), `${where}: a 0 the route does not vouch for`).toBeNull();
+    // (4) a record-level URL is on the cited publisher's own host and names this record; an item without one says so
+    if (it.upstreamRecordUrl) checkRecordUrl(where, it, r);
+    else expect(it.note, `${where}: says it has no record-level URL`).toMatch(/no record-level URL: \S/);
+    // (5) about-eye is exactly the catalogue's own claims
+    expect(it.kind === "about-eye", `${where}: about-eye iff cited to eye's catalogue`).toBe(it.sourceId === "eye-catalog");
+    if (it.kind === "about-eye") expect(it.upstreamRecordUrl, `${where}: eye's own claim has no publisher record`).toBeUndefined();
   }
+}
+
+/**
+ * Each source's own host, written here independently of world.ts: a record URL on any other host
+ * cites a different publisher than the item does (the borrowed-citation bug, one level down).
+ */
+const RECORD_HOSTS: Record<string, RegExp> = {
+  "census-tigerweb": /^https:\/\/tigerweb\.geo\.census\.gov\/arcgis\/rest\/services\//,
+  "nws-api": /^https:\/\/api\.weather\.gov\//,
+  "usgs-wbd": /^https:\/\/hydro\.nationalmap\.gov\//,
+  "fema-nfhl": /^https:\/\/hazards\.fema\.gov\//,
+  "epa-ecoregions": /^https:\/\/geodata\.epa\.gov\//,
+  "usgs-epqs": /^https:\/\/epqs\.nationalmap\.gov\//,
+  "fema-nri": /^https:\/\/services\.arcgis\.com\/XG15cJAlne2vxtgt\/arcgis\/rest\/services\/National_Risk_Index_Counties\//,
+  "fema-openfema": /^https:\/\/www\.fema\.gov\/api\/open\//,
+  usdm: /^https:\/\/usdmdataservices\.unl\.edu\//,
+  "usgs-earthquakes": /^https:\/\/earthquake\.usgs\.gov\//,
+  "bls-qcew": /^https:\/\/data\.bls\.gov\/cew\//,
+  "cdc-svi": /^https:\/\/services3\.arcgis\.com\/ZvidGQkLaDJxRSJ2\//,
+  "hifld-hospitals": /^https:\/\/services\.arcgis\.com\/XG15cJAlne2vxtgt\/arcgis\/rest\/services\/Hospitals_RAPT\//,
+  "cms-provider-data": /^https:\/\/data\.cms\.gov\/provider-data\//,
+  "usace-nid": /^https:\/\/geospatial\.sec\.usace\.army\.mil\//,
+  "sec-edgar": /^https:\/\/data\.sec\.gov\//,
+  "epa-cws-boundaries": /^https:\/\/services\.arcgis\.com\/cJ9YHowT8TU7DUyn\/arcgis\/rest\/services\/Water_System_Boundaries\//,
+  "epa-ucmr5-pat": /^https:\/\/services\.arcgis\.com\/cJ9YHowT8TU7DUyn\/arcgis\/rest\/services\/PFAS_Analytic_Tools_Layers\//,
+};
+
+/** The point a fabric item was read at: the lon and lat of its own link. */
+function linkPoint(link: string): [string, string] {
+  const qs = new URLSearchParams(link.split("?")[1] ?? "");
+  return [qs.get("lon") ?? "?", qs.get("lat") ?? "?"];
+}
+
+/** What a record URL must contain to be this record's: its id, written here from the item, not from world.ts. */
+function recordIds(it: WorldItem, r: ToolReply): string[] {
+  const place = r.payload.place as { countyFips: string | null };
+  const cf = place.countyFips ?? "?";
+  const code = it.code ?? "";
+  switch (it.sourceId) {
+    case "census-tigerweb":
+      return [`GEOID%3D'${code}'`];
+    case "nws-api":
+    case "usgs-epqs":
+    case "fema-nfhl": {
+      const [lon, lat] = linkPoint(it.link);
+      if (it.fact === "NFIP community") return [`CID%3D'${code}'`];
+      if (it.sourceId === "nws-api") return [`/points/${Number(lat).toFixed(4)},${Number(lon).toFixed(4)}`];
+      return it.sourceId === "usgs-epqs" ? [`x=${lon}&y=${lat}`] : [`geometry=${lon},${lat}`];
+    }
+    case "usgs-wbd":
+      return [`huc12%3D'${code}'`];
+    case "epa-ecoregions":
+      return [`US_L3CODE%3D'${code}'`];
+    case "fema-nri":
+    case "cdc-svi":
+      return [`'${cf}'`];
+    case "fema-openfema":
+      return it.fact === "FEMA declaration" ? [`disasterNumber%20eq%20${code.replace(/^[A-Z]+-/, "")}`] : [`fipsStateCode%20eq%20'${cf.slice(0, 2)}'`, `fipsCountyCode%20eq%20'${cf.slice(2)}'`];
+    case "usdm": {
+      const [y, m, d] = String(it.period).split("-");
+      return [`aoi=${cf}`, `startdate=${Number(m)}/${Number(d)}/${y}`];
+    }
+    case "bls-qcew": {
+      const [y, q2] = String(it.period).split(" Q");
+      return [`/${y}/${q2}/area/`];
+    }
+    case "hifld-hospitals":
+      return [`ID%3D'${code.replace(/^hifld-hosp:/, "")}'`];
+    case "cms-provider-data":
+      return [`=${code}&`];
+    case "usace-nid":
+      return [`NIDID%3D'${code.replace(/^nid:/, "")}'`];
+    case "sec-edgar":
+      return [`CIK${code.replace(/^CIK /, "").padStart(10, "0")}.json`];
+    case "epa-cws-boundaries":
+      return [`PWSID%3D'${code}'`];
+    case "epa-ucmr5-pat": {
+      const c = it.fact.replace(/^UCMR 5 highest single result: /, "");
+      return [`F_PWS_ID%3D'${code}'`, ...(c !== it.fact ? [`Contaminant%3D'${encodeURIComponent(c)}'`] : [])];
+    }
+    default:
+      return [];
+  }
+}
+
+function checkRecordUrl(where: string, it: WorldItem, r: ToolReply): void {
+  const host = RECORD_HOSTS[it.sourceId];
+  expect(host, `${where}: a source with a known record host`).toBeDefined();
+  expect(it.upstreamRecordUrl, `${where}: on the publisher's host`).toMatch(host);
+  if (/^(NWS alert|earthquake)$/.test(it.fact)) return; // the event's own URL, checked against the live list in (1b)
+  const ids = recordIds(it, r);
+  expect(ids.length, `${where}: an id rule`).toBeGreaterThan(0);
+  for (const id of ids) expect(it.upstreamRecordUrl, `${where}: names ${id}`).toContain(id);
 }
 
 /** Every (route, source) pair the tool cited in a reply, except the calendar (which cites no provenance of its own). */
@@ -705,7 +850,7 @@ function citedPairs(r: ToolReply): Map<string, Set<string>> {
 
 describe("world_context: invariant over recorded live replies", () => {
   it("has the recorded places", () => {
-    expect(recorded.map(([k]) => k)).toEqual(["austin_pt", "chugach_02063", "ct_09110", "denver_about", "mobile_01097", "nola_smallbox", "ocean_atlantic", "petroleum_30069", "pr_72127", "volusia_alert_pt", "zero_declarations"]);
+    expect(recorded.map(([k]) => k)).toEqual(["austin_pt", "chugach_02063", "collegeville_pa_pt", "ct_09110", "denver_about", "mobile_01097", "nola_smallbox", "ocean_atlantic", "petroleum_30069", "pr_72127", "volusia_alert_pt", "zero_declarations"]);
   });
 
   it("between them the fixtures cite, and so the mutations drop, every source in the fact table", async () => {
@@ -715,7 +860,10 @@ describe("world_context: invariant over recorded live replies", () => {
     expect([...wanted].filter((id) => !dropped.has(id)).sort()).toEqual([]);
     // and the item kinds the earlier rounds could not see
     const all = (await Promise.all(recorded.map(([, rec]) => runRecorded(rec)))).flatMap(allItems);
-    for (const fact of ["NWS alert", "FEMA declarations listed", "collection", "public company (by ticker; names are not copied)", "FEMA flood zone"]) expect(all.map((i) => i.fact), fact).toContain(fact);
+    for (const fact of ["NWS alert", "FEMA declarations listed", "collection", "public company (by ticker; names are not copied)", "FEMA flood zone", "CMS overall hospital star rating", "community water system serving the point (EPA service area)", "UCMR 5 PFAS status of the system", "UCMR 5 highest single result: PFOA"]) expect(all.map((i) => i.fact), fact).toContain(fact);
+    // and, between them, a record-level URL from every source in RECORD_HOSTS (a quake needs one in the past day, which no fixture has)
+    const withRecord = new Set(all.filter((i) => i.upstreamRecordUrl).map((i) => i.sourceId));
+    expect(Object.keys(RECORD_HOSTS).filter((id) => !withRecord.has(id) && id !== "usgs-earthquakes")).toEqual([]);
   });
 
   for (const [label, rec] of recorded) {
@@ -809,7 +957,7 @@ describe("world_context: citations never borrow", () => {
     const live = { ...LIVE, data: { ...LIVE.data, items: [...LIVE.data.items, quake] } };
     const r = await run({ fips: "48453", topics: ["hazards"] }, { "/api/live": live }).reply;
     const hz = topicsOf(r).hazards.items;
-    expect(hz.find((i) => i.fact.startsWith("Severe or Extreme NWS alerts"))).toMatchObject({ value: 1, sourceId: "nws-api", note: expect.stringMatching(/0.25 degrees around the county's representative point .*not the whole county/) });
+    expect(hz.find((i) => i.fact.startsWith("Severe or Extreme NWS alerts"))).toMatchObject({ value: 1, sourceId: "nws-api", note: expect.stringMatching(/0.25 degrees around the county's Census internal point .*not the whole county/) });
     expect(hz.find((i) => i.fact.startsWith("M4.5+ earthquakes"))).toMatchObject({ value: 1, sourceId: "usgs-earthquakes" });
     const r2 = await run({ lon: -97.74, lat: 30.27, topics: ["hazards"] }, { "/api/live": { ...LIVE, data: { ...LIVE.data, unmapped: 2 } } }).reply;
     expect(topicsOf(r2).hazards.items.some((i) => i.fact.startsWith("Severe or Extreme NWS alerts"))).toBe(false);
@@ -942,4 +1090,167 @@ describe("world_context: bad input", () => {
       expect(errorResult(err).structuredContent).toMatchObject({ code: "invalid_arguments", category: "invalid_input", retryable: false });
     });
   }
+});
+
+describe("world_context: a county is centred on Census's internal point", () => {
+  // Ten counties across the table: Mobile (the eval's 11 km case), a CT planning region, Alaska, Puerto Rico, Hawaii.
+  const SAMPLE = ["01097", "09110", "30069", "02063", "72127", "48453", "15003", "06037", "42091", "36061"];
+
+  it("for 10 counties, place.point equals the county table's point and the boxes centre on it, never on the screener's anchor", async () => {
+    for (const fips of SAMPLE) {
+      const c = countyByFips(fips)!;
+      expect(c, fips).toBeTruthy();
+      // The screener answers with an anchor 0.1 degrees away: the tool must not use it.
+      const screen = screenRow({ geoid: fips });
+      (screen.data.rows[0] as { geo: number[] }).geo = [c.lon + 0.1, c.lat + 0.1];
+      const { f, reply } = run({ fips, topics: ["hazards", "institutions", "water"] }, { "/api/screen?kind=county": screen });
+      const r = await reply;
+      const pt = (r.payload.place as { point: JsonObject }).point;
+      expect([pt.lon, pt.lat], fips).toEqual([Math.round(c.lon * 1e4) / 1e4, Math.round(c.lat * 1e4) / 1e4]);
+      expect(pt, fips).toMatchObject({ sourceId: "census-tigerweb", publisher: "U.S. Census Bureau", upstreamRecordUrl: expect.stringContaining(`GEOID%3D'${fips}'`) });
+      expect(pt.upstreamRecordUrl, fips).toMatch(/^https:\/\/tigerweb\.geo\.census\.gov\/arcgis\/rest\/services\/Generalized_ACS2023\/State_County\/MapServer\/13\/query\?.*INTPTLAT,INTPTLON/);
+      expect(f.calls, fips).toContain(`/api/fabric?op=stack&lon=${pt.lon}&lat=${pt.lat}`);
+      const box = (r.payload.place as { searchBox: number[] }).searchBox;
+      expect([(box[0] + box[2]) / 2, (box[1] + box[3]) / 2].map((x) => Math.round(x * 1e3) / 1e3), fips).toEqual([Math.round(c.lon * 1e3) / 1e3, Math.round(c.lat * 1e3) / 1e3]);
+      expect(f.calls.find((x) => x.startsWith("/api/infra?op=hospitals")), fips).toBe(`/api/infra?op=hospitals&bbox=${box.join(",")}`);
+      expect(f.calls, fips).toContain(`/api/water?op=pfas&bbox=${waterBox(pt.lon as number, pt.lat as number).join(",")}&polygons=1`);
+    }
+  });
+
+  it("in every recorded county fixture, Census TIGERweb puts the point inside that county", async () => {
+    const counties = recorded.filter(([, rec]) => typeof rec.input.fips === "string" && String(rec.input.fips).length === 5);
+    expect(counties.length).toBeGreaterThanOrEqual(5);
+    for (const [label, rec] of counties) {
+      const r = await runRecorded(rec);
+      const pt = (r.payload.place as { point: { lon: number; lat: number } }).point;
+      const stack = rec.routes[`/api/fabric?op=stack&lon=${pt.lon}&lat=${pt.lat}`];
+      expect(stack, `${label}: the fabric was recorded at the Census point`).toBeDefined();
+      const county = ((stack.body.data as JsonObject).nodes as JsonObject[]).find((n) => n.kind === "county");
+      expect(county?.code, label).toBe(rec.input.fips);
+    }
+  });
+
+  it("without the county table the county has no point, says why, and no box is searched", async () => {
+    const f = router();
+    const r = await worldContext(toolByName("world_context")!.inputSchema.parse({ fips: "48453", topics: ["institutions"] }) as never, { fetchJson: f.fetchJson });
+    expect((r.payload.place as JsonObject).point).toBeNull();
+    expect(topicsOf(r).identity.missing).toContainEqual({ what: "the county's point", reason: expect.stringMatching(/without eye's county table/) });
+    expect(f.calls.some((c) => c.startsWith("/api/infra"))).toBe(false);
+  });
+});
+
+describe("world_context: water", () => {
+  it("names the system whose EPA service area holds the point, by PWSID, with its UCMR 5 status and detections, each with EPA's record", async () => {
+    const r = await run({ lon: -97.74, lat: 30.27, topics: ["water"] }).reply;
+    const w = topicsOf(r).water.items;
+    expect(w.map((i) => [i.fact, i.value])).toEqual([
+      ["community water system serving the point (EPA service area)", "TX2270001"],
+      ["UCMR 5 PFAS status of the system", "detected"],
+      ["UCMR 5 highest single result: PFOA", 4.1],
+    ]);
+    // The system next door (its polygon does not hold the point) is not named.
+    expect(JSON.stringify(w)).not.toContain("TX2270999");
+    // Water system names are never copied.
+    expect(JSON.stringify(r.payload)).not.toContain("CITY OF EXAMPLE");
+    expect(w[0].upstreamRecordUrl).toBe("https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0/query?where=PWSID%3D'TX2270001'&outFields=*&returnGeometry=false&f=json");
+    expect(w[2].upstreamRecordUrl).toMatch(/PFAS_Analytic_Tools_Layers\/FeatureServer\/1\/query\?where=F_PWS_ID%3D'TX2270001'%20AND%20UCMR_Cycle%3D'UCMR%205%20\(2023-2025\)'%20AND%20Contaminant%3D'PFOA'/);
+    expect(w[1].note).toMatch(/^1 of 2 PFAS at or above/);
+  });
+
+  const water = (over: JsonObject): Record<string, Answer> => ({ "/api/water?op=pfas": { ...WATER, ...over } });
+
+  it("a failed, cut or empty answer is a missing entry with its reason, never a 0 or 'not detected'", async () => {
+    const cases: Array<[string, Record<string, Answer>, RegExp]> = [
+      ["route failed", { "/api/water?op=pfas": { status: 502, body: { error: "EPA 503" } } }, /^HTTP 502: EPA 503$/],
+      ["service areas failed", water({ provenance: WATER.provenance.filter((p) => p.source.id !== "epa-cws-boundaries"), coverage: [{ id: "service-areas", state: "error", count: null }] }), /epa-cws-boundaries: the route sent no provenance/],
+      ["layer error with provenance", water({ coverage: [{ id: "service-areas", state: "error", count: null }] }), /did not answer this time .*unknown, not none/],
+      ["cut at the record limit", water({ coverage: [{ id: "service-areas", state: "partial", count: 2000 }], data: { type: "FeatureCollection", features: [] } }), /hit its record limit/],
+      ["no area holds the point", water({ data: { type: "FeatureCollection", features: [WATER.data.features[1]] } }), /no EPA community water system service area contains the point: .*this is not a 0/],
+    ];
+    for (const [label, over, reason] of cases) {
+      const r = await run({ lon: -97.74, lat: 30.27, topics: ["water"] }, over).reply;
+      const s = topicsOf(r).water;
+      expect(s.items, label).toEqual([]);
+      expect(s.missing!.find((m) => m.what === "community water system serving the point")?.reason, label).toMatch(reason);
+      expect(s.coverageStatus, label).toMatchObject({ status: "partial" });
+    }
+    // Results unknown for the system: the system is named, its PFAS are a missing entry, never "not detected".
+    const f0 = WATER.data.features[0];
+    const unknown = { ...f0, properties: { ...f0.properties, extra: { ...f0.properties.extra, state: "unknown", results: [] } } };
+    const r = await run({ lon: -97.74, lat: 30.27, topics: ["water"] }, water({ data: { type: "FeatureCollection", features: [unknown] } })).reply;
+    expect(topicsOf(r).water.items.map((i) => i.fact)).toEqual(["community water system serving the point (EPA service area)"]);
+    expect(topicsOf(r).water.missing).toContainEqual({ what: "UCMR 5 PFAS results for TX2270001", reason: expect.stringMatching(/unknown, never 'not detected'/) });
+    // UCMR 5 results without EPA's results provenance: no status, a missing entry.
+    const noPat = await run({ lon: -97.74, lat: 30.27, topics: ["water"] }, water({ provenance: WATER.provenance.filter((p) => p.source.id !== "epa-ucmr5-pat") })).reply;
+    expect(topicsOf(noPat).water.items.map((i) => i.fact)).toEqual(["community water system serving the point (EPA service area)"]);
+    expect(topicsOf(noPat).water.missing!.map((m) => m.reason)).toContain("epa-ucmr5-pat: the route sent no provenance for it, so nothing from it is shown");
+  });
+
+  it("a state asks no water route and says why", async () => {
+    const { f, reply } = run({ fips: "48000", topics: ["water"] });
+    const r = await reply;
+    expect(f.calls.some((c) => c.startsWith("/api/water"))).toBe(false);
+    expect(topicsOf(r).water.missing![0].reason).toMatch(/a state has no single water system/);
+  });
+
+  it("Collegeville PA (recorded): the Collegeville-Trappe system by PWSID, PFOA 235 ng/L, every row cited to EPA's own record", async () => {
+    const rec = recorded.find(([k]) => k === "collegeville_pa_pt")![1];
+    const r = await runRecorded(rec);
+    const w = topicsOf(r).water.items;
+    expect(w[0]).toMatchObject({ fact: "community water system serving the point (EPA service area)", value: "PA1460022", sourceId: "epa-cws-boundaries" });
+    expect(w.find((i) => i.fact === "UCMR 5 highest single result: PFOA")).toMatchObject({ value: 235, unit: "ng/L", sourceId: "epa-ucmr5-pat" });
+    expect(w.every((i) => /^https:\/\/services\.arcgis\.com\/cJ9YHowT8TU7DUyn\//.test(i.upstreamRecordUrl ?? ""))).toBe(true);
+    expect(JSON.stringify(r.payload)).not.toMatch(/COLLEGEVILLE TRAPPE/);
+  });
+
+  it("ringsContain: inside, outside, a hole, a multipolygon", () => {
+    expect(ringsContain(sq(0, 0, 1, 1), 0.5, 0.5)).toBe(true);
+    expect(ringsContain(sq(0, 0, 1, 1), 1.5, 0.5)).toBe(false);
+    expect(ringsContain([sq(0, 0, 1, 1)[0], sq(0.25, 0.25, 0.75, 0.75)[0]], 0.5, 0.5)).toBe(false);
+    expect(ringsContain([sq(5, 5, 6, 6), sq(0, 0, 1, 1)], 0.5, 0.5)).toBe(true);
+  });
+});
+
+describe("world_context: release items cite a schedule an agent can fetch, or say it cannot", () => {
+  // Every schedule page the calendar can send, filed by hand: curl -A groundtruth-eval/0.1, 2026-10-18.
+  // A new page fails here until someone checks it and files it.
+  const ANSWERED_200 = [
+    "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
+    "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
+    "https://datatopics.worldbank.org/world-development-indicators/",
+    "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+    "https://wits.worldbank.org/",
+    "https://www.bea.gov/news/schedule",
+    "https://www.census.gov/construction/nrc/index.html",
+    "https://www.census.gov/construction/nrs/index.html",
+    "https://www.census.gov/retail/release_schedule.html",
+    "https://www.eia.gov/petroleum/data.php",
+    "https://www.freddiemac.com/pmms",
+  ];
+  const ANSWERED_403 = [
+    "https://www.bls.gov/schedule/news_release/cewqtr.htm",
+    "https://www.bls.gov/schedule/news_release/empsit.htm",
+    "https://www.bts.gov/ports",
+    "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
+    "https://www.zillow.com/research/data/",
+  ];
+  // Neither 200 nor 403 from this box: a TLS failure (USGS) and a 404 (BEA's motor-vehicles page). No note claims a block for them.
+  const OTHER = ["https://waterdata.usgs.gov/nwis", "https://www.bea.gov/data/consumer-spending/motor-vehicles"];
+
+  it("every scheduleUrl on the calendar has been checked and filed", () => {
+    const urls = [...new Set(RELEASE_CALENDAR.map((e) => e.scheduleUrl).filter((u): u is string => !!u))].sort();
+    expect(urls.filter((u) => ![...ANSWERED_200, ...ANSWERED_403, ...OTHER].includes(u))).toEqual([]);
+  });
+
+  it("a release whose schedule page answered 403 keeps it and says the page blocks automated clients; the others do not", async () => {
+    const all = [...ANSWERED_403, ...ANSWERED_200, ...OTHER];
+    const releases = all.map((u, i) => ({ id: `r${i}`, sourceId: "bls-qcew", title: `R${String(i).padStart(2, "0")}`, window: { nominal: `2026-11-${String(i + 1).padStart(2, "0")}` }, scheduleUrl: u }));
+    const seen: WorldItem[] = [];
+    for (const part of [releases.slice(0, 9), releases.slice(9)]) {
+      const r = await run({ fips: "48453", topics: ["economy", "freshness"], max_records: 10 }, { "/api/releases?op=calendar": { ...CALENDAR, data: { ...CALENDAR.data, releases: part } } }).reply;
+      seen.push(...topicsOf(r).freshness.items);
+    }
+    expect(seen.map((i) => i.upstreamUrl).sort()).toEqual([...all].sort());
+    for (const it of seen) expect(String(it.note).includes(SCHEDULE_BLOCKED_NOTE), it.upstreamUrl).toBe(ANSWERED_403.includes(it.upstreamUrl));
+  });
 });
