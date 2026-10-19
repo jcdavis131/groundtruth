@@ -25,7 +25,7 @@
     "ml:forecast": "python3 ml/multitower/forecast.py"
   },
   "dependencies": {
-    "@base-ui/react": "^1.8.0",
+    "@base-ui/react": "^1.9.0",
     "@elevenlabs/client": "^1.25.0",
     "@modelcontextprotocol/sdk": "^1.30.0",
     "@resvg/resvg-wasm": "2.6.2",
