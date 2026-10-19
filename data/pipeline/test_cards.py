@@ -36,8 +36,9 @@ def eye_feature(owner_type, owner_types=None, name="Bardwell Dam"):
 class DamNameRuleTest(unittest.TestCase):
     def test_public_owner_types_keep_the_name(self):
         for t in ["Federal", "State", "Local Government", "Public Utility", "Tribal Government"]:
-            self.assertEqual(cards.dam_name_rule({"owner type": t}), "public-name", t)
             self.assertEqual(cards.dam_name_rule({"owner type": t, "owner types": t}), "public-name", t)
+            # No owner-types list (a stale tile, or eye before it asked NID for it) can't show every owner is public.
+            self.assertEqual(cards.dam_name_rule({"owner type": t}), "label-by-id", t)
         self.assertEqual(cards.dam_name_rule({"owner type": "State", "owner types": "Local Government, State"}), "public-name")
 
     def test_non_answers_and_private_are_labelled_by_id(self):

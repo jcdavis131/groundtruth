@@ -76,17 +76,18 @@ def dam_name_rule(details: dict) -> str:
     Private, Not Listed, a missing or empty owner type and any other value are labelled by NID id ("Dam TX00028"):
     a non-answer is unknown, not public.
 
-    eye's answers before it requested OWNER_TYPES carry no "owner types" key; then only the primary type decides,
-    and a dam that is Private only in its list is not seen (34 named dams in Texas, NID 2026-10-18). Once eye
-    serves the key, an empty or non-public list labels the dam by id; a dam eye labels by id is never public-name
-    (build.to_record)."""
+    An answer with no "owner types" key (eye before it requested OWNER_TYPES, or a stale cached tile) can't show
+    that every owner is public: 34 named Texas dams are Private only in that list (NID 2026-10-18). So it fails
+    closed too and labels the dam by id; refetching the tile from an eye that serves the key brings the name
+    back. A dam eye labels by id is never public-name (build.to_record)."""
     primary = str(details.get("owner type") or "").strip().lower()
     if primary not in DAM_NAMED_OWNER_TYPES:
         return "label-by-id"
-    if "owner types" in details:
-        entries = [e.strip().lower() for e in str(details.get("owner types") or "").split(",")]
-        if not all(e in DAM_NAMED_OWNER_TYPES for e in entries):
-            return "label-by-id"
+    if "owner types" not in details:
+        return "label-by-id"
+    entries = [e.strip().lower() for e in str(details.get("owner types") or "").split(",")]
+    if not all(e in DAM_NAMED_OWNER_TYPES for e in entries):
+        return "label-by-id"
     return "public-name"
 
 
