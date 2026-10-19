@@ -218,7 +218,8 @@ async function fetchAircraft(ctx: FetchContext): Promise<FetchResult> {
         if (f && !features.has(f.properties.id)) features.set(f.properties.id, f);
       }
       sources.push(env.source);
-      loaded = ctx.view.bbox && !global ? ctx.view.bbox : [-180, -90, 180, 90];
+      // A 200 with no state vectors (states: null) loaded nothing, so it draws no box rather than "loaded, none".
+      if (Array.isArray(env.data.states)) loaded = ctx.view.bbox && !global ? ctx.view.bbox : [-180, -90, 180, 90];
       if (env.data.rateRemaining != null) {
         meta = { openskyCreditsRemaining: env.data.rateRemaining };
         note = `OpenSky credits left today: ${env.data.rateRemaining}`;

@@ -49,9 +49,14 @@ async function fetchCompanies(ctx: FetchContext): Promise<FetchResult> {
   const notes: string[] = [`${features.length} headquarters in view`];
   if (e.capped) notes.push("capped at 2,000, largest by revenue kept");
   notes.push(e.pulled ? `snapshot ${e.pulled}` : "fixture snapshot; run scripts/companies-data.mjs for the full universe and facts");
+  // The box the headquarters were loaded for. A capped answer kept only the largest, so it is a floor there;
+  // a bundle with no pull date is the hand-checked fixture, not the EDGAR universe, so its count is never a total.
+  const left = {
+    ...(e.capped ? { truncated: true } : {}),
+    ...(e.pulled ? {} : { missing: ["the full EDGAR universe (this is the bundled 25-company fixture)"] }),
+  };
   return {
-    // The box the headquarters were loaded for; a capped answer kept only the largest, so it is a floor there.
-    collection: { type: "FeatureCollection", features: [...features, civicLoadedBox("companies", answeredBox(env, asked), "company headquarters", e.capped ? { truncated: true } : undefined)] },
+    collection: { type: "FeatureCollection", features: [...features, civicLoadedBox("companies", answeredBox(env, asked), "company headquarters", left)] },
     source: "SEC EDGAR",
     fetchedAt: ctx.now,
     note: notes.join(" · "),
