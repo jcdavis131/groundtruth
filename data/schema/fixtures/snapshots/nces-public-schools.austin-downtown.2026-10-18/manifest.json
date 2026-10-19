@@ -61,5 +61,16 @@
       "bytes": 4405,
       "records": 2
     }
-  ]
+  ],
+  "embeddableFields": [
+    "level",
+    "type",
+    "charter",
+    "virtual",
+    "status",
+    "locale",
+    "grades",
+    "county"
+  ],
+  "embeddableName": "when-nameRule-public-name"
 }

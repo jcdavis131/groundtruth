@@ -90,7 +90,7 @@ The day is the UTC date of `createdAt`. The commit that built it is in `builder.
 
 A snapshot is a folder holding `manifest.json` and the record files it lists. The fixtures use `records.jsonl`: records sorted by `id`, one JSON object per line, LF line endings, UTF-8. The pipeline's snapshots use `records.parquet` (GeoParquet; its columns are in [PIPELINE.md](PIPELINE.md)), and their folders live in the data root, outside git, with a copy of each manifest committed under `data/manifests/`.
 
-The `geoparquet` format, the `point-in-polygon` rule and the `region` request purpose were added to `manifest/1` on 2026-10-18 without a version bump, because each one only widens an enum (`files[].format`, `region.rule`, `requests[].purpose`) and every manifest that was valid before is still valid.
+The `geoparquet` format, the `point-in-polygon` rule and the `region` request purpose were added to `manifest/1` on 2026-10-18 without a version bump, because each one only widens an enum (`files[].format`, `region.rule`, `requests[].purpose`) and every manifest that was valid before is still valid. The optional `embeddableFields` and `embeddableName` were added on 2026-10-19 under the same rule: a manifest without them is still valid. Every snapshot this repo holds carries them, and `validate.test.mjs` fails if one doesn't.
 
 ### The manifest
 
@@ -109,6 +109,21 @@ The `geoparquet` format, the `point-in-polygon` rule and the `region` request pu
 | `publisherCount` | yes | The publisher's own count for the region: `value`, `method` (how it was asked for, in words), `url` and `countedAt`. When `value` differs from `recordCount`, `gap` is required and names the rows that aren't records and why. |
 | `files` | yes | Each file: `path` (relative, inside the snapshot folder), `format` (`jsonl`, or `geoparquet` for the files `data/pipeline` writes), `sha256` (64 lowercase hex characters), `bytes` and `records`. |
 | `withheldFields` | no | Source fields left out, each with `field` and `why`. Absent when none are withheld. |
+| `embeddableFields` | no | The `details` keys eye agrees to embed for this collection, in eye's order. Derived, never written by hand: see [What may be embedded](#what-may-be-embedded). Present together with `embeddableName`. |
+| `embeddableName` | no | When a record's `name` may be embedded: `when-nameRule-public-name` (only a record whose `nameRule` is `public-name`) or `never`. Derived from eye's `PUBLIC_NAME_RULE`. |
+
+### What may be embedded
+
+**Embed or train on a record's `text`, the `details` keys its manifest lists in `embeddableFields`, and its `name` only where `embeddableName` allows it. Everything else in `details` is for display and citation.** `details` holds what eye shows when you click a record, and that is more than eye searches or embeds: a school's street `address`, enrollment and lunch counts, a dam's river and owner type, ids like the NID id or NRIS refnum. A trainer reading `details` whole would embed what eye never does.
+
+Both fields come from eye's own rules in `apps/map/lib/catalog/embedFields.ts`, through `data/schema/embeddable.mjs`:
+
+- `EMBED_TEXT` names the upstream fields a card embeds (`PRIMARY_PURPOSE`); a snapshot's `details` uses eye's display keys (`primary purpose`). `DETAILS_KEY` in `embeddable.mjs` says which key carries each field, read from the builder (`lib/infra/features.ts`, `lib/civic/schools.ts`, `lib/land/features.ts`). A field no key carries alone maps to nothing: a school's `LCITY` and `LSTATE` are only inside `address`, which also holds the street, so `address` stays out and the city and state reach a model through `text`. NCES's `GSLO` and `GSHI` share `grades`. Every key must also pass eye's `embeddableField` (the deny list, `published name`, unreviewed `*name` fields).
+- `PUBLIC_NAME_RULE` is per record, so it isn't a `details` key. A record's allowed name is in `name`, never in `details` (a dam's `published name` is withheld on every dam), and `nameRule` says per record whether it is a published name. `embeddableName` is `when-nameRule-public-name` for a collection in `PUBLIC_NAME_RULE` (dams and schools here) and `never` otherwise (NRHP). So a private dam, labelled `Dam TX00028` with `nameRule` `label-by-id`, gives no name to embed.
+
+The builders call it: `data/pipeline/build.py` and `schema/fixtures/build-fixtures.mjs` add both fields to each manifest. `node data/schema/embeddable.mjs --backfill <manifest.json> ...` writes them into an existing manifest and changes nothing else; it filled in the three Texas snapshots of 2026-10-19 and the fixtures. Only the committed copies were filled in: the `manifest.json` next to each snapshot's files in the data root is the one the build wrote, and nothing compares the two. Run the same command on it to bring it level.
+
+When eye changes `EMBED_TEXT` for a snapshot collection, `embeddable.mjs` refuses until `DETAILS_KEY` is reviewed, and `validate.mjs` fails every manifest whose lists no longer match (code `embeddable`). Rebuilding or backfilling the manifests fixes it. A collection without a `DETAILS_KEY` table can't be built yet.
 
 ### Checks beyond the schema
 
@@ -122,6 +137,7 @@ The `geoparquet` format, the `point-in-polygon` rule and the `region` request pu
 - `time`: the record was retrieved after its snapshot's day.
 - `public-name`: `nameRule` is `public-name` on a collection with no public-name rule, or on a record whose `name` is in its collection's label-by-id form (`Dam TX00028`, `<designation> · PAD-US 12345`).
 - `withheld`: a record carries a detail its collection always withholds (`published name` on `nid-dams` and `padus-units`).
+- `embeddable`: a manifest's `embeddableFields` or `embeddableName` differs from what `embeddable.mjs` derives from eye's `embedFields.ts`, or only one of the two is there.
 - `bbox`: the box isn't west < east and south < north.
 - `count`: `recordCount` doesn't match the files.
 - `gap`: the counts differ and `gap` doesn't say why.

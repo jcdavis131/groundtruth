@@ -4995,5 +4995,14 @@
       "field": "property name (as NPS lists it)",
       "why": "NPS's RESNAME can be a person's name (eye's nrhp-listed card: never searched or embedded); a training snapshot leaves it out"
     }
-  ]
+  ],
+  "embeddableFields": [
+    "resource type",
+    "national historic landmark",
+    "listed",
+    "city",
+    "county",
+    "state"
+  ],
+  "embeddableName": "never"
 }

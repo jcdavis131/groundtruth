@@ -8,7 +8,8 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CASES, build, fileOf } from "./fixtures/make-invalid.mjs";
-import { MANIFEST_SCHEMA, RECORD_SCHEMA, damOwnerProblem, schemaErrors, validateManifest, validateRecord, verifyFiles } from "./validate.mjs";
+import { DETAILS_KEY, embeddableFor, withEmbeddable } from "./embeddable.mjs";
+import { MANIFEST_SCHEMA, PUBLIC_NAME_COLLECTIONS, RECORD_SCHEMA, damOwnerProblem, schemaErrors, validateManifest, validateRecord, verifyFiles } from "./validate.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const FIX = path.join(HERE, "fixtures");
@@ -164,6 +165,71 @@ const polyRegion = { ...m0.region, rule: "point-in-polygon" };
 check(validateManifest({ ...m0, region: polyRegion }).length === 0, "region rule point-in-polygon is accepted");
 check(validateManifest({ ...m0, requests: [...m0.requests, { ...m0.requests[0], purpose: "region" }] }).length === 0, "request purpose region is accepted");
 check(validateManifest({ ...m0, region: { ...m0.region, rule: "inside-texas" } }).some((e) => e.code === "enum"), "an unknown region rule fails with enum");
+
+// embeddableFields and embeddableName: derived from eye's embedFields.ts, carried by every snapshot this repo
+// holds, and failing on drift. A manifest from before 2026-10-19 without them is still manifest/1 valid.
+const committed = path.join(HERE, "..", "manifests");
+const holders = [
+  ...snaps.map((s) => path.join(FIX, "snapshots", s, "manifest.json")),
+  ...readdirSync(committed).flatMap((c) => list(path.join(committed, c)).map((f) => path.join(committed, c, f))),
+];
+check(holders.length >= 6, `at least 6 manifests carry the embeddable fields (${holders.length})`);
+for (const p of holders) {
+  const m = json(p);
+  const rel = path.relative(path.join(HERE, "..", ".."), p).replaceAll("\\", "/");
+  let want = null;
+  try {
+    want = embeddableFor(m.collection);
+  } catch (e) {
+    check(false, `${rel}: eye's embedFields.ts derives its embeddable fields`, e.message);
+    continue;
+  }
+  check(JSON.stringify(m.embeddableFields) === JSON.stringify(want.embeddableFields), `${rel} embeddableFields match embedFields.ts`, `has ${JSON.stringify(m.embeddableFields)}, derived ${JSON.stringify(want.embeddableFields)}`);
+  check(m.embeddableName === want.embeddableName, `${rel} embeddableName matches PUBLIC_NAME_RULE`, `has ${JSON.stringify(m.embeddableName)}, derived ${want.embeddableName}`);
+  check(readFileSync(p, "utf8") === withEmbeddable(readFileSync(p, "utf8")), `${rel} is what embeddable.mjs --backfill writes`);
+}
+const { embeddableFields: _f, embeddableName: _n, ...bare } = m0;
+check(validateManifest(bare).length === 0, "a manifest without embeddableFields and embeddableName is still valid manifest/1");
+check(validateManifest({ ...bare, embeddableFields: m0.embeddableFields }).some((e) => e.code === "embeddable"), "embeddableFields without embeddableName fails with embeddable");
+check(
+  validateManifest({ ...m0, embeddableFields: [...m0.embeddableFields].reverse() }).some((e) => e.code === "embeddable" && e.path === "/embeddableFields"),
+  "embeddableFields in another order than EMBED_TEXT's fails with embeddable",
+);
+
+// Every EMBED_TEXT field of a snapshot collection is mapped, every derived key is a key the builder writes, and
+// what may never be embedded (the street address, owners, published names, ids) never is.
+const fixtureDetails = {};
+for (const f of validRecords) {
+  const r = json(path.join(FIX, "record", "valid", f));
+  (fixtureDetails[r.collection] ??= new Set());
+  for (const k of Object.keys(r.details)) fixtureDetails[r.collection].add(k);
+}
+for (const c of Object.keys(DETAILS_KEY)) {
+  let derived;
+  try {
+    derived = embeddableFor(c);
+  } catch (e) {
+    check(false, `${c}: DETAILS_KEY covers eye's EMBED_TEXT`, e.message);
+    continue;
+  }
+  const { embeddableFields: keys, embeddableName: rule } = derived;
+  check(keys.length > 0, `${c}: at least one details key is embeddable`);
+  for (const k of ["address", "owner type", "owner types", "published name", "property name (as NPS lists it)", "NID id", "NCES school id", "nris refnum", "district"])
+    check(!keys.includes(k), `${c}: ${JSON.stringify(k)} is never embeddable`);
+  if (fixtureDetails[c]) {
+    const unseen = keys.filter((k) => !fixtureDetails[c].has(k) && k !== "national historic landmark" && k !== "condition assessment");
+    check(unseen.length === 0, `${c}: every embeddable key appears in a valid record fixture's details`, `not seen: ${unseen.join(", ")}`);
+  }
+  check((rule === "when-nameRule-public-name") === PUBLIC_NAME_COLLECTIONS.has(c), `${c}: embeddableName agrees with validate.mjs's public-name list`);
+}
+check(Object.keys(DETAILS_KEY).sort().join() === ["nces-public-schools", "nid-dams", "nrhp-listed"].join(), "DETAILS_KEY covers the collections data/pipeline/cards.py builds");
+let bit = null;
+try {
+  embeddableFor("hifld-hospitals");
+} catch (e) {
+  bit = e.message;
+}
+check(bit !== null && /DETAILS_KEY/.test(bit), "a collection with no DETAILS_KEY table can't be given embeddable fields", bit ?? "no error");
 
 // The evaluator refuses keywords it does not implement, so a schema can't claim more than is checked.
 let threw = false;

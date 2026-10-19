@@ -98,6 +98,20 @@ export const CASES = {
     { name: "count-gap-unexplained", base: MANIFEST, expect: { code: "gap", path: "/publisherCount/gap" }, mutate: (m) => void delete m.publisherCount.gap },
     { name: "bbox-inverted", base: MANIFEST, expect: { code: "bbox", path: "/region/bbox" }, mutate: (m) => void ([m.region.bbox[0], m.region.bbox[2]] = [m.region.bbox[2], m.region.bbox[0]]) },
     { name: "missing-publisher-count", base: MANIFEST, expect: { code: "required", path: "/publisherCount" }, mutate: (m) => void delete m.publisherCount },
+    // embeddableFields drifted from eye's EMBED_TEXT: an NRHP listing's refnum is an id, matched by letters, never embedded.
+    {
+      name: "embeddable-fields-drift",
+      base: MANIFEST,
+      expect: { code: "embeddable", path: "/embeddableFields" },
+      mutate: (m) => void m.embeddableFields.push("nris refnum"),
+    },
+    // An NRHP property's name can be a person's: PUBLIC_NAME_RULE has no nrhp-listed entry, so its name is never embedded.
+    {
+      name: "embeddable-name-not-allowed",
+      base: MANIFEST,
+      expect: { code: "embeddable", path: "/embeddableName" },
+      mutate: (m) => void (m.embeddableName = "when-nameRule-public-name"),
+    },
   ],
 };
 

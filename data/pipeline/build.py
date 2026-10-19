@@ -44,7 +44,8 @@ from net import Fetcher, sha256, utc_now
 VERSION = "0.1.0"
 REPO = Path(__file__).resolve().parents[2]
 VALIDATE = REPO / "data" / "schema" / "validate.mjs"
-PINNED = ["data/pipeline", "data/schema", "data/pyproject.toml"]
+EMBEDDABLE = REPO / "data" / "schema" / "embeddable.mjs"
+PINNED = ["data/pipeline", "data/schema", "data/pyproject.toml", "apps/map/lib/catalog/embedFields.ts"]
 
 
 def log(msg: str) -> None:
@@ -57,6 +58,15 @@ def git(*args: str) -> str:
 
 def node(*args: str) -> subprocess.CompletedProcess:
     return subprocess.run(["node", str(VALIDATE), *args], capture_output=True, text=True, encoding="utf8")
+
+
+def embeddable(collection: str) -> dict:
+    """{embeddableFields, embeddableName}: derived by data/schema/embeddable.mjs from eye's EMBED_TEXT and
+    PUBLIC_NAME_RULE (apps/map/lib/catalog/embedFields.ts), never written here."""
+    v = subprocess.run(["node", "--no-warnings", str(EMBEDDABLE), collection], capture_output=True, text=True, encoding="utf8")
+    if v.returncode != 0:
+        raise SystemExit(f"{collection}: embeddable fields can't be derived:\n{v.stdout}{v.stderr}")
+    return json.loads(v.stdout)
 
 
 # ---------------------------------------------------------------- fetch
@@ -398,6 +408,7 @@ def build(collection: str, region: dict, data_root: Path, manifests: Path, git_s
         "publisherCount": publisher_count,
         "files": [{"path": "records.parquet", "format": "geoparquet", "sha256": sha256(pq_bytes), "bytes": len(pq_bytes), "records": len(records)}],
         **({"withheldFields": withheld_fields(cfg, relabelled)} if cfg["withheld"] else {}),
+        **embeddable(collection),
     }
     text = dump_manifest(manifest)
     (folder / "manifest.json").write_bytes(text.encode("utf8"))

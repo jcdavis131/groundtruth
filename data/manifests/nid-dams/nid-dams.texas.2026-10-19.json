@@ -104,5 +104,15 @@
       "field": "published name",
       "why": "NID's NAME on a privately owned dam can be its owner's name ('<Surname> Pond Dam'); eye shows it on click but never searches or embeds it, labels the dam by NID id, and a training snapshot leaves it out. The same holds for a dam whose owner type is Not Listed, missing or any value other than Federal, State, Local Government, Public Utility or Tribal Government (a non-answer is unknown, not public). A dam whose name is allowed carries it in name."
     }
-  ]
+  ],
+  "embeddableFields": [
+    "primary purpose",
+    "dam type",
+    "hazard potential",
+    "condition assessment",
+    "county",
+    "state",
+    "year completed"
+  ],
+  "embeddableName": "when-nameRule-public-name"
 }
