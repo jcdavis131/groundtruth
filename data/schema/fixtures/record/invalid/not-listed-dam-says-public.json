@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "record/1",
+  "id": "nid:TX00001",
+  "collection": "nid-dams",
+  "layer": "dams",
+  "name": "Bardwell Dam",
+  "nameRule": "public-name",
+  "kind": "high",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -96.64138091788206,
+      32.25097992504292
+    ]
+  },
+  "place": {
+    "stateFips": "48",
+    "stateUsps": "TX",
+    "method": "name-lookup"
+  },
+  "details": {
+    "NID id": "TX00001",
+    "hazard potential": "High",
+    "what hazard potential means": "the damage a failure would cause downstream (High: loss of life likely), not the dam's condition or how likely it is to fail",
+    "primary purpose": "Flood Risk Reduction",
+    "purposes": "Fish and Wildlife Pond, Flood Risk Reduction, Recreation, Water Supply",
+    "dam type": "Earth",
+    "NID height": "82 ft",
+    "NID storage": "317,483 acre-ft",
+    "surface area": "3,570 acres",
+    "drainage area": "178 sq mi",
+    "year completed": 1965,
+    "river or stream": "Waxahachie Creek",
+    "county": "Ellis, Texas",
+    "state": "Texas",
+    "owner type": "Not Listed",
+    "emergency action plan": "Yes",
+    "operational status": "Normal Operations",
+    "NID record updated": "2026-09-17"
+  },
+  "text": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Bardwell Dam; county: Ellis, Texas; state: Texas; dam purpose: Flood Risk Reduction; dam type: Earth; hazard potential: High; year completed: 1965",
+  "provenance": {
+    "sourceId": "usace-nid",
+    "sourceName": "National Inventory of Dams (public service)",
+    "publisher": "U.S. Army Corps of Engineers",
+    "licence": "public domain",
+    "seriesId": "National_Inventory_of_Dams_Public_Service FeatureServer layer 0",
+    "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+    "retrievedAt": "2026-10-18T23:07:35.318Z",
+    "kind": "published",
+    "revision": "NID is updated continuously by the states and federal agencies; each record carries its own update date",
+    "notes": [
+      "bbox -97.75,31.75,-96.25,33.25"
+    ]
+  },
+  "snapshotId": "nid-dams.texas.2026-10-19"
+}

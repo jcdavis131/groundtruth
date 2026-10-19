@@ -2,6 +2,7 @@
 //
 //   node data/schema/validate.mjs record <file.json | file.jsonl> ...
 //   node data/schema/validate.mjs manifest <manifest.json> ...   (also checks the files it lists, next to it)
+//   node data/schema/validate.mjs manifest --no-files <manifest.json> ...   (the manifest alone)
 //
 // Two layers of checks:
 //   1. The JSON Schema in record.schema.json / manifest.schema.json, read by a small evaluator for the subset
@@ -9,8 +10,9 @@
 //      maxLength, minimum, maximum, items, prefixItems, minItems, maxItems, allOf, if/then and local $ref.
 //      Any other keyword in a schema is an error, so the schema can't quietly say more than this checks.
 //   2. Rules JSON Schema can't say (data/SCHEMA.md, "Checks beyond the schema"): no placeholder values, closed
-//      polygon rings, state and county codes that agree, the snapshot id's parts, the public-name list, the
-//      count gap, and the listed files' bytes, sha256 and record counts.
+//      polygon rings, state and county codes that agree, the snapshot id's parts, the public-name list, no
+//      public-name on a name in label-by-id form, a dam's public-name only under public owner types, no name segment
+//      in a label-by-id record's text, no withheld detail (a dam's published name), the count gap, and the listed files' bytes, sha256 and record counts.
 // Each problem is {code, path, message}. Exit 0 when every input is valid, 1 otherwise.
 
 import { createHash } from "node:crypto";
@@ -115,6 +117,42 @@ const USPS_BY_FIPS = new Map(STATES.map(([f, u]) => [f, u]));
 export const PUBLIC_NAME_COLLECTIONS = new Set(["hifld-hospitals", "nces-public-schools", "nid-dams", "padus-units"]);
 
 /**
+ * The label-by-id form eye gives a record whose name it may not show (lib/infra/features.ts, lib/land/features.ts).
+ * A record whose name has this form is labelled by id, so it can't say public-name.
+ */
+export const LABEL_BY_ID_FORM = {
+  "nid-dams": /^Dam [A-Z]{2}\d+$/, // a private dam, or one with no name: "Dam TX00028"
+  "padus-units": / · PAD-US \d+$/, // a privately owned unit: "<designation> · PAD-US 12345"
+};
+
+/**
+ * The owner types under which a dam may keep its published name (eye's DAM_NAMED_OWNER_TYPES, lib/infra/features.ts):
+ * a public-name dam's "owner type" and every entry of its "owner types" must be one of these. Private, Not Listed,
+ * a missing owner type and anything else are labelled by id.
+ */
+export const DAM_NAMED_OWNER_TYPES = new Set(["federal", "state", "local government", "public utility", "tribal government"]);
+
+function damOwnerProblem(details) {
+  const d = details && typeof details === "object" ? details : {};
+  const primary = typeof d["owner type"] === "string" ? d["owner type"].trim().toLowerCase() : "";
+  if (!DAM_NAMED_OWNER_TYPES.has(primary)) return `owner type ${JSON.stringify(d["owner type"] ?? null)} is not public (Not Listed or missing is unknown, not public)`;
+  if (Object.hasOwn(d, "owner types")) {
+    const bad = String(d["owner types"] ?? "").split(",").map((s) => s.trim().toLowerCase()).filter((e) => !DAM_NAMED_OWNER_TYPES.has(e));
+    if (bad.length) return `owner types ${JSON.stringify(d["owner types"])} include a non-public entry`;
+  }
+  return null;
+}
+
+/**
+ * Detail keys a snapshot never carries: eye shows them on click, but they hold the published name of a record
+ * labelled by id, which can be a person's. The snapshot's manifest lists them under withheldFields.
+ */
+export const WITHHELD_DETAILS = {
+  "nid-dams": ["published name"],
+  "padus-units": ["published name"],
+};
+
+/**
  * Strings that stand in for a missing value. Compared trimmed and case-folded. A publisher's own coded state in
  * its own words ("not reported", "not applicable", "Unknown" as a published category) is a value, not one of these.
  */
@@ -171,6 +209,20 @@ export function validateRecord(r) {
   }
   if (r.nameRule === "public-name" && !PUBLIC_NAME_COLLECTIONS.has(r.collection))
     out.push({ code: "public-name", path: "/nameRule", message: `${r.collection} has no public-name rule; label the record by id` });
+  const form = LABEL_BY_ID_FORM[r.collection];
+  if (r.nameRule === "public-name" && form && typeof r.name === "string" && form.test(r.name))
+    out.push({ code: "public-name", path: "/nameRule", message: `${JSON.stringify(r.name)} is a label by id, so the record's nameRule is label-by-id` });
+  if (r.collection === "nid-dams" && r.nameRule === "public-name") {
+    const why = damOwnerProblem(r.details);
+    if (why) out.push({ code: "public-name", path: "/nameRule", message: `${why}, so the dam is labelled by id` });
+  }
+  // A record labelled by id never carries a name in its record text (eye's "name: <published name>" segment).
+  if (r.nameRule === "label-by-id" && PUBLIC_NAME_COLLECTIONS.has(r.collection) && typeof r.text === "string" && r.text.split("; ").some((s) => s.startsWith("name: ")))
+    out.push({ code: "public-name", path: "/text", message: "a record labelled by id has a name segment in its record text" });
+  if (r.details && typeof r.details === "object")
+    for (const k of WITHHELD_DETAILS[r.collection] ?? [])
+      if (Object.hasOwn(r.details, k))
+        out.push({ code: "withheld", path: `/details/${k}`, message: `${r.collection} never carries ${JSON.stringify(k)}: it can be a person's name; leave it out and list it in the manifest's withheldFields` });
   return out;
 }
 
@@ -217,6 +269,14 @@ export function verifyFiles(m, dir) {
     if (buf.length !== f.bytes) out.push({ code: "file-bytes", path: `/files/${i}/bytes`, message: `${f.path} is ${buf.length} bytes, manifest says ${f.bytes}` });
     const sha = createHash("sha256").update(buf).digest("hex");
     if (sha !== f.sha256) out.push({ code: "file-sha", path: `/files/${i}/sha256`, message: `${f.path} hashes to ${sha}` });
+    if (f.format === "geoparquet") {
+      // Plain Node can't read Parquet, so a GeoParquet file is checked by bytes, sha256 and its PAR1 magic here;
+      // data/pipeline/read.py checks its row count and records when it reads it.
+      const magic = (b) => b.length >= 4 && b.subarray(0, 4).toString("latin1") === "PAR1";
+      if (buf.length < 8 || !magic(buf) || !magic(buf.subarray(buf.length - 4)))
+        out.push({ code: "file-format", path: `/files/${i}/format`, message: `${f.path} is not a Parquet file (no PAR1 magic at both ends)` });
+      return;
+    }
     const lines = buf.toString("utf8").split("\n").filter((l) => l.length);
     if (lines.length !== f.records) out.push({ code: "file-records", path: `/files/${i}/records`, message: `${f.path} holds ${lines.length} records, manifest says ${f.records}` });
     lines.forEach((l, n) => {
@@ -238,9 +298,13 @@ export function verifyFiles(m, dir) {
 // ---------------------------------------------------------------- CLI
 
 function main(argv) {
-  const [what, ...files] = argv;
-  if (!["record", "manifest"].includes(what) || !files.length) {
-    console.log("usage: node data/schema/validate.mjs record|manifest <file> ...");
+  const [what, ...rest] = argv;
+  // --no-files: check a manifest alone, for the committed copies under data/manifests/ whose files live in the
+  // data root, outside git.
+  const noFiles = rest.includes("--no-files");
+  const files = rest.filter((a) => a !== "--no-files");
+  if (!["record", "manifest"].includes(what) || !files.length || (noFiles && what !== "manifest")) {
+    console.log("usage: node data/schema/validate.mjs record <file> ... | manifest [--no-files] <file> ...");
     return 2;
   }
   let bad = 0;
@@ -248,7 +312,7 @@ function main(argv) {
     const text = readFileSync(f, "utf8");
     const docs = f.endsWith(".jsonl") ? text.split("\n").filter(Boolean).map((l) => JSON.parse(l)) : [JSON.parse(text)];
     docs.forEach((d, n) => {
-      const errs = what === "record" ? validateRecord(d) : [...validateManifest(d), ...verifyFiles(d, path.dirname(f))];
+      const errs = what === "record" ? validateRecord(d) : [...validateManifest(d), ...(noFiles ? [] : verifyFiles(d, path.dirname(f)))];
       const label = docs.length > 1 ? `${f}:${n + 1}` : f;
       if (errs.length) bad++;
       console.log(errs.length ? `FAIL  ${label}` : `ok    ${label}`);

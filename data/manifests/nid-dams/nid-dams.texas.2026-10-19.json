@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "manifest/1",
+  "snapshotId": "nid-dams.texas.2026-10-19",
+  "collection": "nid-dams",
+  "region": {
+    "id": "texas",
+    "name": "Texas",
+    "bbox": [
+      -106.6858,
+      25.7901,
+      -93.4809,
+      36.5505
+    ],
+    "rule": "point-in-polygon",
+    "definition": "A record is in when NID's STATE field (eye's details.state) puts it in Texas and its point lies inside, or within 0.05 degrees of, eye's outline state:48 from https://eye.jcamd.com/api/economy?op=areas&level=state (Census TIGERweb, generalised 1:20M; response sha256 e43aaa9eecb50a923507578c16309b9b8199b158ed84e138bbb419c654ddbaa3, retrieved 2026-10-18T23:06:58.575Z). The tolerance covers the generalised coast and river borders; the source's own state field decides between neighbours. bbox is the widened outline's extent. Records came from 46 requests to eye's infra?op=dams: 1.5-degree boxes on eye's 0.25-degree grid that touch the widened outline, each split in four while eye said truncated (0 split), deduplicated by id."
+  },
+  "createdAt": "2026-10-19T02:12:41Z",
+  "builder": {
+    "name": "groundtruth data/pipeline/build.py",
+    "version": "0.1.0",
+    "gitSha": "eee200000774c379ec6cc6f1c4ac0b57f3cf9f70",
+    "repo": "github.com/jcdavis131/groundtruth"
+  },
+  "recordSchemaVersion": "record/1",
+  "sources": [
+    {
+      "sourceId": "usace-nid",
+      "licence": "public domain"
+    }
+  ],
+  "requests": [
+    {"purpose": "region", "url": "https://eye.jcamd.com/api/economy?op=areas&level=state", "status": 200, "retrievedAt": "2026-10-18T23:06:58.575Z", "bytes": 640615, "sha256": "e43aaa9eecb50a923507578c16309b9b8199b158ed84e138bbb419c654ddbaa3"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-106.75,30.25,-105.25,31.75", "status": 200, "retrievedAt": "2026-10-19T02:11:54.410Z", "bytes": 32702, "sha256": "1b4dda477d87d8149ecdb9d428ea5e6572140901f1eb17dfb7fb6a3ccb8c7325"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-106.75,31.75,-105.25,33.25", "status": 200, "retrievedAt": "2026-10-19T02:11:55.413Z", "bytes": 86408, "sha256": "6aa6e4e8eecc72aed39053db620ed1914eb0ca4d72aa9dacdbaff31ec8311005"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-105.25,28.75,-103.75,30.25", "status": 200, "retrievedAt": "2026-10-19T02:11:56.408Z", "bytes": 7505, "sha256": "5d32802a13a5c37945401fb4e3c89e3206a01d94c6f5e3096131ca0628d278d6"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-105.25,30.25,-103.75,31.75", "status": 200, "retrievedAt": "2026-10-19T02:11:57.415Z", "bytes": 14739, "sha256": "67afc5afce51baf8b4920387c9a77dccd7f3dc4be2c3fdccf9358370eb578ab1"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-105.25,31.75,-103.75,33.25", "status": 200, "retrievedAt": "2026-10-19T02:11:58.414Z", "bytes": 35755, "sha256": "a6614d005d380b863755d2915beeea3fd7252ab73d26cdf1888b947269e960f3"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-103.75,28.75,-102.25,30.25", "status": 200, "retrievedAt": "2026-10-19T02:11:59.411Z", "bytes": 22899, "sha256": "cdd7aca6f571cfdc7a5511a78407bc3fc9e0c54ab0ef8505d1020cd1f17c1c6a"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-103.75,30.25,-102.25,31.75", "status": 200, "retrievedAt": "2026-10-19T02:12:00.426Z", "bytes": 16919, "sha256": "701fd3f64ada45800a3dc944bd47f7d7af7726472f658cce3454370ff73a710f"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-103.75,31.75,-102.25,33.25", "status": 200, "retrievedAt": "2026-10-19T02:12:01.421Z", "bytes": 8541, "sha256": "efa27fb3108111d6b99a2b3d7aa6745d67a162757ccbe8bd34f30e1c3f7b60dc"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-103.75,33.25,-102.25,34.75", "status": 200, "retrievedAt": "2026-10-19T02:12:02.423Z", "bytes": 19392, "sha256": "802a5cf0304f1958521612e44f8ccd8f8ace51dc299895f71c441ab2bbaa8eae"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-103.75,34.75,-102.25,36.25", "status": 200, "retrievedAt": "2026-10-19T02:12:03.425Z", "bytes": 54312, "sha256": "50da14baae8fa9da1505c0da197d06260d6818275b0b0948e0fee924b66145e4"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-103.75,36.25,-102.25,37.75", "status": 200, "retrievedAt": "2026-10-19T02:12:04.433Z", "bytes": 22252, "sha256": "6c2269dab1598a37e969a1677e3dba827ff4234e4f5bc9f128b734efeb04afb4"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-102.25,28.75,-100.75,30.25", "status": 200, "retrievedAt": "2026-10-19T02:12:05.428Z", "bytes": 9777, "sha256": "889698bfe621c54fe0087b731a060805d169ed77c15958806846ab849e4bfa4c"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-102.25,30.25,-100.75,31.75", "status": 200, "retrievedAt": "2026-10-19T02:12:06.431Z", "bytes": 12053, "sha256": "37e435e518677dd7fdf0c99fdd413637b475f6730db8a1413aabe590bed1602d"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-102.25,31.75,-100.75,33.25", "status": 200, "retrievedAt": "2026-10-19T02:12:07.430Z", "bytes": 71946, "sha256": "31c2d7bdc6776b2025847725ed2732723a06f520ba0a32b91463091cac567187"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-102.25,33.25,-100.75,34.75", "status": 200, "retrievedAt": "2026-10-19T02:12:08.427Z", "bytes": 144143, "sha256": "90ccac4d49595f47e8c41fd06fbf5bb6835c81ffc9e447b7bdc98bb33b25532c"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-102.25,34.75,-100.75,36.25", "status": 200, "retrievedAt": "2026-10-19T02:12:09.430Z", "bytes": 137480, "sha256": "08583497790128f58f7ed1737b91f8051f8ce49c796cc2108a2cf27237f22f6f"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-102.25,36.25,-100.75,37.75", "status": 200, "retrievedAt": "2026-10-19T02:12:10.424Z", "bytes": 75031, "sha256": "1da90a1bebb0d481cba7472f4f57a70131a6f2c7b9000b70168aa63f95dc1817"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-100.75,25.75,-99.25,27.25", "status": 200, "retrievedAt": "2026-10-19T02:12:11.425Z", "bytes": 18694, "sha256": "8894fdd7f324ab382285f573f47750b04be22d83ac7268813eca1ee7887d3f50"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-100.75,27.25,-99.25,28.75", "status": 200, "retrievedAt": "2026-10-19T02:12:12.424Z", "bytes": 239835, "sha256": "93807abec1c462a1d3c592a7e2e935ea848db40d156e768b18cc00c7c03522c5"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-100.75,28.75,-99.25,30.25", "status": 200, "retrievedAt": "2026-10-19T02:12:13.434Z", "bytes": 184139, "sha256": "da8f70c217d6e6602fca550ec145b2b9a4d218bb5c0ebaf3f1da8200f2d63914"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-100.75,30.25,-99.25,31.75", "status": 200, "retrievedAt": "2026-10-19T02:12:14.441Z", "bytes": 240991, "sha256": "a2edff67f51b23116e6c7aa0088a95824dfbdec3cf9130497c54c33e11ee37c0"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-100.75,31.75,-99.25,33.25", "status": 200, "retrievedAt": "2026-10-19T02:12:15.451Z", "bytes": 294970, "sha256": "2a8267f70d0e34664b7a4661f839c7346ffd5365d844eb817fe29c55d6d75ce3"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-100.75,33.25,-99.25,34.75", "status": 200, "retrievedAt": "2026-10-19T02:12:16.452Z", "bytes": 190294, "sha256": "aa61601761f9edea6a8098137246daafa4e39f262e44d5170eb4d818a6c5d445"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-100.75,34.75,-99.25,36.25", "status": 200, "retrievedAt": "2026-10-19T02:12:17.459Z", "bytes": 697741, "sha256": "7a243b6043cfc2efb68bf1212205a5865fbcb32f9323dd9cc77654623225beba"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-100.75,36.25,-99.25,37.75", "status": 200, "retrievedAt": "2026-10-19T02:12:18.458Z", "bytes": 273157, "sha256": "8637cb14c3473c142061f24a8d09a221b16961e177e15423a67267a7967c468c"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-99.25,25.75,-97.75,27.25", "status": 200, "retrievedAt": "2026-10-19T02:12:19.453Z", "bytes": 92335, "sha256": "e6d9aeb0ec4285ebbdb5021da010891d0f80701f9c5e4ddf3bd8a7a3bda80125"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-99.25,27.25,-97.75,28.75", "status": 200, "retrievedAt": "2026-10-19T02:12:20.457Z", "bytes": 335126, "sha256": "93e7c78671f129c75df3fab79269267eb8eb536fa4e577c3124d140ca26329fc"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-99.25,28.75,-97.75,30.25", "status": 200, "retrievedAt": "2026-10-19T02:12:21.460Z", "bytes": 477616, "sha256": "70cc36151b1b431f642df64d56fa9d17dcc1eeb796dd7cb863d3edf0d28192ab"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-99.25,30.25,-97.75,31.75", "status": 200, "retrievedAt": "2026-10-19T02:12:22.464Z", "bytes": 383521, "sha256": "e4df8dd9b6f8309ea3ac34ded364bdc4ccc44ed6796f71c118fd7a9153683adb"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-99.25,31.75,-97.75,33.25", "status": 200, "retrievedAt": "2026-10-19T02:12:23.461Z", "bytes": 732485, "sha256": "37e52423b74157f73aa883a8e31016b95813cd4042390c45d8bb8272210f01bf"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-99.25,33.25,-97.75,34.75", "status": 200, "retrievedAt": "2026-10-19T02:12:24.451Z", "bytes": 628352, "sha256": "63bc4d0da5974e8d6a53f0f4e05bce4a7fcb51d68504cb17617255f4938d3344"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-97.75,25.75,-96.25,27.25", "status": 200, "retrievedAt": "2026-10-19T02:12:25.452Z", "bytes": 52910, "sha256": "7e933a68d3f5b5782fc819967efcfb4b555e667a866d03022f9e3541ebc3d32f"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-97.75,27.25,-96.25,28.75", "status": 200, "retrievedAt": "2026-10-19T02:12:26.452Z", "bytes": 32631, "sha256": "3da6ab4e5bdca4919610f1153891b5d5f0d3ea4eae7ff740d49d367b819dfcde"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-97.75,28.75,-96.25,30.25", "status": 200, "retrievedAt": "2026-10-19T02:12:27.450Z", "bytes": 312433, "sha256": "d5f268c694b90e3fe1c9604a1e1a45d9d7d41e30a8fd4ddb457a4159267d9115"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-97.75,30.25,-96.25,31.75", "status": 200, "retrievedAt": "2026-10-19T02:12:28.457Z", "bytes": 606101, "sha256": "313d416a0a667d5d2573f88ee15a44da27d5523cac2daae58db84cad434f605a"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-97.75,31.75,-96.25,33.25", "status": 200, "retrievedAt": "2026-10-19T02:12:29.455Z", "bytes": 1176496, "sha256": "c93f0851bfd67c461ba03220ae3097c68fe141a3131d428b51993453e98558a3"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-97.75,33.25,-96.25,34.75", "status": 200, "retrievedAt": "2026-10-19T02:12:30.462Z", "bytes": 1617902, "sha256": "ba65918aac14d3da3878f82103e7bb57ddfea1b8c8e1ed7e2abc9f315d5327ea"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-96.25,27.25,-94.75,28.75", "status": 200, "retrievedAt": "2026-10-19T02:12:31.456Z", "bytes": 2608, "sha256": "dfea127a94319f1b06c94e01027256285fcf0361c3046d0b13ba05d3b757fa6f"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-96.25,28.75,-94.75,30.25", "status": 200, "retrievedAt": "2026-10-19T02:12:32.466Z", "bytes": 230518, "sha256": "383557b12fa2d6658203fbf35e720fff963dd3309496e634ee4a22fc471a7976"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-96.25,30.25,-94.75,31.75", "status": 200, "retrievedAt": "2026-10-19T02:12:33.478Z", "bytes": 562661, "sha256": "f08a8a6e4963b035b1b6e34ddff33769ca0f4d9b62f2cee4f04263f72135cdcf"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-96.25,31.75,-94.75,33.25", "status": 200, "retrievedAt": "2026-10-19T02:12:34.475Z", "bytes": 924612, "sha256": "6481bf3624d9e828cacba7116a78530bfc84030e4f7b0ffefe5474f5403b3a1f"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-96.25,33.25,-94.75,34.75", "status": 200, "retrievedAt": "2026-10-19T02:12:36.998Z", "bytes": 468219, "sha256": "927719febef6479430d22118b2a36a75d6f6661e392498d67b9ec7227fdb783b"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-94.75,28.75,-93.25,30.25", "status": 200, "retrievedAt": "2026-10-19T02:12:37.998Z", "bytes": 30540, "sha256": "4c30d0dcefbe8dcd224c1a62158ac3589dcd500ed9649dbcf2d6f6aed392749d"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-94.75,30.25,-93.25,31.75", "status": 200, "retrievedAt": "2026-10-19T02:12:39.007Z", "bytes": 227602, "sha256": "b6b20965dca19cf48d00a218c7a6d9a9447e8041e85475f4b847b4a6d0109621"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-94.75,31.75,-93.25,33.25", "status": 200, "retrievedAt": "2026-10-19T02:12:40.007Z", "bytes": 549128, "sha256": "d03e49ed127a7e3d22a1783bdc46dabbf57db7587bc50fc15b8ec45ee281f251"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-94.75,33.25,-93.25,34.75", "status": 200, "retrievedAt": "2026-10-19T02:12:41.000Z", "bytes": 251553, "sha256": "db86161b016e21d8de3f1e8e5a3b89945b6186f666e2ee48f13e5b4efabbaa67"},
+    {"purpose": "count", "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0/query?where=STATE%3D%27Texas%27&returnCountOnly=true&f=json", "status": 200, "retrievedAt": "2026-10-18T23:07:46.951Z", "bytes": 14, "sha256": "3fc4957a009f88f7160242705a55602fb8b2dcc19006cd9c6765cb856ff383aa"},
+    {"purpose": "gap", "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0/query?where=STATE%3D%27Texas%27&outFields=NIDID&returnGeometry=true&outSR=4326&orderByFields=NIDID&resultOffset=0&resultRecordCount=2000&f=json", "status": 200, "retrievedAt": "2026-10-19T01:13:38.668Z", "bytes": 189828, "sha256": "bd4922ef549b78daaa9d4867aa612ffaeb1cff76786adc52e8d7c82079e2deef"},
+    {"purpose": "gap", "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0/query?where=STATE%3D%27Texas%27&outFields=NIDID&returnGeometry=true&outSR=4326&orderByFields=NIDID&resultOffset=2000&resultRecordCount=2000&f=json", "status": 200, "retrievedAt": "2026-10-19T01:13:39.667Z", "bytes": 189858, "sha256": "abe2e261d9a9eed01257d3f9d0c3c9f7937cc7282a56a887c5804d222ea7fff3"},
+    {"purpose": "gap", "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0/query?where=STATE%3D%27Texas%27&outFields=NIDID&returnGeometry=true&outSR=4326&orderByFields=NIDID&resultOffset=4000&resultRecordCount=2000&f=json", "status": 200, "retrievedAt": "2026-10-19T01:13:40.659Z", "bytes": 189828, "sha256": "fb76747de81ddcaa6f45a0b49c7944ba04e0d134eb3cc73112ee912fa821b3a8"},
+    {"purpose": "gap", "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0/query?where=STATE%3D%27Texas%27&outFields=NIDID&returnGeometry=true&outSR=4326&orderByFields=NIDID&resultOffset=6000&resultRecordCount=2000&f=json", "status": 200, "retrievedAt": "2026-10-19T01:13:41.661Z", "bytes": 134918, "sha256": "979d7885c201cd13e91e14e644555a0c6b39cf2c008797608013923d8e741d3b"}
+  ],
+  "recordCount": 7415,
+  "publisherCount": {
+    "value": 7421,
+    "method": "ArcGIS REST query on the publisher's own layer: where STATE='Texas', returnCountOnly=true (keyless). Every row the publisher files under Texas, whatever its status.",
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0/query?where=STATE%3D%27Texas%27&returnCountOnly=true&f=json",
+    "countedAt": "2026-10-18T23:07:46.951Z",
+    "gap": "The publisher counts 7421; this snapshot holds 7415. 3 publisher row(s) repeat an id another row already has (NIDID), and a record's key is its id, so one record per id: nid:LA00030 on 3 rows, nid:TX00021 on 2 rows; 3 left out by this snapshot's region rule: the source says Texas but the point lies more than 0.05 degrees outside eye's outline: nid:TX05573, nid:TX06381, nid:TX06748. Not counted either way: 2445 feature(s) from edge tiles whose source names another state."
+  },
+  "files": [
+    {
+      "path": "records.parquet",
+      "format": "geoparquet",
+      "sha256": "b77b4ecaf4cf5650b6af93a274c60cf6ce1f8fdaddd5c1836600e81b0d5719e2",
+      "bytes": 1120012,
+      "records": 7415
+    }
+  ],
+  "withheldFields": [
+    {
+      "field": "published name",
+      "why": "NID's NAME on a privately owned dam can be its owner's name ('<Surname> Pond Dam'); eye shows it on click but never searches or embeds it, labels the dam by NID id, and a training snapshot leaves it out. The same holds for a dam whose owner type is Not Listed, missing or any value other than Federal, State, Local Government, Public Utility or Tribal Government (a non-answer is unknown, not public). A dam whose name is allowed carries it in name."
+    }
+  ]
+}

@@ -14,6 +14,7 @@ Files:
 ```
 node data/schema/validate.mjs record <file.json | file.jsonl> ...
 node data/schema/validate.mjs manifest <snapshot>/manifest.json ...
+node data/schema/validate.mjs manifest --no-files data/manifests/*/*.json    (a manifest alone, without its files)
 node data/schema/validate.test.mjs
 ```
 
@@ -36,7 +37,7 @@ One JSON object. In a snapshot file, it's one line of JSONL.
 | `collection` | yes | The catalogue card id from eye's `lib/catalog/collections.ts` (`nces-public-schools`, `nrhp-listed`). |
 | `layer` | yes | eye's layer id (`schools`, `historic`). |
 | `name` | yes | The label eye draws. What it may be is set by `nameRule`. |
-| `nameRule` | yes | `public-name` means the record's published name. It's allowed only on a collection with a public-name rule: today `hifld-hospitals`, `nces-public-schools`, `nid-dams` and `padus-units`, the same list as eye's `PUBLIC_NAME_RULE`. `label-by-id` means a label built from the record's id and category (`NRHP 82004525 · building`), never a name that could be a person's. |
+| `nameRule` | yes | `public-name` means the record's published name. It's allowed only on a collection with a public-name rule: today `hifld-hospitals`, `nces-public-schools`, `nid-dams` and `padus-units`, the same list as eye's `PUBLIC_NAME_RULE`. `label-by-id` means a label built from the record's id and category (`NRHP 82004525 · building`, `Dam TX00028`), never a name that could be a person's. The rule is set per record, the way eye's `PUBLIC_NAME_RULE` sets it: a dam keeps its published name only when its owner type is Federal, State, Local Government, Public Utility or Tribal Government and so is every entry of NID's `OWNER_TYPES` list (`owner types`), so a dam that is Private anywhere, Not Listed, missing an owner type or carries any other value is `label-by-id` (a non-answer is unknown, not public), and its record text carries no `name:` segment; a PAD-US unit keeps it only on federal or state land (`Own_Type` FED or STAT) that is not an easement. |
 | `kind` | no | eye's sub-type (`high`, `building`). |
 | `geometry` | yes | GeoJSON geometry (RFC 7946): Point, MultiPoint, LineString, MultiLineString, Polygon or MultiPolygon. WGS84 degrees, longitude first. A height is kept only when the source measured one. |
 | `place` | yes | Place joins: `stateFips` and `stateUsps` (required, and they must agree), and `countyFips` when it can be derived (it must sit inside the state). `method` says how the join was made: `source-field` (the upstream's own code), `point-in-polygon` (the geometry tested against a named boundary file) or `name-lookup` (a place name matched to a code table). |
@@ -75,7 +76,7 @@ One JSON object. In a snapshot file, it's one line of JSONL.
 
 ### Names and privacy
 
-eye's privacy rules apply to every snapshot as they are written in eye: no private-person search or embedding, owner names only in the one clicked parcel's record, and the `GEV_PEOPLE_WITHHELD` list. A snapshot is a copy that leaves eye, so it adds one rule. A source field eye shows on click but that can hold a person's name is withheld from the snapshot, and the manifest lists it under `withheldFields` with the reason. The first case is NRHP's property name (`RESNAME`): eye's card says it can be a person's name and never searches or embeds it, so the historic snapshots leave it out and label each record by its NRIS number.
+eye's privacy rules apply to every snapshot as they are written in eye: no private-person search or embedding, owner names only in the one clicked parcel's record, and the `GEV_PEOPLE_WITHHELD` list. A snapshot is a copy that leaves eye, so it adds one rule. A source field eye shows on click but that can hold a person's name is withheld from the snapshot, and the manifest lists it under `withheldFields` with the reason. The first case is NRHP's property name (`RESNAME`): eye's card says it can be a person's name and never searches or embeds it, so the historic snapshots leave it out and label each record by its NRIS number. The second is NID's `published name` detail: eye shows a private dam's NAME on click under that key, since it can be its owner's (`<Surname> Pond Dam`), and labels the dam by its NID id. The dam snapshots leave the detail out on every dam; a dam whose name is allowed carries it in `name`.
 
 ## The snapshot
 
@@ -87,7 +88,9 @@ A snapshot is one collection, one region and one UTC day, and it never changes o
 
 The day is the UTC date of `createdAt`. The commit that built it is in `builder.gitSha`. The charter's draft name was `YYYY-MM-DD+<commit7>`, with the commit inside the id. This version keeps the id readable and puts the commit in the manifest, because a training run cites the id and the manifest pins the code. If the id should carry the commit too, that takes a `manifest/2`.
 
-A snapshot is a folder holding `manifest.json` and the record files it lists (`records.jsonl` for now). Records are sorted by `id`, one JSON object per line, LF line endings, UTF-8.
+A snapshot is a folder holding `manifest.json` and the record files it lists. The fixtures use `records.jsonl`: records sorted by `id`, one JSON object per line, LF line endings, UTF-8. The pipeline's snapshots use `records.parquet` (GeoParquet; its columns are in [PIPELINE.md](PIPELINE.md)), and their folders live in the data root, outside git, with a copy of each manifest committed under `data/manifests/`.
+
+The `geoparquet` format, the `point-in-polygon` rule and the `region` request purpose were added to `manifest/1` on 2026-10-18 without a version bump, because each one only widens an enum (`files[].format`, `region.rule`, `requests[].purpose`) and every manifest that was valid before is still valid.
 
 ### The manifest
 
@@ -96,15 +99,15 @@ A snapshot is a folder holding `manifest.json` and the record files it lists (`r
 | `schemaVersion` | yes | `"manifest/1"` |
 | `snapshotId` | yes | Must equal `<collection>.<region.id>.<createdAt's UTC date>`. |
 | `collection` | yes | The collection. |
-| `region` | yes | `id` (a slug), `name`, `bbox` as [west, south, east, north] in WGS84 with west < east and south < north, and `rule`: `point-in-bbox` (a Point is in when it lies inside the box, edges included) or `intersects-bbox`. `definition` is optional prose. |
+| `region` | yes | `id` (a slug), `name`, `bbox` as [west, south, east, north] in WGS84 with west < east and south < north, and `rule`: `point-in-bbox` (a Point is in when it lies inside the box, edges included), `intersects-bbox`, or `point-in-polygon` (a Point is in when it lies inside a named boundary; `definition` then names the boundary, its URL and the sha256 of the response it came from, and `bbox` is the boundary's extent). `definition` is optional prose. |
 | `createdAt` | yes | When the builder ran, in UTC. |
 | `builder` | yes | `name`, `version` (semver) and `gitSha` (the full 40-character commit the builder ran from). `repo` is optional. |
 | `recordSchemaVersion` | yes | `"record/1"` |
 | `sources` | yes | Each `sourceId` in the records, with its `licence`. |
-| `requests` | yes | Every request the builder made, in order: `purpose` (`records`, `count` or `gap`), `url`, `status`, `retrievedAt`, `bytes` and the `sha256` of the response body. |
+| `requests` | yes | Every request the builder made, in order: `purpose` (`records`, `count`, `gap`, or `region` for the boundary a `point-in-polygon` rule tests against), `url`, `status`, `retrievedAt`, `bytes` and the `sha256` of the response body. |
 | `recordCount` | yes | Rows in the snapshot. Must equal the sum of `files[].records`. |
 | `publisherCount` | yes | The publisher's own count for the region: `value`, `method` (how it was asked for, in words), `url` and `countedAt`. When `value` differs from `recordCount`, `gap` is required and names the rows that aren't records and why. |
-| `files` | yes | Each file: `path` (relative, inside the snapshot folder), `format` (`jsonl`), `sha256` (64 lowercase hex characters), `bytes` and `records`. |
+| `files` | yes | Each file: `path` (relative, inside the snapshot folder), `format` (`jsonl`, or `geoparquet` for the files `data/pipeline` writes), `sha256` (64 lowercase hex characters), `bytes` and `records`. |
 | `withheldFields` | no | Source fields left out, each with `field` and `why`. Absent when none are withheld. |
 
 ### Checks beyond the schema
@@ -117,11 +120,13 @@ A snapshot is a folder holding `manifest.json` and the record files it lists (`r
 - `county`: `countyFips` isn't inside `stateFips`.
 - `snapshot`: the record's snapshot is of another collection, or the date isn't a real date. In a manifest, the id doesn't match its collection, region and day.
 - `time`: the record was retrieved after its snapshot's day.
-- `public-name`: `nameRule` is `public-name` on a collection with no public-name rule.
+- `public-name`: `nameRule` is `public-name` on a collection with no public-name rule, or on a record whose `name` is in its collection's label-by-id form (`Dam TX00028`, `<designation> · PAD-US 12345`).
+- `withheld`: a record carries a detail its collection always withholds (`published name` on `nid-dams` and `padus-units`).
 - `bbox`: the box isn't west < east and south < north.
 - `count`: `recordCount` doesn't match the files.
 - `gap`: the counts differ and `gap` doesn't say why.
 - `file-missing`, `file-bytes`, `file-sha`, `file-records`, `file-record`: a listed file is absent, its size, hash or line count differs from the manifest, or one of its lines isn't a valid record of this snapshot (including a repeated id).
+- `file-format`: a file listed as `geoparquet` doesn't start and end with Parquet's `PAR1` magic. Plain Node can't read Parquet, so for these files the validator checks bytes, sha256 and the magic only; `data/pipeline/read.py` checks the row count and every row when it reads one.
 
 Schema problems use the keyword's name (`required`, `type`, `pattern`, `enum`, `const`, `additional`, `minItems`), with `range` for `minimum` and `maximum`. The evaluator implements only the keywords the two schema files use, and throws on any other, so a schema can't quietly promise a check that isn't made.
 
@@ -142,6 +147,6 @@ The first record of each snapshot is copied to `record/valid/`. The builder refu
 ## Not in this version
 
 - **A conformance count over all 60 collections.** This is the database's first real job. Of the six routes probed on 2026-10-18, three already emit this shape. WRC passes the upstream's raw fields through, with no canonical id or record text. Gauges and HUD DDA returned no features in the probe boxes, so they weren't checked.
-- **A snapshot builder for production.** The fixture builder shows the mapping, but it isn't the weekly job the consumer contract asks for.
+- **A weekly snapshot job.** `data/pipeline/` (see [PIPELINE.md](PIPELINE.md)) builds whole-state snapshots by hand. Nothing schedules it yet.
 - **Records outside the United States.** `place` requires state codes, so a collection abroad (some World Heritage sites, for example) needs a `record/2` with a country join.
 - **Embeddings.** A snapshot holds record text, not vectors. When vectors ship, the manifest will name the embedder, its commit and its table's sha256, as `catalog_search` already reports them.

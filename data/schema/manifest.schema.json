@@ -30,8 +30,8 @@
           ]
         },
         "rule": {
-          "description": "point-in-bbox: a Point record is in when it lies inside the box, edges included. intersects-bbox: any geometry that touches the box.",
-          "enum": ["point-in-bbox", "intersects-bbox"]
+          "description": "point-in-bbox: a Point record is in when it lies inside the box, edges included. intersects-bbox: any geometry that touches the box. point-in-polygon: a Point record is in when it lies inside a named boundary polygon, which definition names (source, fetch and sha256); bbox is then the polygon's extent.",
+          "enum": ["point-in-bbox", "intersects-bbox", "point-in-polygon"]
         },
         "definition": { "type": "string", "minLength": 1 }
       }
@@ -72,8 +72,8 @@
         "additionalProperties": false,
         "properties": {
           "purpose": {
-            "description": "records: the rows the snapshot holds. count: the publisher's count. gap: the publisher's ids, to explain a count gap.",
-            "enum": ["records", "count", "gap"]
+            "description": "records: the rows the snapshot holds. count: the publisher's count. gap: the publisher's ids, to explain a count gap. region: the boundary the region rule tests against.",
+            "enum": ["records", "count", "gap", "region"]
           },
           "url": { "$ref": "#/$defs/url" },
           "status": { "type": "integer", "minimum": 100, "maximum": 599 },
@@ -106,7 +106,10 @@
         "additionalProperties": false,
         "properties": {
           "path": { "type": "string", "pattern": "^[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$" },
-          "format": { "enum": ["jsonl"] },
+          "format": {
+            "description": "jsonl: one record/1 object per line, checked line by line. geoparquet: GeoParquet written by data/pipeline, checked by bytes and sha256 here and by row count in data/pipeline/read.py.",
+            "enum": ["jsonl", "geoparquet"]
+          },
           "sha256": { "$ref": "#/$defs/sha256" },
           "bytes": { "type": "integer", "minimum": 0 },
           "records": { "type": "integer", "minimum": 0 }

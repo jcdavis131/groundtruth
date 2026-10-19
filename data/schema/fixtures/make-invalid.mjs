@@ -14,6 +14,8 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const read = (p) => JSON.parse(readFileSync(path.join(HERE, p), "utf8"));
 const SCHOOL = "record/valid/nces-public-schools.austin-east.json";
 const HISTORIC = "record/valid/nrhp-listed.austin-east.json";
+const PRIVATE_DAM = "record/valid/nid-dams.texas-private.json";
+const PUBLIC_DAM = "record/valid/nid-dams.texas-public.json";
 const MANIFEST = "snapshots/nrhp-listed.austin-east.2026-10-18/manifest.json";
 
 export const CASES = {
@@ -31,6 +33,38 @@ export const CASES = {
     { name: "null-detail", base: SCHOOL, expect: { code: "type", path: "/details/virtual" }, mutate: (r) => void (r.details.virtual = null) },
     { name: "text-literal-null", base: HISTORIC, expect: { code: "pattern", path: "/text" }, mutate: (r) => void (r.text = "null") },
     { name: "public-name-not-allowed", base: HISTORIC, expect: { code: "public-name", path: "/nameRule" }, mutate: (r) => void (r.nameRule = "public-name") },
+    // A private dam labelled "Dam <NIDID>" that still says public-name (PR #12's first build did this for every dam).
+    { name: "label-by-id-name-says-public", base: PRIVATE_DAM, expect: { code: "public-name", path: "/nameRule" }, mutate: (r) => void (r.nameRule = "public-name") },
+    // A private dam whose owner-named published name rides along in details.
+    {
+      name: "dam-published-name-carried",
+      base: PRIVATE_DAM,
+      expect: { code: "withheld", path: "/details/published name" },
+      mutate: (r) => void (r.details["published name"] = "Cj Gerlach Dam"),
+    },
+    // A Not Listed dam that keeps its published name (eye named these before 2026-10-19; TX09788 is a real one).
+    {
+      name: "not-listed-dam-says-public",
+      base: PUBLIC_DAM,
+      expect: { code: "public-name", path: "/nameRule" },
+      mutate: (r) => void (r.details["owner type"] = "Not Listed"),
+    },
+    // A dam that is Local Government first and Private too in NID's OWNER_TYPES (104 nationally, 33 in Texas).
+    {
+      name: "mixed-owner-dam-says-public",
+      base: PUBLIC_DAM,
+      expect: { code: "public-name", path: "/nameRule" },
+      mutate: (r) => void Object.assign(r.details, { "owner type": "Local Government", "owner types": "Local Government, Private" }),
+    },
+    // A dam labelled by id whose record text still names it (eye's text for a Not Listed dam before 2026-10-19).
+    {
+      name: "label-by-id-text-names-dam",
+      base: PRIVATE_DAM,
+      expect: { code: "public-name", path: "/text" },
+      mutate: (r) => void (r.text = r.text.replace("; county: ", "; name: Cj Gerlach Dam; county: ")),
+    },
+    // The detail is withheld on every dam, not only a private one.
+    { name: "public-dam-published-name-carried", base: PUBLIC_DAM, expect: { code: "withheld", path: "/details/published name" }, mutate: (r) => void (r.details["published name"] = r.name) },
     { name: "county-outside-state", base: SCHOOL, expect: { code: "county", path: "/place/countyFips" }, mutate: (r) => void (r.place.countyFips = "06453") },
     { name: "state-codes-disagree", base: HISTORIC, expect: { code: "state", path: "/place/stateUsps" }, mutate: (r) => void (r.place.stateUsps = "OK") },
     {

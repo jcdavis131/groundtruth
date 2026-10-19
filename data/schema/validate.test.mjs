@@ -2,7 +2,9 @@
 //   node data/schema/validate.test.mjs
 // Every valid fixture must pass; every invalid one must fail with the reason make-invalid.mjs gives it; the
 // invalid files must match their source; each snapshot's files must hash to what its manifest says.
-import { readdirSync, readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CASES, build, fileOf } from "./fixtures/make-invalid.mjs";
@@ -74,12 +76,83 @@ check(validateRecord({ ...school, details: { ...school.details, x: -9999 } }).so
 check(validateRecord({ ...school, details: { ...school.details, status: "not reported" } }).length === 0, "a publisher's own coded state (\"not reported\") is a value, not a placeholder");
 check(validateRecord({ ...school, snapshotId: school.snapshotId.replace(/\d{4}-\d{2}-\d{2}$/, "2026-02-31") }).some((e) => e.code === "snapshot"), "a snapshot id on a day that doesn't exist fails");
 
+// Dams: a name is allowed only on a dam eye names; a label by id never says public-name; published name never rides along.
+const privateDam = json(path.join(FIX, "record", "valid", "nid-dams.texas-private.json"));
+const publicDam = json(path.join(FIX, "record", "valid", "nid-dams.texas-public.json"));
+check(privateDam.nameRule === "label-by-id" && privateDam.name === `Dam ${privateDam.details["NID id"]}` && privateDam.details["owner type"] === "Private", "the private dam fixture is labelled by its NID id");
+check(publicDam.nameRule === "public-name" && publicDam.details["owner type"] !== "Private", "the public dam fixture keeps its published name");
+check(
+  validateRecord({ ...publicDam, nameRule: "label-by-id", text: publicDam.text.replace("; name: Bardwell Dam", "") }).length === 0,
+  "a dam may always be labelled by id (its name out of the record text)",
+);
+check(
+  validateRecord({ ...publicDam, name: `Dam ${publicDam.details["NID id"]}` }).some((e) => e.code === "public-name"),
+  "a dam named \"Dam <NIDID>\" that says public-name fails with public-name, whatever its owner type",
+);
+check(validateRecord({ ...publicDam, name: "Dam Site 7" }).length === 0, "a published name that starts with \"Dam\" but is not an NID id is not a label by id");
+// A dam keeps its name only under public owner types (eye's damIsNamed): every non-answer is labelled by id.
+const withOwners = (primary, list) => {
+  const d = { ...publicDam.details };
+  if (primary === undefined) delete d["owner type"];
+  else d["owner type"] = primary;
+  if (list !== undefined) d["owner types"] = list;
+  return { ...publicDam, details: d };
+};
+for (const t of ["Federal", "State", "Local Government", "Public Utility", "Tribal Government"])
+  check(validateRecord(withOwners(t, t)).length === 0, `a ${t} dam may keep its published name`);
+check(validateRecord(withOwners("State", "Local Government, State")).length === 0, "a dam whose owner types are all public may keep its name");
+check(validateRecord(withOwners("Federal")).length === 0, "eye's answers before OWNER_TYPES: the primary type alone decides");
+for (const [primary, list, why] of [
+  ["Not Listed", undefined, "Not Listed"],
+  ["not listed", "Not Listed", "Not Listed, any case"],
+  [undefined, undefined, "no owner type"],
+  ["Private", undefined, "Private"],
+  ["Unknown", undefined, "a value NID has never used"],
+  ["Local Government", "Local Government, Private", "Private second in OWNER_TYPES"],
+  ["Local Government", "Private", "OWNER_TYPES contradicting the primary"],
+  ["Federal", "", "an empty OWNER_TYPES"],
+  ["State", "State, Not Listed", "Not Listed in OWNER_TYPES"],
+])
+  check(
+    validateRecord(withOwners(primary, list)).some((e) => e.code === "public-name" && e.path === "/nameRule"),
+    `a dam that says public-name fails with public-name under ${why}`,
+  );
+check(validateRecord({ ...withOwners("Not Listed"), nameRule: "label-by-id", name: `Dam ${publicDam.details["NID id"]}`, text: publicDam.text.replace("; name: Bardwell Dam", "") }).length === 0, "a Not Listed dam labelled by id, its name out of the text, is valid");
+check(
+  validateRecord({ ...publicDam, nameRule: "label-by-id", name: `Dam ${publicDam.details["NID id"]}` }).some((e) => e.code === "public-name" && e.path === "/text"),
+  "a dam labelled by id whose record text keeps \"name: <published name>\" fails with public-name at /text",
+);
+check(
+  validateRecord({ ...school, collection: "padus-units", snapshotId: school.snapshotId.replace(/^[^.]+/, "padus-units"), name: "Conservation Easement · PAD-US 41234" }).some(
+    (e) => e.code === "public-name" && e.path === "/nameRule",
+  ),
+  "a PAD-US unit labelled by id that says public-name fails with public-name",
+);
+check(
+  validateRecord({ ...school, details: { ...school.details, "published name": "x" } }).length === 0,
+  "\"published name\" is withheld only where a collection lists it (not schools)",
+);
+
 const sdir = path.join(FIX, "snapshots", snaps[0]);
 const m0 = json(path.join(sdir, "manifest.json"));
 const tampered = { ...m0, files: [{ ...m0.files[0], sha256: "0".repeat(64) }] };
 check(verifyFiles(tampered, sdir).some((e) => e.code === "file-sha"), "a file whose bytes don't match the manifest's sha256 fails with file-sha");
 check(verifyFiles({ ...m0, files: [{ ...m0.files[0], records: m0.files[0].records + 1 }] }, sdir).some((e) => e.code === "file-records"), "a wrong per-file record count fails with file-records");
 check(verifyFiles({ ...m0, snapshotId: "nrhp-listed.elsewhere.2026-10-18" }, sdir).some((e) => e.code === "file-record"), "records from another snapshot fail with file-record");
+
+// GeoParquet files (data/pipeline) are checked by bytes, sha256 and the PAR1 magic; a jsonl file posing as one fails.
+const pq = Buffer.from("PAR1 not a real footer PAR1", "latin1");
+const pqDir = mkdtempSync(path.join(tmpdir(), "gt-pq-"));
+writeFileSync(path.join(pqDir, "records.parquet"), pq);
+const pqFile = { path: "records.parquet", format: "geoparquet", sha256: createHash("sha256").update(pq).digest("hex"), bytes: pq.length, records: m0.recordCount };
+const pqManifest = { ...m0, files: [pqFile] };
+check(validateManifest(pqManifest).length === 0 && verifyFiles(pqManifest, pqDir).length === 0, "a geoparquet file whose bytes and sha256 match passes");
+check(verifyFiles({ ...pqManifest, files: [{ ...pqFile, sha256: "0".repeat(64) }] }, pqDir).some((e) => e.code === "file-sha"), "a tampered geoparquet file fails with file-sha");
+check(verifyFiles({ ...m0, files: [{ ...m0.files[0], format: "geoparquet" }] }, sdir).some((e) => e.code === "file-format"), "a jsonl file listed as geoparquet fails with file-format");
+const polyRegion = { ...m0.region, rule: "point-in-polygon" };
+check(validateManifest({ ...m0, region: polyRegion }).length === 0, "region rule point-in-polygon is accepted");
+check(validateManifest({ ...m0, requests: [...m0.requests, { ...m0.requests[0], purpose: "region" }] }).length === 0, "request purpose region is accepted");
+check(validateManifest({ ...m0, region: { ...m0.region, rule: "inside-texas" } }).some((e) => e.code === "enum"), "an unknown region rule fails with enum");
 
 // The evaluator refuses keywords it does not implement, so a schema can't claim more than is checked.
 let threw = false;
