@@ -56,6 +56,25 @@ export function teamItems(rosters, p54) {
 }
 
 /**
+ * Team-seasons whose Wikidata venue data is known to be stale. Each one leaves the arena out; none of them
+ * names a venue in its place, so nothing here is asserted without a source. Remove an entry once Wikidata
+ * records the move (the builder then reports an overlap or the new venue on its own).
+ */
+export const ARENA_HOLDS = [
+  {
+    teamItem: "Q976396", // Los Angeles Clippers
+    fromSeason: "2024-25",
+    reason:
+      "held: the Clippers' P115 still ends open at Crypto.com Arena (Q186080), and their new arena's item (Intuit Dome, Q54958436) has no occupant or opening date yet (checked 2026-10-19), so the dates cannot place the move; left out rather than named wrong",
+  },
+];
+
+/** The hold that covers a team item's season, or undefined. */
+export function arenaHold(teamItem, season, holds = ARENA_HOLDS) {
+  return holds.find((h) => h.teamItem === teamItem && season >= h.fromSeason);
+}
+
+/**
  * Venues that name the team as an occupant (P466) and start after every P115 statement on the team item:
  * evidence of a move the team item does not record yet (the Clippers' P115 ends at Crypto.com Arena,
  * open-ended, while Intuit Dome lists them from 2024). Added as statements so the overlap leaves the arena

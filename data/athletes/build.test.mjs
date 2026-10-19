@@ -7,7 +7,7 @@
 import { Readable } from "node:stream";
 import { project, readTable, splitCsvLine } from "./lib/csv.mjs";
 import { fipsToGeoid, gnisToAnsi, resolveBirthplace, traceProblems } from "./lib/birthplace.mjs";
-import { covers, nameFor, teamItems, venueFor, withOccupantMoves } from "./lib/arena.mjs";
+import { arenaHold, ARENA_HOLDS, covers, nameFor, teamItems, venueFor, withOccupantMoves } from "./lib/arena.mjs";
 import { refuseNeverList } from "./lib/net.mjs";
 import { birthFields, eraAbbr, homeArenas, present } from "./build.mjs";
 import { validateAthlete } from "./validate.mjs";
@@ -196,6 +196,8 @@ check(covers("2024-01-01T00:00:00Z", null, "2024-11-01T00:00:00Z") && !covers(nu
   const names = [{ name: "Staples Center", start: "1999-01-01T00:00:00Z", end: "2021-12-25T00:00:00Z" }, { name: "Crypto.com Arena", start: "2021-12-25T00:00:00Z", end: null }];
   check(nameFor(names, "Crypto.com Arena", "2015-16").name === "Staples Center" && nameFor(names, "Crypto.com Arena", "2022-23").name === "Crypto.com Arena", "a season gets the venue's dated official name for that season");
   check(nameFor([], "Current Label", "2015-16").from === "label", "with no dated official name, the current label is used and says so");
+  check(!!arenaHold("Q976396", "2024-25") && !!arenaHold("Q976396", "2025-26") && !arenaHold("Q976396", "2023-24"), "the Clippers' arena is held from 2024-25 on, not before");
+  check(ARENA_HOLDS.every((h) => !("venue" in h) && /left out/.test(h.reason)), "a hold only leaves an arena out; it never names one");
 }
 {
   const m = (team, start = "2010-01-01T00:00:00Z", end = null) => ({ team, start, end });

@@ -31,7 +31,7 @@ import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
 import { readTable, splitCsvLine } from "./lib/csv.mjs";
 import { MAX_WALK, OUTCOMES, resolveBirthplace, traceProblems } from "./lib/birthplace.mjs";
-import { nameFor, teamItems, venueFor, withOccupantMoves, MIN_SHARE, MIN_VOTES } from "./lib/arena.mjs";
+import { arenaHold, ARENA_HOLDS, nameFor, teamItems, venueFor, withOccupantMoves, MIN_SHARE, MIN_VOTES } from "./lib/arena.mjs";
 import { makeClient, UA } from "./lib/net.mjs";
 import { recordKey, validateAthlete } from "./validate.mjs";
 
@@ -416,6 +416,11 @@ async function nbaArenas(client, rosters, playerQids, log) {
     const season = key.split("|")[0];
     if (!it.teamQid) {
       out.set(key, { absent: it.absent });
+      continue;
+    }
+    const hold = arenaHold(it.teamQid, season);
+    if (hold) {
+      out.set(key, { absent: hold.reason, teamQid: it.teamQid });
       continue;
     }
     const v = venueFor(venues.get(it.teamQid) ?? [], season);
@@ -883,6 +888,7 @@ async function main() {
       method: `team item = the NBA team item (P118 ${NBA_LEAGUE}) that at least ${MIN_VOTES} roster players and ${MIN_SHARE * 100}% of the voting ones were on (dated P54) on Jan 1 of the season; arena = the one dated P115 statement covering Nov 1 of the season's first year; any undated P115 statement leaves it out. A venue that lists the team as occupant (P466) from after every P115 start counts as a move the team item lacks, so the overlap leaves those seasons out (the Clippers' P115 ends open at Crypto.com Arena; Intuit Dome lists them from 2024). The name is the venue's dated English official name (P1448) for the season when there is one, else its current English label`,
       teamSeasons: nbaAr.arenas.size,
       withArena: [...nbaAr.arenas.values()].filter((v) => v.venue).length,
+      holds: ARENA_HOLDS,
       nameFrom: [...nbaAr.arenas.values()].filter((v) => v.venue).reduce((o, v) => (bump(o, v.nameFrom), o), {}),
       clippers: Object.fromEntries([...nbaAr.arenas.entries()].filter(([k]) => k.endsWith("|1610612746")).sort().map(([k, v]) => [k.split("|")[0], v.venue ? v.label : `absent: ${v.absent}`])),
       byReason: Object.entries([...nbaAr.arenas.values()].filter((v) => !v.venue).reduce((o, v) => (bump(o, v.absent), o), {})).map(([reason, n]) => ({ reason, teamSeasons: n })),
