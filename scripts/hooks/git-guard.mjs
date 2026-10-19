@@ -10,7 +10,8 @@
 // the remote rules on eye and groundtruth: enforce_admins on, no force push, no deletion of the default
 // branch. The hook catches the mistake before it reaches the remote and says why.
 // Known out of scope: python -c, node -e and perl -e calling git (git in their text is denied, git built
-// at run time isn't seen), git update-ref, git run from a script file, and commands built from variables.
+// at run time isn't seen), git update-ref and git send-pack, git run from a script file, and commands built
+// from variables. A PowerShell ( ) or @( ) word after the command name counts as a variable.
 //
 // Design. One rule, so it converges instead of chasing shapes. A command with no git token in it (git,
 // git.exe, a path ending in /git, also spelled g"i"t, g\it, g^it, $'\x67it' or inside a PowerShell
@@ -40,6 +41,7 @@
 //             a +refspec, --mirror, --all/--branches, and any push whose destination is master or main
 //             (origin main, HEAD:master, feature:refs/heads/main, :master). With no refspec, or with HEAD as
 //             the refspec, it looks up the current branch and blocks when that is master or main.
+//   subtree   push whose branch is master or main (git subtree push --prefix=dist origin main).
 //   reset     --hard on a shared branch: master, main, or any branch with an upstream. Allowed on a local
 //             branch with no upstream and on a detached HEAD.
 //   clean     anything but a dry run (-n/--dry-run). -f, -fdx and -xdf are all blocked, and so is a plain
@@ -333,6 +335,13 @@ function lex(src, ps, start = 0, inSub = false, meta = { spans: [], open: [], hi
       i += src[i + 1] === "|" || src[i + 1] === "&" ? 2 : 1;
       continue;
     }
+    if (ps && (c === "(" || (c === "@" && src[i + 1] === "(")) && (word || seg.length || c === "@")) {
+      // PowerShell ( ) and @( ) after the first word of a statement are expressions whose value becomes the
+      // word: git push origin ('HEAD:' + $b), git ('push') -f, git @('push','-f'). Their run-time value is
+      // unknown to the guard, so they are lexed like $( ) and the word is marked as coming from a variable.
+      i = sub(i + (c === "@" ? 2 : 1));
+      continue;
+    }
     if (c === "(") {
       if (skipNext && !word) skipNext = false; // <(cmd) and >(cmd) are process substitution, not a file
       endSeg();
@@ -574,6 +583,8 @@ function checkGit(args, ctx, env = {}, depth = 0) {
       return checkBranch(rest, g);
     case "stash":
       return checkStash(rest, g);
+    case "subtree":
+      return checkSubtree(rest);
   }
   if (BUILTINS.has(sub.text)) return null;
   return checkAlias(sub.text, args.slice(0, i), rest, g, cfg, configEnv, ctx, env, depth);
@@ -680,6 +691,49 @@ function checkPush(rest, g) {
     dst = dst.replace(/^(?:refs\/)?heads\//, "");
     if (PROTECTED.test(dst)) return `a push to ${dst} goes straight to the default branch. Push a feature branch and open a PR`;
   }
+  return null;
+}
+
+// git subtree push <remote> <ref> runs git push <remote> <commit>:refs/heads/<ref>, so <ref> goes through
+// the same master/main rule as a push destination. subtree push has no force option. Its options may come
+// before or after the subcommand; -P/--prefix, -m/--message, -b/--branch, --onto and --annotate take a value.
+const SUBTREE_VALUE_LONG = ["--prefix", "--message", "--branch", "--onto", "--annotate"];
+function checkSubtree(rest) {
+  const pos = [];
+  let ended = false;
+  for (let i = 0; i < rest.length; i++) {
+    const a = rest[i];
+    const t = a.text;
+    if (a.dyn) {
+      if (pos.length === 0 || pos[0].text === "push")
+        return "a subtree argument comes from a variable, so the guard can't tell where subtree push goes";
+      continue;
+    }
+    if (!ended && t === "--") {
+      ended = true;
+      continue;
+    }
+    if (!ended && t.startsWith("--")) {
+      if (!t.includes("=") && SUBTREE_VALUE_LONG.some((o) => isLong(t, o))) i++;
+      continue;
+    }
+    if (!ended && t.startsWith("-") && t.length > 1) {
+      for (let k = 1; k < t.length; k++)
+        if ("Pmb".includes(t[k])) {
+          if (k === t.length - 1) i++;
+          break;
+        }
+      continue;
+    }
+    pos.push(a);
+  }
+  if (pos[0]?.text !== "push") return null;
+  const ref = pos[2];
+  if (!ref) return null;
+  if (ref.glob) return `an unquoted glob in a subtree push argument (${ref.text}) can expand to master or main. Spell it out`;
+  const colon = ref.text.lastIndexOf(":");
+  const dst = (colon >= 0 ? ref.text.slice(colon + 1) : ref.text).replace(/^(?:refs\/)?heads\//, "");
+  if (PROTECTED.test(dst)) return `git subtree push to ${dst} goes straight to the default branch. Push the subtree to a feature branch and open a PR`;
   return null;
 }
 
