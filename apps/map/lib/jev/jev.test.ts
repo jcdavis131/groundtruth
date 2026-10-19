@@ -4,6 +4,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import type { WorldItem } from "@/lib/mcp/world";
 import { fipsTarget, jevArguments, jevRequest, readReply } from "./ask";
+import { parseShare, shareQuery } from "@/lib/globe/share";
 import { parseJev } from "./flag";
 import { JEV_TOPICS, gapSentence, jevSections, placeTitle, sourceHref, toLine, toSection } from "./format";
 
@@ -98,5 +99,17 @@ describe("the ?jev=1 flag", () => {
     expect(parseJev("?lat=30&jev=1")).toBe(true);
     expect(parseJev("?jev=0")).toBe(false);
     expect(parseJev("")).toBe(false);
+  });
+
+  it("is kept in a share link while on, so a reload or a shared link keeps the panel", () => {
+    const s = parseShare("?lat=30.2672&lon=-97.7431&jev=1");
+    expect(s.jev).toBe(true);
+    expect(new URLSearchParams(shareQuery(s)).get("jev")).toBe("1");
+  });
+
+  it("leaves a link without jev=1 untouched", () => {
+    const s = parseShare("?lat=30&lon=-97&jev=0");
+    expect(s.jev).toBeUndefined();
+    expect(shareQuery(s)).not.toContain("jev");
   });
 });
