@@ -247,6 +247,8 @@ export interface FetchContext {
   signal?: AbortSignal;
   /** Free-form layer options coming from the settings store (e.g. satellite groups). */
   options: Record<string, unknown>;
+  /** Set only under ?perf=1: proxy() marks this layer's response time (lib/perf/trace.ts). */
+  traceLayer?: LayerId;
 }
 
 /** What a definition's `refine` may read about the layers named in its `dependsOn`. */

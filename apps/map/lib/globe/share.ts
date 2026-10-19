@@ -11,6 +11,8 @@
 //   &v=2026-08-15                data vintage (pins the mission clock to that day;
 //                                history-aware layers will read that release later)
 //   &embed=1                     no HUD chrome (iframes)
+//   &perf=1                      the frame-time overlay (lib/perf); kept in the link while on
+//   &view=austin                 with perf=1: the fixed test view (austin, texas, flows)
 //   &zoning=47.60670,-122.33250  the zoning answer at this point (lat,lon, 5 decimals);
 //                                asked for once the camera is there, with the Zoning layer on
 //   &pin=27.8000,-97.3960        the constructs stack anchored at this point (lat,lon)
@@ -90,6 +92,7 @@ import { parseBroadbandMeasure } from "@/lib/civic/broadband";
 import { parseWrcMeasure } from "@/lib/hazards/wrc";
 import { parseHousingMeasure } from "@/lib/civic/housing";
 import { housingPartsPref } from "@/lib/civic/taxcredit";
+import { isPerfView, perfMode, type PerfView } from "@/lib/perf/flag";
 
 /** A broadband measure or WRC rank family from a link: 1 to 3 (0, the default, is never written). */
 export function parseMeasureParam(v: string | null | undefined): number | undefined {
@@ -166,6 +169,10 @@ export interface ShareState {
   hv?: "count";
   /** Housing: the tax-credit chips on (dda, lihtc). None is the default and is never written. */
   hp?: string;
+  /** The ?perf=1 frame-time overlay is on (lib/perf). */
+  perf?: true;
+  /** With perf: the fixed test view. */
+  perfView?: PerfView;
 }
 
 /** Terrain exaggeration from a link: 1 to 3, else undefined. */
@@ -313,6 +320,11 @@ export function parseShare(search: string): ShareState {
   if (q.get("hv") === "count") out.hv = "count";
   const hp = housingPartsPref(q.get("hp") ?? "");
   if (hp.length) out.hp = hp.join(",");
+  if (q.get("perf") === "1") {
+    out.perf = true;
+    const pv = q.get("view");
+    if (isPerfView(pv)) out.perfView = pv;
+  }
   return out;
 }
 
@@ -358,6 +370,10 @@ export function shareQuery(s: ShareState): string {
   // The Area panel belongs to a drawn area; without one it has nothing to show.
   if (s.aoi && completeShape(s.shape)?.kind === "area") q.set("aoi", "1");
   if (s.here) q.set("here", `${s.here.lat.toFixed(5)},${s.here.lon.toFixed(5)}`);
+  if (s.perf) {
+    q.set("perf", "1");
+    if (s.perfView) q.set("view", s.perfView);
+  }
   let str = q.toString();
   // The shape goes last and unescaped (URLSearchParams would write , ; : as
   // %2C %3B %3A), so a link with a drawn area stays readable. Its characters
@@ -417,6 +433,8 @@ export function currentShare(): ShareState {
     hp: st.layers.housing && housingPartsPref(prefs.housingParts).length ? housingPartsPref(prefs.housingParts).join(",") : undefined,
     aoi: useArea.getState().open && areaRing(st.measure.shape) ? true : undefined,
     here: here ? { lat: here.lat, lon: here.lon } : undefined,
+    perf: perfMode().on ? true : undefined,
+    perfView: perfMode().view ?? undefined,
   };
 }
 

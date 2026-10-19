@@ -19,6 +19,7 @@ import { useGlobe } from "@/lib/store/globe";
 import { useSettings, type Prefs } from "@/lib/store/settings";
 import { useNow } from "@/lib/hooks/useNow";
 import { useStrata } from "@/lib/fabric/strataStore";
+import { markLayer, tracing } from "@/lib/perf/trace";
 import EmergenceBridge from "./EmergenceBridge";
 import TraceOverlay from "./TraceOverlay";
 import NldiOverlay from "./NldiOverlay";
@@ -189,8 +190,11 @@ function LayerBridge({ def }: { def: LayerDefinition }) {
     // Each answer carries the view key it was fetched for, so one kept on screen while
     // the next view loads (keepPreviousData) still says which view it describes, and the
     // view itself: an interval refetch under the same key asks with the latest view.
-    queryFn: ({ signal }): Promise<FetchResult> =>
-      def
+    queryFn: ({ signal }): Promise<FetchResult> => {
+      // ?perf=1 only: time this fetch (start, response in proxy(), result ready).
+      const trace = tracing();
+      if (trace) markLayer(def.id, "start");
+      return def
         .fetch({
           keys,
           view,
@@ -199,8 +203,13 @@ function LayerBridge({ def }: { def: LayerDefinition }) {
           playbackYear: playbackKey,
           signal,
           options: { ...prefs } as unknown as Record<string, unknown>,
+          traceLayer: trace ? def.id : undefined,
         })
-        .then((r) => ({ ...r, viewKey: vk, fetchView: view })),
+        .then((r) => {
+          if (trace) markLayer(def.id, "parsed");
+          return { ...r, viewKey: vk, fetchView: view };
+        });
+    },
     enabled,
     refetchInterval: def.updateIntervalMs,
     staleTime: Math.max(1000, def.updateIntervalMs / 2),
@@ -231,6 +240,15 @@ function LayerBridge({ def }: { def: LayerDefinition }) {
   useEffect(() => {
     if (!data) return;
     rendererRef.current?.update(data.collection, data.meta);
+    // ?perf=1 only: the first frame drawn after the renderer took this answer.
+    if (tracing()) {
+      const scene = getViewer()?.scene;
+      const n = data.collection.features.length;
+      const off = scene?.postRender.addEventListener(() => {
+        off?.();
+        markLayer(def.id, "drawn", n);
+      });
+    }
     const live = data.collection.features.filter((f) => !f.properties.simulated).length;
     const metaCount = typeof data.meta?.count === "number" ? (data.meta.count as number) : undefined;
     setStatus(def.id, {
