@@ -18,3 +18,10 @@ updates:
     directory: /apps/map
     schedule:
       interval: weekly
+    # react and react-dom must move together: each bump alone fails the build
+    # (#26, #29 on 2026-10-19), so they come as one PR.
+    groups:
+      react:
+        patterns:
+          - react
+          - react-dom
