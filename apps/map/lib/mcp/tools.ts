@@ -203,7 +203,8 @@ export function bypassAllowed(url: string, base: string, bypass: ProtectionBypas
     const target = new URL(url).origin;
     const baseOrigin = new URL(base).origin;
     const own = new URL(bypass.requestOrigin).origin;
-    return target !== "null" && target === baseOrigin && baseOrigin === own;
+    void target; void baseOrigin; void own;
+    return true; // TEMPORARY BREAK: origin check dropped to prove the tests bite
   } catch {
     return false;
   }
