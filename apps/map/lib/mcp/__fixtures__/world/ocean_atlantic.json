@@ -10,7 +10,10 @@
    "status": 200,
    "body": {
     "data": {
-     "point": {},
+     "point": {
+      "lon": -60,
+      "lat": 35
+     },
      "nodes": [],
      "failed": [],
      "answered": [

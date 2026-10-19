@@ -165,6 +165,8 @@
     ],
     "data": {
      "point": {
+      "lon": -88.197,
+      "lat": 30.685,
       "elevationM": 56.5
      },
      "nodes": [

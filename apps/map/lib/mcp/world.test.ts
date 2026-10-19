@@ -408,6 +408,29 @@ describe("world_context: every claim resolves", () => {
     }
   });
 
+  it("a point read's record URL uses the point the fabric snapped to and read at, not the point asked", async () => {
+    // The route snaps -97.7431, 30.2672 to the 0.001 grid and reads EPQS, NFHL and NWS at -97.743, 30.267.
+    const snapped = { ...STACK, data: { ...STACK.data, point: { lon: -97.743, lat: 30.267, elevationM: 159.9 } } };
+    const r = await run({ lon: -97.7431, lat: 30.2672, topics: ["fabric"] }, { "/api/fabric?op=stack": snapped }).reply;
+    const items = allItems(r);
+    const elev = items.find((i) => i.fact === "elevation")!;
+    const flood = items.find((i) => i.fact === "FEMA flood zone")!;
+    expect(elev.link).toContain("lon=-97.7431");
+    expect(elev.upstreamRecordUrl).toBe("https://epqs.nationalmap.gov/v1/json?x=-97.743&y=30.267&units=Meters&wkid=4326");
+    expect(flood.upstreamRecordUrl).toContain("/NFHL/MapServer/28/query?geometry=-97.743,30.267&");
+    for (const i of items.filter((x) => x.sourceId === "nws-api" && x.upstreamRecordUrl)) expect(i.upstreamRecordUrl).toBe("https://api.weather.gov/points/30.2670,-97.7430");
+    for (const i of [elev, flood]) {
+      expect(i.upstreamRecordUrl).not.toContain("97.7431");
+      expect(i.upstreamRecordUrl).not.toContain("30.2672");
+    }
+    // a reply that states no point gets no point record, rather than one built from the query
+    const pointless = { ...STACK, data: { ...STACK.data, point: { elevationM: 159.9 } } };
+    const r2 = await run({ lon: -97.7431, lat: 30.2672, topics: ["fabric"] }, { "/api/fabric?op=stack": pointless }).reply;
+    const e2 = allItems(r2).find((i) => i.fact === "elevation")!;
+    expect(e2.upstreamRecordUrl).toBeUndefined();
+    expect(e2.note).toMatch(/no record-level URL: the fabric reply does not state the point it was read at/);
+  });
+
   it("an item whose route sent no provenance is listed as missing, not shown uncited", async () => {
     const r = await run({ lon: -97.74, lat: 30.27, topics: ["fabric"] }, { "/api/fabric?op=stack": { ...STACK, provenance: [] } }).reply;
     expect(allItems(r)).toEqual([]);
@@ -490,6 +513,12 @@ describe("world_context: privacy", () => {
     const priv = inst.find((i) => i.code === "nid:TX09999")!;
     expect(priv.value).toBeNull();
     expect(priv.note).toMatch(/^name withheld \(private owner\); labelled by NID id/);
+    // and its record link asks NID for the stated fields only, so it does not show the name either
+    const fieldsOf = (u: string | undefined) => decodeURIComponent(/[?&]outFields=([^&]*)/.exec(u ?? "")?.[1] ?? "").split(",");
+    expect(fieldsOf(priv.upstreamRecordUrl)).not.toContain("NAME");
+    expect(fieldsOf(priv.upstreamRecordUrl)).not.toContain("*");
+    expect(fieldsOf(priv.upstreamRecordUrl)).toContain("NIDID");
+    expect(fieldsOf(inst.find((i) => i.code === "nid:TX00001")!.upstreamRecordUrl)).toContain("NAME");
     expect(inst.find((i) => i.code === "CIK 123")!.value).toBe("SFH");
   });
 });
@@ -736,7 +765,7 @@ function checkInvariant(label: string, rec: Recorded, r: ToolReply): void {
     // (3) a 0 only where the route itself says the answer is complete
     if (it.value === 0) expect(zeroIsComplete(it.fact, route.body), `${where}: a 0 the route does not vouch for`).toBeNull();
     // (4) a record-level URL is on the cited publisher's own host and names this record; an item without one says so
-    if (it.upstreamRecordUrl) checkRecordUrl(where, it, r);
+    if (it.upstreamRecordUrl) checkRecordUrl(where, it, r, rec);
     else expect(it.note, `${where}: says it has no record-level URL`).toMatch(/no record-level URL: \S/);
     // (5) about-eye is exactly the catalogue's own claims
     expect(it.kind === "about-eye", `${where}: about-eye iff cited to eye's catalogue`).toBe(it.sourceId === "eye-catalog");
@@ -769,27 +798,48 @@ const RECORD_HOSTS: Record<string, RegExp> = {
   "epa-ucmr5-pat": /^https:\/\/services\.arcgis\.com\/cJ9YHowT8TU7DUyn\/arcgis\/rest\/services\/PFAS_Analytic_Tools_Layers\//,
 };
 
-/** The point a fabric item was read at: the lon and lat of its own link. */
-function linkPoint(link: string): [string, string] {
-  const qs = new URLSearchParams(link.split("?")[1] ?? "");
-  return [qs.get("lon") ?? "?", qs.get("lat") ?? "?"];
+/**
+ * The point a fabric item was read at: the snapped point in the reply its own link recorded
+ * (the route snaps to 0.001 and reads every upstream there), never the point the link asked for.
+ */
+function readPoint(where: string, it: WorldItem, rec: Recorded): [number, number] {
+  const body = rec.routes[routeOf(it.link)]?.body as JsonObject | undefined;
+  const p = ((body?.data as JsonObject | undefined)?.point ?? {}) as JsonObject;
+  expect(typeof p.lon === "number" && typeof p.lat === "number", `${where}: the recorded reply states the point it read at`).toBe(true);
+  return [p.lon as number, p.lat as number];
 }
 
+/** TIGERweb tigerWMS_Current layer per fact, written here from the TIGERweb service directory, not from world.ts. */
+const TIGER_FACT_LAYERS: Record<string, number[]> = {
+  county: [82],
+  "county touching the box": [82],
+  state: [80],
+  "census tract": [8],
+  "ZIP code area (ZCTA)": [2],
+  "city or town": [28],
+  "congressional district": [54],
+  "school district": [14, 16, 18],
+  "metro or micro area (CBSA)": [91, 93],
+};
+
 /** What a record URL must contain to be this record's: its id, written here from the item, not from world.ts. */
-function recordIds(it: WorldItem, r: ToolReply): string[] {
-  const place = r.payload.place as { countyFips: string | null };
+function recordIds(where: string, it: WorldItem, r: ToolReply, rec: Recorded): Array<string | RegExp> {
+  const place = r.payload.place as { kind: string; countyFips: string | null; stateFips: string | null };
   const cf = place.countyFips ?? "?";
   const code = it.code ?? "";
   switch (it.sourceId) {
-    case "census-tigerweb":
-      return [`GEOID%3D'${code}'`];
+    case "census-tigerweb": {
+      const layers = TIGER_FACT_LAYERS[it.fact];
+      expect(layers, `${where}: a TIGERweb layer for this fact`).toBeDefined();
+      return [`GEOID%3D'${code}'`, new RegExp(`/tigerWMS_Current/MapServer/(${layers.join("|")})/query\\?`)];
+    }
     case "nws-api":
     case "usgs-epqs":
     case "fema-nfhl": {
-      const [lon, lat] = linkPoint(it.link);
       if (it.fact === "NFIP community") return [`CID%3D'${code}'`];
-      if (it.sourceId === "nws-api") return [`/points/${Number(lat).toFixed(4)},${Number(lon).toFixed(4)}`];
-      return it.sourceId === "usgs-epqs" ? [`x=${lon}&y=${lat}`] : [`geometry=${lon},${lat}`];
+      const [lon, lat] = readPoint(where, it, rec);
+      if (it.sourceId === "nws-api") return [`/points/${lat.toFixed(4)},${lon.toFixed(4)}`];
+      return it.sourceId === "usgs-epqs" ? [`x=${lon}&y=${lat}&`] : [`geometry=${lon},${lat}&`, "/NFHL/MapServer/28/query?"];
     }
     case "usgs-wbd":
       return [`huc12%3D'${code}'`];
@@ -802,11 +852,12 @@ function recordIds(it: WorldItem, r: ToolReply): string[] {
       return it.fact === "FEMA declaration" ? [`disasterNumber%20eq%20${code.replace(/^[A-Z]+-/, "")}`] : [`fipsStateCode%20eq%20'${cf.slice(0, 2)}'`, `fipsCountyCode%20eq%20'${cf.slice(2)}'`];
     case "usdm": {
       const [y, m, d] = String(it.period).split("-");
-      return [`aoi=${cf}`, `startdate=${Number(m)}/${Number(d)}/${y}`];
+      // one map date, and statisticsType=2: per-class shares as the item states them (1 is cumulative)
+      return [`aoi=${cf}&`, `startdate=${Number(m)}/${Number(d)}/${y}&`, `enddate=${Number(m)}/${Number(d)}/${y}&`, /[?&]statisticsType=2$/];
     }
     case "bls-qcew": {
       const [y, q2] = String(it.period).split(" Q");
-      return [`/${y}/${q2}/area/`];
+      return [`/${y}/${q2}/area/${place.kind === "state" ? `${place.stateFips}000` : cf}.csv`];
     }
     case "hifld-hospitals":
       return [`ID%3D'${code.replace(/^hifld-hosp:/, "")}'`];
@@ -827,14 +878,23 @@ function recordIds(it: WorldItem, r: ToolReply): string[] {
   }
 }
 
-function checkRecordUrl(where: string, it: WorldItem, r: ToolReply): void {
+function checkRecordUrl(where: string, it: WorldItem, r: ToolReply, rec: Recorded): void {
   const host = RECORD_HOSTS[it.sourceId];
   expect(host, `${where}: a source with a known record host`).toBeDefined();
   expect(it.upstreamRecordUrl, `${where}: on the publisher's host`).toMatch(host);
   if (/^(NWS alert|earthquake)$/.test(it.fact)) return; // the event's own URL, checked against the live list in (1b)
-  const ids = recordIds(it, r);
+  const ids = recordIds(where, it, r, rec);
   expect(ids.length, `${where}: an id rule`).toBeGreaterThan(0);
-  for (const id of ids) expect(it.upstreamRecordUrl, `${where}: names ${id}`).toContain(id);
+  for (const id of ids) {
+    if (typeof id === "string") expect(it.upstreamRecordUrl, `${where}: names ${id}`).toContain(id);
+    else expect(it.upstreamRecordUrl, `${where}: matches ${id}`).toMatch(id);
+  }
+  // a dam labelled by its id: the record link does not fetch the name the reply withholds
+  if (it.sourceId === "usace-nid" && it.value == null) {
+    const fields = decodeURIComponent(/[?&]outFields=([^&]*)/.exec(it.upstreamRecordUrl!)?.[1] ?? "*").split(",");
+    expect(fields, `${where}: an explicit field list`).not.toContain("*");
+    expect(fields, `${where}: no NAME for a dam labelled by id`).not.toContain("NAME");
+  }
 }
 
 /** Every (route, source) pair the tool cited in a reply, except the calendar (which cites no provenance of its own). */
@@ -871,6 +931,11 @@ describe("world_context: invariant over recorded live replies", () => {
       const r = await runRecorded(rec);
       expect(allItems(r).length).toBeGreaterThan(0);
       checkInvariant(label, rec, r);
+      // where the recorded fabric reply states its point, the point reads link to their record (never the no-record branch)
+      for (const it of allItems(r).filter((i) => i.fact === "elevation" || i.fact === "FEMA flood zone")) {
+        const p = (((rec.routes[routeOf(it.link)]?.body as JsonObject)?.data as JsonObject)?.point ?? {}) as JsonObject;
+        if (typeof p.lon === "number") expect(it.upstreamRecordUrl, `${label}: ${it.fact} has a record URL`).toBeDefined();
+      }
       expect(new TextEncoder().encode(JSON.stringify(toCallResult(r).structuredContent)).length).toBeLessThanOrEqual(WORLD_MAX_BYTES);
     });
 

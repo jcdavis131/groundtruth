@@ -112,7 +112,8 @@ function trim(p, body) {
   if (p.startsWith("/api/screen")) keep.data = { rows: (d.rows ?? []).map((r) => ({ name: r.name, geo: r.geo, values: pick(r.values ?? {}, SCREEN_VALUES) })) };
   else if (p.startsWith("/api/fabric?op=stack"))
     keep.data = {
-      point: pick(d.point ?? {}, ["elevationM"]),
+      // lon/lat are the snapped point the fabric read at; record URLs for point queries are built from it.
+      point: pick(d.point ?? {}, ["lon", "lat", "elevationM"]),
       nodes: (d.nodes ?? []).map((n) => ({ ...pick(n, ["kind", "name", "code", "source"]), facts: pick(n.facts ?? {}, NODE_FACTS) })),
       ...pick(d, ["failed", "coverage"]),
     };

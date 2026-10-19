@@ -311,12 +311,15 @@ function item(c: Cite | NoCite, fact: string, value: WorldItem["value"], extra: 
 
 const enc = encodeURIComponent;
 
-/** An ArcGIS layer query for one record, on the layer the item's own provenance names; else why not. */
-function arcgisRecord(c: Cite | NoCite, where: string): string | NoRecord {
+/**
+ * An ArcGIS layer query for one record, on the layer the item's own provenance names; else why not.
+ * `outFields` narrows the reply where `*` would show a field the item withholds (a private dam's name).
+ */
+function arcgisRecord(c: Cite | NoCite, where: string, outFields = "*"): string | NoRecord {
   if (!isCite(c)) return noRecord("no citation");
   const base = c.upstreamUrl.replace(/\/+$/, "");
   if (!/\/(FeatureServer|MapServer)\/\d+$/.test(base)) return noRecord("the cited source is not a single ArcGIS layer this tool can query by id");
-  return `${base}/query?where=${enc(where)}&outFields=*&returnGeometry=false&f=json`;
+  return `${base}/query?where=${enc(where)}&outFields=${outFields}&returnGeometry=false&f=json`;
 }
 
 const TIGER_CURRENT = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer";
@@ -363,12 +366,16 @@ function qcewRecord(period: string | undefined, area: string | null): string | N
   return `https://data.bls.gov/cew/data/api/${m[1]}/${m[2]}/area/${area}.csv`;
 }
 
+/** NID fields a dam item states (owner type, hazard, condition, year), besides NIDID and, for a named dam, NAME. */
+const DAM_RECORD_FIELDS = ["PRIMARY_OWNER_TYPE", "OWNER_TYPES", "HAZARD_POTENTIAL", "CONDITION_ASSESSMENT", "YEAR_COMPLETED"];
+
 /** USDM's county area-percent statistics for the one map date the item states. */
 function usdmRecord(fips: string, mapDate: string | null): string | NoRecord {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(mapDate ?? "");
   if (!m) return noRecord("the route gave no map date");
   const d = `${Number(m[2])}/${Number(m[3])}/${m[1]}`;
-  return `https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=${fips}&startdate=${d}&enddate=${d}&statisticsType=1`;
+  // statisticsType=2 is categorical (per-class shares summing to 100), as the item states them; 1 is cumulative (D0 includes D1-D4).
+  return `https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=${fips}&startdate=${d}&enddate=${d}&statisticsType=2`;
 }
 
 /** CMS Provider Data: the Hospital General Information row for one CCN, on the dataset the route cites. */
@@ -567,12 +574,18 @@ function nodeNote(n: Node): string | undefined {
   return parts.length ? parts.join("; ") : undefined;
 }
 
-/** The point the fabric was asked at: the lon and lat of the route URL it answered. */
+/**
+ * The point the fabric read at: the route snaps the asked point to a 0.001 grid and reads every
+ * upstream there, so a record URL built from the asked point can return a different value. Only
+ * the reply's own point (data.point, else meta.snapped) is used; never the query.
+ */
 function fabricPoint(fabric: Got): [number, number] | null {
-  const qs = new URLSearchParams(fabric.url.split("?")[1] ?? "");
-  const lon = num(qs.get("lon"));
-  const lat = num(qs.get("lat"));
-  return lon == null || lat == null ? null : [lon, lat];
+  for (const p of [obj(obj(fabric.body.data).point), obj(obj(fabric.body.meta).snapped)]) {
+    const lon = num(p.lon);
+    const lat = num(p.lat);
+    if (lon != null && lat != null) return [lon, lat];
+  }
+  return null;
 }
 
 /** A fabric node's record at its publisher: TIGERweb by GEOID, the rest by code or by the point. */
@@ -845,7 +858,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
       const elev = num(obj(obj(fabric.body.data).point).elevationM);
       if (elev != null) {
         const at = fabricPoint(fabric);
-        push(s, item(cite(fabric, "usgs-epqs"), "elevation", elev, { unit: "m", note: r.kind === "bbox" ? "at the centre of the box" : undefined, record: at ? pointRecord("usgs-epqs", "elevation", null, at[0], at[1]) : noRecord("the fabric URL states no point") }));
+        push(s, item(cite(fabric, "usgs-epqs"), "elevation", elev, { unit: "m", note: r.kind === "bbox" ? "at the centre of the box" : undefined, record: at ? pointRecord("usgs-epqs", "elevation", null, at[0], at[1]) : noRecord("the fabric reply does not state the point it was read at") }));
       }
       else miss(s, "elevation", "USGS 3DEP gave no elevation for this point");
       fabricFailed(fabric, s);
@@ -1090,7 +1103,8 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
       return item(c, "dam", name, {
         code: nid ?? undefined,
         point: pt ?? undefined,
-        record: nid?.startsWith("nid:") ? arcgisRecord(c, `NIDID='${nid.slice(4)}'`) : noRecord("the route gave no NID id"),
+        // A dam labelled by its id gets a record link that leaves NAME out too: the reply withholds it.
+        record: nid?.startsWith("nid:") ? arcgisRecord(c, `NIDID='${nid.slice(4)}'`, (name ? ["NIDID", "NAME", ...DAM_RECORD_FIELDS] : ["NIDID", ...DAM_RECORD_FIELDS]).join(",")) : noRecord("the route gave no NID id"),
         note: [unnamed, str(d["hazard potential"]) ? `hazard potential ${str(d["hazard potential"])}` : null, str(d["condition assessment"]) ? `condition ${str(d["condition assessment"])}` : null, str(d["year completed"]) ? `completed ${str(d["year completed"])}` : null, str(d["owner type"]) ? `owner type ${str(d["owner type"])}` : null, boxNote]
           .filter(Boolean)
           .join("; "),
