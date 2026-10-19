@@ -132,14 +132,14 @@ export const LABEL_BY_ID_FORM = {
  */
 export const DAM_NAMED_OWNER_TYPES = new Set(["federal", "state", "local government", "public utility", "tribal government"]);
 
-function damOwnerProblem(details) {
+export function damOwnerProblem(details) {
   const d = details && typeof details === "object" ? details : {};
   const primary = typeof d["owner type"] === "string" ? d["owner type"].trim().toLowerCase() : "";
   if (!DAM_NAMED_OWNER_TYPES.has(primary)) return `owner type ${JSON.stringify(d["owner type"] ?? null)} is not public (Not Listed or missing is unknown, not public)`;
-  if (Object.hasOwn(d, "owner types")) {
-    const bad = String(d["owner types"] ?? "").split(",").map((s) => s.trim().toLowerCase()).filter((e) => !DAM_NAMED_OWNER_TYPES.has(e));
-    if (bad.length) return `owner types ${JSON.stringify(d["owner types"])} include a non-public entry`;
-  }
+  // No owner-types list can't show that every owner is public: fail closed, as the builder and eye do.
+  if (!Object.hasOwn(d, "owner types")) return "owner types missing: a public-name dam must show every owner is public";
+  const bad = String(d["owner types"] ?? "").split(",").map((s) => s.trim().toLowerCase()).filter((e) => !DAM_NAMED_OWNER_TYPES.has(e));
+  if (bad.length) return `owner types ${JSON.stringify(d["owner types"])} include a non-public entry`;
   return null;
 }
 

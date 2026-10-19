@@ -83,5 +83,19 @@ class DamNameRuleTest(unittest.TestCase):
         self.assertIn("name: Bardwell Dam", r["text"])
 
 
+class DamRuleParityTest(unittest.TestCase):
+    """The same case table the validator and eye read (data/schema/fixtures/dam-owner-cases.json): every owner pair
+    NID publishes plus edge cases. dam_name_rule must agree with "named" on every one."""
+
+    def test_every_case(self):
+        doc = json.loads((REPO / "data" / "schema" / "fixtures" / "dam-owner-cases.json").read_text("utf8"))
+        for c in doc["cases"]:
+            details = {"owner type": c["primary"]}
+            if not c.get("absent"):
+                details["owner types"] = c["ownerTypes"]
+            want = "public-name" if c["named"] else "label-by-id"
+            self.assertEqual(cards.dam_name_rule(details), want, c)
+
+
 if __name__ == "__main__":
     unittest.main()

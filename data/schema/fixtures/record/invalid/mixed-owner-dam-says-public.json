@@ -34,10 +34,10 @@
     "county": "Ellis, Texas",
     "state": "Texas",
     "owner type": "Local Government",
+    "owner types": "Local Government, Private",
     "emergency action plan": "Yes",
     "operational status": "Normal Operations",
-    "NID record updated": "2026-09-17",
-    "owner types": "Local Government, Private"
+    "NID record updated": "2026-09-17"
   },
   "text": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Bardwell Dam; county: Ellis, Texas; state: Texas; dam purpose: Flood Risk Reduction; dam type: Earth; hazard potential: High; year completed: 1965",
   "provenance": {
