@@ -14,11 +14,11 @@
     "rule": "point-in-polygon",
     "definition": "A record is in when NID's STATE field (eye's details.state) puts it in Texas and its point lies inside, or within 0.05 degrees of, eye's outline state:48 from https://eye.jcamd.com/api/economy?op=areas&level=state (Census TIGERweb, generalised 1:20M; response sha256 e43aaa9eecb50a923507578c16309b9b8199b158ed84e138bbb419c654ddbaa3, retrieved 2026-10-18T23:06:58.575Z). The tolerance covers the generalised coast and river borders; the source's own state field decides between neighbours. bbox is the widened outline's extent. Records came from 46 requests to eye's infra?op=dams: 1.5-degree boxes on eye's 0.25-degree grid that touch the widened outline, each split in four while eye said truncated (0 split), deduplicated by id."
   },
-  "createdAt": "2026-10-19T01:35:35Z",
+  "createdAt": "2026-10-19T01:54:53Z",
   "builder": {
     "name": "groundtruth data/pipeline/build.py",
     "version": "0.1.0",
-    "gitSha": "517dc76b999377b4220407f231644a62b3857efe",
+    "gitSha": "251f8949bc2ff764c7535d9cb4d94a7d497ac6ee",
     "repo": "github.com/jcdavis131/groundtruth"
   },
   "recordSchemaVersion": "record/1",
@@ -94,15 +94,15 @@
     {
       "path": "records.parquet",
       "format": "geoparquet",
-      "sha256": "e9dae817e2c2cbeb2a221616d92dfff0b5c1d3b7b187ec9ff9cae453cce8f2dc",
-      "bytes": 1120052,
+      "sha256": "52f03895d0f701b4b847e336c0e2bb552bbaa0e518877b9e967f8669cf4c181f",
+      "bytes": 1118400,
       "records": 7415
     }
   ],
   "withheldFields": [
     {
       "field": "published name",
-      "why": "NID's NAME on a privately owned dam can be its owner's name ('<Surname> Pond Dam'); eye shows it on click but never searches or embeds it, labels the dam by NID id, and a training snapshot leaves it out. A dam whose name is allowed carries it in name."
+      "why": "NID's NAME on a privately owned dam can be its owner's name ('<Surname> Pond Dam'); eye shows it on click but never searches or embeds it, labels the dam by NID id, and a training snapshot leaves it out. The same holds for a dam whose owner type is Not Listed, missing or any value other than Federal, State, Local Government, Public Utility or Tribal Government (a non-answer is unknown, not public). A dam whose name is allowed carries it in name. This build labelled 39 dams by NID id that eye's answers still named, and took their name out of the record text: eye's rule before 2026-10-19 named Not Listed dams and dams with no owner type. eye's answers here carry no OWNER_TYPES, so a dam that is Private only in NID's OWNER_TYPES list is not seen and keeps its name (34 in Texas per NID's FeatureServer/0 on 2026-10-18); a rebuild from eye's answers after it requests OWNER_TYPES labels them by id."
     }
   ]
 }
