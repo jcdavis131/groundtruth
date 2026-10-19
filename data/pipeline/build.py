@@ -203,15 +203,22 @@ def arcgis(layer: str, where: str, extra: str) -> str:
     return f"{layer}/query?where={urllib.parse.quote(where)}&{extra}&f=json"
 
 
+def _point(g) -> tuple[float, float] | None:
+    if isinstance(g, dict) and isinstance(g.get("x"), (int, float)) and isinstance(g.get("y"), (int, float)):
+        return (float(g["x"]), float(g["y"]))
+    return None
+
+
 def publisher_ids(fx: Fetcher, pub: dict, where: str) -> tuple[dict[str, dict], int, dict[str, int]]:
     """({eye id: attributes}, rows the publisher returned, {eye id: rows} for ids on more than one row)."""
     fields = ",".join(x for x in [pub["idField"], pub.get("statusField")] if x)
     rows, off = [], 0
     while True:
-        page = fx.get_json(arcgis(pub["layer"], where, f"outFields={fields}&returnGeometry=false&orderByFields={pub['idField']}&resultOffset={off}&resultRecordCount=2000"), "gap")
+        page = fx.get_json(arcgis(pub["layer"], where, f"outFields={fields}&returnGeometry=true&outSR=4326&orderByFields={pub['idField']}&resultOffset={off}&resultRecordCount=2000"), "gap")
         if "error" in page:
             raise SystemExit(f"publisher id query failed: {page['error']}")
-        got = [x["attributes"] for x in page.get("features", [])]
+        # The publisher's own point rides along as _pt, to say why no tile held a row.
+        got = [{**x["attributes"], "_pt": _point(x.get("geometry"))} for x in page.get("features", [])]
         rows += got
         off += len(got)
         if not got or not page.get("exceededTransferLimit"):
@@ -225,7 +232,7 @@ def publisher_ids(fx: Fetcher, pub: dict, where: str) -> tuple[dict[str, dict], 
     return by_id, len(rows), {k: n for k, n in times.items() if n > 1}
 
 
-def count_and_gap(fx: Fetcher, cfg: dict, region: dict, records: list[dict], dropped: dict, neighbours: int) -> dict:
+def count_and_gap(fx: Fetcher, cfg: dict, region: dict, records: list[dict], dropped: dict, neighbours: int, outline: geo.Region) -> dict:
     pub = cfg["publisher"]
     where = pub["stateWhere"](region)
     url = arcgis(pub["layer"], where, "returnCountOnly=true")
@@ -244,17 +251,23 @@ def count_and_gap(fx: Fetcher, cfg: dict, region: dict, records: list[dict], dro
         raise SystemExit(f"publisher id pages hold {rows} rows, its count says {c['count']}")
     served = publisher_ids(fx, pub, f"({where}) AND {pub['eyeWhere']}")[0] if pub.get("eyeWhere") else None
     have = {r["id"] for r in records}
+    missing = sorted(set(theirs) - have)
+    near = outline.near([(eid, *theirs[eid]["_pt"]) for eid in missing if theirs[eid]["_pt"]])
     groups: dict[str, list[str]] = {}
-    for eid in sorted(set(theirs) - have):
+    for eid in missing:
         a = theirs[eid]
         if pub.get("notServed") and pub["notServed"](a):
-            why = pub["notServedWhy"].format(**{k: a.get(k) for k in a})
+            why = pub["notServedWhy"].format(**{k: ("(none)" if v is None else v) for k, v in a.items()})
         elif served is not None and eid not in served:
             why = "address restricted (NPS's Address field marks it; eye filters these out and never requests the address)"
         elif eid in dropped:
             why = f"left out by this snapshot's region rule: {dropped[eid]}"
+        elif a["_pt"] is None:
+            why = "the publisher files it under the state, but its row has no point, so no tile could hold it"
+        elif eid not in near:
+            why = f"the publisher files it under the state, but its own point lies more than {outline.tolerance} degrees outside eye's outline, so no tile asked for it"
         else:
-            why = "the publisher files it under the state, but no tile of eye's answers held it"
+            why = "the publisher files it under the state and its point is inside, but no tile of eye's answers held it"
         groups.setdefault(why, []).append(eid)
     extra = sorted(have - set(theirs))
     parts = [f"{len(ids)} {why}: {', '.join(ids)}" for why, ids in sorted(groups.items(), key=lambda kv: -len(kv[1]))]
@@ -324,7 +337,7 @@ def build(collection: str, region: dict, data_root: Path, manifests: Path, git_s
         raise SystemExit(f"{pq} has no GeoParquet 'geo' metadata")
     pq_bytes = pq.read_bytes()
 
-    publisher_count = count_and_gap(fx, cfg, region, records, dropped, neighbours)
+    publisher_count = count_and_gap(fx, cfg, region, records, dropped, neighbours, outline)
     tol = cards.BOUNDARY_TOLERANCE_DEG
     manifest = {
         "schemaVersion": "manifest/1",
