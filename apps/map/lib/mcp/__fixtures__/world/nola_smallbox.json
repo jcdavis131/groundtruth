@@ -1,0 +1,2918 @@
+{
+ "recorded": "2026-10-19T02:32:24.233Z",
+ "from": "https://www.arxiviq.com",
+ "input": {
+  "bbox": [
+   -90.08,
+   29.94,
+   -90.05,
+   29.97
+  ]
+ },
+ "routes": {
+  "/api/fabric?op=stack&lon=-90.065&lat=29.955": {
+   "status": 200,
+   "body": {
+    "data": {
+     "point": {
+      "elevationM": 2.5
+     },
+     "nodes": [
+      {
+       "kind": "tract",
+       "name": "Census Tract 135.02",
+       "code": "22071013502",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "zcta",
+       "name": "70130",
+       "code": "70130",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc12",
+       "name": "Bayou Saint John-Canal Number Two",
+       "code": "080902030103",
+       "source": "usgs-wbd",
+       "facts": {
+        "drains to": "080902030302"
+       }
+      },
+      {
+       "kind": "place",
+       "name": "New Orleans city",
+       "code": "2255000",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "school",
+       "name": "Orleans Parish School District",
+       "code": "2201170",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "unified"
+       }
+      },
+      {
+       "kind": "county",
+       "name": "Orleans Parish, LA",
+       "code": "22071",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "cd",
+       "name": "LA-02",
+       "code": "2202",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "cbsa",
+       "name": "New Orleans-Metairie, LA Metro Area",
+       "code": "35380",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "metropolitan"
+       }
+      },
+      {
+       "kind": "nws-office",
+       "name": "NWS New Orleans/Baton Rouge",
+       "code": "LIX",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "eco3",
+       "name": "Mississippi Alluvial Plain",
+       "code": "73",
+       "source": "epa-ecoregions",
+       "facts": {}
+      },
+      {
+       "kind": "state",
+       "name": "Louisiana",
+       "code": "22",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "timezone",
+       "name": "America/Chicago",
+       "code": "America/Chicago",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "country",
+       "name": "United States",
+       "code": "USA",
+       "source": "natural-earth",
+       "facts": {}
+      }
+     ],
+     "failed": [
+      {
+       "source": "fema-nfhl",
+       "error": "This operation was aborted (not retried for 5 min)"
+      }
+     ],
+     "answered": [
+      "natural-earth",
+      "census-tigerweb",
+      "federal-regions",
+      "usgs-wbd",
+      "epa-ecoregions",
+      "nws-api",
+      "usgs-epqs",
+      "wikipedia"
+     ],
+     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "natural-earth",
+       "publisher": "Natural Earth",
+       "url": "https://www.naturalearthdata.com/"
+      },
+      "retrievedAt": "2026-10-19T02:32:23.436Z"
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T02:32:23.436Z"
+     },
+     {
+      "source": {
+       "id": "federal-regions",
+       "publisher": "EPA, FEMA, Federal Reserve System",
+       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
+      },
+      "retrievedAt": "2026-10-19T02:32:23.436Z"
+     },
+     {
+      "source": {
+       "id": "usgs-wbd",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
+      },
+      "retrievedAt": "2026-10-19T02:32:23.436Z"
+     },
+     {
+      "source": {
+       "id": "epa-ecoregions",
+       "publisher": "U.S. Environmental Protection Agency",
+       "url": "https://www.epa.gov/eco-research/ecoregions"
+      },
+      "retrievedAt": "2026-10-19T02:32:23.436Z"
+     },
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "retrievedAt": "2026-10-19T02:32:23.436Z"
+     },
+     {
+      "source": {
+       "id": "usgs-epqs",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://apps.nationalmap.gov/epqs/"
+      },
+      "retrievedAt": "2026-10-19T02:32:23.436Z"
+     },
+     {
+      "source": {
+       "id": "wikipedia",
+       "publisher": "Wikimedia Foundation",
+       "url": "https://en.wikipedia.org/"
+      },
+      "retrievedAt": "2026-10-19T02:32:23.436Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:23.436Z"
+   }
+  },
+  "/api/screen?kind=county&q=geoid%20%3D%3D%20%2222071%22%20LIMIT%201": {
+   "status": 200,
+   "body": {
+    "data": {
+     "rows": [
+      {
+       "name": "Orleans Parish, LA",
+       "geo": [
+        -89.9267086,
+        30.069735
+       ],
+       "values": {
+        "name": "Orleans Parish",
+        "geoid": "22071",
+        "state": "LA",
+        "jobs.emp": 185249,
+        "jobs.avgWeeklyWage": 1463,
+        "jobs.period": "2026 Q1",
+        "jobs.suppressed": "false",
+        "home.latest": 242068.5341067028,
+        "home.yoyPct": -1.5468433786523401,
+        "home.asOf": "2026-09-30",
+        "rent.latest": 1633.0559213978877
+       }
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T02:29:23.898Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T02:29:23.898Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T02:29:23.898Z"
+     },
+     {
+      "source": {
+       "id": "bls-qcew",
+       "publisher": "U.S. Bureau of Labor Statistics",
+       "url": "https://www.bls.gov/cew/"
+      },
+      "retrievedAt": "2026-10-19T02:29:23.898Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T02:29:23.898Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T02:29:23.898Z"
+     },
+     {
+      "source": {
+       "id": "bls-qcew",
+       "publisher": "U.S. Bureau of Labor Statistics",
+       "url": "https://www.bls.gov/cew/"
+      },
+      "retrievedAt": "2026-10-19T02:29:23.898Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:23.557Z"
+   }
+  },
+  "/api/releases?op=calendar": {
+   "status": 200,
+   "body": {
+    "data": {
+     "from": "2026-10-19",
+     "to": "2026-11-18",
+     "releases": [
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-22",
+        "latest": "2026-10-22",
+        "nominal": "2026-10-22"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-29",
+        "latest": "2026-10-29",
+        "nominal": "2026-10-29"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-05",
+        "latest": "2026-11-05",
+        "nominal": "2026-11-05"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-12",
+        "latest": "2026-11-12",
+        "nominal": "2026-11-12"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "zillow-zhvi",
+       "sourceId": "zillow-zhvi",
+       "title": "Zillow ZHVI typical home value (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-14",
+        "latest": "2026-11-21",
+        "nominal": "2026-11-14"
+       },
+       "scheduleUrl": "https://www.zillow.com/research/data/"
+      },
+      {
+       "id": "zillow-zori",
+       "sourceId": "zillow-zori",
+       "title": "Zillow ZORI typical rent (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-14",
+        "latest": "2026-11-21",
+        "nominal": "2026-11-14"
+       },
+       "scheduleUrl": "https://www.zillow.com/research/data/"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "bts-border",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "usgs-water",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://api.waterdata.usgs.gov/"
+      },
+      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.freddiemac.com/pmms",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "bts-supply-chain",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/news/schedule",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:47.351Z"
+   }
+  },
+  "/api/live": {
+   "status": 200,
+   "body": {
+    "data": {
+     "items": [],
+     "failed": [],
+     "unmapped": 0
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     },
+     {
+      "source": {
+       "id": "usgs-earthquakes",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://earthquake.usgs.gov/"
+      },
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:49.835Z"
+   }
+  },
+  "/api/fabric?op=field&kind=county&bbox=-90.08,29.94,-90.05,29.97": {
+   "status": 200,
+   "body": {
+    "data": {
+     "units": [
+      {
+       "code": "22051",
+       "name": "Jefferson Parish, LA",
+       "rings": [
+        [
+         [
+          -90.0688,
+          29.9211
+         ],
+         [
+          -90.0625,
+          29.926
+         ],
+         [
+          -90.0592,
+          29.9304
+         ],
+         [
+          -90.058,
+          29.938
+         ],
+         [
+          -90.0585,
+          29.9453
+         ],
+         [
+          -90.008,
+          29.8969
+         ],
+         [
+          -90.0098,
+          29.8915
+         ],
+         [
+          -90.023,
+          29.8682
+         ],
+         [
+          -90.0235,
+          29.8655
+         ],
+         [
+          -90.0226,
+          29.865
+         ],
+         [
+          -90.0229,
+          29.8625
+         ],
+         [
+          -90.0255,
+          29.8594
+         ],
+         [
+          -90.0255,
+          29.8565
+         ],
+         [
+          -90.0269,
+          29.8535
+         ],
+         [
+          -90.0333,
+          29.8483
+         ],
+         [
+          -90.0405,
+          29.8457
+         ],
+         [
+          -90.0446,
+          29.8414
+         ],
+         [
+          -90.0517,
+          29.8379
+         ],
+         [
+          -90.0538,
+          29.8383
+         ],
+         [
+          -90.0585,
+          29.8367
+         ],
+         [
+          -90.0606,
+          29.8345
+         ],
+         [
+          -90.0643,
+          29.833
+         ],
+         [
+          -90.0684,
+          29.8292
+         ],
+         [
+          -90.0686,
+          29.8265
+         ],
+         [
+          -90.0676,
+          29.8255
+         ],
+         [
+          -90.0675,
+          29.8237
+         ],
+         [
+          -90.0716,
+          29.8104
+         ],
+         [
+          -90.0717,
+          29.8068
+         ],
+         [
+          -90.0704,
+          29.8037
+         ],
+         [
+          -90.0685,
+          29.8018
+         ],
+         [
+          -90.0649,
+          29.7909
+         ],
+         [
+          -90.06,
+          29.7841
+         ],
+         [
+          -90.0608,
+          29.7833
+         ],
+         [
+          -90.0628,
+          29.7832
+         ],
+         [
+          -90.0728,
+          29.7733
+         ],
+         [
+          -90.0757,
+          29.7719
+         ],
+         [
+          -90.0657,
+          29.7531
+         ],
+         [
+          -90.0673,
+          29.7389
+         ],
+         [
+          -90.0622,
+          29.731
+         ],
+         [
+          -90.0406,
+          29.708
+         ],
+         [
+          -90.038,
+          29.6997
+         ],
+         [
+          -90.0295,
+          29.6871
+         ],
+         [
+          -90.0159,
+          29.6744
+         ],
+         [
+          -90.0036,
+          29.6313
+         ],
+         [
+          -90.0022,
+          29.6234
+         ],
+         [
+          -90.0007,
+          29.6223
+         ],
+         [
+          -89.9977,
+          29.6227
+         ],
+         [
+          -89.9948,
+          29.6212
+         ],
+         [
+          -89.9906,
+          29.6225
+         ],
+         [
+          -89.9875,
+          29.6215
+         ],
+         [
+          -89.9852,
+          29.6189
+         ],
+         [
+          -89.9845,
+          29.6166
+         ],
+         [
+          -89.9879,
+          29.6149
+         ],
+         [
+          -89.988,
+          29.6138
+         ],
+         [
+          -89.9862,
+          29.6121
+         ],
+         [
+          -89.9851,
+          29.6095
+         ],
+         [
+          -89.9812,
+          29.6087
+         ],
+         [
+          -89.98,
+          29.6076
+         ],
+         [
+          -89.9835,
+          29.6018
+         ],
+         [
+          -89.9833,
+          29.6003
+         ],
+         [
+          -89.9798,
+          29.5974
+         ],
+         [
+          -89.9801,
+          29.5952
+         ],
+         [
+          -89.9818,
+          29.5927
+         ],
+         [
+          -89.9812,
+          29.5887
+         ],
+         [
+          -89.9801,
+          29.5876
+         ],
+         [
+          -89.9773,
+          29.5888
+         ],
+         [
+          -89.976,
+          29.588
+         ],
+         [
+          -89.9812,
+          29.5842
+         ],
+         [
+          -89.981,
+          29.5793
+         ],
+         [
+          -89.9861,
+          29.575
+         ],
+         [
+          -89.9832,
+          29.5724
+         ],
+         [
+          -89.9825,
+          29.5678
+         ],
+         [
+          -89.987,
+          29.5642
+         ],
+         [
+          -89.9887,
+          29.5617
+         ],
+         [
+          -89.9887,
+          29.5494
+         ],
+         [
+          -89.9849,
+          29.5402
+         ],
+         [
+          -89.9857,
+          29.5372
+         ],
+         [
+          -89.9827,
+          29.5361
+         ],
+         [
+          -89.9798,
+          29.538
+         ],
+         [
+          -89.9789,
+          29.5336
+         ],
+         [
+          -89.9796,
+          29.4856
+         ],
+         [
+          -89.9775,
+          29.4856
+         ],
+         [
+          -89.9775,
+          29.4494
+         ],
+         [
+          -89.9708,
+          29.4451
+         ],
+         [
+          -89.9659,
+          29.4393
+         ],
+         [
+          -89.9609,
+          29.4307
+         ],
+         [
+          -89.9519,
+          29.3935
+         ],
+         [
+          -89.9465,
+          29.3752
+         ],
+         [
+          -89.9307,
+          29.3356
+         ],
+         [
+          -89.9188,
+          29.3201
+         ],
+         [
+          -89.9144,
+          29.3086
+         ],
+         [
+          -89.9087,
+          29.2999
+         ],
+         [
+          -89.9023,
+          29.2923
+         ],
+         [
+          -89.9001,
+          29.2502
+         ],
+         [
+          -89.8997,
+          29.155
+         ],
+         [
+          -90.0323,
+          29.135
+         ],
+         [
+          -90.0556,
+          29.122
+         ],
+         [
+          -90.0694,
+          29.1097
+         ],
+         [
+          -90.0891,
+          29.0946
+         ],
+         [
+          -90.0891,
+          29.163
+         ],
+         [
+          -90.0899,
+          29.1641
+         ],
+         [
+          -90.0861,
+          29.1744
+         ],
+         [
+          -90.0878,
+          29.1787
+         ],
+         [
+          -90.0905,
+          29.1809
+         ],
+         [
+          -90.0849,
+          29.1846
+         ],
+         [
+          -90.0865,
+          29.1872
+         ],
+         [
+          -90.0834,
+          29.1884
+         ],
+         [
+          -90.0818,
+          29.192
+         ],
+         [
+          -90.0755,
+          29.1966
+         ],
+         [
+          -90.0737,
+          29.1964
+         ],
+         [
+          -90.0725,
+          29.1973
+         ],
+         [
+          -90.0705,
+          29.2008
+         ],
+         [
+          -90.062,
+          29.2052
+         ],
+         [
+          -90.0635,
+          29.2061
+         ],
+         [
+          -90.0635,
+          29.2106
+         ],
+         [
+          -90.056,
+          29.2304
+         ],
+         [
+          -90.0474,
+          29.2416
+         ],
+         [
+          -90.0402,
+          29.253
+         ],
+         [
+          -90.0338,
+          29.2609
+         ],
+         [
+          -90.0309,
+          29.2675
+         ],
+         [
+          -90.0293,
+          29.2693
+         ],
+         [
+          -90.0159,
+          29.274
+         ],
+         [
+          -90.0143,
+          29.2753
+         ],
+         [
+          -90.0098,
+          29.2825
+         ],
+         [
+          -90.0001,
+          29.2949
+         ],
+         [
+          -89.999,
+          29.2983
+         ],
+         [
+          -89.9993,
+          29.3015
+         ],
+         [
+          -90.0033,
+          29.3104
+         ],
+         [
+          -90.0065,
+          29.3134
+         ],
+         [
+          -90.021,
+          29.3207
+         ],
+         [
+          -90.0278,
+          29.3268
+         ],
+         [
+          -90.0302,
+          29.3321
+         ],
+         [
+          -90.0296,
+          29.3411
+         ],
+         [
+          -90.0303,
+          29.3448
+         ],
+         [
+          -90.0312,
+          29.3471
+         ],
+         [
+          -90.0357,
+          29.3509
+         ],
+         [
+          -90.0351,
+          29.3565
+         ],
+         [
+          -90.0361,
+          29.366
+         ],
+         [
+          -90.0354,
+          29.3682
+         ],
+         [
+          -90.0294,
+          29.377
+         ],
+         [
+          -90.0286,
+          29.3794
+         ],
+         [
+          -90.0291,
+          29.3822
+         ],
+         [
+          -90.0309,
+          29.3845
+         ],
+         [
+          -90.0291,
+          29.3875
+         ],
+         [
+          -90.0333,
+          29.3933
+         ],
+         [
+          -90.0251,
+          29.4133
+         ],
+         [
+          -90.0206,
+          29.4285
+         ],
+         [
+          -90.0223,
+          29.4311
+         ],
+         [
+          -90.0292,
+          29.4319
+         ],
+         [
+          -90.0376,
+          29.4363
+         ],
+         [
+          -90.0421,
+          29.4434
+         ],
+         [
+          -90.042,
+          29.4459
+         ],
+         [
+          -90.0374,
+          29.4478
+         ],
+         [
+          -90.0429,
+          29.4523
+         ],
+         [
+          -90.0486,
+          29.4552
+         ],
+         [
+          -90.0474,
+          29.4586
+         ],
+         [
+          -90.0476,
+          29.4604
+         ],
+         [
+          -90.049,
+          29.4615
+         ],
+         [
+          -90.0542,
+          29.4615
+         ],
+         [
+          -90.0627,
+          29.4592
+         ],
+         [
+          -90.0695,
+          29.4614
+         ],
+         [
+          -90.0749,
+          29.4651
+         ],
+         [
+          -90.0782,
+          29.4661
+         ],
+         [
+          -90.0805,
+          29.4659
+         ],
+         [
+          -90.0859,
+          29.4625
+         ],
+         [
+          -90.0952,
+          29.4614
+         ],
+         [
+          -90.1141,
+          29.4657
+         ],
+         [
+          -90.125,
+          29.4702
+         ],
+         [
+          -90.1375,
+          29.4772
+         ],
+         [
+          -90.1402,
+          29.4817
+         ],
+         [
+          -90.1423,
+          29.4915
+         ],
+         [
+          -90.1445,
+          29.4974
+         ],
+         [
+          -90.1464,
+          29.5007
+         ],
+         [
+          -90.1554,
+          29.5105
+         ],
+         [
+          -90.1646,
+          29.5235
+         ],
+         [
+          -90.1693,
+          29.5327
+         ],
+         [
+          -90.1722,
+          29.5412
+         ],
+         [
+          -90.1742,
+          29.5429
+         ],
+         [
+          -90.177,
+          29.5439
+         ],
+         [
+          -90.1826,
+          29.5447
+         ],
+         [
+          -90.1875,
+          29.5464
+         ],
+         [
+          -90.1898,
+          29.5482
+         ],
+         [
+          -90.192,
+          29.5517
+         ],
+         [
+          -90.1918,
+          29.5573
+         ],
+         [
+          -90.1862,
+          29.5633
+         ],
+         [
+          -90.1763,
+          29.5669
+         ],
+         [
+          -90.166,
+          29.5673
+         ],
+         [
+          -90.1618,
+          29.5682
+         ],
+         [
+          -90.1585,
+          29.57
+         ],
+         [
+          -90.1578,
+          29.5737
+         ],
+         [
+          -90.1645,
+          29.5777
+         ],
+         [
+          -90.1651,
+          29.5785
+         ],
+         [
+          -90.1646,
+          29.5799
+         ],
+         [
+          -90.163,
+          29.5817
+         ],
+         [
+          -90.1513,
+          29.5884
+         ],
+         [
+          -90.152,
+          29.5915
+         ],
+         [
+          -90.1541,
+          29.5943
+         ],
+         [
+          -90.1515,
+          29.5961
+         ],
+         [
+          -90.1512,
+          29.5986
+         ],
+         [
+          -90.1563,
+          29.6019
+         ],
+         [
+          -90.1555,
+          29.6035
+         ],
+         [
+          -90.1522,
+          29.6067
+         ],
+         [
+          -90.1512,
+          29.6091
+         ],
+         [
+          -90.1519,
+          29.6102
+         ],
+         [
+          -90.1563,
+          29.6088
+         ],
+         [
+          -90.1577,
+          29.6094
+         ],
+         [
+          -90.1571,
+          29.6136
+         ],
+         [
+          -90.16,
+          29.6166
+         ],
+         [
+          -90.1612,
+          29.6234
+         ],
+         [
+          -90.1597,
+          29.6327
+         ],
+         [
+          -90.1593,
+          29.6406
+         ],
+         [
+          -90.1611,
+          29.6471
+         ],
+         [
+          -90.1591,
+          29.6534
+         ],
+         [
+          -90.1554,
+          29.6574
+         ],
+         [
+          -90.1551,
+          29.6602
+         ],
+         [
+          -90.1579,
+          29.6665
+         ],
+         [
+          -90.158,
+          29.6694
+         ],
+         [
+          -90.1558,
+          29.6775
+         ],
+         [
+          -90.1642,
+          29.6769
+         ],
+         [
+          -90.1704,
+          29.6835
+         ],
+         [
+          -90.1779,
+          29.6828
+         ],
+         [
+          -90.1835,
+          29.6806
+         ],
+         [
+          -90.1864,
+          29.6809
+         ],
+         [
+          -90.1925,
+          29.6868
+         ],
+         [
+          -90.1934,
+          29.6895
+         ],
+         [
+          -90.1952,
+          29.6905
+         ],
+         [
+          -90.2011,
+          29.6885
+         ],
+         [
+          -90.2027,
+          29.6895
+         ],
+         [
+          -90.2026,
+          29.6916
+         ],
+         [
+          -90.2282,
+          29.692
+         ],
+         [
+          -90.2023,
+          29.7507
+         ],
+         [
+          -90.1725,
+          29.8042
+         ],
+         [
+          -90.1695,
+          29.8064
+         ],
+         [
+          -90.1709,
+          29.8134
+         ],
+         [
+          -90.1676,
+          29.8168
+         ],
+         [
+          -90.1673,
+          29.8185
+         ],
+         [
+          -90.1723,
+          29.8247
+         ],
+         [
+          -90.1732,
+          29.8275
+         ],
+         [
+          -90.1822,
+          29.8277
+         ],
+         [
+          -90.2402,
+          29.8621
+         ],
+         [
+          -90.2417,
+          29.8684
+         ],
+         [
+          -90.2403,
+          29.8719
+         ],
+         [
+          -90.2427,
+          29.8749
+         ],
+         [
+          -90.2432,
+          29.8807
+         ],
+         [
+          -90.2487,
+          29.8847
+         ],
+         [
+          -90.2513,
+          29.888
+         ],
+         [
+          -90.2548,
+          29.89
+         ],
+         [
+          -90.2565,
+          29.8942
+         ],
+         [
+          -90.2593,
+          29.8972
+         ],
+         [
+          -90.2646,
+          29.8989
+         ],
+         [
+          -90.2643,
+          29.9008
+         ],
+         [
+          -90.2659,
+          29.9015
+         ],
+         [
+          -90.2667,
+          29.9039
+         ],
+         [
+          -90.2683,
+          29.905
+         ],
+         [
+          -90.2735,
+          29.9218
+         ],
+         [
+          -90.2782,
+          29.9617
+         ],
+         [
+          -90.2803,
+          29.9726
+         ],
+         [
+          -90.2792,
+          30.0525
+         ],
+         [
+          -90.2776,
+          30.057
+         ],
+         [
+          -90.2756,
+          30.0889
+         ],
+         [
+          -90.2731,
+          30.0961
+         ],
+         [
+          -90.2726,
+          30.1078
+         ],
+         [
+          -90.2695,
+          30.1196
+         ],
+         [
+          -90.2654,
+          30.144
+         ],
+         [
+          -90.2599,
+          30.1634
+         ],
+         [
+          -90.2204,
+          30.1756
+         ],
+         [
+          -90.1786,
+          30.1853
+         ],
+         [
+          -90.1563,
+          30.1896
+         ],
+         [
+          -90.1447,
+          30.18
+         ],
+         [
+          -90.1398,
+          30.1774
+         ],
+         [
+          -90.1081,
+          30.1649
+         ],
+         [
+          -90.1194,
+          30.0366
+         ],
+         [
+          -90.1185,
+          30.0298
+         ],
+         [
+          -90.1199,
+          30.0287
+         ],
+         [
+          -90.1209,
+          30.0249
+         ],
+         [
+          -90.125,
+          29.9738
+         ],
+         [
+          -90.1401,
+          29.9479
+         ],
+         [
+          -90.139,
+          29.9384
+         ],
+         [
+          -90.1393,
+          29.9249
+         ],
+         [
+          -90.1386,
+          29.9188
+         ],
+         [
+          -90.1325,
+          29.913
+         ],
+         [
+          -90.1274,
+          29.9109
+         ],
+         [
+          -90.1165,
+          29.9087
+         ],
+         [
+          -90.1072,
+          29.9085
+         ],
+         [
+          -90.0856,
+          29.9144
+         ],
+         [
+          -90.0717,
+          29.9193
+         ],
+         [
+          -90.0688,
+          29.9211
+         ]
+        ]
+       ]
+      },
+      {
+       "code": "22071",
+       "name": "Orleans Parish, LA",
+       "rings": [
+        [
+         [
+          -90.1401,
+          29.9479
+         ],
+         [
+          -90.125,
+          29.9738
+         ],
+         [
+          -90.1209,
+          30.0249
+         ],
+         [
+          -90.1199,
+          30.0287
+         ],
+         [
+          -90.1185,
+          30.0298
+         ],
+         [
+          -90.1194,
+          30.0366
+         ],
+         [
+          -90.1081,
+          30.1649
+         ],
+         [
+          -90.0985,
+          30.1612
+         ],
+         [
+          -90.0825,
+          30.1572
+         ],
+         [
+          -90.0697,
+          30.1554
+         ],
+         [
+          -90.0403,
+          30.1551
+         ],
+         [
+          -90.0234,
+          30.158
+         ],
+         [
+          -90.0034,
+          30.163
+         ],
+         [
+          -89.9744,
+          30.1762
+         ],
+         [
+          -89.9622,
+          30.1792
+         ],
+         [
+          -89.9032,
+          30.1987
+         ],
+         [
+          -89.8662,
+          30.1914
+         ],
+         [
+          -89.8484,
+          30.1901
+         ],
+         [
+          -89.8208,
+          30.18
+         ],
+         [
+          -89.7974,
+          30.1608
+         ],
+         [
+          -89.7759,
+          30.1594
+         ],
+         [
+          -89.7563,
+          30.169
+         ],
+         [
+          -89.748,
+          30.1763
+         ],
+         [
+          -89.7441,
+          30.1775
+         ],
+         [
+          -89.7368,
+          30.1747
+         ],
+         [
+          -89.7262,
+          30.1647
+         ],
+         [
+          -89.7193,
+          30.161
+         ],
+         [
+          -89.714,
+          30.1612
+         ],
+         [
+          -89.7002,
+          30.1667
+         ],
+         [
+          -89.6976,
+          30.1682
+         ],
+         [
+          -89.6926,
+          30.1742
+         ],
+         [
+          -89.6869,
+          30.1755
+         ],
+         [
+          -89.6817,
+          30.1743
+         ],
+         [
+          -89.6648,
+          30.1668
+         ],
+         [
+          -89.6554,
+          30.1593
+         ],
+         [
+          -89.6504,
+          30.1581
+         ],
+         [
+          -89.6405,
+          30.1582
+         ],
+         [
+          -89.6251,
+          30.1549
+         ],
+         [
+          -89.6251,
+          30.15
+         ],
+         [
+          -89.6276,
+          30.1451
+         ],
+         [
+          -89.633,
+          30.142
+         ],
+         [
+          -89.6363,
+          30.1416
+         ],
+         [
+          -89.641,
+          30.1386
+         ],
+         [
+          -89.6436,
+          30.1348
+         ],
+         [
+          -89.6486,
+          30.1306
+         ],
+         [
+          -89.6506,
+          30.1263
+         ],
+         [
+          -89.6548,
+          30.1202
+         ],
+         [
+          -89.6576,
+          30.1179
+         ],
+         [
+          -89.6654,
+          30.114
+         ],
+         [
+          -89.6692,
+          30.1107
+         ],
+         [
+          -89.6746,
+          30.1104
+         ],
+         [
+          -89.6782,
+          30.1083
+         ],
+         [
+          -89.6813,
+          30.096
+         ],
+         [
+          -89.6811,
+          30.0937
+         ],
+         [
+          -89.6825,
+          30.0911
+         ],
+         [
+          -89.6834,
+          30.0761
+         ],
+         [
+          -89.6953,
+          30.0711
+         ],
+         [
+          -89.7094,
+          30.07
+         ],
+         [
+          -89.7162,
+          30.0674
+         ],
+         [
+          -89.7198,
+          30.0669
+         ],
+         [
+          -89.7219,
+          30.066
+         ],
+         [
+          -89.7219,
+          30.0649
+         ],
+         [
+          -89.7239,
+          30.0636
+         ],
+         [
+          -89.7253,
+          30.0639
+         ],
+         [
+          -89.7275,
+          30.0627
+         ],
+         [
+          -89.7275,
+          30.0619
+         ],
+         [
+          -89.7296,
+          30.0602
+         ],
+         [
+          -89.7296,
+          30.059
+         ],
+         [
+          -89.7306,
+          30.0587
+         ],
+         [
+          -89.731,
+          30.0576
+         ],
+         [
+          -89.7302,
+          30.057
+         ],
+         [
+          -89.7317,
+          30.0535
+         ],
+         [
+          -89.7312,
+          30.0488
+         ],
+         [
+          -89.729,
+          30.0443
+         ],
+         [
+          -89.7224,
+          30.0365
+         ],
+         [
+          -89.7203,
+          30.0325
+         ],
+         [
+          -89.7178,
+          30.0301
+         ],
+         [
+          -89.7174,
+          30.0286
+         ],
+         [
+          -89.7163,
+          30.0281
+         ],
+         [
+          -89.7164,
+          30.0262
+         ],
+         [
+          -89.722,
+          30.0232
+         ],
+         [
+          -89.7278,
+          30.0221
+         ],
+         [
+          -89.7339,
+          30.0223
+         ],
+         [
+          -89.7374,
+          30.0259
+         ],
+         [
+          -89.7443,
+          30.0298
+         ],
+         [
+          -89.7489,
+          30.0362
+         ],
+         [
+          -89.7515,
+          30.0367
+         ],
+         [
+          -89.7522,
+          30.0362
+         ],
+         [
+          -89.7562,
+          30.0387
+         ],
+         [
+          -89.7581,
+          30.0386
+         ],
+         [
+          -89.7617,
+          30.0412
+         ],
+         [
+          -89.7644,
+          30.0421
+         ],
+         [
+          -89.7731,
+          30.0431
+         ],
+         [
+          -89.7825,
+          30.0454
+         ],
+         [
+          -89.8074,
+          30.0453
+         ],
+         [
+          -89.8123,
+          30.0444
+         ],
+         [
+          -89.8193,
+          30.0405
+         ],
+         [
+          -89.8255,
+          30.0353
+         ],
+         [
+          -89.8302,
+          30.0334
+         ],
+         [
+          -89.8417,
+          30.0223
+         ],
+         [
+          -89.8505,
+          30.0077
+         ],
+         [
+          -89.8577,
+          30.0079
+         ],
+         [
+          -89.8592,
+          30.0058
+         ],
+         [
+          -89.8601,
+          30.0011
+         ],
+         [
+          -89.8653,
+          29.9974
+         ],
+         [
+          -89.8649,
+          29.9963
+         ],
+         [
+          -89.8591,
+          29.9923
+         ],
+         [
+          -89.8598,
+          29.9902
+         ],
+         [
+          -89.8631,
+          29.9877
+         ],
+         [
+          -89.8661,
+          29.9882
+         ],
+         [
+          -89.8687,
+          29.9926
+         ],
+         [
+          -89.8703,
+          29.9931
+         ],
+         [
+          -89.8725,
+          29.9917
+         ],
+         [
+          -89.876,
+          29.987
+         ],
+         [
+          -89.8794,
+          29.9854
+         ],
+         [
+          -89.8809,
+          29.9858
+         ],
+         [
+          -89.8852,
+          29.9913
+         ],
+         [
+          -89.8844,
+          29.9933
+         ],
+         [
+          -89.8851,
+          29.9963
+         ],
+         [
+          -89.8886,
+          29.9976
+         ],
+         [
+          -89.8899,
+          30
+         ],
+         [
+          -89.8945,
+          30.0023
+         ],
+         [
+          -89.8973,
+          30.0007
+         ],
+         [
+          -89.904,
+          30.0025
+         ],
+         [
+          -89.9054,
+          30.0014
+         ],
+         [
+          -89.9154,
+          29.9984
+         ],
+         [
+          -89.919,
+          29.9939
+         ],
+         [
+          -89.9235,
+          29.9919
+         ],
+         [
+          -89.9242,
+          29.9892
+         ],
+         [
+          -89.9253,
+          29.9895
+         ],
+         [
+          -89.9277,
+          29.9877
+         ],
+         [
+          -89.9316,
+          29.9877
+         ],
+         [
+          -89.9378,
+          29.9848
+         ],
+         [
+          -89.9385,
+          29.9828
+         ],
+         [
+          -89.938,
+          29.982
+         ],
+         [
+          -89.9399,
+          29.9802
+         ],
+         [
+          -89.9457,
+          29.9825
+         ],
+         [
+          -89.9489,
+          29.9813
+         ],
+         [
+          -89.9533,
+          29.9812
+         ],
+         [
+          -89.955,
+          29.983
+         ],
+         [
+          -89.9559,
+          29.9867
+         ],
+         [
+          -89.9574,
+          29.9872
+         ],
+         [
+          -89.9606,
+          29.9861
+         ],
+         [
+          -89.9646,
+          29.9897
+         ],
+         [
+          -89.9668,
+          29.9898
+         ],
+         [
+          -89.9705,
+          29.9918
+         ],
+         [
+          -89.9711,
+          29.9939
+         ],
+         [
+          -89.9724,
+          29.9948
+         ],
+         [
+          -89.975,
+          29.9944
+         ],
+         [
+          -89.9799,
+          29.99
+         ],
+         [
+          -89.9808,
+          29.988
+         ],
+         [
+          -89.9825,
+          29.9872
+         ],
+         [
+          -89.9843,
+          29.9871
+         ],
+         [
+          -89.9899,
+          29.9895
+         ],
+         [
+          -89.9924,
+          29.9824
+         ],
+         [
+          -89.992,
+          29.9806
+         ],
+         [
+          -89.9955,
+          29.9726
+         ],
+         [
+          -89.9986,
+          29.9738
+         ],
+         [
+          -90.0121,
+          29.946
+         ],
+         [
+          -89.9881,
+          29.9317
+         ],
+         [
+          -89.9698,
+          29.9247
+         ],
+         [
+          -89.9617,
+          29.9238
+         ],
+         [
+          -89.9366,
+          29.9243
+         ],
+         [
+          -89.9288,
+          29.9218
+         ],
+         [
+          -89.9244,
+          29.9188
+         ],
+         [
+          -89.9189,
+          29.9132
+         ],
+         [
+          -89.9083,
+          29.898
+         ],
+         [
+          -89.9033,
+          29.8874
+         ],
+         [
+          -89.9024,
+          29.8808
+         ],
+         [
+          -89.9031,
+          29.8764
+         ],
+         [
+          -89.9057,
+          29.8719
+         ],
+         [
+          -89.911,
+          29.8685
+         ],
+         [
+          -89.9107,
+          29.8679
+         ],
+         [
+          -89.9176,
+          29.8667
+         ],
+         [
+          -89.9352,
+          29.8928
+         ],
+         [
+          -89.9589,
+          29.9026
+         ],
+         [
+          -89.9727,
+          29.9044
+         ],
+         [
+          -89.9773,
+          29.902
+         ],
+         [
+          -89.9873,
+          29.905
+         ],
+         [
+          -89.9892,
+          29.8894
+         ],
+         [
+          -90.0023,
+          29.8978
+         ],
+         [
+          -90.0025,
+          29.8923
+         ],
+         [
+          -90.0081,
+          29.8955
+         ],
+         [
+          -90.008,
+          29.8969
+         ],
+         [
+          -90.0585,
+          29.9453
+         ],
+         [
+          -90.058,
+          29.938
+         ],
+         [
+          -90.0592,
+          29.9304
+         ],
+         [
+          -90.0625,
+          29.926
+         ],
+         [
+          -90.0717,
+          29.9193
+         ],
+         [
+          -90.1044,
+          29.9088
+         ],
+         [
+          -90.1165,
+          29.9087
+         ],
+         [
+          -90.1274,
+          29.9109
+         ],
+         [
+          -90.1325,
+          29.913
+         ],
+         [
+          -90.1386,
+          29.9188
+         ],
+         [
+          -90.1393,
+          29.9249
+         ],
+         [
+          -90.139,
+          29.9384
+         ],
+         [
+          -90.1401,
+          29.9479
+         ]
+        ]
+       ]
+      }
+     ],
+     "truncated": false
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T02:32:23.705Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:23.705Z"
+   }
+  },
+  "/api/civic?op=svi&level=place&fips=22071": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "rpl": [
+       0.8381,
+       0.9115,
+       0.3595,
+       0.9567,
+       0.7381
+      ]
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "cdc-svi",
+       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
+       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
+      },
+      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
+      "retrievedAt": "2026-10-19T02:32:23.741Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:23.741Z"
+   }
+  },
+  "/api/companies?op=near&bbox=-90.08,29.94,-90.05,29.97": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "pulled": null,
+    "bundle": {
+     "companies": 25,
+     "geocoded": 25,
+     "withFacts": 0
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "sec-edgar",
+       "publisher": "U.S. Securities and Exchange Commission",
+       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+      },
+      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
+     },
+     {
+      "source": {
+       "id": "census-zcta-county",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
+      }
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      }
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:23.757Z"
+   }
+  },
+  "/api/infra?op=dams&bbox=-90.08,29.94,-90.05,29.97": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "usace-nid",
+       "publisher": "U.S. Army Corps of Engineers",
+       "url": "https://nid.sec.usace.army.mil/"
+      },
+      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+      "retrievedAt": "2026-10-19T02:32:23.902Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:23.902Z"
+   }
+  },
+  "/api/infra?op=hospitals&bbox=-90.08,29.94,-90.05,29.97": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -90.0769039100374,
+         29.9548001098785
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0020170112",
+        "name": "TULANE MEDICAL CENTER",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: TULANE MEDICAL CENTER"
+        }
+       }
+      }
+     ]
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "hifld-hospitals",
+       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
+       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
+      "retrievedAt": "2026-10-19T02:32:23.944Z"
+     },
+     {
+      "source": {
+       "id": "cms-provider-data",
+       "publisher": "Centers for Medicare & Medicaid Services",
+       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+      },
+      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:23.945Z"
+   }
+  },
+  "/api/hazards?op=nri&fips=22071": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "STCOFIPS": "22071",
+      "POPULATION": 383606,
+      "RISK_SCORE": 98.25063613231552,
+      "RISK_RATNG": "Relatively High",
+      "EAL_VALT": 304070271.15578395,
+      "EAL_RATNG": "Relatively High",
+      "SOVI_SCORE": 77.51272265,
+      "SOVI_RATNG": "Relatively High",
+      "NRI_VER": "December 2025",
+      "AVLN_RISKR": "Not Applicable",
+      "CFLD_RISKR": "Relatively Moderate",
+      "CWAV_RISKR": "Relatively High",
+      "DRGT_RISKR": "Relatively Low",
+      "ERQK_RISKR": "Relatively Low",
+      "HAIL_RISKR": "Relatively Moderate",
+      "HWAV_RISKR": "Relatively High",
+      "HRCN_RISKR": "Very High",
+      "ISTM_RISKR": "Relatively Moderate",
+      "IFLD_RISKR": "Relatively High",
+      "LNDS_RISKR": "Very Low",
+      "LTNG_RISKR": "Very High",
+      "SWND_RISKR": "Relatively Low",
+      "TRND_RISKR": "Relatively Moderate",
+      "TSUN_RISKR": "Insufficient Data",
+      "VLCN_RISKR": "Not Applicable",
+      "WFIR_RISKR": "Very Low",
+      "WNTW_RISKR": "Relatively Moderate"
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-nri",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://hazards.fema.gov/nri/"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
+      "retrievedAt": "2026-10-19T02:32:23.968Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:23.968Z"
+   }
+  },
+  "/api/hazards?op=history&fips=22071&years=10&declarations=15": {
+   "status": 200,
+   "body": {
+    "data": {
+     "declarations": [
+      {
+       "disasterNumber": 3638,
+       "declarationType": "EM",
+       "declarationDate": "2026-01-24",
+       "incidentType": "Winter Storm",
+       "declarationTitle": "SEVERE WINTER STORM"
+      },
+      {
+       "disasterNumber": 4817,
+       "declarationType": "DR",
+       "declarationDate": "2024-09-16",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE FRANCINE"
+      },
+      {
+       "disasterNumber": 3614,
+       "declarationType": "EM",
+       "declarationDate": "2024-09-10",
+       "incidentType": "Hurricane",
+       "declarationTitle": "TROPICAL STORM FRANCINE"
+      },
+      {
+       "disasterNumber": 3600,
+       "declarationType": "EM",
+       "declarationDate": "2023-09-27",
+       "incidentType": "Other",
+       "declarationTitle": "SEAWATER INTRUSION"
+      },
+      {
+       "disasterNumber": 3574,
+       "declarationType": "EM",
+       "declarationDate": "2021-09-13",
+       "incidentType": "Coastal Storm",
+       "declarationTitle": "TROPICAL STORM NICHOLAS"
+      },
+      {
+       "disasterNumber": 4611,
+       "declarationType": "DR",
+       "declarationDate": "2021-08-29",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE IDA"
+      },
+      {
+       "disasterNumber": 3568,
+       "declarationType": "EM",
+       "declarationDate": "2021-08-27",
+       "incidentType": "Hurricane",
+       "declarationTitle": "TROPICAL STORM IDA"
+      },
+      {
+       "disasterNumber": 4590,
+       "declarationType": "DR",
+       "declarationDate": "2021-03-09",
+       "incidentType": "Severe Ice Storm",
+       "declarationTitle": "SEVERE WINTER STORMS"
+      },
+      {
+       "disasterNumber": 3556,
+       "declarationType": "EM",
+       "declarationDate": "2021-02-18",
+       "incidentType": "Severe Ice Storm",
+       "declarationTitle": "SEVERE WINTER STORM"
+      },
+      {
+       "disasterNumber": 4577,
+       "declarationType": "DR",
+       "declarationDate": "2021-01-12",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE ZETA"
+      },
+      {
+       "disasterNumber": 3549,
+       "declarationType": "EM",
+       "declarationDate": "2020-10-27",
+       "incidentType": "Hurricane",
+       "declarationTitle": "TROPICAL STORM ZETA"
+      },
+      {
+       "disasterNumber": 4570,
+       "declarationType": "DR",
+       "declarationDate": "2020-10-16",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE DELTA"
+      },
+      {
+       "disasterNumber": 3547,
+       "declarationType": "EM",
+       "declarationDate": "2020-10-07",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE DELTA"
+      },
+      {
+       "disasterNumber": 3543,
+       "declarationType": "EM",
+       "declarationDate": "2020-09-14",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE SALLY"
+      },
+      {
+       "disasterNumber": 4559,
+       "declarationType": "DR",
+       "declarationDate": "2020-08-28",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE LAURA"
+      }
+     ],
+     "declarationRows": 39,
+     "droughtNow": {
+      "mapDate": "2026-10-13",
+      "validStart": "2026-10-13",
+      "validEnd": "2026-10-19",
+      "none": 0,
+      "d0": 100,
+      "d1": 0,
+      "d2": 0,
+      "d3": 0,
+      "d4": 0
+     },
+     "missing": []
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-openfema",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      },
+      "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'22'%20and%20fipsCountyCode%20eq%20'071'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
+      "retrievedAt": "2026-10-19T02:32:23.861Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=22071&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
+      "retrievedAt": "2026-10-19T02:32:24.450Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=22071&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
+      "retrievedAt": "2026-10-19T02:32:24.376Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/LA-071/tavg/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T02:32:23.877Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/LA-071/pcp/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T02:32:24.105Z"
+     },
+     {
+      "source": {
+       "id": "noaa-spc",
+       "publisher": "NOAA National Weather Service, Storm Prediction Center",
+       "url": "https://www.spc.noaa.gov/wcm/"
+      },
+      "upstreamUrl": "https://www.spc.noaa.gov/wcm/data/1950-2025_all_tornadoes.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "usgs-landslide-susc",
+       "publisher": "U.S. Geological Survey (Belair, Jones, Martinez, Mirus and Wood)",
+       "url": "https://doi.org/10.5066/P13KAGU3"
+      },
+      "upstreamUrl": "https://www.sciencebase.gov/catalog/file/get/65ccea5bd34ef4b119cb3bac?name=county_analysis.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "ncei-storm-events",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/stormevents/"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:24.453Z"
+   }
+  }
+ }
+}

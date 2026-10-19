@@ -169,6 +169,7 @@ export const SOURCES = {
   "usace-orm": { id: "usace-orm", name: "Regulatory Request System public permit search (ORM)", publisher: "U.S. Army Corps of Engineers", url: "https://permits.ops.usace.army.mil/orm-public", license: "public domain; undocumented public API, treated as unstable", licenseId: "us-gov-work" },
   "federal-regions": { id: "federal-regions", name: "Federal regional office and Reserve district lists", publisher: "EPA, FEMA, Federal Reserve System", url: "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm", license: "public domain" },
   "gev-snapshot": { id: "gev-snapshot", name: "Embedding Atlas feed snapshots", publisher: "Embedding Atlas", url: "https://github.com/jcdavis131/gods-eye-view", license: "MIT; derived counts of public feeds", licenseId: "MIT" },
+  "eye-catalog": { id: "eye-catalog", name: "Embedding Atlas catalogue (curated collection cards, ranked by meaning with potion-base-8M)", publisher: "Embedding Atlas", url: "https://www.arxiviq.com/catalog", license: "MIT; each card cites its own sources", licenseId: "MIT" },
 } as const satisfies Record<string, SourceRef>;
 
 export type SourceId = keyof typeof SOURCES;

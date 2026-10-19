@@ -1,0 +1,1455 @@
+{
+ "recorded": "2026-10-19T02:32:46.813Z",
+ "from": "https://www.arxiviq.com",
+ "input": {
+  "lon": -97.7431,
+  "lat": 30.2672
+ },
+ "routes": {
+  "/api/fabric?op=stack&lon=-97.7431&lat=30.2672": {
+   "status": 200,
+   "body": {
+    "data": {
+     "point": {
+      "elevationM": 148.2
+     },
+     "nodes": [
+      {
+       "kind": "tract",
+       "name": "Census Tract 11.03",
+       "code": "48453001103",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "zcta",
+       "name": "78701",
+       "code": "78701",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc12",
+       "name": "Town Lake-Colorado River",
+       "code": "120902050306",
+       "source": "usgs-wbd",
+       "facts": {
+        "drains to": "120902050307"
+       }
+      },
+      {
+       "kind": "school",
+       "name": "Austin Independent School District",
+       "code": "4808940",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "unified"
+       }
+      },
+      {
+       "kind": "place",
+       "name": "Austin city",
+       "code": "4805000",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "county",
+       "name": "Travis County, TX",
+       "code": "48453",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "cbsa",
+       "name": "Austin-Round Rock-San Marcos, TX Metro Area",
+       "code": "12420",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "metropolitan"
+       }
+      },
+      {
+       "kind": "cd",
+       "name": "TX-10",
+       "code": "4810",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "nws-office",
+       "name": "NWS Austin/San Antonio, TX",
+       "code": "EWX",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "eco3",
+       "name": "Texas Blackland Prairies",
+       "code": "32",
+       "source": "epa-ecoregions",
+       "facts": {}
+      },
+      {
+       "kind": "state",
+       "name": "Texas",
+       "code": "48",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "timezone",
+       "name": "America/Chicago",
+       "code": "America/Chicago",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "country",
+       "name": "United States",
+       "code": "USA",
+       "source": "natural-earth",
+       "facts": {}
+      },
+      {
+       "kind": "flood",
+       "name": "Flood zone X",
+       "code": "X",
+       "source": "fema-nfhl",
+       "facts": {
+        "special flood hazard area": "no",
+        "FIRM panel": "48453C0465K"
+       }
+      },
+      {
+       "kind": "flood-community",
+       "name": "City Of Austin",
+       "code": "480624",
+       "source": "fema-nfhl",
+       "facts": {}
+      }
+     ],
+     "failed": [],
+     "answered": [
+      "natural-earth",
+      "census-tigerweb",
+      "federal-regions",
+      "usgs-wbd",
+      "epa-ecoregions",
+      "nws-api",
+      "usgs-epqs",
+      "wikipedia"
+     ],
+     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "natural-earth",
+       "publisher": "Natural Earth",
+       "url": "https://www.naturalearthdata.com/"
+      },
+      "retrievedAt": "2026-10-19T02:32:46.154Z"
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T02:32:46.154Z"
+     },
+     {
+      "source": {
+       "id": "federal-regions",
+       "publisher": "EPA, FEMA, Federal Reserve System",
+       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
+      },
+      "retrievedAt": "2026-10-19T02:32:46.154Z"
+     },
+     {
+      "source": {
+       "id": "usgs-wbd",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
+      },
+      "retrievedAt": "2026-10-19T02:32:46.154Z"
+     },
+     {
+      "source": {
+       "id": "epa-ecoregions",
+       "publisher": "U.S. Environmental Protection Agency",
+       "url": "https://www.epa.gov/eco-research/ecoregions"
+      },
+      "retrievedAt": "2026-10-19T02:32:46.154Z"
+     },
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "retrievedAt": "2026-10-19T02:32:46.154Z"
+     },
+     {
+      "source": {
+       "id": "usgs-epqs",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://apps.nationalmap.gov/epqs/"
+      },
+      "retrievedAt": "2026-10-19T02:32:46.154Z"
+     },
+     {
+      "source": {
+       "id": "wikipedia",
+       "publisher": "Wikimedia Foundation",
+       "url": "https://en.wikipedia.org/"
+      },
+      "retrievedAt": "2026-10-19T02:32:46.154Z"
+     },
+     {
+      "source": {
+       "id": "fema-nfhl",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/flood-maps/national-flood-hazard-layer"
+      },
+      "retrievedAt": "2026-10-19T01:25:14.701Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:46.154Z"
+   }
+  },
+  "/api/screen?kind=county&q=geoid%20%3D%3D%20%2248453%22%20LIMIT%201": {
+   "status": 200,
+   "body": {
+    "data": {
+     "rows": [
+      {
+       "name": "Travis County, TX",
+       "geo": [
+        -97.7855771,
+        30.3357444
+       ],
+       "values": {
+        "name": "Travis County",
+        "geoid": "48453",
+        "state": "TX",
+        "jobs.emp": 931218,
+        "jobs.avgWeeklyWage": 2087,
+        "jobs.period": "2026 Q1",
+        "jobs.suppressed": "false",
+        "home.latest": 461123.45104988804,
+        "home.yoyPct": -3.560018524627542,
+        "home.asOf": "2026-09-30",
+        "rent.latest": 1602.3841291555734
+       }
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     },
+     {
+      "source": {
+       "id": "bls-qcew",
+       "publisher": "U.S. Bureau of Labor Statistics",
+       "url": "https://www.bls.gov/cew/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     },
+     {
+      "source": {
+       "id": "bls-qcew",
+       "publisher": "U.S. Bureau of Labor Statistics",
+       "url": "https://www.bls.gov/cew/"
+      },
+      "retrievedAt": "2026-10-19T02:32:42.301Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:46.279Z"
+   }
+  },
+  "/api/releases?op=calendar": {
+   "status": 200,
+   "body": {
+    "data": {
+     "from": "2026-10-19",
+     "to": "2026-11-18",
+     "releases": [
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-22",
+        "latest": "2026-10-22",
+        "nominal": "2026-10-22"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-29",
+        "latest": "2026-10-29",
+        "nominal": "2026-10-29"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-05",
+        "latest": "2026-11-05",
+        "nominal": "2026-11-05"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-12",
+        "latest": "2026-11-12",
+        "nominal": "2026-11-12"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "zillow-zhvi",
+       "sourceId": "zillow-zhvi",
+       "title": "Zillow ZHVI typical home value (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-14",
+        "latest": "2026-11-21",
+        "nominal": "2026-11-14"
+       },
+       "scheduleUrl": "https://www.zillow.com/research/data/"
+      },
+      {
+       "id": "zillow-zori",
+       "sourceId": "zillow-zori",
+       "title": "Zillow ZORI typical rent (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-14",
+        "latest": "2026-11-21",
+        "nominal": "2026-11-14"
+       },
+       "scheduleUrl": "https://www.zillow.com/research/data/"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "bts-border",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "usgs-water",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://api.waterdata.usgs.gov/"
+      },
+      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.freddiemac.com/pmms",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "bts-supply-chain",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/news/schedule",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:47.351Z"
+   }
+  },
+  "/api/live": {
+   "status": 200,
+   "body": {
+    "data": {
+     "items": [],
+     "failed": [],
+     "unmapped": 0
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     },
+     {
+      "source": {
+       "id": "usgs-earthquakes",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://earthquake.usgs.gov/"
+      },
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:49.835Z"
+   }
+  },
+  "/api/companies?op=county&fips=48453": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": [
+      {
+       "properties": {
+        "extra": {
+         "cik": 1318605,
+         "ticker": "TSLA",
+         "exchange": "Nasdaq"
+        }
+       }
+      },
+      {
+       "properties": {
+        "extra": {
+         "cik": 1341439,
+         "ticker": "ORCL",
+         "exchange": "NYSE"
+        }
+       }
+      }
+     ]
+    },
+    "pulled": null,
+    "provenance": [
+     {
+      "source": {
+       "id": "sec-edgar",
+       "publisher": "U.S. Securities and Exchange Commission",
+       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+      },
+      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
+     },
+     {
+      "source": {
+       "id": "census-zcta-county",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
+      }
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      }
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:46.318Z"
+   }
+  },
+  "/api/civic?op=svi&level=place&fips=48453": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "rpl": [
+       0.5702,
+       0.5527,
+       0.0935,
+       0.882,
+       0.7805
+      ]
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "cdc-svi",
+       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
+       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
+      },
+      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
+      "retrievedAt": "2026-10-19T02:32:46.376Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:46.376Z"
+   }
+  },
+  "/api/hazards?op=nri&fips=48453": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "STCOFIPS": "48453",
+      "POPULATION": 1285769,
+      "RISK_SCORE": 97.74173027989822,
+      "RISK_RATNG": "Relatively High",
+      "EAL_VALT": 376349275.39746934,
+      "EAL_RATNG": "Relatively High",
+      "SOVI_SCORE": 14.75826972,
+      "SOVI_RATNG": "Very Low",
+      "NRI_VER": "December 2025",
+      "AVLN_RISKR": "Not Applicable",
+      "CFLD_RISKR": "Not Applicable",
+      "CWAV_RISKR": "Relatively Moderate",
+      "DRGT_RISKR": "Relatively Low",
+      "ERQK_RISKR": "Very Low",
+      "HAIL_RISKR": "Very High",
+      "HWAV_RISKR": "Relatively High",
+      "HRCN_RISKR": "Relatively Low",
+      "ISTM_RISKR": "Relatively High",
+      "IFLD_RISKR": "Relatively High",
+      "LNDS_RISKR": "Relatively Low",
+      "LTNG_RISKR": "Relatively High",
+      "SWND_RISKR": "Relatively High",
+      "TRND_RISKR": "Very High",
+      "TSUN_RISKR": "Not Applicable",
+      "VLCN_RISKR": "Not Applicable",
+      "WFIR_RISKR": "Relatively Moderate",
+      "WNTW_RISKR": "Relatively Moderate"
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-nri",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://hazards.fema.gov/nri/"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
+      "retrievedAt": "2026-10-19T02:32:46.451Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:46.451Z"
+   }
+  },
+  "/api/infra?op=hospitals&bbox=-97.8431,30.1672,-97.6431,30.3672": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -97.7959670199805,
+         30.2707596503235
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0133978746",
+        "name": "ARISE AUSTIN MEDICAL CENTER",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: ARISE AUSTIN MEDICAL CENTER"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.7456083203489,
+         30.3050018497249
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0002478705",
+        "name": "ASCENSION SETON MEDICAL CENTER AUSTIN",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "450056",
+          "rating": 3
+         },
+         "embedText": "name: ASCENSION SETON MEDICAL CENTER AUSTIN"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.8357340101854,
+         30.2354115399304
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0196784259",
+        "name": "BAYLOR SCOTT AND WHITE MEDICAL CENTER - AUSTIN",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: BAYLOR SCOTT AND WHITE MEDICAL CENTER - AUSTIN"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.7347933696927,
+         30.3122704801489
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0081478751",
+        "name": "CENTRAL TEXAS REHABILITATION HOSPITAL",
+        "details": {
+         "type": "rehabilitation",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: CENTRAL TEXAS REHABILITATION HOSPITAL"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.7432914996541,
+         30.3118262500936
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003178756",
+        "name": "CORNERSTONE SPECIALTY HOSPITALS AUSTIN",
+        "details": {
+         "type": "long term care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: CORNERSTONE SPECIALTY HOSPITALS AUSTIN"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.7070224602323,
+         30.3031108302137
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0006878746",
+        "name": "DELL CHILDRENS MEDICAL CENTER",
+        "details": {
+         "type": "children",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "453310",
+          "rating": null
+         },
+         "embedText": "name: DELL CHILDRENS MEDICAL CENTER"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.7338477302611,
+         30.2763898799382
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0171078701",
+        "name": "DELL SETON MEDICAL CENTER AT THE UNIVERSITY OF TEXAS",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: DELL SETON MEDICAL CENTER AT THE UNIVERSITY OF TEXAS"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.7663230099649,
+         30.2257136598722
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0139378704",
+        "name": "ENCOMPASS HEALTH REHABILITATION HOSPITAL OF AUSTIN",
+        "details": {
+         "type": "rehabilitation",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: ENCOMPASS HEALTH REHABILITATION HOSPITAL OF AUSTIN"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.7411042196166,
+         30.3058292699043
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003578756",
+        "name": "HEART HOSPITAL OF AUSTIN - A CAMPUS OF ST DAVIDS MEDICAL CENTER",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: HEART HOSPITAL OF AUSTIN - A CAMPUS OF ST DAVIDS MEDICAL CENTER"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.7517162201888,
+         30.3505138599789
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003278731",
+        "name": "NORTHWEST HILLS SURGICAL HOSPITAL",
+        "details": {
+         "type": "special",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: NORTHWEST HILLS SURGICAL HOSPITAL"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.7260463695666,
+         30.2898922102472
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0002378705",
+        "name": "ST DAVIDS MEDICAL CENTER",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "450431",
+          "rating": 4
+         },
+         "embedText": "name: ST DAVIDS MEDICAL CENTER"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.7249857601517,
+         30.2896893197175
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0002778705",
+        "name": "ST DAVIDS REHABILITATION HOSPITAL - A ST DAVIDS MEDICAL CENTER",
+        "details": {
+         "type": "rehabilitation",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "embedText": "name: ST DAVIDS REHABILITATION HOSPITAL - A ST DAVIDS MEDICAL CENTER"
+        }
+       }
+      }
+     ]
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "hifld-hospitals",
+       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
+       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
+      "retrievedAt": "2026-10-19T02:32:46.517Z"
+     },
+     {
+      "source": {
+       "id": "cms-provider-data",
+       "publisher": "Centers for Medicare & Medicaid Services",
+       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+      },
+      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:46.517Z"
+   }
+  },
+  "/api/infra?op=dams&bbox=-97.8431,30.1672,-97.6431,30.3672": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -97.67834060520259,
+         30.16833819842998
+        ]
+       },
+       "properties": {
+        "id": "nid:TX05140",
+        "name": "Dam TX05140",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "year completed": 1966,
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.71324861780087,
+         30.250234213260985
+        ]
+       },
+       "properties": {
+        "id": "nid:TX01088",
+        "name": "Longhorn Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Fair",
+         "year completed": 1960,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "name: Longhorn Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.70340861633514,
+         30.27072421763733
+        ]
+       },
+       "properties": {
+        "id": "nid:TX07418",
+        "name": "Oak Springs Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Fair",
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "name: Oak Springs Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.69372461547528,
+         30.302955224310338
+        ]
+       },
+       "properties": {
+        "id": "nid:TX07012",
+        "name": "Bartholomew Park Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Fair",
+         "year completed": 1997,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "name: Bartholomew Park Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.64837760546713,
+         30.329591231180984
+        ]
+       },
+       "properties": {
+        "id": "nid:TX06445",
+        "name": "Dam TX06445",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "owner type": "Private"
+        },
+        "extra": {}
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.83766964516654,
+         30.175502194113626
+        ]
+       },
+       "properties": {
+        "id": "nid:TX07220",
+        "name": "Gwendolyn Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Satisfactory",
+         "year completed": 1983,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "name: Gwendolyn Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.81366964162399,
+         30.22619720491933
+        ]
+       },
+       "properties": {
+        "id": "nid:TX09414",
+        "name": "Sunset Valley Village Detention Pond Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Fair",
+         "year completed": 1997,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "name: Sunset Valley Village Detention Pond Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.78641263810799,
+         30.29406321920414
+        ]
+       },
+       "properties": {
+        "id": "nid:TX01086",
+        "name": "Tom Miller Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Satisfactory",
+         "year completed": 1939,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "name: Tom Miller Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.77680463906297,
+         30.363217233090477
+        ]
+       },
+       "properties": {
+        "id": "nid:TX06875",
+        "name": "Cougar Run Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Not Rated",
+         "year completed": 1979,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "name: Cougar Run Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.75588362484189,
+         30.175589197070572
+        ]
+       },
+       "properties": {
+        "id": "nid:TX07338",
+        "name": "Thannas Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Fair",
+         "year completed": 1984,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "name: Thannas Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.74977563221628,
+         30.360681233580383
+        ]
+       },
+       "properties": {
+        "id": "nid:TX07217",
+        "name": "Wood Hollow Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Fair",
+         "year completed": 1979,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "name: Wood Hollow Dam"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -97.74535163066152,
+         30.351316231908516
+        ]
+       },
+       "properties": {
+        "id": "nid:TX07219",
+        "name": "Great Northern Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Satisfactory",
+         "year completed": 1978,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "name: Great Northern Dam"
+        }
+       }
+      }
+     ]
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "usace-nid",
+       "publisher": "U.S. Army Corps of Engineers",
+       "url": "https://nid.sec.usace.army.mil/"
+      },
+      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+      "retrievedAt": "2026-10-19T02:32:46.581Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:46.581Z"
+   }
+  },
+  "/api/hazards?op=history&fips=48453&years=10&declarations=15": {
+   "status": 200,
+   "body": {
+    "data": {
+     "declarations": [
+      {
+       "disasterNumber": 4879,
+       "declarationType": "DR",
+       "declarationDate": "2025-07-06",
+       "incidentType": "Flood",
+       "declarationTitle": "SEVERE STORMS, STRAIGHT-LINE WINDS, AND FLOODING"
+      },
+      {
+       "disasterNumber": 4705,
+       "declarationType": "DR",
+       "declarationDate": "2023-04-21",
+       "incidentType": "Winter Storm",
+       "declarationTitle": "SEVERE WINTER STORM"
+      },
+      {
+       "disasterNumber": 4586,
+       "declarationType": "DR",
+       "declarationDate": "2021-02-19",
+       "incidentType": "Severe Ice Storm",
+       "declarationTitle": "SEVERE WINTER STORMS"
+      },
+      {
+       "disasterNumber": 3554,
+       "declarationType": "EM",
+       "declarationDate": "2021-02-14",
+       "incidentType": "Severe Ice Storm",
+       "declarationTitle": "SEVERE WINTER STORM"
+      },
+      {
+       "disasterNumber": 3540,
+       "declarationType": "EM",
+       "declarationDate": "2020-08-24",
+       "incidentType": "Hurricane",
+       "declarationTitle": "TROPICAL STORMS MARCO AND LAURA"
+      },
+      {
+       "disasterNumber": 4485,
+       "declarationType": "DR",
+       "declarationDate": "2020-03-25",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19 PANDEMIC"
+      },
+      {
+       "disasterNumber": 3458,
+       "declarationType": "EM",
+       "declarationDate": "2020-03-13",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19"
+      },
+      {
+       "disasterNumber": 4416,
+       "declarationType": "DR",
+       "declarationDate": "2019-02-25",
+       "incidentType": "Flood",
+       "declarationTitle": "SEVERE STORMS AND FLOODING"
+      },
+      {
+       "disasterNumber": 4332,
+       "declarationType": "DR",
+       "declarationDate": "2017-08-25",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE HARVEY"
+      },
+      {
+       "disasterNumber": 4272,
+       "declarationType": "DR",
+       "declarationDate": "2016-06-11",
+       "incidentType": "Flood",
+       "declarationTitle": "SEVERE STORMS AND FLOODING"
+      },
+      {
+       "disasterNumber": 4245,
+       "declarationType": "DR",
+       "declarationDate": "2015-11-25",
+       "incidentType": "Severe Storm",
+       "declarationTitle": "SEVERE STORMS, TORNADOES, STRAIGHT-LINE WINDS, AND FLOODING"
+      },
+      {
+       "disasterNumber": 4223,
+       "declarationType": "DR",
+       "declarationDate": "2015-05-29",
+       "incidentType": "Severe Storm",
+       "declarationTitle": "SEVERE STORMS, TORNADOES, STRAIGHT-LINE WINDS AND FLOODING"
+      },
+      {
+       "disasterNumber": 4159,
+       "declarationType": "DR",
+       "declarationDate": "2013-12-20",
+       "incidentType": "Severe Storm",
+       "declarationTitle": "SEVERE STORMS AND FLOODING"
+      },
+      {
+       "disasterNumber": 4029,
+       "declarationType": "DR",
+       "declarationDate": "2011-09-09",
+       "incidentType": "Fire",
+       "declarationTitle": "WILDFIRES"
+      },
+      {
+       "disasterNumber": 2959,
+       "declarationType": "FM",
+       "declarationDate": "2011-09-05",
+       "incidentType": "Fire",
+       "declarationTitle": "PEDERNALES BEND FIRE"
+      }
+     ],
+     "declarationRows": 37,
+     "droughtNow": {
+      "mapDate": "2026-10-13",
+      "validStart": "2026-10-13",
+      "validEnd": "2026-10-19",
+      "none": 0,
+      "d0": 0,
+      "d1": 21.1,
+      "d2": 78.9,
+      "d3": 0,
+      "d4": 0
+     },
+     "missing": []
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-openfema",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      },
+      "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'48'%20and%20fipsCountyCode%20eq%20'453'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
+      "retrievedAt": "2026-10-19T02:32:46.514Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=48453&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
+      "retrievedAt": "2026-10-19T02:32:46.909Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=48453&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
+      "retrievedAt": "2026-10-19T02:32:47.012Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/TX-453/tavg/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T02:32:46.573Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/TX-453/pcp/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T02:32:46.810Z"
+     },
+     {
+      "source": {
+       "id": "noaa-spc",
+       "publisher": "NOAA National Weather Service, Storm Prediction Center",
+       "url": "https://www.spc.noaa.gov/wcm/"
+      },
+      "upstreamUrl": "https://www.spc.noaa.gov/wcm/data/1950-2025_all_tornadoes.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "usgs-landslide-susc",
+       "publisher": "U.S. Geological Survey (Belair, Jones, Martinez, Mirus and Wood)",
+       "url": "https://doi.org/10.5066/P13KAGU3"
+      },
+      "upstreamUrl": "https://www.sciencebase.gov/catalog/file/get/65ccea5bd34ef4b119cb3bac?name=county_analysis.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "ncei-storm-events",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/stormevents/"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:47.017Z"
+   }
+  }
+ },
+ "derivedFrom": "recorded live at the time below, with FEMA NFHL's two nodes and provenance entry for this point taken from the same route's reply at 2026-10-19T01:25:14Z (NFHL failed on every fabric call when this was recorded)"
+}

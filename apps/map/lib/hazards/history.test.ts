@@ -8,6 +8,8 @@ import femaAk261 from "./fixtures/fema-ak-261.json";
 import femaLa from "./fixtures/fema-06037.json";
 import femaOglala from "./fixtures/fema-46102-46113.json";
 import femaKusilvak from "./fixtures/fema-02158-02270.json";
+import sweep from "./fixtures/fema-codes-sweep.json";
+import counties from "../places/data/counties.json";
 import dsciTravis from "./fixtures/usdm-dsci-48453.json";
 import dsciCtRegion from "./fixtures/usdm-dsci-09110.json";
 import dsciCtLegacy from "./fixtures/usdm-dsci-09001.json";
@@ -29,7 +31,11 @@ import {
   femaPerYear,
   femaPrograms,
   femaUrl,
+  CT_LEGACY,
+  femaCodes,
   FEMA_FIELDS,
+  FEMA_LEGACY,
+  FEMA_SPLIT_AREAS,
   FEMA_RENAMES,
   HISTORY_ZERO_FILL,
   landslideLine,
@@ -131,23 +137,134 @@ describe("FEMA", () => {
     expect(skips("09110", "CT")).toEqual({ fema: "join:legacy_ct_counties", cag: "join:legacy_ct_counties" });
   });
 
-  it("Alaska: an REAA row filed under 050 is kept with its designated area verbatim; Valdez-Cordova 261 attaches to no current county", () => {
+  it("Alaska: an REAA row filed under 050 is kept with its designated area verbatim; Valdez-Cordova 261's rows go to the 2019 successor their designated area lies in, marked", () => {
     // fema-ak.json was asked with $filter=fipsStateCode eq '02' and $select=disasterNumber, fipsCountyCode, designatedArea:
     // the state code is the query's, added here; nothing else is touched.
     const rows = parseFema(femaAk).rows.map((r) => ({ ...r, fipsStateCode: "02" }));
     const k = attachFema(rows, "02050");
     expect(k.rows.map((r) => r.designatedArea)).toContain("Lower Kuskokwim Regional Educational Attendance Area");
+    // fema-ak-261.json: OpenFEMA's every row under 02261 (11, 1986-2020), captured 2026-10-17. The verifier's
+    // 2026-10-19 pull (writeups/.../verify3/publisher/openfema-02261.json) has the same DR-4533 and EM-3446 rows.
     const v = parseFema(femaAk261);
     expect(v.rows).toHaveLength(11);
-    for (const fips of ["02063", "02066"]) {
-      const a = attachFema(v.rows, fips);
-      expect(a.rows).toHaveLength(0);
-      expect(a.unmatched).toEqual(["02261"]);
+    expect(decodeURIComponent(femaUrl("02063"))).toContain("fipsStateCode eq '02' and (fipsCountyCode eq '063' or fipsCountyCode eq '261')");
+    expect(decodeURIComponent(femaUrl("02066"))).toContain("fipsStateCode eq '02' and (fipsCountyCode eq '066' or fipsCountyCode eq '261')");
+    // Each row goes where its designated area lies (FEMA_SPLIT_AREAS): the whole former area to both,
+    // the Chugach REAA and Valdez City School District (both inside Chugach) to Chugach only.
+    const areas = (rows: Array<{ designatedArea?: unknown }>) => [...new Set(rows.map((r) => String(r.designatedArea)))].sort();
+    const chugach = attachFema(v.rows, "02063");
+    expect(chugach.rows).toHaveLength(11);
+    expect(areas(chugach.rows)).toEqual(["Chugach Regional Educational Attendance Area", "Valdez City School District", "Valdez-Cordova (Census Area)"]);
+    const copper = attachFema(v.rows, "02066");
+    expect(areas(copper.rows)).toEqual(["Valdez-Cordova (Census Area)"]);
+    expect(copper.unplaced).toEqual([]);
+    for (const [fips, name, other] of [
+      ["02063", "Chugach Census Area", "02066"],
+      ["02066", "Copper River Census Area", "02063"],
+    ]) {
+      const h = assembleHistory(travis({ fips, name, stusab: "AK", fema: ok(parseFema(femaAk261)) }));
+      expect(h.meta.unmatched).toEqual([]);
+      const nums = h.data.declarations.map((d) => `${d.declarationType}-${d.disasterNumber}`);
+      expect(nums).toContain("DR-4533");
+      expect(h.data.declarations.every((d) => d.filedUnder === "02261")).toBe(true);
+      const cav = h.caveats.join(" ");
+      expect(cav).toContain("FEMA files this under the former Valdez-Cordova Census Area, AK (02261), which covered more than this county");
+      expect(cav).toContain(`a row for the whole former area is attached here and to ${other}, never divided`);
+      expect(cav).toMatch(/Regional Educational Attendance Areas/);
     }
-    const a = assembleHistory(travis({ fips: "02063", name: "Chugach Census Area", stusab: "AK", fema: ok(parseFema(femaAk261)) }));
-    expect(a.meta.unmatched).toEqual(["02261"]);
-    expect(a.caveats.join(" ")).toMatch(/under its old code 261/);
-    expect(a.caveats.join(" ")).toMatch(/Regional Educational Attendance Areas/);
+    // EM-3446 and DR-4094 name only the Chugach REAA: Chugach has them, Copper River does not.
+    const cr = assembleHistory(travis({ fips: "02066", name: "Copper River Census Area", stusab: "AK", fema: ok(parseFema(femaAk261)) }));
+    expect(cr.data.declarations.map((d) => d.disasterNumber!).sort((x, y) => x - y)).toEqual([782, 826, 1316, 1440, 4533]);
+    const ch = assembleHistory(travis({ fips: "02063", name: "Chugach Census Area", stusab: "AK", fema: ok(parseFema(femaAk261)) }));
+    expect(ch.data.declarations.map((d) => d.disasterNumber)).toEqual(expect.arrayContaining([3446, 4094, 1663, 1669, 4533]));
+  });
+
+  it("a split code's row for an area no cited source places is attached to none and listed in missing", () => {
+    const row = (area: string, n: number) => ({ fipsStateCode: "02", fipsCountyCode: "280", disasterNumber: n, declarationType: "DR", declarationDate: "2021-02-17T00:00:00.000Z", designatedArea: area });
+    const rows = [row("Chatham Regional Educational Attendance Area", 4585), row("Wrangell City School District", 4533), row("Somewhere New", 9999)];
+    const w = attachFema(rows, "02275");
+    expect(w.rows.map((r) => r.disasterNumber)).toEqual([4533]);
+    expect(w.unplaced.map((u) => [u.area, u.disasterNumber])).toEqual([
+      ["Chatham Regional Educational Attendance Area", 4585],
+      ["Somewhere New", 9999],
+    ]);
+    expect(w.unplaced[0].reason).toMatch(/Hoonah-Angoon Census Area \(02105\)/);
+    expect(w.unplaced[1].reason).toMatch(/not in FEMA_SPLIT_AREAS/);
+    const p = attachFema(rows, "02195");
+    expect(p.rows).toEqual([]);
+    const h = assembleHistory(travis({ fips: "02195", name: "Petersburg Borough", stusab: "AK", fema: ok({ rows, count: 3 }) }));
+    expect(h.data.declarations).toEqual([]);
+    expect(h.data.missing.filter((m) => m.reason === "join:area_not_placed").map((m) => m.detail)).toEqual([
+      expect.stringMatching(/^Chatham Regional Educational Attendance Area \(disaster 4585\), filed under 02280: /),
+      expect.stringMatching(/^Somewhere New \(disaster 9999\), filed under 02280: /),
+    ]);
+  });
+
+  it("every designatedArea FEMA uses under a split code is placed by FEMA_SPLIT_AREAS or deliberately unplaced", () => {
+    // splitCodeAreas in fixtures/fema-codes-sweep.json: every area string under 02201, 02261 and 02280 (2026-10-19 sweep).
+    const splits = FEMA_LEGACY.filter((l) => l.change === "split").map((l) => l.oldFips).sort();
+    expect(Object.keys(sweep.splitCodeAreas).sort()).toEqual(splits);
+    expect(Object.keys(FEMA_SPLIT_AREAS).sort()).toEqual(splits);
+    for (const code of splits) {
+      const legacy = FEMA_LEGACY.find((l) => l.oldFips === code)!;
+      const rules = FEMA_SPLIT_AREAS[code];
+      const used = (sweep.splitCodeAreas as Record<string, Array<{ area: string }>>)[code].map((x) => x.area).sort();
+      expect(rules.map((r) => r.area).sort(), code).toEqual(used);
+      for (const r of rules) {
+        for (const s of r.to) expect(legacy.successors, `${code} ${r.area}`).toContain(s);
+        expect(r.basis, `${code} ${r.area}`).toMatch(/census\.gov|TIGERweb/);
+      }
+      // the whole former area goes to every successor
+      const whole = rules.find((r) => /\(Census Area\)$/.test(r.area))!;
+      expect(whole.to.slice().sort()).toEqual(legacy.successors.slice().sort());
+    }
+  });
+
+  it("FEMA_LEGACY covers every county code FEMA files under outside the county table (the 2026-10-19 sweep)", () => {
+    // fixtures/fema-codes-sweep.json: derived from all 70,571 OpenFEMA DisasterDeclarationsSummaries v2 rows, paged
+    // keyless on 2026-10-19 (writeups/unify-2026-10-18/fema-fips-audit/sweep.py), against lib/places/data/counties.json.
+    const table = new Set(counties.rows.map((r) => r.geoid));
+    expect(sweep.sweptAt).toBe("2026-10-19");
+    expect(sweep.tableCounties).toBe(table.size);
+    const TERRITORIES = new Set(["60", "64", "66", "68", "69", "78"]); // AS, FM, GU, MH, MP, VI: not in the table
+    for (const x of sweep.notInTable) {
+      const l = FEMA_LEGACY.find((e) => e.oldFips === x.fips);
+      if (l) for (const s of l.successors) expect(table.has(s), `${x.fips} -> ${s}`).toBe(true);
+      else if (CT_LEGACY.test(x.fips)) expect(skips("09110", "CT").fema).toBe("join:legacy_ct_counties");
+      else expect(TERRITORIES.has(x.fips.slice(0, 2)), `${x.fips} (${x.area}, latest ${x.latest}) has no crosswalk`).toBe(true);
+    }
+    // No stale entry: every legacy code is one FEMA still files under.
+    for (const l of FEMA_LEGACY) expect(sweep.notInTable.map((x) => x.fips), l.oldFips).toContain(l.oldFips);
+    for (const l of FEMA_LEGACY) for (const s of l.successors) expect(decodeURIComponent(femaUrl(s))).toContain(`fipsCountyCode eq '${l.oldFips.slice(2)}'`);
+    // The four undercounts and the two zeros the sweep found.
+    expect(Object.fromEntries(FEMA_LEGACY.map((l) => [l.oldFips, l.successors]))).toEqual({
+      "46113": ["46102"],
+      "02270": ["02158"],
+      "02261": ["02063", "02066"],
+      "02201": ["02198", "02130", "02275"],
+      "02280": ["02275", "02195"],
+      "51515": ["51019"],
+    });
+  });
+
+  it("a table county FEMA never files under has a crosswalk or a missing reason, never a bare 0", () => {
+    expect(sweep.neverFiled).toHaveLength(12);
+    for (const f of sweep.neverFiled) {
+      const crosswalked = femaCodes(f).length > 1;
+      const reason = skips(f, f.startsWith("09") ? "CT" : "AK").fema;
+      expect(crosswalked || reason === "join:legacy_ct_counties", f).toBe(true);
+    }
+  });
+
+  it("a split, merged or renamed legacy code reads both codes; its rows are marked filedUnder", () => {
+    const row = (county: string, n: number) => ({ fipsStateCode: "51", fipsCountyCode: county, disasterNumber: n, declarationType: "DR", declarationDate: "2025-01-0" + (n % 9) + "T00:00:00.000Z" });
+    const rows = [row("019", 4001), row("515", 4001), row("515", 4002)];
+    const a = attachFema(rows, "51019");
+    expect(a.rows.map((r) => `${r.fipsCountyCode}:${r.disasterNumber}`)).toEqual(["019:4001", "515:4002"]);
+    const h = assembleHistory(travis({ fips: "51019", name: "Bedford County", stusab: "VA", fema: ok({ rows, count: 3 }) }));
+    expect(h.data.declarations.find((d) => d.disasterNumber === 4002)!.filedUnder).toBe("51515");
+    expect(h.data.declarations.find((d) => d.disasterNumber === 4001)!.filedUnder).toBeUndefined();
+    expect(h.caveats.join(" ")).toContain("FEMA still files declarations under the former Bedford city, VA (51515), now part of this county");
   });
 
   it("Oglala Lakota and Kusilvak: FEMA's rows under the old codes are read, each disaster once, never a literal 0", () => {

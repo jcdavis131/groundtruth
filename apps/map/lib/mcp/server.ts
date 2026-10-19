@@ -48,7 +48,14 @@ export function argsSummary(schema: Record<string, unknown>): string {
   const required = new Set((schema.required as string[] | undefined) ?? []);
   return Object.entries(props)
     .map(([k, p]) => {
-      const t = Array.isArray(p.enum) ? (p.enum as string[]).join(" | ") : p.type === "array" ? "number[4]" : String(p.type ?? "any");
+      const itemEnum = p.type === "array" && p.items && typeof p.items === "object" ? (p.items as Record<string, unknown>).enum : undefined;
+      const t = Array.isArray(p.enum)
+        ? (p.enum as string[]).join(" | ")
+        : Array.isArray(itemEnum)
+          ? `(${(itemEnum as string[]).join(" | ")})[]`
+          : p.type === "array"
+            ? "number[4]"
+            : String(p.type ?? "any");
       return `${k}${required.has(k) ? "" : "?"}: ${t}`;
     })
     .join(", ");
