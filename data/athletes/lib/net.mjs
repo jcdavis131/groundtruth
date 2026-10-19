@@ -59,11 +59,14 @@ export function makeClient({ rawDir, gapMs = 1500, log = () => {}, offline = fal
       if (wait > 0) await sleep(wait);
       last = Date.now();
       let res;
+      let buf;
       try {
         const headers = { "User-Agent": UA };
         if (accept) headers.Accept = accept;
         if (contentType) headers["Content-Type"] = contentType;
-        res = await fetchImpl(url, { method, body, headers, signal: AbortSignal.timeout(120_000) });
+        // The timeout covers the body too, so a slow 14 MB download gets ten minutes and is retried.
+        res = await fetchImpl(url, { method, body, headers, signal: AbortSignal.timeout(600_000) });
+        if (res.status !== 429 && res.status < 500) buf = Buffer.from(await res.arrayBuffer());
       } catch (e) {
         log(`${url.slice(0, 80)}: ${e.message}; retry ${attempt + 1}`);
         await sleep(5000 * (attempt + 1));
@@ -76,7 +79,6 @@ export function makeClient({ rawDir, gapMs = 1500, log = () => {}, offline = fal
         await sleep(ms);
         continue;
       }
-      const buf = Buffer.from(await res.arrayBuffer());
       const meta = { url, method, status: res.status, retrievedAt: new Date().toISOString().replace(/\.\d+Z$/, "Z"), bytes: buf.length, sha256: sha(buf) };
       note(meta, false);
       if (res.status !== 200) throw new Error(`${res.status} from ${url}`);
