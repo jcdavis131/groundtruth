@@ -75,6 +75,10 @@
                   "license": {
                     "type": "string",
                     "minLength": 1
+                  },
+                  "licenseId": {
+                    "type": "string",
+                    "minLength": 1
                   }
                 },
                 "required": [
@@ -476,6 +480,10 @@
                   "license": {
                     "type": "string",
                     "minLength": 1
+                  },
+                  "licenseId": {
+                    "type": "string",
+                    "minLength": 1
                   }
                 },
                 "required": [
@@ -759,6 +767,10 @@
                   "license": {
                     "type": "string",
                     "minLength": 1
+                  },
+                  "licenseId": {
+                    "type": "string",
+                    "minLength": 1
                   }
                 },
                 "required": [
@@ -1030,6 +1042,10 @@
                     "format": "uri"
                   },
                   "license": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "licenseId": {
                     "type": "string",
                     "minLength": 1
                   }

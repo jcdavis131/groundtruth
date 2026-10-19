@@ -17,6 +17,8 @@ export interface SourceRef {
   url: string;
   /** Licence or terms in a few words ("public domain", "CC BY 4.0", "free with attribution"). */
   license: string;
+  /** Key in LICENCE_TERMS (lib/provenance/licenceTerms.ts) when the licence maps to one with confidence. `license` stays as the human note. */
+  licenseId?: string;
 }
 
 export interface Provenance {

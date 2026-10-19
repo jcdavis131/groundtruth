@@ -52,6 +52,7 @@ const SourceRefSchema = z.strictObject({
   publisher: Text,
   url: z.url(),
   license: Text,
+  licenseId: Text.optional(),
 });
 
 /** Mirrors Provenance in lib/provenance/types.ts field for field, so citation() takes a parsed record as it is. */
