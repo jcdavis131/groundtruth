@@ -19,6 +19,7 @@
 //   pattern      id, season, url or retrievedAt is malformed
 //   needs        teamCity, arena or season without a team
 //   uncited      a field no source entry lists, or a source listing a field the record does not carry
+//   duplicate    (CLI, per file) the same id, season and team twice; one id across seasons or teams is fine
 // Exit 0 when every input is valid, 1 otherwise, 2 on a usage error.
 
 import { readFileSync } from "node:fs";
@@ -173,6 +174,14 @@ export function validateAthlete(rec) {
   return out;
 }
 
+/**
+ * A record's grain: one athlete, season and team. A player traded mid-season has one record per team,
+ * and one player across seasons one per season, so the id alone is not unique in a file.
+ */
+export function recordKey(rec) {
+  return JSON.stringify([rec.id, rec.season ?? null, rec.team ?? null]);
+}
+
 /** Records in a .json (one object or an array) or .jsonl file, each with where it came from. */
 export function readRecords(file) {
   const text = readFileSync(file, "utf8");
@@ -203,13 +212,14 @@ function main(files) {
       bad++;
       continue;
     }
-    const ids = new Set();
+    const keys = new Set();
     for (const { rec, where } of recs) {
       n++;
       const errs = validateAthlete(rec);
       if (isObject(rec) && typeof rec.id === "string") {
-        if (ids.has(rec.id)) errs.push({ code: "duplicate", path: "/id", message: `${rec.id} appears twice in this file` });
-        ids.add(rec.id);
+        const key = recordKey(rec);
+        if (keys.has(key)) errs.push({ code: "duplicate", path: "/id", message: `${rec.id} appears twice in this file for the same season and team` });
+        keys.add(key);
       }
       for (const e of errs) console.log(`${where}: ${e.code} ${e.path} ${e.message}`);
       if (errs.length) bad++;

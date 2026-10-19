@@ -8,7 +8,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { ALLOWLIST, CITABLE, validateAthlete } from "./validate.mjs";
+import { ALLOWLIST, CITABLE, recordKey, validateAthlete } from "./validate.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, "../..");
@@ -39,7 +39,10 @@ const RECORD_FIELDS = [
 const SOURCE_FIELDS = ["sourceId", "upstreamId", "url", "retrievedAt", "fields"];
 check(JSON.stringify(Object.keys(ALLOWLIST.fields)) === JSON.stringify(RECORD_FIELDS), "the record allowlist is exactly the pinned fields", Object.keys(ALLOWLIST.fields).join(", "));
 check(JSON.stringify(Object.keys(ALLOWLIST.sourceFields)) === JSON.stringify(SOURCE_FIELDS), "the source-entry allowlist is exactly the pinned fields", Object.keys(ALLOWLIST.sourceFields).join(", "));
-check(JSON.stringify(ALLOWLIST.leagues) === JSON.stringify(["NBA", "WNBA", "NFL", "MLB", "NHL", "MLS", "NWSL"]), "leagues are the pinned professional leagues");
+check(JSON.stringify(ALLOWLIST.leagues) === JSON.stringify(["NBA", "NFL"]), "leagues are the pinned v1 leagues, the NBA and the NFL");
+for (const league of ["WNBA", "MLB", "NHL", "MLS", "NWSL"]) {
+  check(validateAthlete({ ...valid(), league }).some((e) => e.code === "enum" && e.path === "/league"), `league ${league} fails until AD5 is decided (it can roster minors)`);
+}
 const required = Object.entries(ALLOWLIST.fields).filter(([, s]) => s.required).map(([k]) => k);
 check(JSON.stringify(required) === JSON.stringify(["schemaVersion", "id", "name", "league", "sources"]), "required fields are schemaVersion, id, name, league, sources", required.join(", "));
 
@@ -277,7 +280,21 @@ const cli = (...files) => spawnSync(process.execPath, [path.join(HERE, "validate
     const dup = path.join(dir, "dup.jsonl");
     writeFileSync(dup, `${good}\n${good}\n`);
     const res2 = cli(dup);
-    check(res2.status === 1 && /duplicate/.test(res2.stdout), "validate.mjs exits 1 on a repeated id", res2.stdout);
+    check(res2.status === 1 && /duplicate/.test(res2.stdout), "validate.mjs exits 1 on a repeated id, season and team", res2.stdout);
+    const nextSeason = JSON.stringify({ ...valid(), season: "2024-25" });
+    const traded = JSON.stringify({ ...valid(), team: "Fixture Town Traders" });
+    const grain = path.join(dir, "grain.jsonl");
+    writeFileSync(grain, `${good}\n${nextSeason}\n${traded}\n`);
+    const res3 = cli(grain);
+    check(res3.status === 0, "validate.mjs accepts one id in two seasons, and in two teams in one season", res3.stdout);
+    const noTeam = { ...valid() };
+    for (const k of ["team", "teamCity", "arena", "season"]) delete noTeam[k];
+    noTeam.sources = noTeam.sources.map((s) => ({ ...s, fields: s.fields.filter((f) => !["team", "teamCity", "arena", "season"].includes(f)) }));
+    const bare = path.join(dir, "bare.jsonl");
+    writeFileSync(bare, `${JSON.stringify(noTeam)}\n${JSON.stringify(noTeam)}\n`);
+    const res4 = cli(bare);
+    check(res4.status === 1 && /duplicate/.test(res4.stdout), "validate.mjs exits 1 on a repeated id with no season or team", res4.stdout);
+    check(recordKey(valid()) !== recordKey({ ...valid(), season: "2024-25" }) && recordKey(valid()) !== recordKey({ ...valid(), team: "x" }), "recordKey is id, season and team");
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

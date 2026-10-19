@@ -23,7 +23,8 @@
     "retrievedAt": { "required": true, "what": "when it was read: ISO 8601 UTC ending in Z" },
     "fields": { "required": true, "what": "the record fields this source supplied" }
   },
-  "leagues": ["NBA", "WNBA", "NFL", "MLB", "NHL", "MLS", "NWSL"],
+  "leagues": ["NBA", "NFL"],
+  "leaguesWhy": "v1 is the NBA and the NFL. MLB, NHL, MLS and NWSL can roster players under 18, and ruling them out would need the age the never-list bans; see AD5 in apps/map/docs/PEOPLE.md.",
   "denied": {
     "why": "Cam's never-list: birth date, age, addresses, family, contact details, health beyond league-published availability. A key that is not on the allowlist fails anyway; a key matching one of these fails with the code denied, so the reason is named.",
     "keyParts": [

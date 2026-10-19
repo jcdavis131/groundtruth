@@ -25,8 +25,9 @@ This reverses the institutions-only rule for reporting owners and for nobody els
 | C3 | [Cam 2026-09-27] | As recorded: parcel mailing addresses are shown as each county publishes them; legal suppressions stay (the HCAD confidential flag, Texas Tax Code 25.025, New Jersey's Daniel's Law: "keep NJ as is"). | the README's parcels section |
 | C4 | [Cam 2026-09-27] | As recorded: the parcels removal-request channel, "ignore for now". | |
 | C5 | [Cam 2026-10-18] | Verbatim choice: "Map + models, scoped". Named professional athletes may appear with their name, team (with its city and arena), school or college and birthplace at city level, on the map and in model training; never a birth date, age, address, family, contact details or health beyond league-published availability. | this file, [Athletes](#athletes); `data/athletes/allowlist.json` at the repository root |
+| C6 | [Cam 2026-10-19] | Verbatim: "go ahead with A5a". A birthplace is joined to a city by ids, never by its name: from the place of birth's Wikidata QID up "located in" to the first settlement, matched to the place record by FIPS or GNIS in the US and GeoNames elsewhere; anything else is left out. The audit behind it: `writeups/jev-2026-10-18/p19-audit/FINDING.md` (outside this repository), also posted on PR #10. | this file, [Athletes](#athletes) (A5a) |
 
-C1 is the only one about reporting owners, and C5 the only one about athletes. Every guardrail below is a proposal that applies C1 and carries C2 to C4 over; the last column of each table says how.
+C1 is the only one about reporting owners, and C5 and C6 the only ones about athletes. Every guardrail below is a proposal that applies C1 and carries C2 to C4 over; the last column of each table says how.
 
 ## Source
 
@@ -230,7 +231,7 @@ Professional athletes are the second group of named people, under a narrower exc
 
 That was Cam's choice out of three. How it is read here:
 
-- **Who:** players on a professional league's published roster (NBA, WNBA, NFL, MLB, NHL, MLS, NWSL; `leagues` in `data/athletes/allowlist.json`). Not college-only or amateur players, not minors, not coaches, staff, families or fans.
+- **Who:** players on a professional league's published roster (for now the NBA and the NFL; `leagues` in `data/athletes/allowlist.json`). Not college-only or amateur players, not minors, not coaches, staff, families or fans. Other leagues wait (AD5): MLB, NHL, MLS and NWSL can roster players under 18, and checking that would need the age the never-list bans.
 - **What:** the player's name, team (with its city and arena), school or college, and birthplace at city level, with region and country.
 - **Where:** on the groundtruth map, and in training and embeddings for the gameworld models.
 - **Never:** birth date, age, home or current address, family members, contact details, injuries or health beyond what the league publishes as game availability.
@@ -280,7 +281,7 @@ Each is public and keyless, and each is read by an explicit field list, the way 
 
 The column and property names above are from each source's documentation as of 2026-10-18. None of these sources has been read here yet. The builder will read each header and refuse a missing column, as the SEC builder does.
 
-The arena is the team's home venue, read from the team and never from the player. Its location lives on the arena's own place record, never on the athlete. A birthplace is joined to a city record by name, then region, then country; one that does not resolve to a single city is left out, never guessed, and the record says nothing about it.
+The arena is the team's home venue, read from the team and never from the player. Its location lives on the arena's own place record, never on the athlete. A birthplace is never joined to a city by its name (A5a). The builder keeps the place of birth's Wikidata QID, walks "located in" (P131) up to the first settlement, and matches that settlement to a place record by an external id: FIPS 55-3 (P774) or GNIS (P590) against Census Gazetteer places in the US, GeoNames (P1566) elsewhere. A birthplace that does not trace that way is left out, never guessed, and the record says nothing about it. Names don't identify places: in the 2026-10-19 audit of 4,894 Wikidata NBA birthplaces, Portland, Paris, Columbus and Rome each named three different places, 0.8% were finer than a city (neighbourhoods, one hospital) and 2.3% were coarser (a state, county or country).
 
 ### Guardrails for athletes
 
@@ -291,6 +292,7 @@ The arena is the team's home venue, read from the team and never from the player
 | A3 | Never a birth date, age or birth year, address, family member, contact detail, or health or injury information. | [Cam 2026-10-18] | C5's never-list |
 | A4 | Every field is cited by a source entry with its URL and retrieval time; sources are public and keyless. | [Cam 2026-10-18] | C5, and the README's record rules |
 | A5 | Birthplace stops at the city: no neighbourhood, hospital, street or coordinate finer than the city's own place record. | [proposed] | applies C5's "city level" |
+| A5a | A birthplace is joined by ids, never by its name. Keep the place of birth's QID (P19); walk "located in" (P131) up to the first settlement (P31 under human settlement, Q486972); match it to the place record by FIPS (P774) or GNIS (P590) in the US, GeoNames (P1566) elsewhere. Leave it out when the walk reaches a state, county or country first, when a level has more than one parent, or when no external id matches; count each outcome. The record's citations carry the P19 QID and the place record's id, and a test checks that every shipped `birthCity` traces back that way. Never ask Wikidata for date of birth (P569), not even as a filter. | [Cam 2026-10-19] | C6 |
 | A6 | An athlete is drawn only at a place record that is not theirs: the team's city, the arena, the school, the birthplace city. Never at a point of their own. For athletes this replaces G4, which stays for reporting owners. | [proposed] | applies C5's "on the map" |
 | A7 | League-published game availability is allowed by C5 but is not in `athlete/1`; adding it is AD2. | [proposed] | narrower than C5 |
 | A8 | No join from an athlete to parcels, addresses, property, permits, licences or Form 3, 4 and 5 filers, in either direction. An athlete who also files a Form 4 is two unrelated records. | [proposed] | carries over C2 and G7 |
@@ -303,9 +305,9 @@ The arena is the team's home venue, read from the team and never from the player
 | --- | --- | --- | --- |
 | AD1 | Search by an athlete's name on the map? | None in ⌘K; athletes are reached from their team, arena, school or birthplace city. | [proposed] |
 | AD2 | League-published game availability (active, out, questionable)? | Not carried in `athlete/1`. | [proposed] |
-| AD3 | Which seasons? | The current season's rosters only. Past rosters wait for a decision on how one player's seasons are keyed. | [proposed] |
+| AD3 | Which seasons? | Every season the keyless caches hold: NBA 2015-16 to 2025-26 (the player game logs), NFL 1999 to 2026 (nflverse). One record per athlete, season and team, so a player traded mid-season has one record per team; `validate.mjs` treats a repeated id, season and team as a duplicate. | [proposed] |
 | AD4 | A hometown where a player grew up, when it differs from the birthplace? | Not carried. C5 names birthplace only, so `hometown` fails the check. | [proposed] |
-| AD5 | Leagues beyond the seven listed (G League, leagues outside the United States)? | A pull request that adds the league to `allowlist.json` and to the pinned list in the test. | [proposed] |
+| AD5 | Leagues beyond the NBA and the NFL (WNBA, MLB, NHL, MLS, NWSL, G League, leagues outside the United States)? | Not yet. Some of them roster minors, and the never-list bans the age that would rule them out. Adding one is a pull request that adds it to `allowlist.json` and to the pinned list in the test, with a way to exclude minors that does not read an age. | [proposed] |
 
 ### What stays true until athletes ship
 
@@ -315,4 +317,4 @@ These describe the app as it is today, and change with the code that ships athle
 - the README's Ethics section ("no named-individual search"), which A9 keeps by default;
 - the catalogue's rule that no name that can be a person's is searched or embedded, which gets an athlete entry when the collection is added.
 
-`lib/people/policy-docs.test.ts` checks the C5 quote and the tags on A1 to A10 and AD1 to AD5.
+`lib/people/policy-docs.test.ts` checks the C5 and C6 quotes and the tags on A1 to A10, A5a and AD1 to AD5.
