@@ -56,6 +56,13 @@ export const CASES = {
       expect: { code: "public-name", path: "/nameRule" },
       mutate: (r) => void Object.assign(r.details, { "owner type": "Local Government", "owner types": "Local Government, Private" }),
     },
+    // A public-looking dam with no owner-types list (a stale tile): it can't show every owner is public.
+    {
+      name: "no-owner-types-dam-says-public",
+      base: PUBLIC_DAM,
+      expect: { code: "public-name", path: "/nameRule" },
+      mutate: (r) => void delete r.details["owner types"],
+    },
     // A dam labelled by id whose record text still names it (eye's text for a Not Listed dam before 2026-10-19).
     {
       name: "label-by-id-text-names-dam",

@@ -8,7 +8,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CASES, build, fileOf } from "./fixtures/make-invalid.mjs";
-import { MANIFEST_SCHEMA, RECORD_SCHEMA, schemaErrors, validateManifest, validateRecord, verifyFiles } from "./validate.mjs";
+import { MANIFEST_SCHEMA, RECORD_SCHEMA, damOwnerProblem, schemaErrors, validateManifest, validateRecord, verifyFiles } from "./validate.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const FIX = path.join(HERE, "fixtures");
@@ -95,13 +95,24 @@ const withOwners = (primary, list) => {
   const d = { ...publicDam.details };
   if (primary === undefined) delete d["owner type"];
   else d["owner type"] = primary;
-  if (list !== undefined) d["owner types"] = list;
+  if (list === undefined) delete d["owner types"];
+  else d["owner types"] = list;
   return { ...publicDam, details: d };
 };
 for (const t of ["Federal", "State", "Local Government", "Public Utility", "Tribal Government"])
   check(validateRecord(withOwners(t, t)).length === 0, `a ${t} dam may keep its published name`);
 check(validateRecord(withOwners("State", "Local Government, State")).length === 0, "a dam whose owner types are all public may keep its name");
-check(validateRecord(withOwners("Federal")).length === 0, "eye's answers before OWNER_TYPES: the primary type alone decides");
+check(validateRecord(withOwners("Federal")).some((e) => e.code === "public-name"), "no owner-types list fails closed: it can't show every owner is public");
+
+// One case table for all three copies of the dam naming rule (eye's damIsNamed, this validator, the builder's
+// dam_name_rule): every owner pair NID publishes, plus edge cases. Each copy must agree with "named" on every case.
+const damCases = json(path.join(FIX, "dam-owner-cases.json"));
+for (const c of damCases.cases) {
+  const details = { "owner type": c.primary };
+  if (!c.absent) details["owner types"] = c.ownerTypes;
+  check((damOwnerProblem(details) === null) === c.named, `dam rule parity: ${JSON.stringify(c.primary)} / ${c.absent ? "(no owner types)" : JSON.stringify(c.ownerTypes)} is ${c.named ? "named" : "labelled by id"}`);
+}
+check(damCases.cases.filter((c) => c.from === "NID").reduce((n, c) => n + c.dams, 0) === damCases.dams, "dam case table: the NID pairs sum to its dam count");
 for (const [primary, list, why] of [
   ["Not Listed", undefined, "Not Listed"],
   ["not listed", "Not Listed", "Not Listed, any case"],

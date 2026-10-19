@@ -1,0 +1,352 @@
+{
+ "about": "Every PRIMARY_OWNER_TYPE / OWNER_TYPES pair in the National Inventory of Dams, with its dam count, plus edge cases. 'named' is the rule: a dam keeps its published name only when its primary owner type and every owner-types entry are Federal, State, Local Government, Public Utility or Tribal Government. Read by all three implementations of the rule (apps/map lib/infra/features.ts damIsNamed, data/schema/validate.mjs, data/pipeline/cards.py dam_name_rule) so they can't drift apart.",
+ "source": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0/query, outStatistics count grouped by PRIMARY_OWNER_TYPE,OWNER_TYPES, keyless",
+ "retrievedAt": "2026-10-19",
+ "dams": 92628,
+ "namedDams": 30524,
+ "cases": [
+  {
+   "primary": "Private",
+   "ownerTypes": "Private",
+   "dams": 60166,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Local Government",
+   "ownerTypes": "Local Government",
+   "dams": 18393,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "State",
+   "ownerTypes": "State",
+   "dams": 6583,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "Federal",
+   "ownerTypes": "Federal",
+   "dams": 3310,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "Public Utility",
+   "ownerTypes": "Public Utility",
+   "dams": 1671,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "Not Listed",
+   "ownerTypes": "Not Listed",
+   "dams": 1639,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Federal",
+   "ownerTypes": "Federal, Tribal Government",
+   "dams": 223,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "State",
+   "ownerTypes": "Local Government, State",
+   "dams": 149,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "Local Government",
+   "ownerTypes": "State",
+   "dams": 136,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "Private",
+   "ownerTypes": "Local Government, Private",
+   "dams": 116,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Local Government",
+   "ownerTypes": "Local Government, Private",
+   "dams": 104,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Private",
+   "ownerTypes": "Private, State",
+   "dams": 19,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Tribal Government",
+   "ownerTypes": "Tribal Government",
+   "dams": 17,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "Local Government",
+   "ownerTypes": "Local Government, State",
+   "dams": 11,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "Local Government",
+   "ownerTypes": "Local Government, Public Utility",
+   "dams": 11,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": null,
+   "ownerTypes": null,
+   "dams": 10,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Federal",
+   "ownerTypes": "Federal, State",
+   "dams": 8,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "Private",
+   "ownerTypes": "Private, Public Utility",
+   "dams": 7,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "State",
+   "ownerTypes": "Private, State",
+   "dams": 6,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "State",
+   "ownerTypes": "Local Government",
+   "dams": 6,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "Local Government",
+   "ownerTypes": "Private",
+   "dams": 5,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Not Listed",
+   "ownerTypes": "Private",
+   "dams": 5,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Federal",
+   "ownerTypes": "Private",
+   "dams": 4,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Private",
+   "ownerTypes": "Local Government",
+   "dams": 4,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Federal",
+   "ownerTypes": "Federal, Private",
+   "dams": 3,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Federal",
+   "ownerTypes": "Federal, Local Government",
+   "dams": 3,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "Private",
+   "ownerTypes": "Not Listed",
+   "dams": 2,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "State",
+   "ownerTypes": "Local Government, Private, State",
+   "dams": 2,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Local Government",
+   "ownerTypes": null,
+   "dams": 2,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": null,
+   "ownerTypes": "State",
+   "dams": 1,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": null,
+   "ownerTypes": "Local Government",
+   "dams": 1,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Private",
+   "ownerTypes": "State",
+   "dams": 1,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Private",
+   "ownerTypes": "Not Listed, Private",
+   "dams": 1,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Local Government",
+   "ownerTypes": "Federal, Local Government",
+   "dams": 1,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "Local Government",
+   "ownerTypes": "Federal",
+   "dams": 1,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "Not Listed",
+   "ownerTypes": "State",
+   "dams": 1,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Private",
+   "ownerTypes": "Local Government, Private, State",
+   "dams": 1,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Private",
+   "ownerTypes": "Private, State, Tribal Government",
+   "dams": 1,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Federal",
+   "ownerTypes": "Federal, Local Government, State",
+   "dams": 1,
+   "named": true,
+   "from": "NID"
+  },
+  {
+   "primary": "Public Utility",
+   "ownerTypes": "Private",
+   "dams": 1,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "State",
+   "ownerTypes": "Not Listed",
+   "dams": 1,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Local Government",
+   "ownerTypes": "Local Government, Not Listed",
+   "dams": 1,
+   "named": false,
+   "from": "NID"
+  },
+  {
+   "primary": "Local Government",
+   "ownerTypes": null,
+   "absent": true,
+   "named": false,
+   "from": "edge: no owner-types key (a stale tile, or an answer from before eye asked NID for OWNER_TYPES)"
+  },
+  {
+   "primary": "State",
+   "ownerTypes": "",
+   "named": false,
+   "from": "edge: empty list"
+  },
+  {
+   "primary": "State",
+   "ownerTypes": "  ",
+   "named": false,
+   "from": "edge: whitespace list"
+  },
+  {
+   "primary": "State",
+   "ownerTypes": "State,",
+   "named": false,
+   "from": "edge: trailing comma leaves an empty entry"
+  },
+  {
+   "primary": "STATE",
+   "ownerTypes": "state",
+   "named": true,
+   "from": "edge: case is ignored"
+  },
+  {
+   "primary": " Federal ",
+   "ownerTypes": " Federal , State ",
+   "named": true,
+   "from": "edge: spaces are trimmed"
+  },
+  {
+   "primary": "Federal",
+   "ownerTypes": "Federal; Private",
+   "named": false,
+   "from": "edge: an unknown separator makes an unknown entry"
+  },
+  {
+   "primary": "Unknown",
+   "ownerTypes": "Unknown",
+   "named": false,
+   "from": "edge: a value NID doesn't use"
+  }
+ ]
+}
