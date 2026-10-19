@@ -13,10 +13,13 @@
 // On a protected Vercel preview those same-origin sub-requests get a 401,
 // because they carry none of the visitor's credentials. When the project has
 // "Protection Bypass for Automation" on, Vercel sets
-// VERCEL_AUTOMATION_BYPASS_SECRET and the sub-requests send it as
-// x-vercel-protection-bypass, but only to this request's own origin (see
-// ProtectionBypass in lib/mcp/tools.ts). Unset (production, local): no header.
-// No visitor cookie or share token is ever forwarded.
+// VERCEL_AUTOMATION_BYPASS_SECRET on every environment, production included.
+// The code sends it as x-vercel-protection-bypass only when all hold:
+// VERCEL_ENV is "preview"; this request's origin is https://VERCEL_URL or
+// https://VERCEL_BRANCH_URL (so a spoofed Host can't name "own origin"); the
+// sub-request goes to that same origin; and the redirect is not followed (see
+// ProtectionBypass and httpFetchJson in lib/mcp/tools.ts). Production, local
+// and stdio send no header. No visitor cookie or share token is ever forwarded.
 
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import path from "node:path";
@@ -52,10 +55,37 @@ function baseUrl(req: Request): string {
   return env ? env.replace(/\/+$/, "") : new URL(req.url).origin;
 }
 
-/** The same-origin protection bypass, or undefined when the secret is unset. Read per request so tests can stub it. */
+/** https://<host> for a Vercel-provided host name, or null when unset or unparsable. */
+function deploymentOrigin(host: string | undefined): string | null {
+  const h = host?.trim();
+  if (!h) return null;
+  try {
+    return new URL("https://" + h).origin;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The same-origin protection bypass, or undefined. Only on a preview
+ * (VERCEL_ENV === "preview"), only with the secret set, and only when this
+ * request's origin is the deployment's own https://VERCEL_URL or
+ * https://VERCEL_BRANCH_URL; requestOrigin is that pinned origin, never one
+ * taken from the Host header alone. Read per request so tests can stub it.
+ */
 function protectionBypass(req: Request): ProtectionBypass | undefined {
+  if (process.env.VERCEL_ENV !== "preview") return undefined;
   const secret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET?.trim();
-  return secret ? { secret, requestOrigin: new URL(req.url).origin } : undefined;
+  if (!secret) return undefined;
+  let incoming: string;
+  try {
+    incoming = new URL(req.url).origin;
+  } catch {
+    return undefined;
+  }
+  const own = [deploymentOrigin(process.env.VERCEL_URL), deploymentOrigin(process.env.VERCEL_BRANCH_URL)];
+  const pinned = own.find((o) => o !== null && o === incoming);
+  return pinned ? { secret, requestOrigin: pinned } : undefined;
 }
 
 export function OPTIONS() {

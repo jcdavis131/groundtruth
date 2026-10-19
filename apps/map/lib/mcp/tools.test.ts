@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { z } from "zod";
 import { PLACE_EXPORTS } from "../catalog/placeExport";
 import { NRI_SOVI_NOTE } from "../hazards/nri";
@@ -370,15 +370,34 @@ describe("httpFetchJson's protection bypass (PREVIEW-TESTABILITY.md)", () => {
   const SECRET = "bypass-test-value-0001";
   const OWN = "https://groundtruth-map-git-x.vercel.app";
 
-  /** A fake fetch that records the headers each call carried. */
-  const recorder = (reply: () => Response) => {
-    const calls: { url: string; headers: Record<string, string> }[] = [];
-    const fetchImpl = (async (url: string | URL | Request, init?: RequestInit) => {
-      calls.push({ url: String(url), headers: { ...(init?.headers as Record<string, string>) } });
-      return reply();
+  /** Every recorded call in the current test, for the afterEach redirect check. */
+  let lastCalls: { headers: Record<string, string>; redirect: RequestRedirect | undefined }[] = [];
+  /**
+   * A fake fetch that records the headers and redirect mode each call carried.
+   * Like the real fetch, it follows a 3xx (same headers, to Location) unless
+   * redirect is "manual", so a dropped redirect: "manual" shows up as a second call.
+   */
+  const recorder = (reply: (url: string, headers: Record<string, string>) => Response) => {
+    const calls: { url: string; headers: Record<string, string>; redirect: RequestRedirect | undefined }[] = [];
+    const fetchImpl = (async (url: string | URL | Request, init?: RequestInit): Promise<Response> => {
+      const headers = { ...(init?.headers as Record<string, string>) };
+      calls.push({ url: String(url), headers, redirect: init?.redirect });
+      lastCalls.push(calls[calls.length - 1]);
+      const res = reply(String(url), headers);
+      const location = res.headers.get("location");
+      if (res.status >= 300 && res.status < 400 && location && init?.redirect !== "manual" && calls.length < 5) {
+        return fetchImpl(new URL(location, String(url)).toString(), init);
+      }
+      return res;
     }) as unknown as typeof fetch;
     return { calls, fetchImpl };
   };
+
+  afterEach(() => {
+    // Every call that carried the secret must have refused redirects.
+    for (const c of lastCalls) if ("x-vercel-protection-bypass" in c.headers) expect(c.redirect).toBe("manual");
+    lastCalls = [];
+  });
 
   it("sends x-vercel-protection-bypass to the request's own origin when the secret is set", async () => {
     const { calls, fetchImpl } = recorder(() => new Response('{"ok":true}'));
@@ -387,6 +406,48 @@ describe("httpFetchJson's protection bypass (PREVIEW-TESTABILITY.md)", () => {
     expect(calls[0].url).toBe(OWN + "/api/economy?op=pulse");
     expect(calls[0].headers["x-vercel-protection-bypass"]).toBe(SECRET);
     expect(calls[0].headers.accept).toBe("application/json");
+    expect(calls[0].redirect).toBe("manual");
+    expect(r.body).toEqual({ ok: true });
+  });
+
+  it("never follows a redirect when the secret is attached, and never echoes Location", async () => {
+    const EVIL = "https://evil.example/steal?from=preview";
+    const { calls, fetchImpl } = recorder((url, headers) =>
+      new URL(url).origin === OWN
+        ? new Response(null, { status: 302, headers: { location: EVIL } })
+        : new Response(JSON.stringify({ got: headers["x-vercel-protection-bypass"] ?? null })),
+    );
+    const r = await httpFetchJson(OWN, fetchImpl, 1000, { secret: SECRET, requestOrigin: OWN })("/api/economy?op=pulse");
+    expect(calls).toHaveLength(1);
+    expect(calls[0].url).toBe(OWN + "/api/economy?op=pulse");
+    expect(calls[0].redirect).toBe("manual");
+    expect(r.status).toBeGreaterThanOrEqual(400);
+    expect(r.url).toBe(OWN + "/api/economy?op=pulse");
+    expect(r.body).toEqual({ error: "route answered HTTP 302; redirect not followed" });
+    const out = JSON.stringify(r);
+    expect(out).not.toContain(SECRET);
+    expect(out).not.toContain("evil.example");
+    expect(out).not.toContain("steal");
+  });
+
+  it("turns every 3xx into an error reply when the secret is attached", async () => {
+    for (const status of [301, 303, 307, 308]) {
+      const { calls, fetchImpl } = recorder(() => new Response(null, { status, headers: { location: OWN + "/elsewhere" } }));
+      const r = await httpFetchJson(OWN, fetchImpl, 1000, { secret: SECRET, requestOrigin: OWN })("/api/a");
+      expect(calls).toHaveLength(1);
+      expect(r.status).toBe(502);
+      expect(r.body).toEqual({ error: `route answered HTTP ${status}; redirect not followed` });
+      expect(JSON.stringify(r)).not.toContain("/elsewhere");
+    }
+  });
+
+  it("leaves redirects alone when no secret is attached", async () => {
+    const { calls, fetchImpl } = recorder((url) =>
+      url.endsWith("/api/old") ? new Response(null, { status: 308, headers: { location: OWN + "/api/new" } }) : new Response('{"ok":true}'),
+    );
+    const r = await httpFetchJson(OWN, fetchImpl, 1000)("/api/old");
+    expect(calls).toHaveLength(2);
+    expect(calls[0].redirect).toBeUndefined();
     expect(r.body).toEqual({ ok: true });
   });
 

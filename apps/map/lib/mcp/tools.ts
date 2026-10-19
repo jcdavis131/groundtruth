@@ -184,15 +184,19 @@ export async function relay(ctx: ToolCtx, path: string, opts: RelayOptions = {})
  * Vercel's "Protection Bypass for Automation" for the route's own sub-requests.
  * A protected preview answers 401 to a server-side fetch of its own /api
  * routes, because the fetch carries none of the visitor's credentials. The
- * bypass secret lets it through, and it may only ever go back to the same
- * deployment: the header is sent only when the fetched URL's origin equals the
- * base URL's origin and that equals the incoming request's own origin.
- * Never to a GEV_BASE_URL on another host, never to any other host.
+ * bypass secret lets it through. Once the project setting is on, Vercel
+ * exposes the secret to every environment, production included, so the code
+ * is what keeps it in: the route builds a ProtectionBypass only on a preview
+ * (VERCEL_ENV === "preview") whose request origin is its own VERCEL_URL or
+ * VERCEL_BRANCH_URL, and here the header goes only when the fetched URL's
+ * origin equals the base URL's origin and that equals requestOrigin. A fetch
+ * that carries it never follows a redirect (see httpFetchJson). Never to a
+ * GEV_BASE_URL on another host, never to any other host.
  */
 export interface ProtectionBypass {
-  /** VERCEL_AUTOMATION_BYPASS_SECRET; unset on production. */
+  /** VERCEL_AUTOMATION_BYPASS_SECRET. */
   secret: string;
-  /** The origin of the request the route is answering. */
+  /** This deployment's own origin, pinned by the route to https://VERCEL_URL or https://VERCEL_BRANCH_URL. */
   requestOrigin: string;
 }
 
@@ -213,15 +217,28 @@ export function bypassAllowed(url: string, base: string, bypass: ProtectionBypas
  * A fetchJson over the real network for a base URL. Timeouts are generous
  * because the report ops fan out to several upstreams on a cold cache.
  * `bypass` is the route's same-origin protection bypass (see ProtectionBypass);
- * no visitor cookie or share token is ever forwarded.
+ * a fetch that carries it uses redirect: "manual" and turns any 3xx into a 502
+ * error reply. No visitor cookie or share token is ever forwarded.
  */
 export function httpFetchJson(baseUrl = DEFAULT_BASE_URL, fetchImpl: typeof fetch = fetch, timeoutMs = 55_000, bypass?: ProtectionBypass): FetchJson {
   const base = baseUrl.replace(/\/+$/, "");
   return async (pathWithQuery) => {
     const url = base + (pathWithQuery.startsWith("/") ? pathWithQuery : "/" + pathWithQuery);
     const headers: Record<string, string> = { accept: "application/json" };
-    if (bypass && bypassAllowed(url, base, bypass)) headers["x-vercel-protection-bypass"] = bypass.secret;
-    const res = await fetchImpl(url, { headers, signal: AbortSignal.timeout(timeoutMs) });
+    const withBypass = !!bypass && bypassAllowed(url, base, bypass);
+    if (withBypass && bypass) headers["x-vercel-protection-bypass"] = bypass.secret;
+    // With the secret attached a redirect is never followed: fetch would carry
+    // the header to wherever Location points. The 3xx comes back as an error
+    // reply: status 502 (so the tool envelope treats it as an error, not a
+    // success), the 3xx status in a plain message, and no Location value.
+    const init: RequestInit = { headers, signal: AbortSignal.timeout(timeoutMs) };
+    if (withBypass) init.redirect = "manual";
+    const res = await fetchImpl(url, init);
+    if (withBypass && (res.type === "opaqueredirect" || (res.status >= 300 && res.status < 400))) {
+      void res.body?.cancel().catch(() => undefined);
+      const shown = res.status >= 300 ? `HTTP ${res.status}` : "a redirect";
+      return { status: 502, body: { error: `route answered ${shown}; redirect not followed` }, url };
+    }
     const text = await res.text();
     let body: unknown = text;
     try {
