@@ -90,7 +90,7 @@ export function entryCount(abs) {
 
 // Removes the link itself. unlinkSync drops a symlink or a junction on Windows; rmdirSync covers the
 // directory-symlink case some platforms report as EPERM/EISDIR. Neither ever recurses.
-function unlinkOnly(p) {
+export function unlinkOnly(p) {
   try {
     fs.unlinkSync(p);
   } catch (e) {

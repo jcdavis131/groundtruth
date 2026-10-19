@@ -94,3 +94,16 @@ jobs:
           if [ -z "$files" ]; then echo "No changed source files to lint."; exit 0; fi
           echo "$files"
           echo "$files" | xargs npx eslint
+
+      # A dependency or lint-config change can change what eslint says about code
+      # nobody touched; eslint 9 -> 10 (#44) was never linted, because the step
+      # above saw no changed source files. Report only: with no record of a clean
+      # full run this measures, it doesn't gate. public/ is skipped as above.
+      - name: eslint (whole app, report only, on dependency or CI changes)
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if git diff --quiet "$BASE" HEAD -- package.json package-lock.json 'eslint.config.*' ':/.github/workflows/map-ci.yml'; then echo "No dependency, lint-config or workflow change."; exit 0; fi
+          npx eslint . --ignore-pattern 'public/**'
