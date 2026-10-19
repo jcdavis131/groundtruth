@@ -26,7 +26,7 @@ const answer = (url: string): unknown => {
   if (url.startsWith("/data/ne_")) return fc;
   if (url.startsWith("/api/water?op=gauges")) return { data: [], returned: 0 };
   if (url.startsWith("/api/water")) return { data: [] };
-  if (url.startsWith("/api/companies")) return { data: fc, count: 0, capped: false };
+  if (url.startsWith("/api/companies")) return { data: fc, count: 0, capped: false, pulled: "2026-10-01" };
   if (url.startsWith("/api/finance?op=banks")) return { data: fc, counties: 3, sodYear: 2025 };
   if (url.startsWith("/api/aircraft")) return { data: { ac: [], states: [] } };
   throw new Error(`unexpected ${url}`);
@@ -71,6 +71,28 @@ describe("view-loaded layers report the box they loaded", () => {
     const radiusKm = (Math.max(40, (100_000 * 1.2) / 1852) * 1852) / 1000;
     expect(halfLatDeg * 111.2).toBeLessThanOrEqual(radiusKm / Math.SQRT2 + 0.5);
     expect(halfLatDeg * 111.2).toBeGreaterThan(radiusKm / Math.SQRT2 - 2);
+  });
+
+  it("a companies answer from the bundled fixture never reads complete", async () => {
+    // lib/companies/data/companies.json ships as a hand-checked fixture with pulled: null until the full universe is built.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => new Response(JSON.stringify(url.startsWith("/api/companies") ? { data: fc, count: 25, capped: false, pulled: null } : answer(url)), { status: 200 })),
+    );
+    const v = (await vitalsFor(companiesLayer, 200_000)).get("county:here")!;
+    expect(v).toMatchObject({ value: null, coverage: "partial" });
+    expect(v.reason).toMatch(/fixture/);
+  });
+
+  it("an OpenSky answer with no state vectors draws no box, so it never reads loaded and none", async () => {
+    const world = await vitalsFor(aircraftLayer, 3_000_000);
+    expect(world.get("county:away")).toMatchObject({ value: 0, coverage: "complete" });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => new Response(JSON.stringify(url.startsWith("/api/aircraft?source=opensky") ? { data: { states: null } } : answer(url)), { status: 200 })),
+    );
+    const none = await vitalsFor(aircraftLayer, 3_000_000);
+    expect(none.get("county:here")!.value).toBeNull();
   });
 
   it("water above the gauge height and a capped companies answer do not read complete", async () => {
