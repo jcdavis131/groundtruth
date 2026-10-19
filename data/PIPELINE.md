@@ -2,7 +2,7 @@
 
 `data/pipeline/` builds whole-state snapshots of eye's collections from eye's public API, writes them as GeoParquet in the data root, and commits each manifest here under `data/manifests/`. The record and manifest formats are in [SCHEMA.md](SCHEMA.md).
 
-Built so far: Texas (state FIPS 48) for `nid-dams`, `nces-public-schools` and `nrhp-listed`. Those three are the ones the conformance count found canonical on the wire with stable ids.
+Built so far, for `nid-dams`, `nces-public-schools` and `nrhp-listed`: Texas (state FIPS 48) and Alabama (01), both 2026-10-19. Those three collections are the ones the conformance count found canonical on the wire with stable ids. A region is one entry in `cards.REGIONS` (its FIPS, USPS code, name and eye outline id), chosen with `--region`.
 
 ## Setup
 
@@ -39,7 +39,7 @@ The raw cache makes a rerun after a failure cheap. A cached body is checked agai
 ## Build
 
 ```
-data/.venv/Scripts/python data/pipeline/build.py nid-dams nces-public-schools nrhp-listed [--data-root DIR]
+data/.venv/Scripts/python data/pipeline/build.py nid-dams nces-public-schools nrhp-listed [--region texas|alabama] [--data-root DIR]
 ```
 
 `--offline` builds from the raw cache only: a request that isn't cached stops the build instead of going to the network.
@@ -48,7 +48,7 @@ The builder refuses to run when `data/pipeline`, `data/schema` or `data/pyprojec
 
 For each collection:
 
-1. **Outline.** The builder reads the state's outline from eye: feature `state:48` of `/api/economy?op=areas&level=state`, which is Census TIGERweb's state layer generalised to 1:20M. This is the manifest's `region` request.
+1. **Outline.** The builder reads the state's outline from eye: the region's `boundaryId` (`state:<FIPS>`, e.g. `state:48`) of `/api/economy?op=areas&level=state`, which is Census TIGERweb's state layer generalised to 1:20M. This is the manifest's `region` request.
 2. **Tiles.** eye clamps each box to a route-specific size and snaps it to a grid. The builder asks for boxes of exactly that size, on that grid, so eye answers each box as asked. If the echoed `bbox` differs, the build stops.
    - **Box sizes, from eye's code at `ed1a907`:**
 
@@ -62,10 +62,10 @@ For each collection:
    - **Truncated answers:** a tile eye answers as `truncated` is split in four, down to a single grid cell. A single cell that is still truncated stops the build.
    - **Pace:** one request a second at most, start to start, over IPv4.
 3. **Region rule.** Features are deduplicated by id, and the first tile to hold one wins. A feature is kept when two things agree:
-   - The source's own state field puts it in Texas. That's NCES's county code (`CNTY`, the `(48453)` in `details.county`), NID's `STATE` or NPS's `State`.
+   - The source's own state field puts it in the region's state. That's the first two digits of NCES's county code (`CNTY`, e.g. the `(48453)` in `details.county`), NID's `STATE` or NPS's `State`.
    - Its point lies inside eye's outline, or within 0.05° of it.
 
-   The tolerance is there because the 1:20M outline cuts corners on the coast and along the Red River, the Rio Grande and the Sabine. Between neighbouring states, the source field decides. The rule is written into the manifest's `region.definition`, with the outline response's sha256.
+   The tolerance is there because the 1:20M outline cuts corners on coasts and river borders (in Texas, the Gulf coast and the Red River, the Rio Grande and the Sabine; in Alabama, the Gulf coast and the Chattahoochee). Between neighbouring states, the source field decides. The rule is written into the manifest's `region.definition`, with the outline response's sha256.
 4. **Records.** Each kept feature is mapped to `record/1` exactly as `build-fixtures.mjs` does it (SCHEMA.md, "From eye's LayerFeature").
    - NRHP property names are withheld, and each record is labelled by its NRIS number.
    - A dam's `nameRule` is set per record from its owner types, as eye's `PUBLIC_NAME_RULE` does (`cards.dam_name_rule`). It's `public-name` only when the owner type is Federal, State, Local Government, Public Utility or Tribal Government, and so is every entry of `owner types`. Anything else is `label-by-id`: Private anywhere, Not Listed, missing, empty or any other value.
@@ -78,7 +78,7 @@ For each collection:
      - dams and historic places: `name-lookup`
 5. **Validation.** Every record goes through `node data/schema/validate.mjs record`. Any failure stops the build, and nothing is written past this point.
 6. **Files.** The builder writes `records.parquet`, then asks the publisher for its own count:
-   - **Count:** an ArcGIS `returnCountOnly=true` query on the publisher's layer, keyless: `LSTATE='TX'` for NCES, `STATE='Texas'` for NID and `State='TEXAS'` for NPS.
+   - **Count:** an ArcGIS `returnCountOnly=true` query on the publisher's layer, keyless: `LSTATE='<USPS>'` for NCES, `STATE='<state name>'` for NID and `State='<STATE NAME>'` for NPS (for Texas: `LSTATE='TX'`, `STATE='Texas'`, `State='TEXAS'`).
    - **Ids:** it pages the publisher's ids, so the manifest's `publisherCount.gap` can name every row that isn't a record, and why.
    - **Manifest:** written, validated with its files, copied to `data/manifests/`, and read back through `read.py`.
 

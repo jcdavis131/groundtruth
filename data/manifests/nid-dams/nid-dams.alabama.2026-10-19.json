@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "manifest/1",
+  "snapshotId": "nid-dams.alabama.2026-10-19",
+  "collection": "nid-dams",
+  "region": {
+    "id": "alabama",
+    "name": "Alabama",
+    "bbox": [
+      -88.5187,
+      30.1787,
+      -84.8418,
+      35.0581
+    ],
+    "rule": "point-in-polygon",
+    "definition": "A record is in when NID's STATE field (eye's details.state) puts it in Alabama and its point lies inside, or within 0.05 degrees of, eye's outline state:01 from https://eye.jcamd.com/api/economy?op=areas&level=state (Census TIGERweb, generalised 1:20M; response sha256 e43aaa9eecb50a923507578c16309b9b8199b158ed84e138bbb419c654ddbaa3, retrieved 2026-10-18T23:06:58.575Z). The tolerance covers the generalised coast and river borders; the source's own state field decides between neighbours. bbox is the widened outline's extent. Records came from 12 requests to eye's infra?op=dams: 1.5-degree boxes on eye's 0.25-degree grid that touch the widened outline, each split in four while eye said truncated (0 split), deduplicated by id."
+  },
+  "createdAt": "2026-10-19T22:35:42Z",
+  "builder": {
+    "name": "groundtruth data/pipeline/build.py",
+    "version": "0.1.0",
+    "gitSha": "8fe2c8441ff50042ed7fe343fc295cf223cc7024",
+    "repo": "github.com/jcdavis131/groundtruth"
+  },
+  "recordSchemaVersion": "record/1",
+  "sources": [
+    {
+      "sourceId": "usace-nid",
+      "licence": "public domain"
+    }
+  ],
+  "requests": [
+    {"purpose": "region", "url": "https://eye.jcamd.com/api/economy?op=areas&level=state", "status": 200, "retrievedAt": "2026-10-18T23:06:58.575Z", "bytes": 640615, "sha256": "e43aaa9eecb50a923507578c16309b9b8199b158ed84e138bbb419c654ddbaa3"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-88.75,30,-87.25,31.5", "status": 200, "retrievedAt": "2026-10-19T22:35:23.697Z", "bytes": 255294, "sha256": "584e23ef8a1cedb670e5ce46abad3ece4cc64434d471e1fe1e1a56554f6aef55"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-88.75,31.5,-87.25,33", "status": 200, "retrievedAt": "2026-10-19T22:35:24.695Z", "bytes": 1104872, "sha256": "ed6b116eada106f24370e6f47cd47e8d576a50593eb72b76226bc736a5c7ca86"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-88.75,33,-87.25,34.5", "status": 200, "retrievedAt": "2026-10-19T22:35:28.362Z", "bytes": 724968, "sha256": "485244a8e832c02d0e8b99572ec92be43e6fb8ae842a204bdb839c4a0017e98e"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-88.75,34.5,-87.25,36", "status": 200, "retrievedAt": "2026-10-19T22:35:29.497Z", "bytes": 339588, "sha256": "d19ea9e1b6217c58678138bb4fd2bf5a8b8375125a5bdc84229e296c7f965c4d"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-87.25,30,-85.75,31.5", "status": 200, "retrievedAt": "2026-10-19T22:35:32.099Z", "bytes": 285761, "sha256": "5b4c468c4fded87060b89f8f6dc45effa9a828af38a22a58bfb3d027a4cea892"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-87.25,31.5,-85.75,33", "status": 200, "retrievedAt": "2026-10-19T22:35:33.227Z", "bytes": 457195, "sha256": "b588351292892092faa2cbea01e1d5a5580893bcc9d18a4c18200809cb1a1cd4"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-87.25,33,-85.75,34.5", "status": 200, "retrievedAt": "2026-10-19T22:35:34.225Z", "bytes": 554868, "sha256": "9759fe63c7c6128ba79bc222c76c6f8c48f19c390c9c4e2a37e6cc1f937e3f8d"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-87.25,34.5,-85.75,36", "status": 200, "retrievedAt": "2026-10-19T22:35:35.232Z", "bytes": 223843, "sha256": "93b3881108a010ea4a74c338932832d4d84db87bbf2f8cb0bbbb5917c8c569ad"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-85.75,30,-84.25,31.5", "status": 200, "retrievedAt": "2026-10-19T22:35:37.677Z", "bytes": 249767, "sha256": "e8dcd7429c0a6f16d90f0652afb1f1803a5b111721d107cee79229bf3f3353dc"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-85.75,31.5,-84.25,33", "status": 200, "retrievedAt": "2026-10-19T22:35:38.679Z", "bytes": 833219, "sha256": "9d1c48ddee7542f221aed0bd732cf6fa9df9a9644ef51e7adde22a234244db9e"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-85.75,33,-84.25,34.5", "status": 200, "retrievedAt": "2026-10-19T22:35:40.215Z", "bytes": 1543127, "sha256": "87e9ba7ed324c7140d70bd96d99e28b01a5e49df9be8b16b16e59458c738c479"},
+    {"purpose": "records", "url": "https://eye.jcamd.com/api/infra?op=dams&bbox=-85.75,34.5,-84.25,36", "status": 200, "retrievedAt": "2026-10-19T22:35:41.646Z", "bytes": 489819, "sha256": "05bd39baf3b6715ed7eb470650f2c15a43337895809be0d9ab2c3c299aa818d1"},
+    {"purpose": "count", "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0/query?where=STATE%3D%27Alabama%27&returnCountOnly=true&f=json", "status": 200, "retrievedAt": "2026-10-19T22:35:42.815Z", "bytes": 14, "sha256": "7e9ac4e9eddac7e1cea9e89b494d0979213d7c590024a761ce303e8936461023"},
+    {"purpose": "gap", "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0/query?where=STATE%3D%27Alabama%27&outFields=NIDID&returnGeometry=true&outSR=4326&orderByFields=NIDID&resultOffset=0&resultRecordCount=2000&f=json", "status": 200, "retrievedAt": "2026-10-19T22:36:53.634Z", "bytes": 189867, "sha256": "152659ce8f0e93275cf7c123369ce7cc07436401be26592303816998d7e462a4"},
+    {"purpose": "gap", "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0/query?where=STATE%3D%27Alabama%27&outFields=NIDID&returnGeometry=true&outSR=4326&orderByFields=NIDID&resultOffset=2000&resultRecordCount=2000&f=json", "status": 200, "retrievedAt": "2026-10-19T22:36:54.645Z", "bytes": 25155, "sha256": "7b610239f46b4c5ed1c5c8e44608f3ccefa8456dfc4c0312ef805948dd1abfe5"}
+  ],
+  "recordCount": 2253,
+  "publisherCount": {
+    "value": 2263,
+    "method": "ArcGIS REST query on the publisher's own layer: where STATE='Alabama', returnCountOnly=true (keyless). Every row the publisher files under Alabama, whatever its status.",
+    "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0/query?where=STATE%3D%27Alabama%27&returnCountOnly=true&f=json",
+    "countedAt": "2026-10-19T22:35:42.815Z",
+    "gap": "The publisher counts 2263; this snapshot holds 2253. 10 publisher row(s) repeat an id another row already has (NIDID), and a record's key is its id, so one record per id: nid:AL01415 on 6 rows, nid:AL01419 on 3 rows, nid:AL09501 on 2 rows, nid:AL83001 on 3 rows. Not counted either way: 3712 feature(s) from edge tiles whose source names another state."
+  },
+  "files": [
+    {
+      "path": "records.parquet",
+      "format": "geoparquet",
+      "sha256": "5ec389f63448d066a4534ce650e7ce5bddb1d1aa393ebef52d8bf17922171355",
+      "bytes": 280771,
+      "records": 2253
+    }
+  ],
+  "withheldFields": [
+    {
+      "field": "published name",
+      "why": "NID's NAME on a privately owned dam can be its owner's name ('<Surname> Pond Dam'); eye shows it on click but never searches or embeds it, labels the dam by NID id, and a training snapshot leaves it out. The same holds for a dam whose owner type is Not Listed, missing or any value other than Federal, State, Local Government, Public Utility or Tribal Government (a non-answer is unknown, not public). A dam whose name is allowed carries it in name."
+    }
+  ],
+  "embeddableFields": [
+    "primary purpose",
+    "dam type",
+    "hazard potential",
+    "condition assessment",
+    "county",
+    "state",
+    "year completed"
+  ],
+  "embeddableName": "when-nameRule-public-name"
+}
