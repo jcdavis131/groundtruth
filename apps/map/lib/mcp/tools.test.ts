@@ -394,9 +394,11 @@ describe("httpFetchJson's protection bypass (PREVIEW-TESTABILITY.md)", () => {
   };
 
   afterEach(() => {
-    // Every call that carried the secret must have refused redirects.
-    for (const c of lastCalls) if ("x-vercel-protection-bypass" in c.headers) expect(c.redirect).toBe("manual");
+    // Every call that carried the secret must have refused redirects. Reset
+    // first, so one failure doesn't carry into the next test.
+    const seen = lastCalls;
     lastCalls = [];
+    for (const c of seen) if ("x-vercel-protection-bypass" in c.headers) expect(c.redirect).toBe("manual");
   });
 
   it("sends x-vercel-protection-bypass to the request's own origin when the secret is set", async () => {
