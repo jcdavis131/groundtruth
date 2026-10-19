@@ -1,11 +1,11 @@
 {
  "schemaVersion": "athletes-manifest/1",
  "snapshotId": "athletes.2026-10-19",
- "createdAt": "2026-10-19T02:00:25Z",
+ "createdAt": "2026-10-19T02:08:33Z",
  "builder": {
   "name": "data/athletes/build.mjs",
   "version": "0.1.0",
-  "gitSha": "a6534b5d20ae73d4f00da9a9d859de07aa9398ed",
+  "gitSha": "4bdcc366e7c9e2ae5e34551095b07133ac490424",
   "repo": "https://github.com/jcdavis131/groundtruth"
  },
  "recordSchemaVersion": "athlete/1",
@@ -65,7 +65,7 @@
    "athletes": 1556
   },
   "NFL": {
-   "records": 57080,
+   "records": 56772,
    "athletes": 12456
   }
  },
@@ -87,12 +87,13 @@
     "absentBecause": "no league-published team city in the keyless sources read here: stats.nba.com is not reachable from this box and nflverse's teams file has no city column; never derived from the team's name"
    },
    "arena": {
-    "have": 3728,
+    "have": 3735,
     "of": 6819,
     "absentBecause": {
      "fewer than 3 roster players have one dated NBA P54 team at the season's midpoint": 2640,
      "no team item has 60% of the roster players' dated P54 votes": 265,
-     "the venue has no English label": 186
+     "two dated home venues overlap the season": 156,
+     "held: the Clippers' P115 still ends open at Crypto.com Arena (Q186080), and their new arena's item (Intuit Dome, Q54958436) has no occupant or opening date yet (checked 2026-10-19), so the dates cannot place the move; left out rather than named wrong": 23
     }
    },
    "school": {
@@ -101,17 +102,17 @@
     "absentBecause": "the NBA's school field (commonplayerinfo SCHOOL) was not read: stats.nba.com timed out and cdn.nba.com answered 403 to a plain keyless request on 2026-10-19; it is not taken from any other source, and no browser is impersonated"
    },
    "birthCity": {
-    "have": 6094,
+    "have": 6124,
     "of": 6819,
     "absentBecause": "rule A5a leaves out every birthplace it cannot trace by ids; see birthplace.outcomesPerAthlete"
    },
    "birthRegion": {
-    "have": 6093,
+    "have": 6123,
     "of": 6819,
     "absentBecause": "GeoNames has no admin1 name for the place record's region code"
    },
    "birthCountry": {
-    "have": 6094,
+    "have": 6124,
     "of": 6819
    },
    "perSeason": {
@@ -129,47 +130,46 @@
    }
   },
   "NFL": {
-   "records": 57080,
+   "records": 56772,
    "athletes": 12456,
    "team": {
-    "have": 57080,
-    "of": 57080
+    "have": 56772,
+    "of": 56772
    },
    "season": {
-    "have": 57080,
-    "of": 57080
+    "have": 56772,
+    "of": 56772
    },
    "teamCity": {
     "have": 0,
-    "of": 57080,
+    "of": 56772,
     "absentBecause": "no league-published team city in the keyless sources read here: stats.nba.com is not reachable from this box and nflverse's teams file has no city column; never derived from the team's name"
    },
    "arena": {
-    "have": 54458,
-    "of": 57080,
+    "have": 56699,
+    "of": 56772,
     "absentBecause": {
-     "no regular-season home game for the team-season in games.csv": 2549,
      "a tie between two home stadiums": 73
     }
    },
    "school": {
-    "have": 56991,
-    "of": 57080,
+    "have": 56683,
+    "of": 56772,
     "absentBecause": "college_name is empty in players.csv for the player"
    },
    "birthCity": {
-    "have": 47912,
-    "of": 57080,
+    "have": 48343,
+    "of": 56772,
     "absentBecause": "rule A5a leaves out every birthplace it cannot trace by ids; see birthplace.outcomesPerAthlete"
    },
    "birthRegion": {
-    "have": 47912,
-    "of": 57080,
+    "have": 48343,
+    "of": 56772,
     "absentBecause": "GeoNames has no admin1 name for the place record's region code"
    },
    "birthCountry": {
-    "have": 47912,
-    "of": 57080
+    "have": 48343,
+    "of": 56772
    },
    "perSeason": {
     "1999": 1650,
@@ -189,10 +189,10 @@
     "2013": 1785,
     "2014": 1830,
     "2015": 1838,
-    "2016": 2198,
-    "2017": 2150,
-    "2018": 2188,
-    "2019": 2222,
+    "2016": 2079,
+    "2017": 2094,
+    "2018": 2120,
+    "2019": 2157,
     "2020": 2205,
     "2021": 2295,
     "2022": 2264,
@@ -207,20 +207,18 @@
   "rule": "A5a (Cam 2026-10-19, \"go ahead with A5a\")",
   "outcomesPerAthlete": {
    "NBA": {
-    "matched-direct": 1337,
+    "matched-direct": 1341,
     "dropped-not-settlement-by-p31": 25,
     "dropped-no-external-id-match": 87,
     "dropped-coarser": 52,
     "matched-after-walk": 43,
-    "dropped-no-label": 4,
     "dropped-country-mismatch": 2,
     "dropped-multiple-p19": 1,
     "absent-no-p19": 5
    },
    "NFL": {
     "absent-no-wikidata-item": 701,
-    "matched-direct": 9605,
-    "dropped-no-label": 152,
+    "matched-direct": 9757,
     "dropped-coarser": 281,
     "dropped-no-external-id-match": 361,
     "dropped-not-settlement-by-p31": 115,
@@ -244,7 +242,7 @@
    "dropped-ambiguous-record": "the item's external ids match more than one place record",
    "dropped-no-external-id-match": "a settlement whose external ids match no place record (US: Census Gazetteer places; elsewhere: GeoNames cities500)",
    "dropped-country-mismatch": "the matched place record is in a different country than the item's P17",
-   "dropped-no-label": "the settlement has no English label to show",
+   "dropped-no-label": "the settlement has no English or default (mul) label to show",
    "dropped-walk-too-deep": "no settlement within 4 P131 levels",
    "dropped-no-place-data": "Wikidata returned nothing for the place item",
    "absent-no-wikidata-item": "no Wikidata item carries the athlete's league id",
@@ -253,7 +251,7 @@
    "absent-no-p19": "the Wikidata item has no place of birth"
   },
   "traceCheck": {
-   "recordsChecked": 54006,
+   "recordsChecked": 54467,
    "failures": 0
   },
   "settlementClass": "Q486972",
@@ -283,21 +281,49 @@
   }
  },
  "nbaArenas": {
-  "method": "team item = the NBA team item (P118 Q155223) that at least 3 roster players and 60% of the voting ones were on (dated P54) on Jan 1 of the season; arena = the one dated P115 statement covering Nov 1 of the season's first year; any undated P115 statement leaves it out",
+  "method": "team item = the NBA team item (P118 Q155223) that at least 3 roster players and 60% of the voting ones were on (dated P54) on Jan 1 of the season; arena = the one dated P115 statement covering Nov 1 of the season's first year; any undated P115 statement leaves it out. A venue that lists the team as occupant (P466) from after every P115 start counts as a move the team item lacks, so the overlap leaves those seasons out (the Clippers' P115 ends open at Crypto.com Arena; Intuit Dome lists them from 2024). The name is the venue's dated English official name (P1448) for the season when there is one, else its current English label",
   "teamSeasons": 330,
   "withArena": 187,
+  "holds": [
+   {
+    "teamItem": "Q976396",
+    "fromSeason": "2024-25",
+    "reason": "held: the Clippers' P115 still ends open at Crypto.com Arena (Q186080), and their new arena's item (Intuit Dome, Q54958436) has no occupant or opening date yet (checked 2026-10-19), so the dates cannot place the move; left out rather than named wrong"
+   }
+  ],
+  "nameFrom": {
+   "label": 151,
+   "official-name": 36
+  },
+  "clippers": {
+   "2015-16": "Staples Center",
+   "2016-17": "absent: fewer than 3 roster players have one dated NBA P54 team at the season's midpoint",
+   "2017-18": "absent: fewer than 3 roster players have one dated NBA P54 team at the season's midpoint",
+   "2018-19": "Staples Center",
+   "2019-20": "Staples Center",
+   "2020-21": "Staples Center",
+   "2021-22": "Staples Center",
+   "2022-23": "Crypto.com Arena",
+   "2023-24": "absent: fewer than 3 roster players have one dated NBA P54 team at the season's midpoint",
+   "2024-25": "absent: held: the Clippers' P115 still ends open at Crypto.com Arena (Q186080), and their new arena's item (Intuit Dome, Q54958436) has no occupant or opening date yet (checked 2026-10-19), so the dates cannot place the move; left out rather than named wrong",
+   "2025-26": "absent: fewer than 3 roster players have one dated NBA P54 team at the season's midpoint"
+  },
   "byReason": [
    {
     "reason": "fewer than 3 roster players have one dated NBA P54 team at the season's midpoint",
     "teamSeasons": 124
    },
    {
-    "reason": "the venue has no English label",
-    "teamSeasons": 8
-   },
-   {
     "reason": "no team item has 60% of the roster players' dated P54 votes",
     "teamSeasons": 11
+   },
+   {
+    "reason": "two dated home venues overlap the season",
+    "teamSeasons": 7
+   },
+   {
+    "reason": "held: the Clippers' P115 still ends open at Crypto.com Arena (Q186080), and their new arena's item (Intuit Dome, Q54958436) has no occupant or opening date yet (checked 2026-10-19), so the dates cannot place the move; left out rather than named wrong",
+    "teamSeasons": 1
    }
   ]
  },
@@ -1162,28 +1188,32 @@
    "gsis_id not in players.csv, or no display_name": 32
   }
  },
+ "nflAbbreviationsMappedToTheirSeason": {
+  "playerSeasonTeams": 2549,
+  "how": "nflverse team_id, to the abbreviation games.csv used that season (LV in a 2010 stats file -> OAK, Oakland Raiders)"
+ },
  "invalid": {},
  "files": [
   {
    "path": "nba.jsonl",
    "format": "jsonl",
    "records": 6819,
-   "bytes": 7921963,
-   "sha256": "3dd79d42c85e4331cc0c32cfee3f22af0f3e5099d23fd8dbd7d1de96aa95b9ed"
+   "bytes": 7942575,
+   "sha256": "8bca7b0875e2c744ff14c4c66bc170175fe0edc2601cf79c034bbd2c6c0a2aca"
   },
   {
    "path": "nfl.jsonl",
    "format": "jsonl",
-   "records": 57080,
-   "bytes": 89215719,
-   "sha256": "67b50c67d119e9be9dbabb31a27c88d52da26226829ead8eb29d1e591142bf4f"
+   "records": 56772,
+   "bytes": 89726653,
+   "sha256": "c2864e22f3fa0d19674d1676bc20c2672809af640190a10e8280329ade2ec221"
   },
   {
    "path": "birth-trace.jsonl",
    "format": "jsonl",
-   "records": 11079,
-   "bytes": 1794361,
-   "sha256": "6fb3fe85080d7082a4a83956d7b576d0ddeb737416886dd7f5f65b1cb1ef74c5"
+   "records": 11235,
+   "bytes": 1819462,
+   "sha256": "9b65c892c4488f3d1a7e08b513235585ff427fac8da607706e8674020316be3c"
   },
   {
    "path": "schools.jsonl",
@@ -1195,30 +1225,30 @@
   {
    "path": "birth-cities.jsonl",
    "format": "jsonl",
-   "records": 2892,
-   "bytes": 860358,
-   "sha256": "42d9c3721b8df54d093c1b490fb8467ca0072c661a906a4d6551a7562e5d7f7e"
+   "records": 2897,
+   "bytes": 864165,
+   "sha256": "46d62180b641c9b2cac47235e74d1739ba938c7f518dccaa59c2a8ff9446e48b"
   },
   {
    "path": "arenas.jsonl",
    "format": "jsonl",
-   "records": 99,
-   "bytes": 45298,
-   "sha256": "82d8aa3eac46b4071726ee0ee8c8ed2acfe0eaa37ccac566fb3f5444a16ba6f6"
+   "records": 100,
+   "bytes": 45662,
+   "sha256": "c4ba5ecfac7bcaeeab319f102314496605a49c15a0b55ef8e20731e654e05d2e"
   },
   {
    "path": "wikidata-places.json",
    "format": "json",
    "records": 3573,
-   "bytes": 694512,
-   "sha256": "da6d80ee89046a41eda8884fe155a7caccda84cf2925937ad58b704ee9d7f6f1"
+   "bytes": 694559,
+   "sha256": "7a7cd56e1d9a5af0b3a18d7301d077c9d43bdfb6dca13f9a61464e89202032b3"
   },
   {
    "path": "place-records.json",
    "format": "json",
-   "records": 2909,
-   "bytes": 694572,
-   "sha256": "2e85cef5679e5f34a05bb7e2cf7074b6a8e03dc421a61520eaa4bfba046c3715"
+   "records": 2914,
+   "bytes": 695755,
+   "sha256": "ce97d6ec8f015a4ab239466cfaeae815b15d034268c7c0c48afb723f875ba419"
   }
  ],
  "requests": [
@@ -2314,42 +2344,75 @@
    "purpose": "nba-home-venues",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "6d7c0e4f0d5ed1c88008e1f02f0db7f2e993fca1313d5cc73e3864bd5d1b8b1c",
+   "bodySha256": "58aa023faaab19a054b8a8c817f15f554670f8eeec8c70d1345b331a8ff057d2",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:49:36Z",
-   "bytes": 106106,
-   "sha256": "43b113f0fdf0db8c93d82fe147541b3720c5814d78d38f9187ab991954490bf9",
+   "retrievedAt": "2026-10-19T02:04:16Z",
+   "bytes": 106228,
+   "sha256": "9a7d459bd0c8b771961267c6bddf70203e644726a727b4070bffae9f40a1c10b",
+   "cached": true
+  },
+  {
+   "purpose": "nba-venue-occupants",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "eb967ac7266533c091df7cba2a9b63efef28c89dd5ce7fb7307f4787097b4d1f",
+   "status": 200,
+   "retrievedAt": "2026-10-19T02:04:17Z",
+   "bytes": 63878,
+   "sha256": "928dd3f04c25394506d46600eb5b269880669a9f936f34a1a9234dff896edd6f",
+   "cached": true
+  },
+  {
+   "purpose": "nba-venue-names",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "7d98744cf6aabf3ca802a3e0ddcefd69ef951b989c426c95498a76cc02578fb5",
+   "status": 200,
+   "retrievedAt": "2026-10-19T02:04:18Z",
+   "bytes": 6710,
+   "sha256": "3ead3bf917377d124188286528b101f4c42459f511a1ab80d49a7d12d451916f",
+   "cached": true
+  },
+  {
+   "purpose": "nba-venue-names",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "c715c66f114d48d0702ab0e59c02c29001843ad9e90cfa723d0b49a543cac63b",
+   "status": 200,
+   "retrievedAt": "2026-10-19T02:04:20Z",
+   "bytes": 3818,
+   "sha256": "42ab857aa7c1272657966bb84b1853828965fdb738c87f8e81717b4c65ad7b8f",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "a1fd0027b6d26f024268245e1e53a3c3e9c7b69488ae86894639201da06feb07",
+   "bodySha256": "7e4356c48895fde147da6e6dd2040b656a941e71307412419195ab8a538a91bf",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:49:39Z",
+   "retrievedAt": "2026-10-19T02:04:28Z",
    "bytes": 133243,
-   "sha256": "9d9ec0475dcc43d77ec56fb82132f71321f7c767ed92255cc4db43cd99b6e337",
+   "sha256": "2375338ca715c5fc4d6fffdc5090368dfe9bc8b377c97b591238bf72e600d63c",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "6efe3dff815c17c741d7cbbed5d81d74b816ecf487564ebd700b3e7991f29466",
+   "bodySha256": "afbe36cd5d81f192a6e52933d15dc834b88a69b89eacf5de85de2d13dbce11e3",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:49:44Z",
-   "bytes": 133212,
-   "sha256": "cb6b85695111fecfcc63615d5b7aa6c16262eb4245d20ca516f1515b13c42b45",
+   "retrievedAt": "2026-10-19T02:04:33Z",
+   "bytes": 133431,
+   "sha256": "1cb896935de5b0267306509e1cfb77caafe2646b98cb7a004110143fa18e0980",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "abee2bf9ac802b476a045cc34aea958b14f34360e29347bdedbb45519db7a35c",
+   "bodySha256": "f9741c269fc47933e421fb52507e3978e23713dc6d218c7505490529f9102529",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:49:47Z",
+   "retrievedAt": "2026-10-19T02:04:37Z",
    "bytes": 133547,
    "sha256": "cf53db3bab97715e64c4cefaef887df12a98f3789d4a0951ceb35b29f64f2661",
    "cached": true
@@ -2358,31 +2421,31 @@
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "2a103436f707c6400e313e8d731a0b3c676553d793955f645ae445925cc0529f",
+   "bodySha256": "61367b39e00ff88cc165a8e50a14cec4d8e7edf4d0ebb88a5aeb91d613a81b9a",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:49:52Z",
-   "bytes": 133399,
-   "sha256": "6bed6974fbc1b110332ac8fac89d6676715b8eb2c46e66f979d59c79e38fb87c",
+   "retrievedAt": "2026-10-19T02:04:41Z",
+   "bytes": 133626,
+   "sha256": "fd2ab5d74d07ff18af3be17ea497a44e07317cf346f30d474eebd4c0e8ae0265",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "7638c5fe8c9423d48d12b265694113b33bd7655af47d62f5e54d6a09cbf64d27",
+   "bodySha256": "e226acce7d6b82cdae5491446f91a1e94b6e8720450a1861f25b10af192baebb",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:49:58Z",
-   "bytes": 132897,
-   "sha256": "f9c3dc96f0cc69b44616e0488f20744bf3ac7cd94f1618177fd666afe9614c64",
+   "retrievedAt": "2026-10-19T02:04:45Z",
+   "bytes": 133121,
+   "sha256": "ddb610f4ac6c80ff75ce11b7299340a86edae5bd8a3c5b737dd584f5c3bc84c8",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "a62f8619cf59f74aaeff5252cfc161da2c239145cc753c4b154f4ac8afdff5dd",
+   "bodySha256": "c2f668f75c5f5fd0135cf5cc35b4e92a3af76c55dd297d545b827a84b553d85c",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:02Z",
+   "retrievedAt": "2026-10-19T02:04:46Z",
    "bytes": 134093,
    "sha256": "9602c8342ee211ce3c3966dca7dc4056cb981558af7df8d9f4d9701c150caa86",
    "cached": true
@@ -2391,20 +2454,20 @@
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "6c119dc65c01979f8bf894ebb8d6f9030daca7f7ffdf8932a60d5fd2e0e805b5",
+   "bodySha256": "2b682285190e7f2de63fd347c542b08d42aee598b4a13ba498eff789ff0c856e",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:05Z",
+   "retrievedAt": "2026-10-19T02:04:49Z",
    "bytes": 133357,
-   "sha256": "0ff5e52bf10b4f06cba2de0f35b6b0c0ba7cfafdd5b9808b56b0f69482a9721b",
+   "sha256": "1318a20409c46a29c474830cfe485e4afdddda46e4cc7ca533f202095fede5d9",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "ca0fe43e6d97410745388f417d089a3dee9309f61323da3a697af51e1ea538d8",
+   "bodySha256": "00e83223a246f5a06a6bdac1f4eb157918cd766b7e621156d3cb6eeb0b857547",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:07Z",
+   "retrievedAt": "2026-10-19T02:04:50Z",
    "bytes": 133702,
    "sha256": "da7a29cf5a8f61062e1e33c8132288379303e762ef39c96697bad4e5c3f4c79d",
    "cached": true
@@ -2413,31 +2476,31 @@
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "6c866975860eef77ce8db145d9e1f854e9d4869341b5904c653870456d901aa2",
+   "bodySha256": "dc025cef674d6ddfcb228a03631d17bf73b83011b74bfc7c9d3fb8f96f27c42b",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:09Z",
+   "retrievedAt": "2026-10-19T02:04:52Z",
    "bytes": 133769,
-   "sha256": "2354a9350c121bbd7532ba77a6aa641865e1f4dfc8746471be872384096333e6",
+   "sha256": "ec8efb5ed7e83da7a598702917889d3fb5f9990d3197ac424c6da03bd654e28e",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "427a5cead20e7cddface71bb4c7a3103ab7adfa66fac5e348ed463b254532fe9",
+   "bodySha256": "cd049ace3ae52ca55a5e3f7256dfb31c22ff527d89cfdac1b47c0bcbf523071c",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:13Z",
+   "retrievedAt": "2026-10-19T02:04:54Z",
    "bytes": 133679,
-   "sha256": "191f2843a8e70a978aa2279ccefc31708195869396609b1326758af8651d07e3",
+   "sha256": "cd9b7bcafd0c08016c1172c1dbb5d1e879f11bc2e2cb24908309e014012e45b0",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "a52278172e89cabf902099ddc8a2d3b94d488c429bb5e969b3be725e39c0b467",
+   "bodySha256": "e750a6aafb82ba4f027da9b63e6b398697f282d9b1b038e8486bfb9ade3e711d",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:16Z",
+   "retrievedAt": "2026-10-19T02:04:55Z",
    "bytes": 133506,
    "sha256": "b4ff709e3cbe19188e2f2b0aaf45b73aea6bfdbeebb5a1ae59624c668a87e44e",
    "cached": true
@@ -2446,20 +2509,20 @@
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "bfaa2a8eb82a2651baa534fd2e2707d788add47444dd4da77f7cf0ae76f442ff",
+   "bodySha256": "8b52e84fc8591460c0ec2f654324ece45a473f1b611020b150fcc8bbabf14216",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:18Z",
+   "retrievedAt": "2026-10-19T02:04:57Z",
    "bytes": 133629,
-   "sha256": "f0316f4a1fc1ca13d69b591011c85a6b0b65e0e426d13050f532778ba9b2c86c",
+   "sha256": "bdbcc106f159fc32edb69008e2e425ff1ea9c17154fe81a193728246e5e424f7",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "cce51c094f6a1657cca4e60493a728880f71194b5ad48328224463636ada6eee",
+   "bodySha256": "406b04befebc00dd1cb02e1134b8b267dce989060460b7d716947adc4ce11180",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:21Z",
+   "retrievedAt": "2026-10-19T02:04:58Z",
    "bytes": 133331,
    "sha256": "7793746ec8e7274f0fe43adb46971290751acf792a8fb226d3e72a76a52eff5f",
    "cached": true
@@ -2468,20 +2531,20 @@
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "9a36523e57b5443aac2fc50c6dfedb17d8e7bfee85eb81b6b9e8acf8c986e5ee",
+   "bodySha256": "3f8045dc0f5643a1a66722e6b7a0d203940b4e19492f32ba28cd9a263388063e",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:22Z",
+   "retrievedAt": "2026-10-19T02:05:01Z",
    "bytes": 133289,
-   "sha256": "958889c727d066be20ac80a9ea8be485e9ec569f85092cd779f667ea9afb4820",
+   "sha256": "ad474d952c4b1457e8e45bbe38920bd1b6c5048382ba0bf18c1c51fbec285e70",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "2328ce453a9292ba064612a20b07fc493cd7e2d9b5d9fb6d3c8ebdb4c996c139",
+   "bodySha256": "8dca6919459a52d2bc24c3e7c9ab6bb0886c0788db43d74caab136fa90dba340",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:24Z",
+   "retrievedAt": "2026-10-19T02:05:04Z",
    "bytes": 133687,
    "sha256": "c36bba6acb83e0a40b531b9706640f2ae87198d7e000cc6a954aa7a4bf8d2453",
    "cached": true
@@ -2490,163 +2553,163 @@
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "7c30b068e0db8ca9dc808a6a0bf41299389dd8d0fa5eb4c4ef84977e5b8bb1af",
+   "bodySha256": "8a88abd63e85ca76de3e8710101704ab43a899806d8604f1dbd699ebb5f771af",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:27Z",
+   "retrievedAt": "2026-10-19T02:05:06Z",
    "bytes": 133458,
-   "sha256": "03927a0e7cbff72962ac91a9b622ad4a934920338d6a178be77c3197b0cb5e10",
+   "sha256": "4d3d53702d5324e510836db6edc5daa73572bf4d316a4ab015b9885f27ec4dbb",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "949a3a69348332de8c2cc660b2339c5a203151f4a195edf18d566bb584e4e632",
+   "bodySha256": "97534ea3be47cf7bc1e6511a2bdb243a573656fddf7c9ac648eb17908897e9f1",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:29Z",
+   "retrievedAt": "2026-10-19T02:05:09Z",
    "bytes": 133509,
-   "sha256": "3498c646fb9afdd6176d0e0f1553c357a2ca1ba89d7a562f3ca829a2321e7e4d",
+   "sha256": "a720b65b87a177b5fe8463720897241b83254b914d253eb4b5182f456547a6d7",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "dce79ab70c486ee3abf256603070d685ee122d02aacf63084cb4cbcdb26b8e9d",
+   "bodySha256": "b6b344b928a7685569855570e1ce8aa5810561ec144f9d48662869249b164a6e",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:33Z",
+   "retrievedAt": "2026-10-19T02:05:17Z",
    "bytes": 133516,
-   "sha256": "d932b82029ba4e1357578effe18b91900448c530732e77465b2222bf84e5d2e6",
+   "sha256": "b4bb92ab15c74b52ea0c3c91a5920e297b556340a9b7115cef02bed2da9cf349",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "e0ccb6a954641245d0f48dc16fefdcd8cf2214e70dde497e719e4332c76b98b1",
+   "bodySha256": "8b84cb845b1c753faa7527d47ca930881162c3606d951efec03a044439de90d4",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:35Z",
+   "retrievedAt": "2026-10-19T02:05:19Z",
    "bytes": 133118,
-   "sha256": "0e90aed461cfdbf303e934c2d6d8eca22088090929fbf2cfdaf4363e4e46bfda",
+   "sha256": "c30e2d2c152732f9caec36a522dd42fe1b7a8f1932a58934de7740064f9d6a36",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "35a3eba13597cd4ac4e22d9909d4a0d1b292819c720ba983f4b3421eb06bfe5d",
+   "bodySha256": "7d6d0c0048ff67a1178d425d696aa862a3076c9a9d042f92fba1c9533538f21d",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:36Z",
-   "bytes": 132997,
-   "sha256": "79a74d9a93bb553737ed53b1c03fa1d2321dd5ae319ef621c45eb698cd9518bb",
+   "retrievedAt": "2026-10-19T02:05:20Z",
+   "bytes": 133217,
+   "sha256": "3f310be3de9a43072f4a6dafccf4cf7caa293134c8ebe74c6b8b2ca34c8937d9",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "c7ddb03d8bae5abcfc5fb48f5c40e4d65d556f78335fe26223fefab7732e216e",
+   "bodySha256": "d5aaecd2962e9864178394ab2a87dd1ab0b14e18fd503930488634d1b2428a0a",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:40Z",
+   "retrievedAt": "2026-10-19T02:05:22Z",
    "bytes": 133704,
-   "sha256": "d5a179a6ee8ced38c0785140f4901fe40ce05e375c05aea04ef13540b4420e34",
+   "sha256": "de1a65db2c9fbb7b246fe6388287e19c53967580130b8d06af2bfc41e1aae6ce",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "17a1c9d652c006ec81480301630410ab854e09f9c5b2388f7c702f56799f6e19",
+   "bodySha256": "c9d6874a623e0bae3a64b099a0a2a7a66ff43b59841aea37d7e9a8122a45f3b4",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:42Z",
-   "bytes": 133808,
-   "sha256": "2382c35e48857f6665a9de1734ec2d87d0011e22b60c3cff4557b97cc95a26c5",
+   "retrievedAt": "2026-10-19T02:05:23Z",
+   "bytes": 133919,
+   "sha256": "cc75619e1bd3087c4106bf8f005b8f642117421aa663a588b216d5da573355e0",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "b845be603a53cce62d8b1129628567a521cdad74e9b2d20237d4adc1474da637",
+   "bodySha256": "763e191121dce9dcd4ab9bc41a2ab6d6a62c1adf081b8d19d059b8fde3d19664",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:45Z",
+   "retrievedAt": "2026-10-19T02:05:29Z",
    "bytes": 133710,
-   "sha256": "7ba62ead024e2f498f3b3468a2008d7cc30c41f2004fb72b2dc3e1da4e616935",
+   "sha256": "de22245e0630e52245daecb786313e9f10603f18a0d573f67ad197804e5ff07f",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "71e9a9b76f6bb9fc3eea5021a0a368e17a85dae5206f8cd393d079e7acb24198",
+   "bodySha256": "7c386b4fcfbaa01145d43a9f5d0a99e7e4eefbd33210cd43ab5ab8f7c7bd52f9",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:47Z",
+   "retrievedAt": "2026-10-19T02:05:35Z",
    "bytes": 133583,
-   "sha256": "7cf40b2e60a3b124df305f2e87a16ef360a5e39c19e29d0cedac1d4e6301b5cf",
+   "sha256": "754c2bf7fbfc0817567a09487c9eb1d993e026b1a48f051ece973311efe66d3d",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "c33a412d981a691a2e6530d68331c3e9ba7864f200f8d1eb2c58cb4ba16accb1",
+   "bodySha256": "bf3a96fda15791ddb24414def85bf84be18d65534de4fa4590146c6016bd4bfb",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:49Z",
+   "retrievedAt": "2026-10-19T02:05:37Z",
    "bytes": 133361,
-   "sha256": "d3b0175af24ff9e515e3a975a8f07b612bfefad610289a6bce2a36180dc10945",
+   "sha256": "77285e5cdc545f858cbd6389b6259984548ea00227414fee606686524f3f307d",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "f614c84f2c814b892b7988550727cd65588e7cd6cf8f1169e9264d91080d0878",
+   "bodySha256": "efdb80706515f89650da71f5ebc345d4a4eb38d7343bf9423845f9e55a50ffba",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:52Z",
+   "retrievedAt": "2026-10-19T02:05:38Z",
    "bytes": 133532,
-   "sha256": "5e87dc7a3778e78f37b1e227cee07ed3f77f5edee056a2cc8ff5ff5eeacc83fa",
+   "sha256": "6bebabd3229fbab27c1447af6f0618c7cc369b0b48fee22ed89e555f7563011a",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "918ce043ac6f1d15c20c08f2971132735f831eb06109a2757d17ad9a4d723130",
+   "bodySha256": "7dd7448b2b296e0fd37f6a4f047302bd89fc308d103f3d04d4c97baca9f031b7",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:56Z",
+   "retrievedAt": "2026-10-19T02:05:40Z",
    "bytes": 133631,
-   "sha256": "3bfac14e57ee46e9c601017f4d88ea550202c2197a2e9440623cea01624ad252",
+   "sha256": "05d5346b96a170f6b24127b47da28dafbfa8c96db728de28cac531e03220f61e",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "6b46a525288b5f973bbdec70de64cdb7572b75b0f83a1afe0318ad548fe0f10b",
+   "bodySha256": "3f7eaeff0f51543e64932475beb7095f5b772aeb0644afa562c2fa270704ebe5",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:50:58Z",
+   "retrievedAt": "2026-10-19T02:05:46Z",
    "bytes": 133848,
-   "sha256": "8f3f51d079f06f6d8345444d729ba575f6d8042f73fe8fbe25974b1b3c966af8",
+   "sha256": "e906cf58c359de14b12f56fe5954057716147e22672964a874aa966cd2ff3e3f",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "a53cc290fa7f118d84a037690ce9fe32e74c0b3440f9c6b0b5cfda207095b1da",
+   "bodySha256": "6dadefeead65a6b01b9fed731acc1f5e4158e92e964c65e49c7a57e233669483",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:51:03Z",
+   "retrievedAt": "2026-10-19T02:05:50Z",
    "bytes": 133014,
-   "sha256": "ccf31638b96e6e0b3386f50d6792606a7b5231361893e7342a54ba891d46a7f2",
+   "sha256": "04c556c47bfacf387f72058760ee9ad49c67d4598f20b47cf57dc54ff8f279a5",
    "cached": true
   },
   {
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "58d42853cb381709c997e5d09066237a4a0e62f4360282f1d9d8dfe374f94256",
+   "bodySha256": "925d7d535e6f652fe808e5977be4e77dc203653353961cefdf6f032a753165e8",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:51:05Z",
+   "retrievedAt": "2026-10-19T02:05:54Z",
    "bytes": 55686,
    "sha256": "ac4c8fe2e70481f458e094d5b9b2963e0aed0d629f5df1d2fe5695a6fdc2af13",
    "cached": true
@@ -2655,9 +2718,9 @@
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "3ed72f1684a573b3e78a2fe115acd50f208c3b5524a75fe4eebcbf780a6786d7",
+   "bodySha256": "44ae431ced274c5e9c6f6100b79152ab940226883737abcfaff42cf9ac45c5d5",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:51:09Z",
+   "retrievedAt": "2026-10-19T02:05:59Z",
    "bytes": 46237,
    "sha256": "7df1ade4c20ddfa6a520f89dd4b06ded8ad3d9050359a8ab025574be66999af9",
    "cached": true
@@ -2666,9 +2729,9 @@
    "purpose": "places",
    "method": "POST",
    "url": "https://query.wikidata.org/sparql",
-   "bodySha256": "bf1d6dec0aee52acd814c05cbc9de328ae46883e6a3460d0abd5106fee7bcb63",
+   "bodySha256": "5ccd5882230184ce9efe0e405ae6545dfcc48a4a58167f151f23788e5c34fc1b",
    "status": 200,
-   "retrievedAt": "2026-10-19T01:51:11Z",
+   "retrievedAt": "2026-10-19T02:05:59Z",
    "bytes": 1240,
    "sha256": "4900872ae825214e70490008988fc1ec15ec652e37160cf63f248b0b80786824",
    "cached": true
@@ -2691,7 +2754,7 @@
    "retrievedAt": "2026-10-19T02:00:17Z",
    "bytes": 13886879,
    "sha256": "56c9e2dc0344e2bbeb82c97ed43e0d65120e92d957283fe61d7eec79279245ce",
-   "cached": false
+   "cached": true
   },
   {
    "purpose": "place-records",
@@ -2701,7 +2764,7 @@
    "retrievedAt": "2026-10-19T02:00:19Z",
    "bytes": 151583,
    "sha256": "1da92a6323a5fec3176f3f743bf4cf4040fd56a876da55e46fbca23c863aa60a",
-   "cached": false
+   "cached": true
   },
   {
    "purpose": "place-records",
@@ -2711,8 +2774,8 @@
    "retrievedAt": "2026-10-19T02:00:20Z",
    "bytes": 31690,
    "sha256": "c55f638cfaafb4fe45a9aa15120a0f1f78e8a34a8e1847d7b9320cf740fbc9ab",
-   "cached": false
+   "cached": true
   }
  ],
- "runSeconds": 236
+ "runSeconds": 12
 }
