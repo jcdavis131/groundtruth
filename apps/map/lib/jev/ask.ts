@@ -57,6 +57,20 @@ export async function askJev(t: JevTarget, signal?: AbortSignal): Promise<JevAns
   return readReply(body);
 }
 
+/**
+ * Nominatim place types asked by FIPS through the place fabric, and the fabric
+ * node kind each one is read from. Alaska's county equivalents come back from
+ * Nominatim as "census" (census areas, Chugach) or "borough"; both are counties
+ * in the fabric.
+ */
+export const JEV_FIPS_TYPES: Readonly<Record<string, "county" | "state">> = { county: "county", census: "county", borough: "county", state: "state" };
+
+/**
+ * Place hits Jev can be asked about in ⌘K: the FIPS types above, or a city or
+ * town (asked at its point; world_context names its metro). Never an address.
+ */
+export const JEV_PLACE_TYPES: ReadonlySet<string> = new Set([...Object.keys(JEV_FIPS_TYPES), "city", "town", "village", "municipality"]);
+
 /** A ⌘K place hit (Nominatim, via /api/geocode) Jev can be asked about. */
 export interface PlacePick {
   lon: number;
@@ -72,7 +86,7 @@ export interface PlacePick {
  */
 export async function targetForPick(h: PlacePick, signal?: AbortSignal): Promise<JevTarget> {
   const point: JevTarget = { kind: "point", lon: h.lon, lat: h.lat };
-  if (h.type !== "county" && h.type !== "state") return point;
+  if (!Object.hasOwn(JEV_FIPS_TYPES, h.type)) return point;
   try {
     const res = await fetch(`/api/fabric?op=stack&lon=${h.lon.toFixed(4)}&lat=${h.lat.toFixed(4)}`, { signal });
     if (!res.ok) return point;
@@ -84,8 +98,10 @@ export async function targetForPick(h: PlacePick, signal?: AbortSignal): Promise
 }
 
 export function fipsTarget(type: string, nodes: { kind?: string; code?: string }[]): JevTarget | null {
-  const code = nodes.find((n) => n.kind === type)?.code;
-  if (type === "county" && code && /^\d{5}$/.test(code)) return { kind: "county", fips: code };
-  if (type === "state" && code && /^\d{2}$/.test(code)) return { kind: "state", fips: code };
+  if (!Object.hasOwn(JEV_FIPS_TYPES, type)) return null;
+  const kind = JEV_FIPS_TYPES[type];
+  const code = nodes.find((n) => n.kind === kind)?.code;
+  if (kind === "county" && code && /^\d{5}$/.test(code)) return { kind: "county", fips: code };
+  if (kind === "state" && code && /^\d{2}$/.test(code)) return { kind: "state", fips: code };
   return null;
 }

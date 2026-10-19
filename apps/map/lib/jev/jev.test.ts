@@ -17,10 +17,12 @@ describe("toLine", () => {
     expect(toLine({ ...base, value: false }).text).toBe("no");
   });
 
-  it("shows the note for a null value, never 0", () => {
-    const l = toLine({ ...base, value: null, note: "name withheld (private owner); labelled by NID id" });
-    expect(l.text).toBe("name withheld (private owner); labelled by NID id");
+  it("shows the note for a null value in plain words, never 0", () => {
+    const l = toLine({ ...base, value: null, note: "name withheld (private owner); labelled by NID id", code: "nid:AL00011" });
+    expect(l.text).toBe("name withheld (private owner); labelled by its NID id");
     expect(l.fromNote).toBe(true);
+    expect(l.id).toBe("NID id AL00011");
+    expect(toLine({ ...base, value: "Longhorn Dam", code: "nid:TX00001" }).id).toBeUndefined();
   });
 
   it("formats numbers with their unit and dates retrieval", () => {
@@ -41,11 +43,12 @@ describe("toSection", () => {
     expect(toSection("hazards", { items: [base] }).marker).toBeNull();
     const s = toSection("hazards", { items: [], missing: [{ what: "FEMA declarations", reason: "FEMA lists Connecticut under its 8 legacy counties." }] });
     expect(s.marker).toContain("FEMA declarations");
-    expect(s.gaps[0].sentence).toBe("FEMA declarations: FEMA lists Connecticut under its 8 legacy counties.");
+    expect(s.gaps[0].sentence).toBe("FEMA declarations: FEMA still files Connecticut under its 8 old counties, not the planning regions Census uses now, so nothing is filed under this region.");
+    expect(s.gaps[0].rule).toBe("ct-legacy-counties");
   });
 
-  it("writes a gap as one sentence", () => {
-    expect(gapSentence({ what: "elevation", reason: "USGS 3DEP gave no elevation for this point" })).toBe("elevation: USGS 3DEP gave no elevation for this point.");
+  it("writes a gap as what, then the plain sentence for its reason", () => {
+    expect(gapSentence({ what: "elevation", reason: "USGS 3DEP gave no elevation for this point" })).toBe("elevation: USGS has no elevation for this spot.");
   });
 });
 

@@ -7,8 +7,13 @@
 //   - One line per item: the value, or the item's note when the value is null
 //     (a private dam's withheld name, a hospital CMS gives no rating). A null
 //     is never drawn as 0 and is not a gap.
-//   - Only topics[t].missing entries become gap sentences, in the reply's own
-//     words (what, then why).
+//   - Only topics[t].missing entries become gap sentences: what, then why,
+//     the why mapped to a plain sentence by lib/jev/plain.ts (fixed patterns
+//     from ASK-PANEL-PLAIN-TEXT.md; an unmatched reason is shown as written).
+//   - Notes, publishers and the point's basis go through the same plain layer,
+//     and acronyms are spelled out on first use (lib/jev/glossary.ts).
+//   - A list cut at max_records says so ("3 of 7 hospitals shown."), and a
+//     reply world_context trimmed for size says so once.
 //   - A topic gets a "partial" marker only when it has missing entries. Every
 //     reply's top-level coverageStatus says partial, so a panel-wide badge
 //     would show every time and mean nothing: there is none.
@@ -16,6 +21,7 @@
 //     for that record), else link (the eye route that reproduces it).
 
 import type { WorldItem, WorldSection } from "@/lib/mcp/world";
+import { cutSentences, plainBasis, plainNote, plainPublisher, plainReason, truncatedSentence } from "./plain";
 
 /** The sections the panel shows, in order. world_context's fabric and collections topics are not asked for. */
 export const JEV_SECTIONS = ["identity", "hazards", "economy", "vulnerability", "institutions", "water", "freshness"] as const;
@@ -45,16 +51,20 @@ export interface JevBundle {
     point?: { lon?: number; lat?: number; basis?: string } | null;
   };
   topics?: Partial<Record<string, WorldSection>>;
+  /** Set when world_context dropped items to stay under its size limit. */
+  truncated?: { droppedItems?: number; note?: string };
   error?: string;
 }
 
 export interface JevLine {
   fact: string;
-  /** The value as words, or the item's note when the value is null. */
+  /** The value as words, or the item's note (in plain words) when the value is null. */
   text: string;
+  /** A record id shown on the line where the value is withheld: a private dam's NID id ("NID id AL00011"). */
+  id?: string;
   /** True when `text` is the item's note standing in for a null value. */
   fromNote: boolean;
-  /** The item's note beside a real value (context such as "score 95.2 (percentile ...)"). */
+  /** The item's note beside a real value, in plain words (context such as "score 95.2 (percentile ...)"). */
   note?: string;
   publisher: string;
   /** The period the value is for, as the source states it ("2026 Q1"). */
@@ -70,7 +80,9 @@ export interface JevLine {
 export interface JevGap {
   what: string;
   reason: string;
-  /** The plain sentence shown: what, then why, in the reply's own words. */
+  /** The pattern that wrote the sentence (lib/jev/plain.ts), or null when the reason is shown as written. */
+  rule: string | null;
+  /** The plain sentence shown: what, then why. */
   sentence: string;
 }
 
@@ -79,6 +91,8 @@ export interface JevSection {
   title: string;
   lines: JevLine[];
   gaps: JevGap[];
+  /** Lists cut at max_records, as sentences ("3 of 7 hospitals shown."). */
+  cuts: string[];
   /** The partial-coverage marker, only when the topic has missing entries. */
   marker: string | null;
 }
@@ -97,31 +111,37 @@ export function toLine(it: WorldItem): JevLine {
   const isNull = it.value === null || it.value === undefined;
   const line: JevLine = {
     fact: it.fact,
-    text: isNull ? (it.note ?? "the source states no value here") : valueText(it.value as Exclude<WorldItem["value"], null>, it.unit),
+    text: isNull ? (it.note ? plainNote(it.note) : "the source states no value here") : valueText(it.value as Exclude<WorldItem["value"], null>, it.unit),
     fromNote: isNull,
-    publisher: it.publisher,
+    publisher: plainPublisher(it.publisher),
     asOf: (it.retrievedAt ?? "").slice(0, 10),
     href: sourceHref(it),
     aboutEye: it.kind === "about-eye",
   };
-  if (!isNull && it.note) line.note = it.note;
+  if (!isNull && it.note) line.note = plainNote(it.note);
+  if (isNull && it.code?.startsWith("nid:")) line.id = `NID id ${it.code.slice(4)}`;
   if (it.period) line.period = it.period;
   return line;
 }
 
+export function toGap(m: { what: string; reason: string }): JevGap {
+  const p = plainReason(m.what, m.reason);
+  return { what: m.what, reason: m.reason, rule: p.rule, sentence: `${m.what}: ${p.text}` };
+}
+
 export function gapSentence(m: { what: string; reason: string }): string {
-  const reason = m.reason.trim().replace(/[.\s]+$/, "");
-  return `${m.what}: ${reason}.`;
+  return toGap(m).sentence;
 }
 
 export function toSection(key: JevSectionKey, sec: WorldSection | undefined): JevSection {
   const missing = sec?.missing ?? [];
-  const gaps = missing.map((m) => ({ what: m.what, reason: m.reason, sentence: gapSentence(m) }));
+  const gaps = missing.map(toGap);
   return {
     key,
     title: JEV_TITLES[key],
     lines: (sec?.items ?? []).map(toLine),
     gaps,
+    cuts: cutSentences(sec?.coverageStatus?.basis),
     marker: gaps.length ? `partial: ${gaps.length === 1 ? "1 thing" : `${gaps.length} things`} not shown (${gaps.map((g) => g.what).join("; ")})` : null,
   };
 }
@@ -130,6 +150,22 @@ export function toSection(key: JevSectionKey, sec: WorldSection | undefined): Je
 export function jevSections(b: JevBundle): JevSection[] {
   const topics = b.topics ?? {};
   return JEV_SECTIONS.filter((k) => topics[k]).map((k) => toSection(k, topics[k]));
+}
+
+/** The reply-wide note when world_context trimmed the answer for size, else null. */
+export function truncatedNote(b: JevBundle): string | null {
+  return b.truncated ? truncatedSentence(b.truncated) : null;
+}
+
+/** What the panel's status line says (read out by screen readers): short, never the whole answer. */
+export function jevStatusLine(status: "idle" | "loading" | "done" | "error", b: JevBundle | null): string {
+  if (status === "loading") return "Asking Jev…";
+  if (status === "error") return "No answer for this place.";
+  if (status !== "done" || !b) return "";
+  const secs = jevSections(b);
+  const facts = secs.reduce((n, s) => n + s.lines.length, 0);
+  const gaps = secs.reduce((n, s) => n + s.gaps.length, 0);
+  return `Answer loaded: ${facts} ${facts === 1 ? "fact" : "facts"}, ${gaps} ${gaps === 1 ? "gap" : "gaps"}`;
 }
 
 /** The panel's heading for a reply: the place's name from the reply itself, else its point. */
@@ -146,7 +182,7 @@ const KIND_WORDS: Record<string, string> = { county: "county", state: "state", p
 export function placeSubtitle(b: JevBundle): string | null {
   const p = b.place;
   if (!p) return null;
-  const parts = [p.kind ? KIND_WORDS[p.kind] ?? p.kind : null, p.countyFips ? `FIPS ${p.countyFips}` : p.stateFips && p.kind === "state" ? `FIPS ${p.stateFips}` : null, p.point?.basis ?? null];
+  const parts = [p.kind ? KIND_WORDS[p.kind] ?? p.kind : null, p.countyFips ? `FIPS ${p.countyFips}` : p.stateFips && p.kind === "state" ? `FIPS ${p.stateFips}` : null, plainBasis(p.point?.basis)];
   const s = parts.filter(Boolean).join(" · ");
   return s || null;
 }

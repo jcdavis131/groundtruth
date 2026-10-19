@@ -41,13 +41,8 @@ import { RecordIndex, featureKey, type RecordHit } from "@/lib/embed/recordIndex
 import { GATE_CONFIG } from "@/lib/embed/gateConfig";
 import { trackRecordOpen, trackResultOpen, trackSearch } from "@/lib/analytics/events";
 import { askJevAboutPick } from "@/lib/jev/store";
+import { JEV_PLACE_TYPES } from "@/lib/jev/ask";
 import { useJevOn } from "./AskJevOverlay";
-
-/**
- * Place hits Jev can be asked about (?jev=1): a county or a state (asked by FIPS), or a
- * city or town (asked at its point; world_context names its metro). Never an address.
- */
-export const JEV_PLACE_TYPES = new Set(["county", "state", "city", "town", "village", "municipality"]);
 
 /** A catalogue card ranked by meaning (/api/catalog?op=search). */
 export interface CardSearchHit {

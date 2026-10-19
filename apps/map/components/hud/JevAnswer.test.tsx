@@ -10,6 +10,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import type { WorldItem, WorldSection } from "@/lib/mcp/world";
 import { JEV_SECTIONS, gapSentence, type JevBundle } from "@/lib/jev/format";
+import { plainNote } from "@/lib/jev/plain";
+import { GLOSSARY } from "@/lib/jev/glossary";
 import JevAnswer, { JEV_FADE_CLASS } from "./JevAnswer";
 
 const DIR = path.join(__dirname, "..", "..", "lib", "jev", "__fixtures__");
@@ -19,6 +21,12 @@ const FIXTURES = NAMES.map((n) => ({ name: n, bundle: JSON.parse(fs.readFileSync
 /** Text as renderToStaticMarkup escapes it. */
 function esc(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
+}
+
+/** Visible text with each first-use expansion folded back to the bare acronym. */
+function plainOf(html: string): string {
+  const t = html.replace(/<[^>]*>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&amp;/g, "&");
+  return Object.entries(GLOSSARY).reduce((acc, [a, f]) => acc.split(`${a} (${f})`).join(a), t);
 }
 
 function render(bundle: JevBundle, reducedMotion = false): string {
@@ -34,7 +42,7 @@ function sectionsOf(html: string): Map<string, string> {
 
 const linesOf = (sec: string) => [...sec.matchAll(/<li data-jev-line=""[\s\S]*?<\/li>/g)].map((m) => m[0]);
 const gapsOf = (sec: string) => [...sec.matchAll(/<li data-jev-gap=""[^>]*>([\s\S]*?)<\/li>/g)].map((m) => m[1]);
-const valueOf = (line: string) => /<span data-jev-value=""[^>]*>([\s\S]*?)<\/span>/.exec(line)?.[1] ?? null;
+const valueOf = (line: string) => /<span data-jev-value=""[^>]*>([\s\S]*?)<\/span><span class="text-\[9px\]/.exec(line)?.[1] ?? null;
 const hrefOf = (line: string) => /<a data-jev-source="" href="([^"]*)"/.exec(line)?.[1] ?? null;
 
 function shownTopics(b: JevBundle): [string, WorldSection][] {
@@ -57,14 +65,13 @@ describe.each(FIXTURES)("JevAnswer over $name", ({ bundle }) => {
     expect(secs.has("fabric")).toBe(false);
   });
 
-  it("renders every missing[] entry as a gap sentence in the reply's words, never as a 0", () => {
+  it("renders every missing[] entry as a gap sentence (what, then the plain why), never as a 0", () => {
     for (const [k, t] of shownTopics(bundle)) {
-      const gaps = gapsOf(secs.get(k)!);
+      const gaps = gapsOf(secs.get(k)!).map(plainOf);
       const missing = t.missing ?? [];
-      expect(gaps, k).toEqual(missing.map((m) => esc(gapSentence(m))));
+      expect(gaps, k).toEqual(missing.map((m) => gapSentence(m)));
       for (const [i, g] of gaps.entries()) {
-        expect(g).toContain(esc(missing[i].what));
-        expect(g).toContain(esc(missing[i].reason.trim().replace(/[.\s]+$/, "")));
+        expect(g.startsWith(`${missing[i].what}: `)).toBe(true);
         expect(g.trim()).not.toBe("0");
       }
       // A topic with gaps and no items draws no value at all, so nothing can read as 0.
@@ -80,10 +87,10 @@ describe.each(FIXTURES)("JevAnswer over $name", ({ bundle }) => {
         if (it.value !== null) return;
         const v = valueOf(lines[i]);
         expect(it.note, `${k} item ${i} has a note`).toBeTruthy();
-        expect(v).toBe(esc(it.note!));
+        expect(plainOf(v ?? "")).toBe(plainNote(it.note!));
         expect(v).not.toBe("0");
         expect(lines[i]).toContain("data-jev-from-note");
-        expect(gapsOf(secs.get(k)!)).not.toContain(esc(it.note!));
+        expect(gapsOf(secs.get(k)!).map(plainOf)).not.toContain(plainNote(it.note!));
       });
     }
   });

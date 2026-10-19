@@ -5,6 +5,7 @@
 import { create } from "zustand";
 import { askJev, targetForPick, JEV_TIMEOUT_MS, type JevTarget, type PlacePick } from "./ask";
 import type { JevBundle } from "./format";
+import { restoreFocus, type JevOrigin } from "./focus";
 
 export interface JevState {
   /** What the visitor picked, in words, until the reply names it. */
@@ -12,6 +13,8 @@ export interface JevState {
   status: "idle" | "loading" | "done" | "error";
   bundle: JevBundle | null;
   error: string | null;
+  /** Where the question came from, so the panel knows whether to scroll itself into view. */
+  origin: JevOrigin | null;
   seq: number;
 }
 
@@ -19,17 +22,27 @@ interface Store extends JevState {
   set: (s: Partial<JevState>) => void;
 }
 
-export const useJev = create<Store>()((set) => ({ asked: null, status: "idle", bundle: null, error: null, seq: 0, set: (s) => set(s) }));
+export const useJev = create<Store>()((set) => ({ asked: null, status: "idle", bundle: null, error: null, origin: null, seq: 0, set: (s) => set(s) }));
 
 let inflight: AbortController | null = null;
+/** What had focus when Jev was asked (not state: a DOM node), given focus back on close. */
+let opener: HTMLElement | null = null;
 
-async function run(label: string, target: (signal: AbortSignal) => Promise<JevTarget>): Promise<void> {
+function captureOpener(): void {
+  if (typeof document === "undefined") return;
+  const el = document.activeElement;
+  // A new ask from inside the open panel keeps the first opener.
+  if (el instanceof HTMLElement && el !== document.body && !el.closest("[data-jev-panel]")) opener = el;
+}
+
+async function run(label: string, origin: JevOrigin, target: (signal: AbortSignal) => Promise<JevTarget>): Promise<void> {
+  captureOpener();
   inflight?.abort();
   const ctrl = new AbortController();
   inflight = ctrl;
   const timer = setTimeout(() => ctrl.abort(), JEV_TIMEOUT_MS);
   const seq = useJev.getState().seq + 1;
-  useJev.getState().set({ asked: label, status: "loading", bundle: null, error: null, seq });
+  useJev.getState().set({ asked: label, status: "loading", bundle: null, error: null, origin, seq });
   const mine = () => useJev.getState().seq === seq;
   try {
     const t = await target(ctrl.signal);
@@ -49,17 +62,20 @@ async function run(label: string, target: (signal: AbortSignal) => Promise<JevTa
 
 /** Ask about a point (a right-click on the globe, through What's here). */
 export function askJevAboutPoint(lon: number, lat: number): Promise<void> {
-  return run(`${lat.toFixed(4)}, ${lon.toFixed(4)}`, async () => ({ kind: "point", lon, lat }));
+  return run(`${lat.toFixed(4)}, ${lon.toFixed(4)}`, "here", async () => ({ kind: "point", lon, lat }));
 }
 
 /** Ask about a ⌘K place hit: a county or state by FIPS, anything else by its point. */
 export function askJevAboutPick(name: string, hit: PlacePick): Promise<void> {
-  return run(name, (signal) => targetForPick(hit, signal));
+  return run(name, "search", (signal) => targetForPick(hit, signal));
 }
 
 export function closeJev(): void {
   inflight?.abort();
   inflight = null;
   const seq = useJev.getState().seq + 1;
-  useJev.getState().set({ asked: null, status: "idle", bundle: null, error: null, seq });
+  useJev.getState().set({ asked: null, status: "idle", bundle: null, error: null, origin: null, seq });
+  const back = opener;
+  opener = null;
+  restoreFocus(back);
 }
