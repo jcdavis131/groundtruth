@@ -1,3 +1,4 @@
+<!-- Shape after mattpocock/skills skills/engineering/pr/SKILL.md (MIT, (c) 2026 Matt Pocock, at 49dd158) and HumanLayer's show-me Summary (MIT, humanlayer/skills at 653b641); written in our own words. -->
 ## Summary
 
 <!-- What changed and why, in a few sentences. Someone who hasn't seen the work should be able to decide from this body alone. -->
