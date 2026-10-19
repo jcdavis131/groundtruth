@@ -105,44 +105,76 @@ export function isPhysical(f: LayerFeature): boolean {
  */
 export const NOT_MEASURES = new Set<string>(["constructs", "field", "occupations", "weather", "commerce", "realestate", "spending", "traffic", "hazards", "flood", "wetlands", "publiclands", "relief", "slope", "contours", "soils", "firehazard", "landcover", "sealevel", "transmission", "pipelines", "rail", "faults", "geology", "plss", "events", "parcels", "zoning", "permits", "licences", "envpermits", "historic", "crithab", "contaminants", "wayback", "topo", "impaired", "pfas", "ust", "hydro", "riskindex", "naip", "heritage", "health", "vulnerability", "broadband", "wildfirerisk", "tribal", "housing", "landslidesusc"]);
 
-/** The box a near-only layer loaded and whether its source hit a record limit. */
+/**
+ * Counted layers that load the whole world with no floor or limit, so they
+ * are complete without a loaded box: USGS's feed of every earthquake in the
+ * past 24 hours. Every other counted layer loads for the view (a bbox, a
+ * radius, a height cut-off or a size floor) and, unless it draws a loaded
+ * box, does not say what it loaded, so a unit reads as not loaded for it.
+ */
+export const WORLD_LOADED = new Set<string>(["earthquakes"]);
+
+/** Whether a layer's points are counted by the field at all. */
+export function isCounted(layer: string): boolean {
+  return !NOT_MEASURES.has(layer) && !NOT_PHYSICAL.has(layer as LayerId);
+}
+
+/** The box a near-only layer loaded and what its answer left out. */
 interface Loaded {
   layer: LayerId;
   box: BBox;
   truncated: boolean;
+  floorMw?: number;
+  missing?: string[];
 }
 
 function loadedBoxOf(f: LayerFeature): Loaded | null {
   if (f.properties.kind !== "loaded-box" || f.geometry?.type !== "Polygon") return null;
-  if (NOT_MEASURES.has(f.properties.layer) || NOT_PHYSICAL.has(f.properties.layer)) return null;
+  if (!isCounted(f.properties.layer)) return null;
   const box = ringsBbox(f.geometry.coordinates as number[][][]);
   if (!box) return null;
   const x = (f.properties.extra as LoadedBoxExtra | undefined) ?? {};
-  return { layer: f.properties.layer, box, truncated: x.truncated === true };
+  return { layer: f.properties.layer, box, truncated: x.truncated === true, ...(x.floorMw ? { floorMw: x.floorMw } : {}), ...(x.missing?.length ? { missing: x.missing } : {}) };
 }
 
 const within = (a: BBox, b: BBox) => a[0] >= b[0] && a[1] >= b[1] && a[2] <= b[2] && a[3] <= b[3];
 const meets = (a: BBox, b: BBox) => a[0] <= b[2] && a[2] >= b[0] && a[1] <= b[3] && a[3] >= b[1];
 
 /**
- * A unit's coverage by the counted layers that drew a loaded box. Layers with
- * no box (world or view-wide answers) are taken as loaded. Reasons are sorted
- * so the answer does not depend on the order layers arrive in.
+ * A unit's coverage by the counted layers. A layer with a loaded box covers
+ * what is inside it, less a record limit, a size floor or a missing part; a
+ * layer without one covers nothing unless it is WORLD_LOADED. Reasons are
+ * sorted so the answer does not depend on the order layers arrive in.
  */
-function coverageOf(unit: BBox, boxes: Loaded[]): { coverage: Coverage; reasons: string[] } {
+function coverageOf(unit: BBox, counted: Set<LayerId>, boxes: Loaded[]): { coverage: Coverage; reasons: string[] } {
   const byLayer = new Map<LayerId, Loaded[]>();
+  for (const l of counted) if (!WORLD_LOADED.has(l)) byLayer.set(l, []);
   for (const b of boxes) byLayer.set(b.layer, [...(byLayer.get(b.layer) ?? []), b]);
   let partial = false;
   let reached = false;
   let missed = false;
   const reasons: string[] = [];
   for (const [layer, list] of byLayer) {
-    const inside = list.find((b) => within(unit, b.box) && !b.truncated) ?? list.find((b) => within(unit, b.box));
+    if (!list.length) {
+      missed = true;
+      reasons.push(`${layer} doesn't report what it loaded (it loads for the view), so its count here is unknown`);
+      continue;
+    }
+    const whole = (b: Loaded) => !b.truncated && !b.floorMw && !b.missing;
+    const inside = list.find((b) => within(unit, b.box) && whole(b)) ?? list.find((b) => within(unit, b.box));
     if (inside) {
       reached = true;
       if (inside.truncated) {
         partial = true;
         reasons.push(`${layer} incomplete here: the source's record limit was hit, so its count is a floor`);
+      }
+      if (inside.floorMw) {
+        partial = true;
+        reasons.push(`${layer} incomplete here: only those of ${inside.floorMw.toLocaleString("en-US")} MW or more were loaded at this height`);
+      }
+      if (inside.missing) {
+        partial = true;
+        reasons.push(`${layer} incomplete here: ${inside.missing.join(", ")} did not load`);
       }
     } else if (list.some((b) => meets(unit, b.box))) {
       reached = true;
@@ -169,6 +201,8 @@ export function computeVitals(
   measure: Measure = "all",
   normalise: Normalise = "count",
   conditionOf?: (f: LayerFeature) => FeatureCondition | null,
+  /** The layers turned on. A counted one with nothing loaded in view still bounds coverage. Defaults to the layers of `features`. */
+  shown?: Iterable<string>,
 ): Map<string, Vitals> {
   const idx: Indexed[] = [];
   for (const node of nodes) {
@@ -180,12 +214,16 @@ export function computeVitals(
   const conds = new Map<string, FeatureCondition[]>();
   const wantCondition = measure === "streamflow" && !!conditionOf;
   const boxes: Loaded[] = [];
+  // Under one layer only that layer bounds what is known; under streamflow, the gauges'; under "all", every counted layer turned on.
+  const counts = (l: string) => isCounted(l) && (measure === "all" || l === (measure === "streamflow" ? "water" : measure));
+  const counted = new Set<LayerId>();
+  if (measure !== "all") counted.add((measure === "streamflow" ? "water" : measure) as LayerId);
+  if (shown) for (const l of shown) if (counts(l)) counted.add(l as LayerId);
   for (const f of features) {
+    if (!shown && counts(f.properties.layer) && !f.properties.simulated) counted.add(f.properties.layer);
     const lb = loadedBoxOf(f);
     if (lb) {
-      // Under one layer only that layer's box bounds what is known; under streamflow, the gauges'.
-      const counted = measure === "all" || (measure === "streamflow" ? lb.layer === "water" : lb.layer === measure);
-      if (counted) boxes.push(lb);
+      if (counts(lb.layer)) boxes.push(lb);
       continue;
     }
     if (!isPhysical(f)) continue;
@@ -210,7 +248,7 @@ export function computeVitals(
     const total = Object.values(byLayer).reduce((a, b) => a + (b ?? 0), 0);
     const area = node.areaKm2 && node.areaKm2 > 0 ? node.areaKm2 : null;
     const density = area ? (total / area) * 1000 : null;
-    const { coverage, reasons } = coverageOf(box, boxes);
+    const { coverage, reasons } = coverageOf(box, counted, boxes);
     if (measure === "streamflow") {
       // A condition is the median of the gauges loaded, not a count, so it is shown with its coverage rather than withheld.
       out.set(node.id, { total, byLayer, density, ...conditionVitals(conds.get(node.id) ?? []), rank: 0, coverage, ...(reasons.length ? { reason: reasons.join("; ") } : {}) });

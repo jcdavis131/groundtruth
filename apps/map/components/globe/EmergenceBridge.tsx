@@ -30,8 +30,10 @@ function recompute() {
     if (n) nodes.push(n);
   }
   const physical: LayerFeature[] = [];
+  const shown: string[] = [];
   for (const other of allRenderers()) {
     if (!other.show || other.layer === "field" || other.layer === "constructs") continue;
+    shown.push(other.layer);
     for (const f of other.features()) physical.push(f);
   }
   const { fieldMeasure, fieldNormalise } = useSettings.getState().prefs;
@@ -40,7 +42,7 @@ function recompute() {
     void ensureNormals(physical).then((got) => {
       if (got) recompute();
     });
-  const next = computeVitals(nodes, physical, measure, fieldNormalise ?? "density", conditionOf);
+  const next = computeVitals(nodes, physical, measure, fieldNormalise ?? "density", conditionOf, shown);
   const changed: string[] = [];
   const differs = (a: Vitals | undefined, b: Vitals | undefined) =>
     !a || !b || a.value !== b.value || a.coverage !== b.coverage || a.reason !== b.reason || a.display !== b.display || a.color !== b.color || Math.abs(a.heat - b.heat) > 0.02 || (a.rank < 6) !== (b.rank < 6);

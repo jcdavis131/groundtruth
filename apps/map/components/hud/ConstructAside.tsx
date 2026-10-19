@@ -603,6 +603,7 @@ function ConditionVitals({ v, c }: { v: Vitals; c: UnitCondition }) {
         Latest instantaneous flow at each USGS gauge inside, placed among the published daily-mean percentiles for today&apos;s date (an estimate: instantaneous against daily means). A gauge without a
         table is left out, not assumed normal.
       </div>
+      {v.coverage !== "complete" && v.reason && <div className="mt-0.5 text-[10px] text-muted-foreground">Gauges may be missing here: {v.reason}.</div>}
     </div>
   );
 }
