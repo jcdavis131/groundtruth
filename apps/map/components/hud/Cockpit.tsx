@@ -43,6 +43,8 @@ import SearchCommand from "./SearchCommand";
 import TitleCard from "./TitleCard";
 import { useGlobe } from "@/lib/store/globe";
 import { LAYERS } from "@/lib/layers";
+import { expandPerfLink } from "@/lib/perf/link";
+import PerfOverlay from "./PerfOverlay";
 
 const CesiumGlobe = dynamic(() => import("@/components/globe/CesiumGlobe"), {
   ssr: false,
@@ -61,6 +63,8 @@ export default function Cockpit({ initialMobile = false }: { initialMobile?: boo
 
   // Default layers on at first boot, unless the link names its own set.
   useEffect(() => {
+    // ?perf=1&view=<name> with no camera or layers of its own: spell the view out first.
+    expandPerfLink();
     const share = parseShare(window.location.search);
     if (share.embed) useGlobe.getState().setEmbed(true);
     // Anchor the constructs stack before its layer first asks for it.
@@ -178,6 +182,7 @@ export default function Cockpit({ initialMobile = false }: { initialMobile?: boo
       <CesiumGlobe />
       <LayerHost />
       <TimeMachineTicker />
+      <PerfOverlay />
       <HudFrame />
       {!embed && <TitleCard />}
       {embed ? (

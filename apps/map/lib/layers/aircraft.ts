@@ -10,6 +10,7 @@
 import type { Feature, Point } from "geojson";
 import { FT_M, KNOT_MS, NM_M } from "@/lib/globe/geo";
 import { keyHeaders } from "@/lib/store/settings";
+import { markLayer } from "@/lib/perf/trace";
 import type { BaseProps, FetchContext, FetchResult, LayerDefinition, LayerFeature } from "./types";
 
 /** readsb / tar1090 aircraft.json record (adsb.lol and ADS-B Exchange share it). */
@@ -164,6 +165,7 @@ export interface ProxyEnvelope<T> {
 /** Call one of this app's own /api routes, forwarding optional operator keys. */
 export async function proxy<T>(url: string, ctx: FetchContext): Promise<ProxyEnvelope<T>> {
   const res = await fetch(url, { headers: keyHeaders(ctx.keys), signal: ctx.signal });
+  if (ctx.traceLayer) markLayer(ctx.traceLayer, "response");
   const json = (await res.json().catch(() => ({}))) as ProxyEnvelope<T>;
   if (!res.ok) throw new Error(json.error ?? `${res.status} from ${url}`);
   return json;
