@@ -1,6 +1,6 @@
 # Notable people linked to a company
 
-The people who report their holdings in a listed company on SEC Forms 3, 4 and 5 (its officers, its directors, its 10% owners) are the one group of named people this project is set to show, and only beside the company they file about. This file records that decision, what the build reads and never reads, and the rules it has to meet before anything ships.
+The people who report their holdings in a listed company on SEC Forms 3, 4 and 5 (its officers, its directors, its 10% owners) are one of two groups of named people this project is set to show, and only beside the company they file about. The other is professional athletes, under a narrower exception of their own ([Athletes](#athletes)). This file records both decisions, what the build reads and never reads, and the rules it has to meet before anything ships.
 
 **Status, 2026-10-01: policy only.** No route, MCP tool, layer or page returns a reporting owner's name yet, and the company dossier still drops Forms 3, 4 and 5 from its filings list ([docs/COMPANIES.md](COMPANIES.md)). The roster file, `lib/people/data/insiders.json`, is built ([The bundle](#the-bundle)), and `lib/people/store.ts` reads it on the server ([The store](#the-store)); nothing calls the store yet. A rule tagged **[Cam YYYY-MM-DD]** is Cam's decision on that date. A rule tagged **[proposed]** is a default written before the build; it holds until Cam decides otherwise, and each one can be reversed.
 
@@ -24,8 +24,9 @@ This reverses the institutions-only rule for reporting owners and for nobody els
 | C2 | [Cam 2026-09-25] | Parcels, addresses and ownership are in scope: "add in as much info as we can". The named-individual search ban stays. | the README's Ethics section ("no search goes from a person's name to what they own"), CONTRIBUTING ground rule 2 |
 | C3 | [Cam 2026-09-27] | As recorded: parcel mailing addresses are shown as each county publishes them; legal suppressions stay (the HCAD confidential flag, Texas Tax Code 25.025, New Jersey's Daniel's Law: "keep NJ as is"). | the README's parcels section |
 | C4 | [Cam 2026-09-27] | As recorded: the parcels removal-request channel, "ignore for now". | |
+| C5 | [Cam 2026-10-18] | Verbatim choice: "Map + models, scoped". Named professional athletes may appear with their name, team (with its city and arena), school or college and birthplace at city level, on the map and in model training; never a birth date, age, address, family, contact details or health beyond league-published availability. | this file, [Athletes](#athletes); `data/athletes/allowlist.json` at the repository root |
 
-C1 is the only one about reporting owners. Every guardrail below is a proposal that applies C1 and carries C2 to C4 over; the last column of each table says how.
+C1 is the only one about reporting owners, and C5 the only one about athletes. Every guardrail below is a proposal that applies C1 and carries C2 to C4 over; the last column of each table says how.
 
 ## Source
 
@@ -216,3 +217,100 @@ python scripts/test_people_data.py
 - Exit codes: 0 written; 1 a zip is missing or a table lacks a column; 2 over the size budget, nothing written.
 - `pulled` is the newest zip's file date unless `--pulled` is given.
 - Filings made after the last posted quarter are not read. If that is added later, an owner seen for the first time shows by role only, name withheld, until the next quarterly build classifies them.
+
+## Athletes
+
+Professional athletes are the second group of named people, under a narrower exception than reporting owners. They are public figures tied to real teams, cities, arenas, schools and birthplaces, and those ties are what the gameworld models need (vector-hoops, gridiron and the dumbmodel.com games): sites, animations and game mechanics built on embeddings of real places.
+
+**Status, 2026-10-18: policy only.** No route, MCP tool, layer, page or snapshot carries an athlete yet. The record shape and its check are built (`data/athletes/` at the repository root, [The record](#the-record)). A new athlete collection on the map counts against the 60-collection freeze in `FREEZE.json`, which holds until 2026-11-01, so the map collection waits for that date or for Cam to lift it. Data and snapshots can be built now. The tags mean what they mean above.
+
+### The decision
+
+> **[Cam 2026-10-18]** "Map + models, scoped"
+
+That was Cam's choice out of three. How it is read here:
+
+- **Who:** players on a professional league's published roster (NBA, WNBA, NFL, MLB, NHL, MLS, NWSL; `leagues` in `data/athletes/allowlist.json`). Not college-only or amateur players, not minors, not coaches, staff, families or fans.
+- **What:** the player's name, team (with its city and arena), school or college, and birthplace at city level, with region and country.
+- **Where:** on the groundtruth map, and in training and embeddings for the gameworld models.
+- **Never:** birth date, age, home or current address, family members, contact details, injuries or health beyond what the league publishes as game availability.
+- **How:** public, keyless sources only, and every record cites its source field by field.
+
+This is an exception for athletes only. It changes nothing for reporting owners: G1 to G16 stand as written for them, and nobody else is added.
+
+### The record
+
+`athlete/1`. One JSON object, one line of JSONL in a file. These are the only fields an athlete record may carry; `data/athletes/allowlist.json` holds the same list, and `data/athletes/validate.test.mjs` fails if this table and that file disagree.
+
+| Field | What it holds |
+| --- | --- |
+| `schemaVersion` | `"athlete/1"` (required) |
+| `id` | the league's own player id with a source prefix, `nba:<PERSON_ID>` or `nfl:<gsis_id>`; never built from a name (required) |
+| `name` | the name as the league's roster publishes it (required) |
+| `league` | one of the professional leagues listed (required) |
+| `team` | the team's name as the league publishes it |
+| `teamCity` | the team's city as the league publishes it; needs `team` |
+| `arena` | the team's home arena or stadium, by name; needs `team` |
+| `season` | the season the team fields describe, `2025` or `2025-26`; needs `team` |
+| `school` | the school or college the league lists |
+| `birthCity` | birthplace: the city's name |
+| `birthRegion` | birthplace: the state, province or region's name |
+| `birthCountry` | birthplace: the country's name |
+| `sources` | one entry per source read: `sourceId`, `upstreamId`, `url`, `retrievedAt` (UTC) and the `fields` it supplied (required) |
+
+`league` and `season` are not in Cam's words. They are there because a team means nothing without its league and its season, and `league` is how the record shows the player is a professional. Missing means absent, as in `data/SCHEMA.md`: a field with no value is left out, never filled with "None", "Unknown" or "N/A". NBA's roster gives `SCHOOL` as "None" for a player with no college, so the builder leaves `school` out for them.
+
+`node data/athletes/validate.mjs <file.json | file.jsonl>` checks records and exits 1 on any problem. It fails:
+
+- any key not on the allowlist, at the top or inside a source entry. A key that names something on the never-list (birth, born, dob, age, address, street, ZIP, family, spouse, children, parents, phone, email, contact, health, injury, availability, height, weight and the rest of `denied.keyParts`) fails with the code `denied`, so the reason is named; any other key fails with `field`;
+- a never-list value in an allowed field, by shape: a date, a four-digit year standing alone, an age, an email, a phone number, a street line, a PO box, a ZIP code or a coordinate;
+- a filler value, a league off the list, a malformed id, season, URL or timestamp, a team field without a team, and a field no source cites.
+
+`data/athletes/` stands alone for now because the data spec (`data/SCHEMA.md`, `data/schema/`) is still an open pull request. When it merges, `record/1` can read the same `allowlist.json`.
+
+### Sources
+
+Each is public and keyless, and each is read by an explicit field list, the way the SEC tables are read above.
+
+| Source | Fields read | Never read |
+| --- | --- | --- |
+| NBA stats, `commonallplayers` and `commonplayerinfo` | `PERSON_ID`, `DISPLAY_FIRST_LAST`, `TEAM_NAME`, `TEAM_CITY`, `SCHOOL`, `ROSTERSTATUS` only to confirm a rostered player | `BIRTHDATE`, `HEIGHT`, `WEIGHT`, `COUNTRY` (it is the player's listed country, not a birthplace), jersey, draft and every other column |
+| nflverse `players` | `gsis_id`, `display_name`, `latest_team`, `college_name` | `birth_date`, `height`, `weight`, `status` and every other column |
+| Wikidata (CC0) | on the player: place of birth (P19), and that place's label, region and country; on the team: home venue (P115), by label | date of birth (P569), spouse, children, relatives, residence and every other property; no query asks for them |
+
+The arena is the team's home venue, read from the team and never from the player. Its location lives on the arena's own place record, never on the athlete. A birthplace is joined to a city record by name, then region, then country; one that does not resolve to a single city is left out, never guessed, and the record says nothing about it.
+
+### Guardrails for athletes
+
+| # | Rule | Tag | Relation to Cam's words |
+| --- | --- | --- | --- |
+| A1 | Only players on a professional league's published roster, identified by the league's own id. Two players with the same name are two records; records are never merged or joined by name (as G8). | [Cam 2026-10-18] | C5's "professional athletes" |
+| A2 | A record carries the allowlist above and nothing else. A field off the list fails the check. | [Cam 2026-10-18] | C5's field list |
+| A3 | Never a birth date, age or birth year, address, family member, contact detail, or health or injury information. | [Cam 2026-10-18] | C5's never-list |
+| A4 | Every field is cited by a source entry with its URL and retrieval time; sources are public and keyless. | [Cam 2026-10-18] | C5, and the README's record rules |
+| A5 | Birthplace stops at the city: no neighbourhood, hospital, street or coordinate finer than the city's own place record. | [proposed] | applies C5's "city level" |
+| A6 | An athlete is drawn only at a place record that is not theirs: the team's city, the arena, the school, the birthplace city. Never at a point of their own. For athletes this replaces G4, which stays for reporting owners. | [proposed] | applies C5's "on the map" |
+| A7 | League-published game availability is allowed by C5 but is not in `athlete/1`; adding it is AD2. | [proposed] | narrower than C5 |
+| A8 | No join from an athlete to parcels, addresses, property, permits, licences or Form 3, 4 and 5 filers, in either direction. An athlete who also files a Form 4 is two unrelated records. | [proposed] | carries over C2 and G7 |
+| A9 | Names may be embedded and used in training for the gameworld models. The map's ⌘K does not search athlete names until AD1 is decided. | [proposed] | C5 allows models; the search ban kept with C2 holds by default |
+| A10 | Withholding uses G16's mechanism keyed on the athlete id: an HMAC digest in a server-side variable, failing closed, a withheld athlete left out of every answer and snapshot with no marker. | [proposed] | as G16 |
+
+### Open decisions for athletes
+
+| # | Question | Default here | Tag |
+| --- | --- | --- | --- |
+| AD1 | Search by an athlete's name on the map? | None in ⌘K; athletes are reached from their team, arena, school or birthplace city. | [proposed] |
+| AD2 | League-published game availability (active, out, questionable)? | Not carried in `athlete/1`. | [proposed] |
+| AD3 | Which seasons? | The current season's rosters only. Past rosters wait for a decision on how one player's seasons are keyed. | [proposed] |
+| AD4 | A hometown where a player grew up, when it differs from the birthplace? | Not carried. C5 names birthplace only, so `hometown` fails the check. | [proposed] |
+| AD5 | Leagues beyond the seven listed (G League, leagues outside the United States)? | A pull request that adds the league to `allowlist.json` and to the pinned list in the test. | [proposed] |
+
+### What stays true until athletes ship
+
+These describe the app as it is today, and change with the code that ships athletes, not before:
+
+- CONTRIBUTING ground rule 1 ("The one exception is the people who file Forms 3, 4 and 5 ... no person on the map");
+- the README's Ethics section ("no named-individual search"), which A9 keeps by default;
+- the catalogue's rule that no name that can be a person's is searched or embedded, which gets an athlete entry when the collection is added.
+
+`lib/people/policy-docs.test.ts` checks the C5 quote and the tags on A1 to A10 and AD1 to AD5.

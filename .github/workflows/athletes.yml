@@ -1,0 +1,39 @@
+# The athlete record check (data/athletes): the field allowlist and the
+# never-list from Cam's 2026-10-18 decision, written up in
+# apps/map/docs/PEOPLE.md under Athletes. Plain Node, no install, a second.
+# It binds a merge only once "athletes" is marked required in branch
+# protection. Read-only: no secrets, writes nothing.
+name: athletes
+
+on:
+  pull_request:
+    paths:
+      - "data/athletes/**"
+      - "apps/map/docs/PEOPLE.md"
+      - ".github/workflows/athletes.yml"
+  push:
+    branches: [master]
+    paths:
+      - "data/athletes/**"
+      - "apps/map/docs/PEOPLE.md"
+      - ".github/workflows/athletes.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  athletes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: athlete record check
+        run: node data/athletes/validate.test.mjs
+      - name: athlete fixture
+        run: node data/athletes/validate.mjs data/athletes/fixtures/athlete.fixture.json
