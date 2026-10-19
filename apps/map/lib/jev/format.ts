@@ -21,7 +21,7 @@
 //     for that record), else link (the eye route that reproduces it).
 
 import type { WorldItem, WorldSection } from "@/lib/mcp/world";
-import { cutSentences, plainBasis, plainNote, plainPublisher, plainReason, plainWhat, truncatedSentence } from "./plain";
+import { cutSentences, plainBasis, plainFact, plainNote, plainPublisher, plainReason, plainWhat, truncatedSentence } from "./plain";
 
 /** The sections the panel shows, in order. world_context's fabric and collections topics are not asked for. */
 export const JEV_SECTIONS = ["identity", "hazards", "economy", "vulnerability", "institutions", "water", "freshness"] as const;
@@ -108,10 +108,11 @@ export function sourceHref(it: Pick<WorldItem, "upstreamRecordUrl" | "link">): s
   return it.upstreamRecordUrl || it.link;
 }
 
-export function toLine(it: WorldItem): JevLine {
+/** `kind` is the kind of place asked about (county, state, point): a fact label says "in this county" only for a county. */
+export function toLine(it: WorldItem, kind?: string | null): JevLine {
   const isNull = it.value === null || it.value === undefined;
   const line: JevLine = {
-    fact: it.fact,
+    fact: plainFact(it.fact, kind),
     text: isNull ? (it.note ? plainNote(it.note) : "the source states no value here") : valueText(it.value as Exclude<WorldItem["value"], null>, it.unit),
     fromNote: isNull,
     publisher: plainPublisher(it.publisher),
@@ -135,13 +136,13 @@ export function gapSentence(m: { what: string; reason: string }): string {
   return toGap(m).sentence;
 }
 
-export function toSection(key: JevSectionKey, sec: WorldSection | undefined): JevSection {
+export function toSection(key: JevSectionKey, sec: WorldSection | undefined, kind?: string | null): JevSection {
   const missing = sec?.missing ?? [];
   const gaps = missing.map(toGap);
   return {
     key,
     title: JEV_TITLES[key],
-    lines: (sec?.items ?? []).map(toLine),
+    lines: (sec?.items ?? []).map((it) => toLine(it, kind)),
     gaps,
     cuts: cutSentences(sec?.coverageStatus?.basis),
     marker: gaps.length ? `partial: ${gaps.length === 1 ? "1 thing" : `${gaps.length} things`} not shown (${gaps.map((g) => g.what).join("; ")})` : null,
@@ -151,7 +152,7 @@ export function toSection(key: JevSectionKey, sec: WorldSection | undefined): Je
 /** The panel's sections for a reply, in JEV_SECTIONS order; topics the reply does not carry are left out. */
 export function jevSections(b: JevBundle): JevSection[] {
   const topics = b.topics ?? {};
-  return JEV_SECTIONS.filter((k) => topics[k]).map((k) => toSection(k, topics[k]));
+  return JEV_SECTIONS.filter((k) => topics[k]).map((k) => toSection(k, topics[k], b.place?.kind));
 }
 
 /** The reply-wide note when world_context trimmed the answer for size, else null. */
@@ -177,12 +178,12 @@ export function jevStatusLine(status: "idle" | "loading" | "done" | "error", b: 
  */
 export const JEV_ERROR_SENTENCE = "Jev couldn't reach its sources just now. Try again in a minute.";
 
-/** The panel's heading for a reply: the place's name from the reply itself, else its point. */
+/** The panel's heading for a reply: the place's name from the reply itself, else "Open water" and its point (a spot with no name is offshore or outside the US). */
 export function placeTitle(b: JevBundle): string {
   const p = b.place;
   if (p?.name) return p.name;
   const pt = p?.point;
-  if (pt && typeof pt.lat === "number" && typeof pt.lon === "number") return `${pt.lat.toFixed(4)}, ${pt.lon.toFixed(4)}`;
+  if (pt && typeof pt.lat === "number" && typeof pt.lon === "number") return `Open water (${pt.lat.toFixed(1)}, ${pt.lon.toFixed(1)})`;
   return "this place";
 }
 

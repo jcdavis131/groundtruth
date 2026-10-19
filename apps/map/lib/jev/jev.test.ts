@@ -58,9 +58,9 @@ describe("jevSections and placeTitle", () => {
     expect(jevSections(b).map((s) => s.key)).toEqual(["identity", "freshness"]);
   });
 
-  it("names the place from the reply, else its point", () => {
+  it("names the place from the reply, else open water at its point", () => {
     expect(placeTitle({ place: { name: "Mobile County, AL" } })).toBe("Mobile County, AL");
-    expect(placeTitle({ place: { name: null, point: { lon: -40, lat: 30 } } })).toBe("30.0000, -40.0000");
+    expect(placeTitle({ place: { name: null, point: { lon: -40, lat: 30 } } })).toBe("Open water (30.0, -40.0)");
   });
 });
 

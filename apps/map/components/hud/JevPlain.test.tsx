@@ -12,9 +12,9 @@ import path from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { WorldItem } from "@/lib/mcp/world";
-import { JEV_ERROR_SENTENCE, JEV_SECTIONS, jevSections, jevStatusLine, toGap, type JevBundle } from "@/lib/jev/format";
-import { GAP_RULES, cutSentences, plainNote, plainPublisher, plainReason, plainWhat, upstreamName } from "@/lib/jev/plain";
-import { ACRONYM_TOKEN, GLOSSARY, Glosser, segText, unglossed } from "@/lib/jev/glossary";
+import { JEV_ERROR_SENTENCE, JEV_SECTIONS, jevSections, jevStatusLine, placeSubtitle, placeTitle, toGap, type JevBundle } from "@/lib/jev/format";
+import { GAP_RULES, aboutKm, cutSentences, plainBasis, plainFact, plainNote, plainPublisher, plainReason, plainWhat, upstreamName } from "@/lib/jev/plain";
+import { ACRONYM_TOKEN, GLOSSARY, Glosser, TERMS, segText, unglossed } from "@/lib/jev/glossary";
 import { closeOnEscape, isCloseKey, restoreFocus, scrollOptions, scrollsOnOpen } from "@/lib/jev/focus";
 import { JEV_FIPS_TYPES, JEV_PLACE_TYPES, fipsTarget, targetForPick } from "@/lib/jev/ask";
 import { JevPanelView } from "./AskJevPanel";
@@ -46,7 +46,8 @@ function panel(bundle: JevBundle | null, status: "loading" | "done" | "error" = 
  * a null value is the panel's words and stays in.
  */
 function ownWords(html: string): string {
-  const cut = html.replace(/<span data-jev-value="" class="[^"]*">[^<]*<\/span>/g, "").replace(/<div data-jev-title=""[^>]*>[^<]*<\/div>/g, "");
+  // A value may carry a term's gloss ("D0 (abnormally dry)", "ng/L"): a first-use span, a later <abbr>, React's text separators.
+  const cut = html.replace(/<span data-jev-value="" class="[^"]*">(?:[^<]|<!-- -->|<abbr[^>]*>[^<]*<\/abbr>|<span>(?:[^<]|<!-- -->)*<\/span>)*<\/span>/g, "").replace(/<div data-jev-title=""[^>]*>[^<]*<\/div>/g, "");
   return visible(cut);
 }
 
@@ -67,10 +68,24 @@ const AGENT_WORDS: readonly (string | RegExp)[] = [
   "usgs-wbd",
   "fema-nfhl",
   "this box",
+  "place fabric",
+  "record-level URL",
+  "user agent",
+  "names are not copied",
+  "internal point",
   /\broute\b/,
   // A search box's four corners: "(-88.4466,30.4346,-87.9466,30.9346)".
   /\(-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?\)/,
   /\((?:tavg|pcp)\)/,
+  // Added for the hallway test (2026-10-19): this atlas's internal name, a bare null, the box, raw degrees,
+  // a magnitude code, an HTTP status and a bracketed snake_case id ("(FEMA_HQ_Preparedness_NIC)").
+  /\beye\b/,
+  /\bnull\b/,
+  /\bthe box\b/,
+  /\d degrees\b/,
+  /\bM\d+(?:\.\d+)?\+/,
+  /\bHTTP \d{3}\b/,
+  /\([A-Za-z0-9]+(?:_[A-Za-z0-9]+)+\)/,
 ];
 
 /** The first agent word in `s`, with its surroundings, or null. */
@@ -154,9 +169,9 @@ describe("gap reasons in plain words", () => {
 
   it("says county or state by the kind of place asked (Texas is a state)", () => {
     const sayFor = (n: string) => plainReason("place fabric", load(n).topics!.fabric!.missing![0].reason).text;
-    expect(sayFor("texas")).toBe("Point details (elevation, flood zone, watershed) need a spot on the map. Click inside the state.");
-    expect(sayFor("mobile")).toBe("Point details (elevation, flood zone, watershed) need a spot on the map. Click inside the county.");
-    expect(plainReason("place fabric", "the fabric is per point; call world_context with lon/lat").text).toBe("Point details (elevation, flood zone, watershed) need a spot on the map. Click inside the county or state.");
+    expect(sayFor("texas")).toBe("Elevation, flood zone and watershed need a spot on the map. Click inside the state.");
+    expect(sayFor("mobile")).toBe("Elevation, flood zone and watershed need a spot on the map. Click inside the county.");
+    expect(plainReason("place fabric", "the fabric is per point; call world_context with lon/lat").text).toBe("Elevation, flood zone and watershed need a spot on the map. Click inside the county or state.");
   });
 
   it("writes parameter codes as words and drops other trailing codes (Connecticut's Capitol region)", () => {
@@ -244,15 +259,100 @@ describe("notes about live counts in a search box", () => {
       plainNote(
         "the box 0.25 degrees around the county's Census internal point (-88.4466,30.4346,-87.9466,30.9346), not the whole county; no record-level URL: a count over NWS's national list of active alerts, matched to this box here; NWS has no URL for exactly this box",
       ),
-    ).toBe("counted within 0.25 degrees of the county's Census internal point, not the whole county; counted from NWS's national list of active alerts, inside that area; the source link opens the whole list, not this count");
+    ).toBe("counted near the middle of the county (about 25 km), not the whole county; counted from NWS's national list of active alerts, inside that area; the source link opens the whole list, not this count");
     expect(plainNote("the box 0.1 degrees around the point (-97.8431,30.1672,-97.6431,30.3672); no record-level URL: a count over USGS's past-day M4.5+ feed, matched to this box here; the feed has no URL for exactly this box")).toBe(
-      "counted within 0.1 degrees of the spot you picked; counted from USGS's past-day M4.5+ feed, inside that area; the source link opens the whole list, not this count",
+      "counted within about 10 km of the spot you picked; counted from USGS's past-day magnitude 4.5 or larger feed, inside that area; the source link opens the whole list, not this count",
     );
     expect(plainNote("within 0.1 degrees of the point; no record-level URL: a count of the route's records inside this box; the publisher has no URL for exactly this box")).toBe(
-      "within 0.1 degrees of the spot you picked; counted inside that area; the source link opens the whole list, not this count",
+      "within about 10 km of the spot you picked; counted inside that area; the source link opens the whole list, not this count",
     );
     // Any other box tuple is dropped too.
     expect(plainNote("matched in (-1.5,2,-3,4.25) only")).toBe("matched in only");
+  });
+});
+
+// The hallway-test polish (writeups jev-2026-10-18: ASK-PANEL-PLAIN-TEXT.md, rows added 2026-10-19).
+describe("words a newcomer reads", () => {
+  const factsOf = (n: string) => jevSections(load(n)).flatMap((s) => s.lines.map((l) => l.fact));
+
+  it("says where a live count was made: in this county for a county, near this place otherwise", () => {
+    expect(factsOf("mobile")).toEqual(expect.arrayContaining(["Severe or Extreme NWS alerts in this county now", "magnitude 4.5 or larger earthquakes in the past day in this county"]));
+    expect(factsOf("austin-pt")).toEqual(expect.arrayContaining(["Severe or Extreme NWS alerts near this place now", "magnitude 4.5 or larger earthquakes in the past day near this place"]));
+    expect(factsOf("ocean")).toContain("Severe or Extreme NWS alerts near this place now");
+    expect(plainFact("Severe or Extreme NWS alerts touching the box now", "county")).toBe("Severe or Extreme NWS alerts in this county now");
+    expect(plainFact("Severe or Extreme NWS alerts touching the box now", "point")).toBe("Severe or Extreme NWS alerts near this place now");
+    expect(plainFact("M4.5+ earthquakes in the past day touching the box")).toBe("magnitude 4.5 or larger earthquakes in the past day near this place");
+  });
+
+  it("writes a magnitude in words in notes too", () => {
+    expect(plainNote("a count over USGS's past-day M4.5+ feed")).toBe("a count over USGS's past-day magnitude 4.5 or larger feed");
+  });
+
+  it("drops the aside about copying names, from a fact and from a note", () => {
+    expect(plainFact("public company (by ticker; names are not copied)")).toBe("public company (by ticker)");
+    expect(factsOf("austin-pt")).toContain("public company (by ticker)");
+    expect(plainNote("population served 279000; labelled by PWSID, names are not copied")).toBe("population served 279000; labelled by PWSID");
+  });
+
+  it("calls the county's internal point its middle, with the distance in rough kilometres", () => {
+    expect(aboutKm("0.25")).toBe("about 25 km");
+    expect(aboutKm("0.1")).toBe("about 10 km");
+    expect(plainNote("children; open; within 0.25 degrees of the county's Census internal point, not the whole county")).toBe("children; open; near the middle of the county (about 25 km), not the whole county");
+    expect(plainNote("type: metropolitan; read at the county's Census internal point")).toBe("type: metropolitan; read at the middle of the county");
+    expect(plainNote("EPA's boundary (simplified to about 50 m) contains the county's Census internal point; labelled by PWSID")).toBe("EPA's boundary (simplified to about 50 m) contains the middle of the county; labelled by PWSID");
+  });
+
+  it("centres a county's subtitle on its middle, and never names a route", () => {
+    expect(placeSubtitle(load("mobile"))).toBe("county · FIPS 01097 · centred on the middle of the county");
+    expect(plainBasis("the point as /api/screen publishes it")).toBe("the point as this atlas publishes it");
+    expect(plainBasis("from eye's county table")).toBe("from this atlas's county table");
+  });
+
+  it("glosses the Drought Monitor's classes and ng/L on first use, inside the value", () => {
+    expect(visible(panel(load("mobile")))).toContain(
+      "D0 (abnormally dry) 55.72%, D1 (moderate drought) 1.42%, D2 (severe drought) 0%, D3 (extreme drought) 0%, D4 (exceptional drought) 0%",
+    );
+    const html = panel(load("austin-pt"));
+    const shown = visible(html);
+    expect(shown).toContain("8.4 ng/L (parts per trillion)");
+    expect(shown.split("ng/L (parts per trillion)")).toHaveLength(2);
+    expect(html).toContain('<abbr title="parts per trillion" class="no-underline">ng/L</abbr>');
+    // A value's acronyms stay the publisher's words; only the terms are glossed there.
+    expect(segText(new Glosser().gloss("FEMA D2 and 3 ng/L", false))).toBe("FEMA D2 (severe drought) and 3 ng/L (parts per trillion)");
+    expect(TERMS.D4).toBe("exceptional drought");
+  });
+
+  it("titles a spot with no name as open water, with its point", () => {
+    expect(placeTitle(load("ocean"))).toBe("Open water (30.0, -40.0)");
+    expect(panel(load("ocean"))).toContain(">Open water (30.0, -40.0)</div>");
+  });
+
+  it("never writes place fabric as a gap's what", () => {
+    expect(plainWhat("place fabric")).toBe("Point details");
+    expect(toGap({ what: "place fabric", reason: "the fabric is per point; call world_context with lon/lat (the county's point is -88.1966, 30.6846)" }).sentence).toBe(
+      "Point details: Elevation, flood zone and watershed need a spot on the map. Click inside the county.",
+    );
+  });
+
+  it("says the middle of this county, not this spot, when a county has no mapped water system", () => {
+    const water = jevSections(load("chugach")).find((s) => s.key === "water")!;
+    expect(water.gaps.map((g) => g.sentence)).toEqual([
+      "community water system serving the point: No public water system's mapped area covers the middle of this county. It may use a private well, or a system EPA hasn't mapped.",
+    ]);
+    expect(plainReason("water", "no EPA community water system service area contains the point: it may be served by a private well").text).toBe(
+      "No public water system's mapped area covers this spot. It may use a private well, or a system EPA hasn't mapped.",
+    );
+  });
+
+  it("rewrites each agent aside in a note or a publisher", () => {
+    expect(plainNote("FEMA NRI December 2025; NRI's own population input, not a Census table eye reads directly")).toBe("FEMA NRI December 2025; NRI's own population input, not a Census table");
+    expect(plainNote("CCN 073300, for hospital hifld-hosp:0003306106; CMS lists the hospital and publishes no overall rating for it: null, not 0")).toBe("CCN 073300; CMS lists the hospital and publishes no overall rating for it");
+    expect(plainNote("-3.6% over the year; no record-level URL: Zillow publishes one CSV of every region, with no URL per region")).toBe("-3.6% over the year; Zillow publishes one CSV of every region, with no URL per region");
+    expect(plainNote("approximate date; the publisher's schedule page blocks automated clients (HTTP 403 to a non-browser user agent, checked 2026-10-18)")).toBe(
+      "approximate date; the publisher's schedule page blocks automated readers (checked 2026-10-18)",
+    );
+    expect(plainNote("Severe Storm; filed by FEMA under the former county code 02261 (the route's caveats say how that code relates to this county)")).toBe("Severe Storm; filed by FEMA under the former county code 02261");
+    expect(plainPublisher("Homeland Infrastructure Foundation-Level Data, hosted by FEMA (FEMA_HQ_Preparedness_NIC)")).toBe("Homeland Infrastructure Foundation-Level Data, hosted by FEMA");
   });
 });
 

@@ -50,7 +50,7 @@ interface RichLine {
   l: JevLine;
   fact: Seg[];
   id: Seg[] | null;
-  /** Null-valued lines show their note in plain words, glossed; a real value is the record's own words and is left as it is. */
+  /** Null-valued lines show their note in plain words, glossed; a real value is the record's own words, with only TERMS glossed ("D0", "ng/L"). */
   text: Seg[];
   note: Seg[] | null;
   publisher: Seg[];
@@ -72,7 +72,7 @@ function enrich(sections: JevSection[], g: Glosser): RichSection[] {
       l,
       fact: g.gloss(l.fact),
       id: l.id ? g.gloss(l.id) : null,
-      text: l.fromNote ? g.gloss(l.text) : [l.text],
+      text: l.fromNote ? g.gloss(l.text) : g.gloss(l.text, false),
       // Reading order: publisher before the note under it.
       publisher: g.gloss(l.publisher),
       note: l.note ? g.gloss(l.note) : null,

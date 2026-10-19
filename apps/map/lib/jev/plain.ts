@@ -33,7 +33,7 @@ export const GAP_RULES: readonly GapRule[] = [
     id: "fabric-per-point",
     test: /the fabric is per point; call world_context with lon\/lat(?: \(the (county|state)'s point)?/,
     // The reason names the kind of place asked about: a state is a state, not a county.
-    say: (_p, m) => `Point details (elevation, flood zone, watershed) need a spot on the map. Click inside the ${m[1] ?? "county or state"}.`,
+    say: (_p, m) => `Elevation, flood zone and watershed need a spot on the map. Click inside the ${m[1] ?? "county or state"}.`,
   },
   {
     id: "upstream-failed",
@@ -67,8 +67,9 @@ export const GAP_RULES: readonly GapRule[] = [
   },
   {
     id: "no-water-service-area",
-    test: /\bno\b.*\bservice area contains/,
-    say: () => "No public water system's mapped area covers this spot. It may use a private well, or a system EPA hasn't mapped.",
+    test: /\bno\b.*\bservice area contains( the county's Census internal point)?/,
+    // A county is asked at its middle (Census's internal point), and the reason says so.
+    say: (_p, m) => `No public water system's mapped area covers ${m[1] ? "the middle of this county" : "this spot"}. It may use a private well, or a system EPA hasn't mapped.`,
   },
   {
     id: "no-value-or-rent-index",
@@ -128,6 +129,7 @@ export function upstreamName(idOrName: string | null | undefined): string {
 /** A gap's `what` as a person reads it: no upstream ids, parameter codes as words, other trailing codes dropped. */
 export function plainWhat(what: string): string {
   const w = what.trim();
+  if (w === "place fabric") return "Point details";
   const fabric = /^place fabric: (.+)$/.exec(w);
   if (fabric) {
     const name = upstreamName(fabric[1]);
@@ -183,12 +185,25 @@ const DROP_CLAUSES = [/^not every registrant$/];
 /** Four numbers in brackets: a search box's corners, "(-88.4466,30.4346,-87.9466,30.9346)". */
 const BOX_TUPLE = /\s*\(-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?\)/g;
 
+/** Degrees as rough kilometres, about 100 km to a degree: "0.25" is "about 25 km", "0.1" is "about 10 km". */
+export function aboutKm(degrees: string): string {
+  return `about ${Math.round(Number(degrees) * 100)} km`;
+}
+
+/** "M4.5+": an earthquake magnitude, written as words. */
+const MAGNITUDE = /\bM(\d+(?:\.\d+)?)\+/g;
+const MAGNITUDE_WORDS = "magnitude $1 or larger";
+
 /** Phrase rewrites inside a note (one clause at a time), in order. */
-const NOTE_REWRITES: readonly [RegExp, string][] = [
+const NOTE_REWRITES: readonly [RegExp, string | ((all: string, degrees: string) => string)][] = [
   // Live counts in a search box: say where they were counted, without the box's corners or the route.
-  [/^the box ([\d.]+) degrees around the county's Census internal point \([^)]*\)/, "counted within $1 degrees of the county's Census internal point"],
-  [/^the box ([\d.]+) degrees around the point \([^)]*\)/, "counted within $1 degrees of the spot you picked"],
-  [/^within ([\d.]+) degrees of the point$/, "within $1 degrees of the spot you picked"],
+  [/^the box ([\d.]+) degrees around the county's Census internal point \([^)]*\)/, (_a, d) => `counted near the middle of the county (${aboutKm(d)})`],
+  [/^the box ([\d.]+) degrees around the point \([^)]*\)/, (_a, d) => `counted within ${aboutKm(d)} of the spot you picked`],
+  [/^within ([\d.]+) degrees of the point$/, (_a, d) => `within ${aboutKm(d)} of the spot you picked`],
+  [/\bwithin ([\d.]+) degrees of the county's Census internal point/g, (_a, d) => `near the middle of the county (${aboutKm(d)})`],
+  [/the county's Census internal point/g, "the middle of the county"],
+  [/,? names are not copied/g, ""],
+  [MAGNITUDE, MAGNITUDE_WORDS],
   [/^no record-level URL: a count of the route's records inside this box$/, "counted inside that area"],
   [/^no record-level URL: a count over (.+?), matched to this box here$/, "counted from $1, inside that area"],
   [/^.+? has no URL for exactly this box$/, "the source link opens the whole list, not this count"],
@@ -209,9 +224,21 @@ const NOTE_REWRITES: readonly [RegExp, string][] = [
 export function plainNote(note: string): string {
   const clauses = note
     .split(/;\s+/)
-    .map((c) => NOTE_REWRITES.reduce((s, [re, to]) => s.replace(re, to), c.trim()))
+    .map((c) => NOTE_REWRITES.reduce((s, [re, to]) => (typeof to === "string" ? s.replace(re, to) : s.replace(re, to)), c.trim()))
     .filter((c) => c && !DROP_CLAUSES.some((re) => re.test(c)));
   return clauses.join("; ");
+}
+
+/**
+ * A fact's label as a person reads it: where a live count was made (near the
+ * place asked about, or in the county when a county was asked), no aside about
+ * copying names, and an earthquake magnitude in words.
+ */
+export function plainFact(fact: string, kind?: string | null): string {
+  return fact
+    .replace(/touching the box/g, kind === "county" ? "in this county" : "near this place")
+    .replace(/;\s*names are not copied/g, "")
+    .replace(MAGNITUDE, MAGNITUDE_WORDS);
 }
 
 /** A publisher's name without the agent-facing ids some carry in brackets ("(FEMA_HQ_Preparedness_NIC)"). */
@@ -222,7 +249,7 @@ export function plainPublisher(p: string): string {
 /** The place's point basis, as the subtitle says it. */
 export function plainBasis(basis: string | undefined | null): string | null {
   if (!basis) return null;
-  if (/internal point/i.test(basis)) return "centred on Census's internal point for the county";
+  if (/internal point/i.test(basis)) return "centred on the middle of the county";
   if (/representative point/i.test(basis)) return "centred on the state's representative point";
   if (basis === "as given") return null;
   return basis.replace(/\/api\/\S+/g, "this atlas").replace(/\beye's\b/g, "this atlas's");
