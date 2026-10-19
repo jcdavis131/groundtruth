@@ -47,7 +47,7 @@ async function fetchUst(ctx: FetchContext): Promise<FetchResult> {
   const loaded = Array.isArray(meta.bbox) && meta.bbox.length === 4 ? meta.bbox : null;
   const lead =
     `${features.length} ${features.length === 1 ? "county" : "counties"} in the dashed box, filled by open releases (0 / 1-9 / 10-49 / 50-199 / 200+, as EPA counts them)` +
-    (meta.unjoined?.releases ? ` · ${meta.unjoined.releases} counties' facilities not joined by name` : "") +
+    (meta.unjoined?.releases ? ` · ${meta.unjoined.releases} ${meta.unjoined.releases === 1 ? "county's" : "counties'"} facilities not joined by name` : "") +
     " · state records as of 2018-2021, not current status; no individual sites";
   return {
     collection: { type: "FeatureCollection", features: loaded ? [...features, loadedBoxFeature("ust", loaded, "county counts")] : features },

@@ -38,8 +38,9 @@ describe("riskindex", () => {
   });
 
   it("says '1 county' when one county is joined", async () => {
-    const all = areasCt as unknown as { polygons: { features: unknown[] } };
-    const one = { ...all, polygons: { ...all.polygons, features: all.polygons.features.slice(0, 1) } };
+    // The outlines are under data.features (polygons is their count); the first, Hampshire 25015, has an NRI row.
+    const all = areasCt as unknown as { data: { features: unknown[] } };
+    const one = { ...all, polygons: 1, data: { ...all.data, features: all.data.features.slice(0, 1) } };
     vi.stubGlobal(
       "fetch",
       vi.fn(async (url: string) => {
