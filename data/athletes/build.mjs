@@ -30,7 +30,7 @@ import path from "node:path";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
 import { readTable, splitCsvLine } from "./lib/csv.mjs";
-import { MAX_WALK, OUTCOMES, resolveBirthplace, traceProblems } from "./lib/birthplace.mjs";
+import { MAX_WALK, OUTCOMES, P131_REGIONS, resolveBirthplace, traceProblems } from "./lib/birthplace.mjs";
 import { arenaHold, ARENA_HOLDS, nameFor, teamItems, venueFor, withOccupantMoves, MIN_SHARE, MIN_VOTES } from "./lib/arena.mjs";
 import { makeClient, UA } from "./lib/net.mjs";
 import { recordKey, validateAthlete } from "./validate.mjs";
@@ -308,11 +308,16 @@ WHERE { VALUES ?pl { ${qids.map((q) => `wd:${q}`).join(" ")} }
  OPTIONAL { ?pl wdt:P17/wdt:P297 ?iso } OPTIONAL { ?pl wdt:P131 ?up }
 } GROUP BY ?pl ?settle ?finer ?coarse`;
 
-/** The place graph: every P19 item, plus the P131 parents of finer-than-city items, up to MAX_WALK levels. */
-async function placeGraph(client, start, log) {
+/**
+ * The place graph: every P19 item, plus the P131 parents of finer-than-city items, up to MAX_WALK levels, plus
+ * every item on a settlement's single-parent P131 chain that regionByP131 needs to decide its region: up to a
+ * P131_REGIONS item (fetched too, for its label), a level with other than one parent, or MAX_WALK levels. By QID only.
+ */
+export async function placeGraph(client, start, log) {
   const graph = new Map();
-  let todo = [...new Set(start)];
-  for (let level = 0; level <= MAX_WALK && todo.length; level++) {
+  const asked = new Set();
+  const fetchLevel = async (todo) => {
+    for (const q of todo) asked.add(q);
     for (const batch of chunks(todo, 120)) {
       const { rows } = await client.sparql(placeQuery(batch), "places");
       for (const b of rows) {
@@ -331,8 +336,32 @@ async function placeGraph(client, start, log) {
         });
       }
     }
+  };
+  let todo = [...new Set(start)];
+  for (let level = 0; level <= MAX_WALK && todo.length; level++) {
+    await fetchLevel(todo);
     todo = [...new Set([...graph.values()].filter((n) => n.finer).flatMap((n) => n.parents))].filter((q) => !graph.has(q));
     log(`wikidata places: ${graph.size} items after level ${level}`);
+  }
+  // Region chains (Puerto Rico and its municipios): without this they reach the graph only when some P19 names them.
+  for (let level = 0; level < MAX_WALK; level++) {
+    const need = new Set();
+    for (const n of graph.values()) {
+      if (!n.settle) continue;
+      let node = n;
+      for (let depth = 0; depth < MAX_WALK && node.parents.length === 1; depth++) {
+        const up = node.parents[0];
+        node = graph.get(up);
+        if (!node) {
+          if (!asked.has(up)) need.add(up);
+          break;
+        }
+        if (P131_REGIONS.has(up)) break;
+      }
+    }
+    if (!need.size) break;
+    await fetchLevel([...need]);
+    log(`wikidata places: ${graph.size} items after region level ${level}`);
   }
   return graph;
 }
