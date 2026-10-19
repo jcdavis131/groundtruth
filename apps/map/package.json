@@ -53,12 +53,12 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@vitest/coverage-v8": "^3.2.7",
+    "@vitest/coverage-v8": "^5.0.5",
     "eslint": "^10",
     "eslint-config-next": "16.4.2",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^3.2.7"
+    "vitest": "^5.0.5"
   },
   "description": "Ask eye about a US place and get a cited, dated public record: where it comes from, when it was read, and what it leaves out.",
   "license": "MIT",
