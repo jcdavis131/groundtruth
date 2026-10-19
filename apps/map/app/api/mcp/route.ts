@@ -9,11 +9,19 @@
 //
 // The tools call the API at GEV_BASE_URL when set (a stdio server or a
 // separately hosted API), otherwise this request's own origin.
+//
+// On a protected Vercel preview those same-origin sub-requests get a 401,
+// because they carry none of the visitor's credentials. When the project has
+// "Protection Bypass for Automation" on, Vercel sets
+// VERCEL_AUTOMATION_BYPASS_SECRET and the sub-requests send it as
+// x-vercel-protection-bypass, but only to this request's own origin (see
+// ProtectionBypass in lib/mcp/tools.ts). Unset (production, local): no header.
+// No visitor cookie or share token is ever forwarded.
 
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import path from "node:path";
 import { createServer, describeServer } from "@/lib/mcp/server";
-import { httpFetchJson } from "@/lib/mcp/tools";
+import { httpFetchJson, type ProtectionBypass } from "@/lib/mcp/tools";
 import { countyPoint } from "@/lib/places/registry";
 
 export const maxDuration = 60;
@@ -44,6 +52,12 @@ function baseUrl(req: Request): string {
   return env ? env.replace(/\/+$/, "") : new URL(req.url).origin;
 }
 
+/** The same-origin protection bypass, or undefined when the secret is unset. Read per request so tests can stub it. */
+function protectionBypass(req: Request): ProtectionBypass | undefined {
+  const secret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET?.trim();
+  return secret ? { secret, requestOrigin: new URL(req.url).origin } : undefined;
+}
+
 export function OPTIONS() {
   return new Response(null, { status: 204, headers: CORS });
 }
@@ -72,7 +86,7 @@ export async function POST(req: Request) {
   }
 
   const server = createServer({
-    fetchJson: httpFetchJson(baseUrl(req)),
+    fetchJson: httpFetchJson(baseUrl(req), fetch, undefined, protectionBypass(req)),
     countyPoint,
     docsDir: path.join(process.cwd(), "docs"),
     openapiPath: path.join(process.cwd(), "public", "openapi.json"),

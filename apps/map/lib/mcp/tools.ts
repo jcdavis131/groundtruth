@@ -181,14 +181,47 @@ export async function relay(ctx: ToolCtx, path: string, opts: RelayOptions = {})
 }
 
 /**
+ * Vercel's "Protection Bypass for Automation" for the route's own sub-requests.
+ * A protected preview answers 401 to a server-side fetch of its own /api
+ * routes, because the fetch carries none of the visitor's credentials. The
+ * bypass secret lets it through, and it may only ever go back to the same
+ * deployment: the header is sent only when the fetched URL's origin equals the
+ * base URL's origin and that equals the incoming request's own origin.
+ * Never to a GEV_BASE_URL on another host, never to any other host.
+ */
+export interface ProtectionBypass {
+  /** VERCEL_AUTOMATION_BYPASS_SECRET; unset on production. */
+  secret: string;
+  /** The origin of the request the route is answering. */
+  requestOrigin: string;
+}
+
+/** Whether the bypass header may go with a fetch of `url`. Fails closed on any unparsable URL. */
+export function bypassAllowed(url: string, base: string, bypass: ProtectionBypass | undefined): boolean {
+  if (!bypass || !bypass.secret) return false;
+  try {
+    const target = new URL(url).origin;
+    const baseOrigin = new URL(base).origin;
+    const own = new URL(bypass.requestOrigin).origin;
+    return target !== "null" && target === baseOrigin && baseOrigin === own;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * A fetchJson over the real network for a base URL. Timeouts are generous
  * because the report ops fan out to several upstreams on a cold cache.
+ * `bypass` is the route's same-origin protection bypass (see ProtectionBypass);
+ * no visitor cookie or share token is ever forwarded.
  */
-export function httpFetchJson(baseUrl = DEFAULT_BASE_URL, fetchImpl: typeof fetch = fetch, timeoutMs = 55_000): FetchJson {
+export function httpFetchJson(baseUrl = DEFAULT_BASE_URL, fetchImpl: typeof fetch = fetch, timeoutMs = 55_000, bypass?: ProtectionBypass): FetchJson {
   const base = baseUrl.replace(/\/+$/, "");
   return async (pathWithQuery) => {
     const url = base + (pathWithQuery.startsWith("/") ? pathWithQuery : "/" + pathWithQuery);
-    const res = await fetchImpl(url, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(timeoutMs) });
+    const headers: Record<string, string> = { accept: "application/json" };
+    if (bypass && bypassAllowed(url, base, bypass)) headers["x-vercel-protection-bypass"] = bypass.secret;
+    const res = await fetchImpl(url, { headers, signal: AbortSignal.timeout(timeoutMs) });
     const text = await res.text();
     let body: unknown = text;
     try {
