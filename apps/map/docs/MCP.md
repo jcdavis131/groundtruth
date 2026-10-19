@@ -106,6 +106,7 @@ Each prompt ends with the same instruction: cite every number with source, perio
 | Variable | Used by | Meaning |
 | --- | --- | --- |
 | `GEV_BASE_URL` | stdio server, HTTP route (optional), `examples/gev.py` | Base URL of the HTTP API the tools call. The route defaults to its own origin; the stdio server and the Python client default to `http://localhost:3000`. |
+| `VERCEL_AUTOMATION_BYPASS_SECRET` | HTTP route only | Set by Vercel once the project turns on "Protection Bypass for Automation", and then exposed to every environment, production included. The code is what keeps it in: the route's sub-requests send it as `x-vercel-protection-bypass` only when `VERCEL_ENV` is `preview`, the request's origin is the deployment's own `https://VERCEL_URL` or `https://VERCEL_BRANCH_URL` (a spoofed Host gets no header), and the sub-request goes to that same origin (never to a `GEV_BASE_URL` on another host). A sub-request that carries it never follows a redirect: a 3xx comes back as an error reply with its status, without the `Location`. Production, local and stdio send no header. The visitor's cookie or share token is never forwarded. |
 
 ## Adding a tool
 

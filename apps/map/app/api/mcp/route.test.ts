@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { GET, MAX_BODY_BYTES, OPTIONS, POST } from "./route";
 
 const URL_ = "http://localhost:3000/api/mcp";
@@ -81,5 +81,141 @@ describe("POST /api/mcp", () => {
   it("a notification-only POST is accepted with 202", async () => {
     const res = await post({ jsonrpc: "2.0", method: "notifications/initialized" });
     expect(res.status).toBe(202);
+  });
+});
+
+describe("POST /api/mcp sub-requests and the preview protection bypass", () => {
+  // Dummy values, shaped like no real token, so guard.mjs's secret rule stays quiet.
+  const SECRET = "bypass-test-value-0002";
+  const BRANCH_HOST = "groundtruth-map-git-x.vercel.app";
+  const DEPLOY_HOST = "groundtruth-map-abc123.vercel.app";
+  const OWN = "https://" + BRANCH_HOST;
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
+  /** A preview deployment with the secret set, as Vercel would expose it. */
+  function preview(env: Record<string, string> = {}) {
+    vi.stubEnv("GEV_BASE_URL", "");
+    vi.stubEnv("VERCEL_ENV", "preview");
+    vi.stubEnv("VERCEL_URL", DEPLOY_HOST);
+    vi.stubEnv("VERCEL_BRANCH_URL", BRANCH_HOST);
+    vi.stubEnv("VERCEL_AUTOMATION_BYPASS_SECRET", SECRET);
+    for (const [k, v] of Object.entries(env)) vi.stubEnv(k, v);
+  }
+
+  /** Stub the global fetch the route's sub-requests use, recording each call's url, headers and redirect mode. */
+  function stubFetch() {
+    const calls: { url: string; headers: Record<string, string>; redirect: RequestRedirect | undefined }[] = [];
+    vi.stubGlobal("fetch", (async (url: string | URL | Request, init?: RequestInit) => {
+      calls.push({ url: String(url), headers: { ...(init?.headers as Record<string, string>) }, redirect: init?.redirect });
+      return new Response('{"rows":[]}', { status: 200, headers: { "content-type": "application/json" } });
+    }) as unknown as typeof fetch);
+    return calls;
+  }
+
+  const TOOL_CALL = { jsonrpc: "2.0", id: 9, method: "tools/call", params: { name: "sectors", arguments: { fips: "48453" } } };
+
+  /** POST the tool call to `origin`'s /api/mcp; the origin stands in for the Host the request arrived with. */
+  function callAt(origin: string, headers: Record<string, string> = {}) {
+    return POST(new Request(origin + "/api/mcp", { method: "POST", headers: { "content-type": "application/json", ...headers }, body: JSON.stringify(TOOL_CALL) }));
+  }
+
+  it("sends the bypass on a preview whose request origin is its own VERCEL_BRANCH_URL", async () => {
+    preview();
+    const calls = stubFetch();
+    const res = await callAt(OWN);
+    expect(res.status).toBe(200);
+    expect(calls.length).toBeGreaterThan(0);
+    for (const c of calls) {
+      expect(new URL(c.url).origin).toBe(OWN);
+      expect(c.headers["x-vercel-protection-bypass"]).toBe(SECRET);
+      expect(c.redirect).toBe("manual");
+      expect(c.headers).not.toHaveProperty("cookie");
+    }
+    expect(await res.text()).not.toContain(SECRET);
+  });
+
+  it("sends the bypass on a preview whose request origin is its own VERCEL_URL", async () => {
+    preview();
+    const calls = stubFetch();
+    await callAt("https://" + DEPLOY_HOST);
+    expect(calls.length).toBeGreaterThan(0);
+    for (const c of calls) {
+      expect(c.headers["x-vercel-protection-bypass"]).toBe(SECRET);
+      expect(c.redirect).toBe("manual");
+    }
+  });
+
+  it("never sends it on production, even with the secret set", async () => {
+    preview({ VERCEL_ENV: "production" });
+    const calls = stubFetch();
+    const res = await callAt(OWN);
+    expect(calls.length).toBeGreaterThan(0);
+    for (const c of calls) expect(Object.keys(c.headers)).toEqual(["accept"]);
+    expect(await res.text()).not.toContain(SECRET);
+  });
+
+  it("never sends it when VERCEL_ENV is unset or development", async () => {
+    for (const env of ["", "development"]) {
+      preview({ VERCEL_ENV: env });
+      const calls = stubFetch();
+      await callAt(OWN);
+      expect(calls.length).toBeGreaterThan(0);
+      for (const c of calls) expect(Object.keys(c.headers)).toEqual(["accept"]);
+    }
+  });
+
+  it("never sends it on a preview when the request's Host is not the deployment's own", async () => {
+    preview();
+    const calls = stubFetch();
+    const res = await callAt("https://evil.example");
+    // http on the right host is another origin too.
+    await callAt("http://" + BRANCH_HOST);
+    await callAt("https://" + BRANCH_HOST + ".evil.example");
+    expect(calls.length).toBeGreaterThan(0);
+    for (const c of calls) expect(c.headers).not.toHaveProperty("x-vercel-protection-bypass");
+    expect(await res.text()).not.toContain(SECRET);
+  });
+
+  it("never sends it on a preview that has neither VERCEL_URL nor VERCEL_BRANCH_URL", async () => {
+    preview({ VERCEL_URL: "", VERCEL_BRANCH_URL: "" });
+    const calls = stubFetch();
+    await callAt(OWN);
+    expect(calls.length).toBeGreaterThan(0);
+    for (const c of calls) expect(c.headers).not.toHaveProperty("x-vercel-protection-bypass");
+  });
+
+  it("sends nothing extra when the secret is unset", async () => {
+    preview({ VERCEL_AUTOMATION_BYPASS_SECRET: "" });
+    const calls = stubFetch();
+    await callAt(OWN);
+    expect(calls.length).toBeGreaterThan(0);
+    for (const c of calls) expect(Object.keys(c.headers)).toEqual(["accept"]);
+  });
+
+  it("never sends it to a GEV_BASE_URL on another host", async () => {
+    preview({ GEV_BASE_URL: "https://eye.jcamd.com" });
+    const calls = stubFetch();
+    const res = await callAt(OWN);
+    expect(calls.length).toBeGreaterThan(0);
+    for (const c of calls) {
+      expect(new URL(c.url).origin).toBe("https://eye.jcamd.com");
+      expect(c.headers).not.toHaveProperty("x-vercel-protection-bypass");
+    }
+    expect(await res.text()).not.toContain(SECRET);
+  });
+
+  it("never forwards the visitor's cookie or share token", async () => {
+    preview({ VERCEL_AUTOMATION_BYPASS_SECRET: "" });
+    const calls = stubFetch();
+    await post(
+      { jsonrpc: "2.0", id: 10, method: "tools/call", params: { name: "sectors", arguments: { fips: "48453" } } },
+      { cookie: "_vercel_jwt=visitor-cookie", "x-vercel-protection-bypass": "visitor-token", authorization: "Bearer visitor" },
+    );
+    expect(calls.length).toBeGreaterThan(0);
+    for (const c of calls) expect(Object.keys(c.headers)).toEqual(["accept"]);
   });
 });
