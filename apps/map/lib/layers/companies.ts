@@ -18,7 +18,8 @@
 import type { Point, FeatureCollection } from "geojson";
 import type { BaseProps, FetchContext, FetchResult, LayerDefinition, LayerFeature } from "./types";
 import { proxy } from "./aircraft";
-import { viewBbox } from "./water";
+import { answeredBox, viewBbox } from "./water";
+import { civicLoadedBox } from "./civicBox";
 
 export type { CompanyExtra, CompanyRecord, SectorMapping } from "@/lib/companies/types";
 
@@ -40,9 +41,8 @@ async function fetchCompanies(ctx: FetchContext): Promise<FetchResult> {
     return { collection: { type: "FeatureCollection", features: [] }, source: "SEC EDGAR", fetchedAt: ctx.now, note: "descend below 3,000 km for company headquarters" };
   }
   // With the horizon in view there is no visible extent; cover the ground under the camera instead.
-  const bbox = viewBbox(ctx, ctx.view.bbox ? 300_000 : Math.min(h, 1_500_000))
-    .map((x) => x.toFixed(2))
-    .join(",");
+  const asked = viewBbox(ctx, ctx.view.bbox ? 300_000 : Math.min(h, 1_500_000));
+  const bbox = asked.map((x) => x.toFixed(2)).join(",");
   const env = await proxy<Env["data"]>(`/api/companies?op=near&bbox=${bbox}`, ctx);
   const e = env as unknown as Env;
   const features = e.data.features as LayerFeature<Point>[];
@@ -50,7 +50,8 @@ async function fetchCompanies(ctx: FetchContext): Promise<FetchResult> {
   if (e.capped) notes.push("capped at 2,000, largest by revenue kept");
   notes.push(e.pulled ? `snapshot ${e.pulled}` : "fixture snapshot; run scripts/companies-data.mjs for the full universe and facts");
   return {
-    collection: { type: "FeatureCollection", features },
+    // The box the headquarters were loaded for; a capped answer kept only the largest, so it is a floor there.
+    collection: { type: "FeatureCollection", features: [...features, civicLoadedBox("companies", answeredBox(env, asked), "company headquarters", e.capped ? { truncated: true } : undefined)] },
     source: "SEC EDGAR",
     fetchedAt: ctx.now,
     note: notes.join(" · "),

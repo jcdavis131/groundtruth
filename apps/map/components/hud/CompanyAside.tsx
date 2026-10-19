@@ -69,7 +69,8 @@ const CHART_KEYS: ConceptKey[] = ["Revenues", "NetIncomeLoss", "OperatingIncomeL
 export default function CompanyAside({ feature }: { feature: LayerFeature }) {
   const x = feature.properties.extra as CompanyExtra;
   const q = useCompanyDossier(x?.cik ?? null);
-  if (!x) return null;
+  // The layer's dashed loaded box is not a company.
+  if (!x?.sector) return null;
   const color = SECTOR_COLOR[x.sector.gics];
   const d = q.data?.data;
   const facts = d?.facts ?? x.facts;

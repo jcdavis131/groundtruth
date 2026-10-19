@@ -8,6 +8,7 @@ import type { LayerStyle, StyledLine, StyledPolygon } from "./renderer";
 import { fmtUsd } from "@/lib/economy/features";
 import { perJobFill, type BranchExtra, type SpendingExtra } from "@/lib/finance/features";
 import type { LayerFeature } from "@/lib/layers/types";
+import { polyOutlines } from "./hazardStyles";
 
 const BANKS = "#5EEAD4";
 const SPENDING = "#FFD166";
@@ -38,17 +39,24 @@ export function depositTier(d: number | null | undefined): { color: string; size
   return { color: "#FFFFFF", size: 10 };
 }
 
+// The dashed box the bank offices were loaded for (lib/layers/banks.ts) is not an office.
+const isBankBox = (f: LayerFeature) => f.properties.kind === "loaded-box";
+const BANK_BOX = "#E5E7EB";
+
 export const bankStyle: LayerStyle = {
   color: BANKS,
   icon: () => null,
-  pointSize: (f) => depositTier((f.properties.extra as BranchExtra).deposits).size,
-  colorFor: (f) => depositTier((f.properties.extra as BranchExtra).deposits).color,
+  pointSize: (f) => (isBankBox(f) ? 0 : depositTier((f.properties.extra as BranchExtra).deposits).size),
+  colorFor: (f) => (isBankBox(f) ? BANK_BOX : depositTier((f.properties.extra as BranchExtra).deposits).color),
   label: (f) => {
+    if (isBankBox(f)) return f.properties.name;
     const x = f.properties.extra as BranchExtra;
     return x.deposits != null ? `${x.shortName} · ${fmtUsd(x.deposits)}` : x.shortName;
   },
   labelMax: 60,
-  labelAlways: (f) => !!(f.properties.extra as BranchExtra).labelled,
+  labelWhen: (f) => !isBankBox(f),
+  labelAlways: (f) => !isBankBox(f) && !!(f.properties.extra as BranchExtra).labelled,
+  lines: (f) => (isBankBox(f) ? polyOutlines(f, BANK_BOX, 0.7, 1.5, true) : null),
   // Full size when hovering a town, a speck from 300 km so a city reads as a cluster.
   scaleByDistance: [2e4, 1.0, 3e5, 0.45],
   translucencyByDistance: [1.5e5, 1.0, 3.2e5, 0.55],

@@ -18,6 +18,8 @@ import type { BranchExtra } from "@/lib/finance/features";
 import type { BaseProps, FetchContext, FetchResult, LayerDefinition, ViewState } from "./types";
 import { emptyCollection } from "./types";
 import { proxy, type ProxyEnvelope } from "./aircraft";
+import { civicLoadedBox } from "./civicBox";
+import { answeredBox } from "./water";
 
 export type { BranchExtra } from "@/lib/finance/features";
 
@@ -47,7 +49,8 @@ async function fetchBanks(ctx: FetchContext): Promise<FetchResult> {
       meta: { count: 0, level: "none" },
     };
   }
-  const bbox = banksBbox(ctx.view).map((x) => x.toFixed(2)).join(",");
+  const asked = banksBbox(ctx.view);
+  const bbox = asked.map((x) => x.toFixed(2)).join(",");
   let env: ProxyEnvelope<BranchFc> & BanksMeta;
   try {
     env = (await proxy<BranchFc>(`/api/finance?op=banks&bbox=${bbox}`, ctx)) as ProxyEnvelope<BranchFc> & BanksMeta;
@@ -63,7 +66,8 @@ async function fetchBanks(ctx: FetchContext): Promise<FetchResult> {
     ? `${features.length} office${features.length === 1 ? "" : "s"} in ${env.counties ?? "?"} ${env.counties === 1 ? "county" : "counties"} · ${withDeposits} with SOD ${env.sodYear} deposits`
     : `${features.length} office${features.length === 1 ? "" : "s"} in ${env.counties ?? "?"} ${env.counties === 1 ? "county" : "counties"} · no Summary of Deposits year matched`;
   return {
-    collection: { type: "FeatureCollection", features },
+    // The box the offices were loaded for (a refused box above 25 counties loads nothing and draws none).
+    collection: { type: "FeatureCollection", features: [...features, civicLoadedBox("banks", answeredBox(env, asked), "bank offices", {})] },
     source: env.source ?? "FDIC BankFind Suite",
     fetchedAt: ctx.now,
     note,

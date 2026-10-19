@@ -110,7 +110,7 @@ export default function FieldControls() {
           <div className="flex items-start gap-1 leading-snug text-muted-foreground">
             <span className="mt-1 inline-block h-0 w-3 shrink-0 border-t border-dashed" style={{ borderColor: NOT_LOADED }} aria-hidden />
             <span>
-              Dashed grey: not loaded, no value, which is not the same as none. Coverage is known only for layers that draw a dashed loaded box (schools, airports, dams,
+              Dashed grey: not loaded, no value, which is not the same as none. Coverage is known only for layers that draw a dashed loaded box (surface-water gauges, public companies, bank branches, aircraft, schools, airports, dams,
               power plants, hospitals and landslides, below their world tier) and for the world feed of earthquakes; a box that hit a record limit or a size floor, or a unit with no area
               for a density, also reads as not loaded. Every other counted layer loads for the view and does not say what it loaded, so with it on every unit reads as not
               loaded. Heat is scaled to the largest fully loaded unit in view.

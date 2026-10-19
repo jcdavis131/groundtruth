@@ -25,7 +25,7 @@ import {
 import { constructsStyle } from "./constructStyles";
 import { fieldStyle } from "./fieldStyles";
 import { alertsStyle } from "./alertStyles";
-import { firesStyle, hazardsStyle, wildfireStyle } from "./hazardStyles";
+import { firesStyle, hazardsStyle, polyOutlines, wildfireStyle } from "./hazardStyles";
 import { floodStyle, heritageStyle, historicStyle, impairedStyle, pfasStyle, publiclandsStyle, tribalStyle, wetlandsStyle } from "./landStyles";
 import { contoursStyle, crithabStyle, firehazardStyle, hydroStyle, landcoverStyle, landslidesuscStyle, naipStyle, reliefStyle, sealevelStyle, slopeStyle, soilsStyle, topoStyle, waybackStyle } from "./terrainStyles";
 import {
@@ -167,7 +167,10 @@ function extrapolate(
 
 export const aircraftStyle: LayerStyle = {
   color: "#4DD8FF",
-  icon: (f) => (f.properties.kind === "rotorcraft" ? "heli" : "plane"),
+  // The dashed box the aircraft were loaded for (lib/layers/aircraft.ts) is not an aircraft: no glyph, no trail, an outline.
+  icon: (f) => (f.properties.kind === "loaded-box" ? null : f.properties.kind === "rotorcraft" ? "heli" : "plane"),
+  labelWhen: (f) => f.properties.kind !== "loaded-box",
+  lines: (f) => (f.properties.kind === "loaded-box" ? polyOutlines(f, "#E5E7EB", 0.7, 1.5, true) : null),
   iconSize: 26,
   colorFor: (f) => {
     if (f.properties.kind === "military") return "#FFB000";

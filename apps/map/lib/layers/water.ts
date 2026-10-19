@@ -16,7 +16,8 @@ import type { MultiLineString, Point, Polygon } from "geojson";
 import { bboxAround, haversine } from "@/lib/globe/geo";
 import { fmtReading, isStale, qualityIndex, screenReadings, type Reading, type Screen } from "@/lib/water/quality";
 import type { GaugeReading } from "@/app/api/water/route";
-import type { BaseProps, FetchContext, FetchResult, LayerDefinition, LayerFeature, RefineContext } from "./types";
+import type { BaseProps, FetchContext, FetchResult, LayerDefinition, LayerFeature, RefineContext, LoadedBoxExtra } from "./types";
+import { civicLoadedBox } from "./civicBox";
 import { proxy } from "./aircraft";
 
 export const GAUGE_MAX_HEIGHT_M = 1_500_000;
@@ -174,6 +175,12 @@ const FLOOD_LABEL: Record<string, string> = {
 export function floodLabel(cat: string | undefined): string {
   if (!cat) return "unknown";
   return FLOOD_LABEL[cat] ?? cat.replace(/_/g, " ");
+}
+
+/** The route's own box when it sends one, else the box asked for. */
+export function answeredBox(env: unknown, asked: [number, number, number, number]): [number, number, number, number] {
+  const b = (env as { bbox?: unknown }).bbox;
+  return Array.isArray(b) && b.length === 4 && b.every((x) => typeof x === "number" && Number.isFinite(x)) ? (b as [number, number, number, number]) : asked;
 }
 
 export function viewBbox(ctx: FetchContext, radiusM: number): [number, number, number, number] {
@@ -380,11 +387,17 @@ async function fetchWater(ctx: FetchContext): Promise<FetchResult> {
         : Promise.resolve(null),
     ]);
     let usgsFeatures: LayerFeature<Point>[] = [];
+    let box: LayerFeature | null = null;
     if (gauges) {
       usgsFeatures = buildGauges(gauges.data, now);
       sources.push("USGS");
       const returned = (gauges as { returned?: number }).returned ?? 0;
       if (returned >= 5000) notes.push("USGS page limit hit, zoom in for every gauge");
+      // The box the gauges were loaded for, so the construct field can tell "no gauge here" from "not loaded here".
+      // Above GAUGE_MAX_HEIGHT_M no gauges load and no box is drawn: not loaded anywhere.
+      const missing = [...(nwps ? [] : ["NWS flood points"]), ...(intersectsTexas(bbox) && !twdb ? ["TWDB reservoirs"] : [])];
+      const left: LoadedBoxExtra = { ...(returned >= 5000 ? { truncated: true } : {}), ...(missing.length ? { missing } : {}) };
+      box = civicLoadedBox("water", answeredBox(gauges, bbox), "live gauges", Object.keys(left).length ? left : undefined);
     }
     let floodOnly: LayerFeature<Point>[] = [];
     if (nwps) {
@@ -396,7 +409,7 @@ async function fetchWater(ctx: FetchContext): Promise<FetchResult> {
       ? buildReservoirs(twdb.data.filter((r) => r.lon >= w && r.lon <= e && r.lat >= s && r.lat <= n))
       : [];
     if (twdb) sources.push("TWDB");
-    features.push(...usgsFeatures, ...floodOnly, ...reservoirs);
+    features.push(...usgsFeatures, ...floodOnly, ...reservoirs, ...(box ? [box] : []));
     const flooding = [...usgsFeatures, ...floodOnly].filter((f) => {
       const c = (f.properties.extra as GaugeExtra).flood?.category;
       return c === "minor" || c === "moderate" || c === "major";
