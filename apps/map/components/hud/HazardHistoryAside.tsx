@@ -11,7 +11,7 @@
 
 import { useEffect, useState } from "react";
 import type { Series } from "@/lib/series/types";
-import { centuryMean, CT_HISTORY_LINE, dsciYearlyMax, yearRows, type HistoryData } from "@/lib/hazards/history";
+import { centuryMean, CT_HISTORY_LINE, dsciYearlyMax, USDM_THIS_WEEK, yearRows, type HistoryData } from "@/lib/hazards/history";
 import { STORM_ALASKA_LINE, STORM_CT_LINE, STORM_MAIN_TYPES, STORM_ZONE_SHARE_MAX } from "@/lib/hazards/storms";
 import SeriesChart from "./SeriesChart";
 
@@ -34,7 +34,6 @@ const pct = (v: number | null | undefined) => (v == null ? "not published" : `${
 
 export default function HazardHistoryAside({ fips }: { fips: string }) {
   const [st, setSt] = useState<State>({});
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     let live = true;
@@ -52,14 +51,26 @@ export default function HazardHistoryAside({ fips }: { fips: string }) {
 
   if (st.error) return <div className="border-t border-border px-3 py-2 text-[10px] text-alert">Hazard history did not answer: {st.error.slice(0, 80)} (unknown, not missing)</div>;
   if (!st.data) return <div className="border-t border-border px-3 py-2 text-[10px] text-muted-foreground">asking FEMA, the Drought Monitor, NOAA and USGS for this county&apos;s hazard history…</div>;
-  const d = st.data;
-  const s = (id: string): Series | undefined => d.series.find((x) => x.id === `${id}:${fips}`);
+  return <HazardHistoryView fips={fips} data={st.data} caveats={st.caveats} />;
+}
+
+/** The answer as drawn, from the route's reply (no fetch): what the tests render. */
+export function HazardHistoryView({ fips, data: d, caveats }: { fips: string; data: HistoryData; caveats?: string[] }) {
+  const [open, setOpen] = useState(false);
+  const st = { caveats };
+  const s =(id: string): Series | undefined => d.series.find((x) => x.id === `${id}:${fips}`);
   const miss = (src: string) => d.missing.find((m) => m.source === src || m.source.startsWith(src));
+  // FEMA itself, exactly: "FEMA legacy-code rows" is a gap in an answer FEMA did give, not FEMA missing.
+  const femaMiss = d.missing.find((m) => m.source === "FEMA");
+  const femaShort = d.missing.filter((m) => m.source === "FEMA legacy-code rows");
+  // This week's categories: did not answer (failed) is unknown, not "no week published".
+  const nowMiss = d.missing.find((m) => (m.source === USDM_THIS_WEEK || m.source === "USDM") && m.reason === "source:failed");
   const ct = /^091[1-9]0$/.test(fips);
   const dr = s("fema:dr");
   const em = s("fema:em");
   const fm = s("fema:fm");
   const total = (x?: Series) => (x ? x.points.reduce((a, p) => a + (p.v ?? 0), 0) : 0);
+  const distinctDecl = new Set(d.declarations.map((x) => `${x.declarationType}-${x.disasterNumber}`)).size;
   const dsci = s("usdm:dsci");
   const tavg = s("cag:tavg");
   const pcp = s("cag:pcp");
@@ -82,18 +93,31 @@ export default function HazardHistoryAside({ fips }: { fips: string }) {
 
       <section className="px-3 pt-2" aria-label="Disaster declarations">
         <div className="hud-label">Disaster declarations (FEMA)</div>
-        {miss("FEMA") ? (
-          <div className="text-[10px] text-muted-foreground">{miss("FEMA")!.reason === "source:failed" ? "FEMA did not answer (unknown, not none)" : "not published in this geography"}</div>
+        {femaMiss ? (
+          <div className="text-[10px] text-muted-foreground">{femaMiss.reason === "source:failed" ? "FEMA did not answer (unknown, not none)" : "not published in this geography"}</div>
         ) : (
           <>
             <div className="text-[10px] tabular-nums">
               {total(dr)} major disaster · {total(em)} emergency · {total(fm)} fire management
+              {femaShort.length > 0 && " (may be short)"}
             </div>
+            {distinctDecl < d.declarations.length && (
+              <div className="text-[9px] text-muted-foreground">
+                {d.declarations.length} rows for {distinctDecl} disasters: FEMA lists one row per designated area
+              </div>
+            )}
+            {femaShort.map((m, i) => (
+              <div key={i} className="text-[9px] leading-snug text-muted-foreground">
+                {m.reason === "join:filed_under_other_code" ? "not counted here, though it lies in this county: " : "not placed in any county: "}
+                {(m.detail ?? "").split(": ")[0]}
+              </div>
+            ))}
             <ul className="mt-1 space-y-0.5 text-[10px]">
               {d.declarations.slice(0, 5).map((x, i) => (
                 <li key={`${x.disasterNumber}:${i}`} className="leading-snug">
                   {x.declarationType}-{x.disasterNumber} · {x.declarationDate} · {x.incidentType} · {x.declarationTitle}
                   {x.programs.length ? ` · ${x.programs.join(", ")}` : ""}
+                  {x.designatedArea ? ` · ${x.designatedArea}` : ""}
                 </li>
               ))}
             </ul>
@@ -130,7 +154,7 @@ export default function HazardHistoryAside({ fips }: { fips: string }) {
             week of {now.mapDate}: none {pct(now.none)} · D0 {pct(now.d0)} · D1 {pct(now.d1)} · D2 {pct(now.d2)} · D3 {pct(now.d3)} · D4 {pct(now.d4)}
           </div>
         ) : (
-          <div className="text-[10px] text-muted-foreground">{miss("USDM") ? "the Drought Monitor did not answer (unknown, not none)" : "no week published"}</div>
+          <div className="text-[10px] text-muted-foreground">{nowMiss ? "this week: the Drought Monitor did not answer (unknown, not none)" : "no week published"}</div>
         )}
       </section>
       {dsci && <SeriesChart title="Highest weekly DSCI in the year (USDM DSCI, 0-500)" rows={dsciYearlyMax(dsci.points)} bars color="#C2410C" fmt={(v) => String(Math.round(v))} note="Computed here from USDM's weekly index: each bar is the year's highest week." />}
@@ -165,13 +189,15 @@ export default function HazardHistoryAside({ fips }: { fips: string }) {
         ) : storms ? (
           <>
             <div className="text-[10px] tabular-nums">
-              {stormMain.map((t) => `${t.total.toLocaleString("en-US")} ${t.type.toLowerCase()}`).join(" · ")} reports since {storms.years?.[0] ?? 1996} (county-coded; tornadoes are SPC&apos;s, above)
+              {stormMain.map((t) => `${t.total.toLocaleString("en-US")} ${t.type.toLowerCase()}${t.blank.length ? "*" : ""}`).join(" · ")} reports since {storms.years?.[0] ?? 1996} (county-coded; tornadoes are SPC&apos;s, above)
             </div>
             {stormOther.length > 0 && (
               <div className="text-[10px] leading-snug text-muted-foreground">
-                +{stormOther.reduce((a, x) => a + x.total, 0).toLocaleString("en-US")} other county-coded reports: {stormOther.map((x) => `${x.type.toLowerCase()} ${x.total}`).join(", ")}
+                +{stormOther.reduce((a, x) => a + x.total, 0).toLocaleString("en-US")}
+                {stormOther.some((x) => x.blank.length) ? " or more" : ""} other county-coded reports: {stormOther.map((x) => `${x.type.toLowerCase()} ${x.total}${x.blank.length ? "*" : ""}`).join(", ")}
               </div>
             )}
+            {[...stormMain, ...stormOther].some((x) => x.blank.length) && <div className="text-[9px] text-muted-foreground">* drawn years only: its zone-coded years are blank and not in the total</div>}
             {storms.break && <div className="text-[9px] text-muted-foreground">series break in {storms.break.year}: {storms.break.what}</div>}
           </>
         ) : null}

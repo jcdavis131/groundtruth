@@ -25,7 +25,7 @@ import { provenance, type Provenance } from "@/lib/provenance/types";
 import { source } from "@/lib/provenance/sources";
 import { BOUNDARY_CHANGED_SINCE_2010, CENSUS_CHANGES_2010, type LandslideBake, type SpcBake } from "./bake";
 import type { StormMeta, StormShard } from "./stormBake";
-import { STORM_ALASKA_LINE, STORM_CT_LINE, STORM_EVENTS_CAVEAT, STORM_GATE_NOTE, STORM_MAIN_TYPES, STORM_NAME_CHECK_NOTE, STORM_ZONE_SHARE_MAX, stormAsSeries, stormSeries, type StormsAnswer } from "./storms";
+import { STORM_ALASKA_LINE, STORM_CT_LINE, STORM_EVENTS_CAVEAT, STORM_GATE_NOTE, STORM_MAIN_TYPES, STORM_NAME_CHECK_NOTE, STORM_TOTAL_NOTE, STORM_ZONE_SHARE_MAX, stormAsSeries, stormSeries, type StormsAnswer } from "./storms";
 
 /**
  * Cam's decision 1 (pending): whether a year with no FEMA declaration or no SPC tornado is a 0
@@ -63,9 +63,9 @@ export const FEMA_MAX = 1000;
 export const FEMA_FIRST_YEAR = 1953;
 export const FEMA_CREDIT = "FEMA OpenFEMA, Disaster Declarations Summaries v2. This product uses the FEMA OpenFEMA API, but is not endorsed by FEMA.";
 
-/** The OpenFEMA filter for one county: its state, and its county code (or its codes, for a FEMA_RENAMES county). */
+/** The OpenFEMA filter for one county: its state, and its county code (or its codes: a FEMA_LEGACY successor, or a county an area filed under another code lies in). */
 export function femaFilter(fips: string): string {
-  const codes = femaCodes(fips).map((c) => `fipsCountyCode eq '${c.slice(2)}'`);
+  const codes = femaReadCodes(fips).map((c) => `fipsCountyCode eq '${c.slice(2)}'`);
   return `fipsStateCode eq '${fips.slice(0, 2)}' and ${codes.length > 1 ? `(${codes.join(" or ")})` : codes[0]}`;
 }
 
@@ -133,7 +133,14 @@ export const FEMA_LEGACY: ReadonlyArray<FemaLegacyCode> = [
   { oldFips: "02270", name: "Wade Hampton Census Area, AK", successors: ["02158"], change: "rename", what: "Wade Hampton Census Area, AK, renamed Kusilvak Census Area (2015-07-01)", citation: CENSUS_CHANGES_2010 },
   { oldFips: "02261", name: "Valdez-Cordova Census Area, AK", successors: ["02063", "02066"], change: "split", what: "Valdez-Cordova Census Area, AK, split into Chugach and Copper River Census Areas (2019-01-02)", citation: CENSUS_CHANGES_2010 },
   { oldFips: "02201", name: "Prince of Wales-Outer Ketchikan Census Area, AK", successors: ["02198", "02130", "02275"], change: "split", what: "Prince of Wales-Outer Ketchikan Census Area, AK, split in 2008: the Outer Ketchikan area to Ketchikan Gateway Borough, the Meyers Chuck area to the new Wrangell City and Borough, the remainder renamed Prince of Wales-Hyder Census Area", citation: CENSUS_CHANGES_2000 },
-  { oldFips: "02280", name: "Wrangell-Petersburg Census Area, AK", successors: ["02275", "02195"], change: "split", what: "Wrangell-Petersburg Census Area, AK, split in 2008 into Wrangell City and Borough and Petersburg Census Area (Petersburg Borough since 2013)", citation: CENSUS_CHANGES_2000 },
+  {
+    oldFips: "02280",
+    name: "Wrangell-Petersburg Census Area, AK",
+    successors: ["02275", "02195", "02198"],
+    change: "split",
+    what: "Wrangell-Petersburg Census Area, AK, split in 2008 into Wrangell City and Borough and Petersburg Census Area; on 2013-01-03 Prince of Wales-Hyder Census Area added part of the former Petersburg Census Area (estimated added population 613) and the rest became Petersburg Borough",
+    citation: `${CENSUS_CHANGES_2000}; ${CENSUS_CHANGES_2010}`,
+  },
   { oldFips: "51515", name: "Bedford city, VA", successors: ["51019"], change: "merged", what: "the independent city of Bedford, VA, became part of Bedford County (2013-07-01)", citation: CENSUS_CHANGES_2010 },
 ];
 
@@ -142,6 +149,13 @@ export interface FemaAreaRule {
   area: string;
   to: string[];
   basis: string;
+  /**
+   * Current counties outside the code's successors that the area lies in (only with `to: []`). FEMA's rows
+   * for it are never attached there; they are read for that county and listed in its missing, with `why`,
+   * so its count says it may be short. The successors skip them: the area is not theirs.
+   */
+  liesIn?: string[];
+  why?: string;
 }
 
 const TIGER_DISTRICT_SHARES =
@@ -166,9 +180,15 @@ export const FEMA_SPLIT_AREAS: Readonly<Record<string, ReadonlyArray<FemaAreaRul
     { area: "Annette Island Regional Educational Attendance Area", to: ["02198"], basis: `Annette Island School District: 100% in Prince of Wales-Hyder Census Area; ${TIGER_DISTRICT_SHARES}` },
   ],
   "02280": [
-    { area: "Wrangell-Petersburg (Census Area)", to: ["02275", "02195"], basis: `the whole former census area (${CENSUS_CHANGES_2000})` },
+    { area: "Wrangell-Petersburg (Census Area)", to: ["02275", "02195", "02198"], basis: `the whole former census area (${CENSUS_CHANGES_2000}; ${CENSUS_CHANGES_2010}: Prince of Wales-Hyder added part of the former Petersburg Census Area on 2013-01-03)` },
     { area: "Wrangell City School District", to: ["02275"], basis: `Wrangell School District: 100% in Wrangell City and Borough; ${TIGER_DISTRICT_SHARES}` },
-    { area: "Chatham Regional Educational Attendance Area", to: [], basis: `Chatham School District lies 100% in Hoonah-Angoon Census Area (02105), which was never part of Wrangell-Petersburg, so FEMA's 02280 rows for it name no successor of that code; ${TIGER_DISTRICT_SHARES}` },
+    {
+      area: "Chatham Regional Educational Attendance Area",
+      to: [],
+      liesIn: ["02105"],
+      why: "FEMA files this area under 02280, Wrangell-Petersburg, though it lies in Hoonah-Angoon",
+      basis: `Chatham School District lies 100% in Hoonah-Angoon Census Area (02105), which was never part of Wrangell-Petersburg, so FEMA's 02280 rows for it name no successor of that code; ${TIGER_DISTRICT_SHARES}; confirmed by TIGERweb tigerWMS_Current point queries, 120 of 120 random points in the district in 02105 (writeups/jev-2026-10-18/p19-audit/wctx/verify4/tiger-check.json, 2026-10-19)`,
+    },
   ],
 };
 
@@ -191,6 +211,18 @@ export function femaCodes(fips: string): string[] {
   return [fips, ...FEMA_LEGACY.filter((l) => l.successors.includes(fips)).map((l) => l.oldFips)];
 }
 
+/** Legacy codes FEMA files an area under that lies in this county though the county never succeeded the code (FemaAreaRule.liesIn). */
+export function femaElsewhereCodes(fips: string): string[] {
+  return Object.entries(FEMA_SPLIT_AREAS)
+    .filter(([code, rules]) => !femaCodes(fips).includes(code) && rules.some((r) => r.liesIn?.includes(fips)))
+    .map(([code]) => code);
+}
+
+/** Every code read for a county: femaCodes, then femaElsewhereCodes (read only to list those rows as missing, never attached). */
+export function femaReadCodes(fips: string): string[] {
+  return [...femaCodes(fips), ...femaElsewhereCodes(fips)];
+}
+
 /** The caveat for a county read with a legacy FEMA code, or null. */
 export function femaRenameNote(fips: string): string | null {
   const notes = FEMA_LEGACY.filter((l) => l.successors.includes(fips)).map((l) => {
@@ -198,7 +230,7 @@ export function femaRenameNote(fips: string): string | null {
     if (l.change === "rename") return `FEMA files many of this county's declarations under its old code ${code} (${l.what}, a Census change of name and code with the same boundary), so both codes are read and each disaster is kept once.`;
     if (l.change === "merged") return `FEMA still files declarations under the former ${l.name} (${l.oldFips}), now part of this county (${l.what}); both codes are read, each disaster is kept once, and a row filed under the former code is marked filedUnder ${l.oldFips}.`;
     const others = l.successors.filter((s) => s !== fips).join(", ");
-    return `FEMA files this under the former ${l.name} (${l.oldFips}), which covered more than this county (${l.what}). Each row is placed by its own designated area (FEMA_SPLIT_AREAS): a row for the whole former area is attached here and to ${others}, never divided; a row for a school district or REAA is attached only to the successor it lies in; a row whose area no cited source places is attached to none and listed in missing. Attached rows are marked filedUnder ${l.oldFips}.`;
+    return `FEMA files this under the former ${l.name} (${l.oldFips}), which covered more than this county (${l.what}). Each row is placed by its own designated area (FEMA_SPLIT_AREAS): a row for the whole former area is attached here and to ${others}, never divided; a row for a school district or REAA is attached only to the successor it lies in; a row for an area lying in a county that never succeeded the code is listed in that county's missing instead; a row whose area no cited source places is attached to none and listed in missing. Attached rows are marked filedUnder ${l.oldFips}.`;
   });
   return notes.length ? notes.join(" ") : null;
 }
@@ -211,7 +243,8 @@ export type MissingReason =
   | "source:not_published_for_puerto_rico"
   | "join:ncei_areas_not_counties"
   | "source:failed"
-  | "join:area_not_placed";
+  | "join:area_not_placed"
+  | "join:filed_under_other_code";
 
 // ---------------------------------------------------------------- parsers
 
@@ -239,35 +272,74 @@ const fipsOf = (r: FemaRow) => {
  * code of 000 (tribal areas, statewide designations) names no county and is counted in notCounty; any
  * other code is unmatched (a legacy Connecticut county).
  */
-export function attachFema(rows: readonly FemaRow[], fips: string): { rows: FemaRow[]; notCounty: number; unmatched: string[]; unplaced: UnplacedFemaRow[] } {
+export function attachFema(
+  rows: readonly FemaRow[],
+  fips: string,
+): { rows: FemaRow[]; notCounty: number; unmatched: string[]; unplaced: UnplacedFemaRow[]; filedElsewhere: FiledElsewhere[] } {
   const mine: FemaRow[] = [];
   const old: FemaRow[] = [];
   const unplaced: UnplacedFemaRow[] = [];
-  const olds = new Set(femaCodes(fips).slice(1));
+  const codes = femaCodes(fips);
+  const olds = new Set(codes.slice(1));
+  const elsewhere = new Set(femaElsewhereCodes(fips));
+  const lying: Array<{ row: FemaRow; oldFips: string; rule: FemaAreaRule }> = [];
   let notCounty = 0;
   const unmatched = new Set<string>();
   for (const r of rows) {
     const f = fipsOf(r);
+    const area = str(r.designatedArea);
     if (f === fips) mine.push(r);
     else if (f && olds.has(f)) {
       // A split's row goes only where its designated area lies (FEMA_SPLIT_AREAS); renames and merges attach whole.
       const rules = FEMA_SPLIT_AREAS[f];
       if (!rules) old.push(r);
       else {
-        const area = str(r.designatedArea);
         const rule = rules.find((x) => x.area === area);
         const n = typeof r.disasterNumber === "number" ? r.disasterNumber : Number(r.disasterNumber);
         if (rule?.to.includes(fips)) old.push(r);
-        else if (!rule || !rule.to.length)
+        // An area that lies in a named county outside the successors is that county's gap, not this one's: skipped here.
+        else if (!rule || (!rule.to.length && !rule.liesIn?.length))
           unplaced.push({ oldFips: f, area, disasterNumber: Number.isFinite(n) ? n : null, reason: rule ? rule.basis : "this designated area is not in FEMA_SPLIT_AREAS, so no cited source places it in a successor" });
       }
+    } else if (f && elsewhere.has(f)) {
+      // Read only for the areas of that code lying here; its other rows are its successors', not this county's.
+      const rule = FEMA_SPLIT_AREAS[f]?.find((x) => x.area === area);
+      if (rule?.liesIn?.includes(fips)) lying.push({ row: r, oldFips: f, rule });
     } else if (!f || f.endsWith("000")) notCounty++;
     else unmatched.add(f);
   }
-  // A FEMA_RENAMES county: an old-code row joins unless its disaster is already filed under the current code.
-  const seen = new Set(mine.map((r) => String(r.disasterNumber)));
-  for (const r of old) if (!seen.has(String(r.disasterNumber))) mine.push(r);
-  return { rows: mine, notCounty, unmatched: [...unmatched].sort(), unplaced };
+  // An old-code row joins unless its disaster is already filed under the current code, and a disaster filed
+  // under two legacy codes (02198: 02201 and 02280) joins from one only, the first in femaCodes order.
+  const dn = (r: FemaRow) => String(r.disasterNumber);
+  const seen = new Set(mine.map(dn));
+  const rank = (r: FemaRow) => codes.indexOf(fipsOf(r) ?? "");
+  const firstCode = new Map<string, number>();
+  for (const r of old) if (!seen.has(dn(r))) firstCode.set(dn(r), Math.min(firstCode.get(dn(r)) ?? Infinity, rank(r)));
+  for (const r of old) if (!seen.has(dn(r)) && firstCode.get(dn(r)) === rank(r)) mine.push(r);
+  // Rows filed under another code for an area lying here, whose disaster is not already attached: one entry per area.
+  const attached = new Set(mine.map(dn));
+  const byArea = new Map<string, FiledElsewhere>();
+  for (const { row, oldFips, rule } of lying) {
+    if (attached.has(dn(row))) continue;
+    const key = `${oldFips}|${rule.area}`;
+    let e = byArea.get(key);
+    if (!e) byArea.set(key, (e = { oldFips, area: rule.area, disasters: [], why: rule.why ?? `FEMA files this area under ${oldFips}, though it lies in this county`, basis: rule.basis }));
+    const n = typeof row.disasterNumber === "number" ? row.disasterNumber : Number(row.disasterNumber);
+    const label = Number.isFinite(n) ? `${str(row.declarationType) ?? "?"}-${n}` : null;
+    if (label && !e.disasters.includes(label)) e.disasters.push(label);
+  }
+  const filedElsewhere = [...byArea.values()].map((e) => ({ ...e, disasters: e.disasters.sort((a, b) => Number(a.split("-")[1]) - Number(b.split("-")[1])) }));
+  return { rows: mine, notCounty, unmatched: [...unmatched].sort(), unplaced, filedElsewhere };
+}
+
+/** Declarations FEMA files under another code for an area lying in this county: not attached, listed in missing. */
+export interface FiledElsewhere {
+  oldFips: string;
+  area: string;
+  /** "DR-4585", "EM-3446": distinct, by number. */
+  disasters: string[];
+  why: string;
+  basis: string;
 }
 
 const yearOf = (iso: unknown): number | null => {
@@ -417,6 +489,9 @@ export const ZERO_RULE_NOTE =
   "A year with no FEMA declaration or no SPC tornado is absent from those series, not 0, until the zero rule is decided (HISTORY_ZERO_FILL is off).";
 export const ZERO_RULE_ON_NOTE = "A year with no FEMA declaration (from 1953) or no SPC tornado (from 1950) is 0: both are the complete federal record (HISTORY_ZERO_FILL is on).";
 
+/** The missing-list name for USDM's categorical call (this week's D0-D4), apart from "USDM" (the weekly DSCI). */
+export const USDM_THIS_WEEK = "USDM this week";
+
 /** One upstream's outcome: its answer, a skip (the regime says it publishes nothing here) or a failure. */
 export type Part<T> = { value: T; retrievedAt: string; url: string } | { skip: MissingReason } | { error: string; url: string };
 
@@ -479,8 +554,10 @@ export interface HistoryAnswer {
   meta: {
     zeroFill: boolean;
     years: number | null;
-    notCounty: number;
-    unmatched: string[];
+    /** FEMA rows naming no county (code 000); null unless FEMA answered (a skipped or failed FEMA counted nothing). */
+    notCounty: number | null;
+    /** County codes FEMA returned that match no county here; null unless FEMA answered. */
+    unmatched: string[] | null;
     ctRegime: { fema: string; usdm: string; cag: string; spc: string; landslide: string; storms?: string } | null;
     asOf: Record<string, string | null>;
   };
@@ -530,8 +607,9 @@ export function assembleHistory(i: HistoryInputs): HistoryAnswer {
   };
 
   // FEMA
-  let notCounty = 0;
-  let unmatched: string[] = [];
+  // Counted only from an answer: a skipped or failed FEMA counted nothing, so these stay null, never 0.
+  let notCounty: number | null = null;
+  let unmatched: string[] | null = null;
   let declarations: HistoryDeclaration[] = [];
   let declarationRows: number | null = null;
   if (isOk(i.fema)) {
@@ -542,6 +620,11 @@ export function assembleHistory(i: HistoryInputs): HistoryAnswer {
     // Rows under a split legacy code whose designated area no cited source places here or anywhere: listed, never attached.
     for (const u of a.unplaced) {
       missing.push({ source: "FEMA legacy-code rows", reason: "join:area_not_placed", detail: `${u.area ?? "(no designated area)"}${u.disasterNumber != null ? ` (disaster ${u.disasterNumber})` : ""}, filed under ${u.oldFips}: ${u.reason}` });
+    }
+    // Rows FEMA files under another county's code for an area lying here: listed here, never attached, so the count says it may be short.
+    for (const e of a.filedElsewhere) {
+      missing.push({ source: "FEMA legacy-code rows", reason: "join:filed_under_other_code", detail: `${e.area} (${e.disasters.join(", ")}), filed under ${e.oldFips}: ${e.why}. Not attached here, so this county's declarations may be short by ${e.disasters.length}. Basis: ${e.basis}` });
+      caveats.push(`This county's FEMA declarations may be short: ${e.disasters.join(", ")} designate ${e.area}, which lies in this county, but FEMA files that area under ${e.oldFips}; they are listed in missing, not attached.`);
     }
     const prov = provenance(source("fema-openfema"), {
       kind: "published",
@@ -582,6 +665,8 @@ export function assembleHistory(i: HistoryInputs): HistoryAnswer {
     else series.push({ id: `usdm:dsci:${i.fips}`, title: "U.S. Drought Monitor Drought Severity and Coverage Index (weekly)", unit: "index 0-500", frequency: "weekly", geo, provenance: prov, tags: ["hazards", "drought"], points: keep(i.dsci.value) });
   } else fail("USDM", i.dsci);
   const droughtNow = isOk(i.droughtNow) ? i.droughtNow.value : null;
+  // This week's categories are their own call: when it fails while the weekly index answers, say so ("did not answer", not "no week").
+  if (!isOk(i.droughtNow)) fail(USDM_THIS_WEEK, i.droughtNow);
   if (isOk(i.droughtNow) && droughtNow) provs.push(provenance(source("usdm"), { kind: "published", seriesId: `CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent aoi=${i.fips} statisticsType=2 (categorical), map of ${droughtNow.mapDate}`, upstreamUrl: i.droughtNow.url, retrievedAt: i.droughtNow.retrievedAt, notes: [USDM_CREDIT] }));
 
   // NOAA CAG
@@ -692,7 +777,9 @@ export function assembleStorms(
   out.provenance.push(prov);
   out.series.push(...stormAsSeries(storms, geo, prov));
   out.asOf = meta.lastYearMonth;
-  out.caveats.push(STORM_EVENTS_CAVEAT, STORM_GATE_NOTE, STORM_NAME_CHECK_NOTE, zeroFill ? STORM_ZERO_ON_NOTE : STORM_ZERO_NOTE);
+  out.caveats.push(STORM_EVENTS_CAVEAT, STORM_GATE_NOTE, STORM_NAME_CHECK_NOTE, zeroFill ? STORM_ZERO_ON_NOTE : STORM_ZERO_NOTE, STORM_TOTAL_NOTE);
+  const shortTypes = storms.types.filter((t) => t.blank.length).map((t) => t.type);
+  if (shortTypes.length) out.caveats.push(`Storm events: the totals for ${shortTypes.join(", ")} leave out their blank (zone-coded) years, so they are short.`);
   if (storms.break) out.caveats.push(`Storm events: ${storms.break.what}; the series counts the county as it was each year, so ${storms.break.year} is a break in the series.`);
   if (!storms.types.some((t) => t.points.length)) out.caveats.push("NCEI records no county-coded storm event naming this county in these years outside tornadoes; with the zero rule off, that is shown as no bars, not as zeros.");
   return out;

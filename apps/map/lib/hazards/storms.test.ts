@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 import metaJson from "./data/storm-events/meta.json";
 import shardTx from "./data/storm-events/48.json";
 import type { StormMeta, StormShard } from "./stormBake";
-import { STORM_EVENTS_CAVEAT, STORM_MAIN_TYPES, STORM_ZONE_SHARE_MAX, stormAsSeries, stormGate, stormSeries, stormSeriesId } from "./storms";
+import { STORM_EVENTS_CAVEAT, STORM_MAIN_TYPES, STORM_TOTAL_NOTE, STORM_ZONE_SHARE_MAX, stormAsSeries, stormGate, stormSeries, stormSeriesId } from "./storms";
 import { toolByName } from "@/lib/mcp/tools";
 import { loadStormShard, STORM_LOADERS } from "./stormShards";
 import { assembleStorms } from "./history";
@@ -83,6 +83,20 @@ describe("assembleStorms", () => {
     expect(a.provenance[0].source.id).toBe("ncei-storm-events");
     expect(a.series.some((s) => s.id === "se:hail:48453")).toBe(true);
     expect(a.caveats.join(" ")).toMatch(/Tornadoes are counted from SPC/);
+  });
+  it("says a type's total covers county-coded reports in drawn years only, and names the types whose blank years leave it short", () => {
+    // The committed Texas shard: Travis has Flood reports, and Flood's 1996 is blank (zone-coded).
+    const full = { value: { meta, shard: shardTx as unknown as StormShard }, retrievedAt: "2026-10-17T00:00:00.000Z", url: meta.dir };
+    const a = assembleStorms({ fips: "48453", now: Date.UTC(2026, 9, 17), years: null, storms: full }, geo);
+    expect(a.caveats).toContain(STORM_TOTAL_NOTE);
+    const flood = a.storms!.types.find((t) => t.type === "Flood")!;
+    expect(flood.blank.map(([y]) => y)).toContain(1996);
+    expect(flood.total).toBe(flood.points.reduce((s, [, n]) => s + n, 0));
+    const short = a.caveats.find((c) => c.startsWith("Storm events: the totals for "))!;
+    expect(short).toMatch(/\bFlood\b/);
+    for (const t of a.storms!.types) expect(short.includes(t.type), t.type).toBe(t.blank.length > 0);
+    // The three main types are drawn every year, so their totals are not called short.
+    for (const t of STORM_MAIN_TYPES) expect(a.storms!.types.find((x) => x.type === t)!.blank).toEqual([]);
   });
   it("is null with join:legacy_ct_counties for a planning region", () => {
     const a = assembleStorms({ fips: "09110", now: 0, years: null, storms: ok }, geo);

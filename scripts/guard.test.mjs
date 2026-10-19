@@ -17,7 +17,10 @@ function repo(files) {
   made.push(dir);
   git(dir, "init", "-q");
   git(dir, "config", "core.autocrlf", "false");
-  for (const [name, body] of Object.entries(files)) writeFileSync(path.join(dir, name), body);
+  for (const [name, body] of Object.entries(files)) {
+    mkdirSync(path.dirname(path.join(dir, name)), { recursive: true });
+    writeFileSync(path.join(dir, name), body);
+  }
   git(dir, "add", "-A");
   return dir;
 }
@@ -108,6 +111,32 @@ check(flags(run(repo({ "README.md": "x\n", "guard.allow.json": allowJson("model.
 const keyed = "AKIA" + caps;
 check(flags(run(repo({ "k.bin": keyed, "guard.allow.json": allowJson("k.bin", sha(keyed)) })).stdout, "secret", "k.bin"),
   "an allow-listed file is still scanned for secrets");
+
+// Workflow actions must be pinned to a full commit sha; a tag or branch fails. Only workflow files are judged.
+const hex = "0123456789abcdef".repeat(3).slice(0, 40);
+const steps = (...uses) => "on: push\njobs:\n  a:\n    steps:\n" + uses.map((u) => `      - uses: ${u}\n`).join("");
+const pinned = repo({
+  ".github/workflows/ok.yml": steps(`actions/checkout@${hex} # v4`, `"actions/setup-node@${hex}"`, "./.github/actions/local"),
+  ".github/workflows/ok2.yaml": "jobs:\n  a:\n    uses: org/repo/.github/workflows/w.yml@" + hex + "\n",
+  "README.md": "Don't write uses: actions/checkout@v4 in a workflow.\n",
+  ".github/notes.yml": "uses: actions/checkout@v4\n",
+});
+const rp = run(pinned);
+check(rp.status === 0, `sha-pinned and local actions pass, and non-workflow files aren't judged${rp.status ? ": " + rp.stdout.trim() : ""}`);
+const unpinnedRepo = repo({
+  ".github/workflows/tag.yml": steps("actions/checkout@v4"),
+  ".github/workflows/branch.yaml": steps("'actions/setup-node@main'"),
+  ".github/workflows/short.yml": steps("actions/checkout@" + hex.slice(0, 7) + " # v4"),
+  ".github/workflows/upper.yml": steps("actions/checkout@" + hex.toUpperCase()),
+  ".github/workflows/bare.yml": steps("actions/checkout"),
+  ".github/workflows/docker.yml": steps("docker://alpine:3.20"),
+  ".github/workflows/reusable.yml": "jobs:\n  a:\n    uses: org/repo/.github/workflows/w.yml@v1\n",
+});
+const ru = run(unpinnedRepo);
+check(ru.status === 1, "a repo with tag-pinned actions fails");
+for (const f of ["tag.yml", "branch.yaml", "short.yml", "upper.yml", "bare.yml", "docker.yml", "reusable.yml"])
+  check(flags(ru.stdout, "pin", ".github/workflows/" + f), `flags pin in ${f}`);
+check(/line 5: actions\/checkout@v4$/m.test(ru.stdout), "a pin finding names the line and the value");
 
 for (const d of made) rmSync(d, { recursive: true, force: true });
 console.log(failed ? `\n${failed} check(s) failed` : "\nall checks pass");

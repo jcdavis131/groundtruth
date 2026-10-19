@@ -8,7 +8,9 @@
 #
 # The run fails only on an upstream that is newly failing: a dead, unreachable
 # or wrong-content answer (DEAD, ERR or ODD) on both tries 20 s apart, not
-# listed in apps/map/scripts/endpoint-sweep.known.json. GitHub emails a failed
+# listed in apps/map/scripts/endpoint-sweep.known.json. A known-outage entry
+# fails it too once its since date is 90 days old, or when its match hits no
+# probed URL (warnings from 7 and 30 days show as annotations). GitHub emails a failed
 # scheduled run to the repository owner. The table, and what was not probed
 # and why, are in the run's summary either way.
 name: map-endpoint-sweep
@@ -42,12 +44,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 1
           persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
 

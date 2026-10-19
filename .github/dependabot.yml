@@ -1,0 +1,20 @@
+# Version updates by pull request, weekly. Workflow actions are pinned to commit
+# shas (scripts/guard.mjs, rule "pin"), so this is what moves them: Dependabot
+# bumps the sha and the trailing "# vN" comment together. The map's npm
+# dependencies come along on the same schedule.
+#
+# This file does not turn on Dependabot security updates. That is a repo setting,
+# still off, and Cam's call (intake 2026-10-18, decision D1).
+#
+# Idea: trimstray/the-book-of-secret-knowledge (MIT, reviewed at 7d37069), K2 in
+# the intake plan. No text or code copied.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: npm
+    directory: /apps/map
+    schedule:
+      interval: weekly

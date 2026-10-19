@@ -42,7 +42,7 @@ afterEach(() => vi.unstubAllGlobals());
 
 const notStorm = (id: string) => !id.startsWith("se:");
 
-type Body = { data: Record<string, unknown> & { series?: Array<{ id: string; points: unknown[] }>; missing?: Array<{ source: string; reason: string }>; landslide?: Record<string, number> | null; fips?: string }; caveats: string[]; provenance: Array<{ source: { id: string } }>; error?: string; ctRegime?: unknown; declarationsListed?: number };
+type Body = { data: Record<string, unknown> & { series?: Array<{ id: string; points: unknown[] }>; missing?: Array<{ source: string; reason: string }>; landslide?: Record<string, number> | null; fips?: string }; caveats: string[]; provenance: Array<{ source: { id: string } }>; error?: string; ctRegime?: unknown; declarationsListed?: number; notCounty?: number | null; unmatched?: string[] | null };
 async function get(qs: string) {
   const res = await GET(new NextRequest(`http://localhost/api/hazards?${qs}`));
   return { status: res.status, body: (await res.json()) as Body };
@@ -101,7 +101,30 @@ describe("op=history", () => {
     expect(body.data.storms).toBeNull();
     // FEMA was not asked, so no declaration count: an empty list here is unknown, not zero.
     expect(body).not.toHaveProperty("declarationsListed");
+    // Nor any count of FEMA's rows: notCounty and unmatched are null, never 0.
+    expect(body.notCounty).toBeNull();
+    expect(body.unmatched).toBeNull();
     expect(body.caveats.join(" ")).toMatch(/only drought is shown for planning regions/);
+  });
+
+  it("USDM's this-week call failing while the weekly index answers is listed missing, not 'no week'", async () => {
+    // The categorical URL gets no answer (the fetch throws); everything else is Travis.
+    answer = (u) => (u.startsWith(`${USDM_API}/GetDroughtSeverityStatisticsByAreaPercent`) ? null : travisAnswers(u));
+    const { status, body } = await get("op=history&fips=48453");
+    expect(status).toBe(200);
+    expect(body.data.droughtNow).toBeNull();
+    expect(body.data.series!.some((s) => s.id === "usdm:dsci:48453")).toBe(true);
+    expect(body.data.missing!.find((m) => m.source === "USDM this week")?.reason).toBe("source:failed");
+    expect(body.data.missing!.some((m) => m.source === "USDM")).toBe(false);
+  });
+
+  it("Hoonah-Angoon (02105): one FEMA call asks for 105 and 280, so the Chatham REAA rows can be listed missing", async () => {
+    answer = (u) => (u.startsWith(FEMA_DDS) ? { metadata: { count: 0 }, DisasterDeclarationsSummaries: [] } : u.startsWith(USDM_API) ? [] : u.startsWith(CAG_BASE) ? 404 : null);
+    const { status } = await get("op=history&fips=02105");
+    expect(status).toBe(200);
+    const fema = calls.filter((c) => c.startsWith(FEMA_DDS));
+    expect(fema).toHaveLength(1);
+    expect(decodeURIComponent(fema[0])).toContain("fipsStateCode eq '02' and (fipsCountyCode eq '105' or fipsCountyCode eq '280')");
   });
 
   it("a failing upstream is a caveat, not a 500; a CAG 404 is not-in-release", async () => {
@@ -111,6 +134,7 @@ describe("op=history", () => {
     expect(body.data.missing!.find((m) => m.source === "FEMA")?.reason).toBe("source:failed");
     // FEMA failed, so no declaration count: unknown, not zero.
     expect(body).not.toHaveProperty("declarationsListed");
+    expect(body.notCounty).toBeNull();
     expect(body.data.missing!.filter((m) => m.source.startsWith("NOAA Climate")).map((m) => m.reason)).toEqual(["source:not_in_release", "source:not_in_release"]);
     expect(body.caveats.join(" ")).toMatch(/FEMA did not answer this time/);
     expect(body.data.series!.map((s) => s.id).filter(notStorm)).toEqual(["usdm:dsci:48453", "spc:tornadoes:48453"]);
