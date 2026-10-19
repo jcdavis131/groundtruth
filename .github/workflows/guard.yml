@@ -28,5 +28,7 @@ jobs:
         run: node scripts/guard.test.mjs
       - name: git-guard hook self-test
         run: node scripts/hooks/git-guard.test.mjs
+      - name: worktree-remove self-test
+        run: node scripts/worktree-remove.test.mjs
       - name: guard
         run: node scripts/guard.mjs
