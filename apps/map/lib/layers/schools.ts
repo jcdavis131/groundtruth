@@ -46,7 +46,7 @@ async function fetchSchools(ctx: FetchContext): Promise<FetchResult> {
     if (x.virtual) n.virtual++;
   }
   return {
-    collection: { type: "FeatureCollection", features: [...features, civicLoadedBox("schools", loaded, "public schools")] },
+    collection: { type: "FeatureCollection", features: [...features, civicLoadedBox("schools", loaded, "public schools", meta.truncated ? { truncated: true } : undefined)] },
     source: "NCES EDGE",
     fetchedAt: ctx.now,
     note:

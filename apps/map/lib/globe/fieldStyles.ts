@@ -4,16 +4,24 @@
 // tall as the physical signals inside it are dense; a faint wash on the ground
 // carries the same heat. All three read the live vitals (emergenceState), and
 // the emergence bridge restyles only the units whose vitals changed.
+// A unit the counted layers did not load (value null) is drawn as a dashed
+// grey outline with no column and no wash: "not loaded", never the lowest
+// colour of the ramp, which means "loaded and none".
 
 import type { LayerFeature } from "@/lib/layers/types";
 import type { LayerStyle, LonLatAlt, StyledLine, StyledPolygon } from "./renderer";
-import { heatColor } from "@/lib/fabric/emergence";
+import { heatColor, NOT_LOADED } from "@/lib/fabric/emergence";
 import { vitalsFor } from "@/lib/fabric/emergenceState";
 import type { FieldExtra } from "@/lib/layers/field";
 import { SIGNAL } from "./constructStyles";
 
 function extraOf(f: LayerFeature): FieldExtra | undefined {
   return f.properties.extra as FieldExtra | undefined;
+}
+
+function unknown(f: LayerFeature): boolean {
+  const v = vitalsFor(f.properties.id);
+  return !!v && v.value == null && !v.condition;
 }
 
 function heatOf(f: LayerFeature): number {
@@ -23,6 +31,7 @@ function heatOf(f: LayerFeature): number {
 /** The flow class colour under the streamflow measure, else the heat ramp. */
 function colorOf(f: LayerFeature): string {
   const v = vitalsFor(f.properties.id);
+  if (unknown(f)) return NOT_LOADED;
   return v?.color ?? heatColor(v?.heat ?? 0);
 }
 
@@ -37,7 +46,7 @@ export const fieldStyle: LayerStyle = {
   labelMax: 0,
   labelAlways: (f) => {
     const v = vitalsFor(f.properties.id);
-    return !!v && !!v.display && v.value > 0 && v.rank < 6;
+    return !!v && !!v.display && v.value != null && v.value > 0 && v.rank < 6;
   },
   // The node sits on top of its column.
   position: (f) => {
@@ -49,6 +58,7 @@ export const fieldStyle: LayerStyle = {
   lines: (f) => {
     const x = extraOf(f);
     if (!x?.node?.rings) return null;
+    if (unknown(f)) return x.node.rings.map((ring) => ({ positions: ring.map((p) => [p[0], p[1], x.plate] as LonLatAlt), color: NOT_LOADED, alpha: 0.55, width: 1, dashed: true }));
     const h = heatOf(f);
     const color = colorOf(f);
     // A rated unit sitting at normal still shows its class colour, faintly.

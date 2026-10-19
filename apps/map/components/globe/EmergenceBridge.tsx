@@ -43,7 +43,7 @@ function recompute() {
   const next = computeVitals(nodes, physical, measure, fieldNormalise ?? "density", conditionOf);
   const changed: string[] = [];
   const differs = (a: Vitals | undefined, b: Vitals | undefined) =>
-    !a || !b || a.value !== b.value || a.display !== b.display || a.color !== b.color || Math.abs(a.heat - b.heat) > 0.02 || (a.rank < 6) !== (b.rank < 6);
+    !a || !b || a.value !== b.value || a.coverage !== b.coverage || a.reason !== b.reason || a.display !== b.display || a.color !== b.color || Math.abs(a.heat - b.heat) > 0.02 || (a.rank < 6) !== (b.rank < 6);
   for (const [id, v] of next) if (differs(vitalsFor(id), v)) changed.push(id);
   if (setVitals(next, vitalsKey(next), Date.now()) || changed.length) r.restyle(changed);
 }

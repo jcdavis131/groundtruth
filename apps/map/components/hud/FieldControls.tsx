@@ -8,12 +8,11 @@ import { useSettings } from "@/lib/store/settings";
 import { LAYERS } from "@/lib/layers";
 import { DOMAINS, KINDS } from "@/lib/fabric/catalog";
 import { FIELD_POVS, kindForScale, type FieldPov } from "@/lib/fabric/fieldScale";
-import type { Measure } from "@/lib/fabric/emergence";
+import { NOT_LOADED, NOT_MEASURES, type Measure } from "@/lib/fabric/emergence";
 import { FLOW_CLASSES, FLOW_CLASS_ORDER } from "@/lib/fabric/condition";
 import { GAUGE_MAX_HEIGHT_M } from "@/lib/layers/water";
 
-// Not measures: layers whose points are not physical (lib/fabric/emergence.ts isPhysical) and area-only layers.
-const NOT_MEASURES = new Set(["constructs", "field", "occupations", "weather", "commerce", "realestate", "spending", "traffic", "hazards", "flood", "wetlands", "publiclands", "relief", "slope", "contours", "soils", "firehazard", "landcover", "sealevel", "transmission", "pipelines", "rail", "faults", "geology", "plss", "events", "parcels", "zoning", "permits", "licences", "envpermits", "historic", "crithab", "contaminants", "wayback", "topo", "impaired", "pfas", "ust", "hydro", "riskindex", "naip", "heritage", "health", "vulnerability", "broadband", "wildfirerisk", "tribal", "housing", "landslidesusc"]);
+// Not measures: lib/fabric/emergence.ts NOT_MEASURES (not physical, or area-only).
 
 export default function FieldControls() {
   const pov = useSettings((s) => s.prefs.fieldPov) ?? "hydrologic";
@@ -93,20 +92,29 @@ export default function FieldControls() {
           </div>
         </div>
       ) : (
-        <div className="flex gap-1" role="radiogroup" aria-label="Normalise">
-          {(["density", "count"] as const).map((n) => (
-            <button
-              key={n}
-              type="button"
-              role="radio"
-              aria-checked={n === normalise}
-              onClick={() => setPref("fieldNormalise", n)}
-              className={`rounded border px-1.5 py-0.5 ${n === normalise ? "border-primary text-primary" : "border-border text-muted-foreground"}`}
-            >
-              {n === "density" ? "per 1,000 km²" : "count"}
-            </button>
-          ))}
-        </div>
+        <>
+          <div className="flex gap-1" role="radiogroup" aria-label="Normalise">
+            {(["density", "count"] as const).map((n) => (
+              <button
+                key={n}
+                type="button"
+                role="radio"
+                aria-checked={n === normalise}
+                onClick={() => setPref("fieldNormalise", n)}
+                className={`rounded border px-1.5 py-0.5 ${n === normalise ? "border-primary text-primary" : "border-border text-muted-foreground"}`}
+              >
+                {n === "density" ? "per 1,000 km²" : "count"}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-start gap-1 leading-snug text-muted-foreground">
+            <span className="mt-1 inline-block h-0 w-3 shrink-0 border-t border-dashed" style={{ borderColor: NOT_LOADED }} aria-hidden />
+            <span>
+              Dashed grey: not loaded. A counted layer&apos;s loaded box does not cover the unit, its source hit a record limit, or the unit has no area for a density. No value,
+              which is not the same as none. Heat is scaled to the largest fully loaded unit in view.
+            </span>
+          </div>
+        </>
       )}
     </div>
   );

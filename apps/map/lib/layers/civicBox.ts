@@ -5,10 +5,10 @@
 // there" (the flood layer's rule, lib/layers/flood.ts).
 
 import type { Bbox } from "@/lib/zoning/features";
-import type { LayerFeature, LayerId, ViewState } from "./types";
+import type { LayerFeature, LayerId, LoadedBoxExtra, ViewState } from "./types";
 
 /** The box a layer loaded, as a dashed outline feature (kind "loaded-box"; never counted or searched). */
-export function civicLoadedBox(layer: LayerId, b: Bbox, what: string): LayerFeature {
+export function civicLoadedBox(layer: LayerId, b: Bbox, what: string, extra?: LoadedBoxExtra): LayerFeature {
   const [w, s, e, n] = b;
   return {
     type: "Feature",
@@ -23,6 +23,8 @@ export function civicLoadedBox(layer: LayerId, b: Bbox, what: string): LayerFeat
         "what this is": `the box ${what} were loaded for. Outside it nothing is loaded, which is not the same as none being there`,
         box: `${w}, ${s} to ${e}, ${n}`,
       },
+      // What the answer left out (a record limit), read by the construct field's coverage.
+      ...(extra ? { extra } : {}),
     },
   };
 }
