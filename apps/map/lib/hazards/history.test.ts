@@ -232,6 +232,15 @@ describe("FEMA", () => {
     expect(h.data.missing.some((x) => x.source === "FEMA")).toBe(false);
   });
 
+  it("says 'designates' when one disaster is filed under another county's code", () => {
+    const rows = [
+      { fipsStateCode: "02", fipsCountyCode: "105", disasterNumber: 4533, declarationType: "DR", declarationDate: "2020-04-09T00:00:00.000Z", designatedArea: "Hoonah-Angoon (Census Area)" },
+      { fipsStateCode: "02", fipsCountyCode: "280", disasterNumber: 4585, declarationType: "DR", declarationDate: "2021-02-17T00:00:00.000Z", designatedArea: "Chatham Regional Educational Attendance Area" },
+    ];
+    const h = assembleHistory(travis({ fips: "02105", name: "Hoonah-Angoon Census Area", stusab: "AK", fema: ok({ rows, count: rows.length }) }));
+    expect(h.caveats.join(" ")).toMatch(/may be short: DR-4585 designates Chatham Regional Educational Attendance Area/);
+  });
+
   it("Prince of Wales-Hyder (02198) reads 02280 too: whole-area rows attach with the caveat, each disaster once across its own code, 02201 and 02280", () => {
     expect(femaCodes("02198")).toEqual(["02198", "02201", "02280"]);
     expect(decodeURIComponent(femaUrl("02198"))).toContain("(fipsCountyCode eq '198' or fipsCountyCode eq '201' or fipsCountyCode eq '280')");

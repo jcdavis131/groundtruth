@@ -624,7 +624,7 @@ export function assembleHistory(i: HistoryInputs): HistoryAnswer {
     // Rows FEMA files under another county's code for an area lying here: listed here, never attached, so the count says it may be short.
     for (const e of a.filedElsewhere) {
       missing.push({ source: "FEMA legacy-code rows", reason: "join:filed_under_other_code", detail: `${e.area} (${e.disasters.join(", ")}), filed under ${e.oldFips}: ${e.why}. Not attached here, so this county's declarations may be short by ${e.disasters.length}. Basis: ${e.basis}` });
-      caveats.push(`This county's FEMA declarations may be short: ${e.disasters.join(", ")} designate ${e.area}, which lies in this county, but FEMA files that area under ${e.oldFips}; they are listed in missing, not attached.`);
+      caveats.push(`This county's FEMA declarations may be short: ${e.disasters.join(", ")} ${e.disasters.length === 1 ? "designates" : "designate"} ${e.area}, which lies in this county, but FEMA files that area under ${e.oldFips}; they are listed in missing, not attached.`);
     }
     const prov = provenance(source("fema-openfema"), {
       kind: "published",
