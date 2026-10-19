@@ -24,7 +24,7 @@
 
 import { execFileSync, spawn } from "node:child_process";
 import { createHash } from "node:crypto";
-import { createReadStream, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { closeSync, createReadStream, existsSync, mkdirSync, openSync, readdirSync, readFileSync, readSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import path from "node:path";
 import { createInterface } from "node:readline";
@@ -88,7 +88,18 @@ export const present = (v) => typeof v === "string" && !NONE.has(v.trim().toLowe
 
 const iso = (ms) => new Date(ms).toISOString().replace(/\.\d+Z$/, "Z");
 const mtime = (f) => iso(statSync(f).mtimeMs);
-const sha256File = (f) => createHash("sha256").update(readFileSync(f)).digest("hex");
+/** sha256 of a file, 1 MB at a time, so a 60 MB cache file never sits in memory whole. */
+function sha256File(f) {
+  const h = createHash("sha256");
+  const fd = openSync(f, "r");
+  const buf = Buffer.alloc(1 << 20);
+  try {
+    for (let n; (n = readSync(fd, buf, 0, buf.length, null)) > 0; ) h.update(buf.subarray(0, n));
+  } finally {
+    closeSync(fd);
+  }
+  return h.digest("hex");
+}
 const chunks = (a, n) => Array.from({ length: Math.ceil(a.length / n) }, (_, i) => a.slice(i * n, i * n + n));
 const qid = (uri) => uri.replace("http://www.wikidata.org/entity/", "");
 const splitL = (v) => (v ? v.split("|").filter(Boolean) : []);
@@ -114,6 +125,18 @@ function gitSha() {
     .filter((l) => l.trim() && !l.includes("data/athletes/manifests/"));
   if (dirty.length) throw new Error(`data/athletes has uncommitted changes; commit them first so the manifest names the code:\n${dirty.join("\n")}`);
   return execFileSync("git", ["-C", REPO, "rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+}
+
+/** A file's first line, reading 8 KB instead of the whole file (some depth charts are 60 MB). */
+function firstLine(file) {
+  const fd = openSync(file, "r");
+  try {
+    const buf = Buffer.alloc(8192);
+    const n = readSync(fd, buf, 0, buf.length, 0);
+    return buf.subarray(0, n).toString("utf8").split("\n")[0].replace(/\r$/, "");
+  } finally {
+    closeSync(fd);
+  }
 }
 
 // ------------------------------------------------------------------------------------------------ NFL
@@ -159,7 +182,7 @@ async function readNfl(dir, log) {
     const year = f.match(/(\d{4})/)[1];
     const isStats = f.startsWith("stats_player_week");
     const cite = { sourceId: isStats ? "nflverse-stats" : "nflverse-depth", url: isStats ? URLS.nflStats(year) : URLS.nflDepth(year), retrievedAt: mtime(full) };
-    const head = splitCsvLine(readFileSync(full, "utf8").slice(0, 4096).split("\n")[0].replace(/\r$/, ""));
+    const head = splitCsvLine(firstLine(full));
     // 2016-2024 depth charts are week-keyed with season and club_code; 2025+ are dated rows with team and no
     // season column, so the file's year is the season.
     const cols = isStats ? ["player_id", "season", "team"] : head.includes("club_code") ? ["gsis_id", "season", "club_code"] : ["gsis_id", "team"];
@@ -449,7 +472,7 @@ const point = (wkt) => {
 async function main() {
   const a = args(process.argv.slice(2));
   const t0 = Date.now();
-  const log = (m) => console.error(`[athletes ${((Date.now() - t0) / 1000).toFixed(0)}s] ${m}`);
+  const log = (m) => console.error(`[athletes ${((Date.now() - t0) / 1000).toFixed(0)}s rss ${Math.round(process.memoryUsage().rss / 1048576)} MB] ${m}`);
   const dataRoot = a["data-root"] ?? process.env.GROUNDTRUTH_DATA_ROOT ?? path.join(homedir(), "datastore", "groundtruth-snapshots");
   const date = a.date ?? new Date().toISOString().slice(0, 10);
   const nflDir = a["nfl-cache"] ?? path.join(homedir(), "vector-gridiron", "pipeline", "cache");
