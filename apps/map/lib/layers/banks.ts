@@ -60,8 +60,8 @@ async function fetchBanks(ctx: FetchContext): Promise<FetchResult> {
   const features = env.data.features;
   const withDeposits = features.filter((f) => (f.properties.extra as BranchExtra).deposits != null).length;
   const note = env.sodYear
-    ? `${features.length} offices in ${env.counties ?? "?"} counties · ${withDeposits} with SOD ${env.sodYear} deposits`
-    : `${features.length} offices in ${env.counties ?? "?"} counties · no Summary of Deposits year matched`;
+    ? `${features.length} office${features.length === 1 ? "" : "s"} in ${env.counties ?? "?"} ${env.counties === 1 ? "county" : "counties"} · ${withDeposits} with SOD ${env.sodYear} deposits`
+    : `${features.length} office${features.length === 1 ? "" : "s"} in ${env.counties ?? "?"} ${env.counties === 1 ? "county" : "counties"} · no Summary of Deposits year matched`;
   return {
     collection: { type: "FeatureCollection", features },
     source: env.source ?? "FDIC BankFind Suite",

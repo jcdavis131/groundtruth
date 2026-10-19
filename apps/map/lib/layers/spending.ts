@@ -61,7 +61,7 @@ async function fetchSpending(ctx: FetchContext): Promise<FetchResult> {
   const note =
     shownLevel === "state"
       ? `${features.length} states · FY${env.fy ?? "?"}${level === "county" ? " · too many counties in view, showing states" : ` · descend below ${Math.round(COUNTY_MAX_HEIGHT_M / 1000).toLocaleString()} km for counties`}`
-      : `${features.length} counties · FY${env.fy ?? "?"} · ${withPerJob} with a per-job figure${env.qcewPeriod ? ` (QCEW ${env.qcewPeriod})` : ""}`;
+      : `${features.length} ${features.length === 1 ? "county" : "counties"} · FY${env.fy ?? "?"} · ${withPerJob} with a per-job figure${env.qcewPeriod ? ` (QCEW ${env.qcewPeriod})` : ""}`;
   return {
     collection: { type: "FeatureCollection", features },
     source: env.source ?? "USAspending + BLS QCEW + Census TIGERweb",

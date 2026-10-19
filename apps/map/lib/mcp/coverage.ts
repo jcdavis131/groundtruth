@@ -29,9 +29,9 @@ export function replyCoverage(payload: Record<string, unknown>, truncatedByMcp: 
   const data = payload.data && typeof payload.data === "object" && !Array.isArray(payload.data) ? (payload.data as Record<string, unknown>) : null;
   if (data) {
     const places = keyCount(data.nullPlaces);
-    if (places) basis.push(`${places} places in data.nullPlaces have an unknown value (null, not 0)`);
+    if (places) basis.push(`${places} place${places === 1 ? " in data.nullPlaces has" : "s in data.nullPlaces have"} an unknown value (null, not 0)`);
     const cells = keyCount(data.nullCells);
-    if (cells) basis.push(`${cells} places in data.nullCells have at least one null field (null, not 0)`);
+    if (cells) basis.push(`${cells} place${cells === 1 ? " in data.nullCells has" : "s in data.nullCells have"} at least one null field (null, not 0)`);
   }
   if (truncatedByMcp) basis.push("the MCP cut the list to fit one reply (see note); the HTTP route has the full set");
   return basis.length ? { status: "partial", basis } : null;

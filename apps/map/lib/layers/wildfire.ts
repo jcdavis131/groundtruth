@@ -47,7 +47,7 @@ async function fetchWildfire(ctx: FetchContext): Promise<FetchResult> {
     f.properties.details = details;
   }
   const note =
-    `${meta.perimeters ?? 0} perimeters · ${meta.pointsWithoutPerimeter ?? 0} points without a perimeter · ${wf} wildfires, ${rx} prescribed` +
+    `${meta.perimeters ?? 0} perimeter${meta.perimeters === 1 ? "" : "s"} · ${meta.pointsWithoutPerimeter ?? 0} point${meta.pointsWithoutPerimeter === 1 ? "" : "s"} without a perimeter · ${wf} wildfire${wf === 1 ? "" : "s"}, ${rx} prescribed` +
     (undated ? ` · ${undated} ${undated === 1 ? "perimeter has" : "perimeters have"} no published capture time` : "") +
     (meta.truncated ? " · upstream record limit hit" : "");
   return {

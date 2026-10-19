@@ -54,7 +54,7 @@ async function fetchNaip(ctx: FetchContext): Promise<FetchResult> {
     return null;
   });
   if (!mosaic) return { ...base, note: `no ${year} NAIP mosaic: Planetary Computer lists no ${year} photograph anywhere · pick a year under the layer's row`, meta: { picture: true, count: 0, naipYear: null, naipYears: years.length, naipTiles: null } };
-  const span = years.length ? `${years.length} years here, ${years[0].year} to ${years[years.length - 1].year}` : "no NAIP year at the view centre";
+  const span = years.length ? `${years.length} year${years.length === 1 ? "" : "s"} here, ${years[0].year} to ${years[years.length - 1].year}` : "no NAIP year at the view centre";
   const note = present
     ? `USDA NAIP aerial photographs, ${year} · draws from about 20 km (level 11) and closer; tiles take 1-3 s · ${span} · click the ground for the flight date`
     : `no ${year} NAIP photograph at the view centre (${span}) · the ${year} mosaic draws only where ${year} was flown`;
