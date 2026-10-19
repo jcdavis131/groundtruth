@@ -93,6 +93,1399 @@
     "generatedAt": "2026-10-19T02:32:03.861Z"
    }
   },
+  "/api/fabric?op=stack&lon=-108.2266&lat=47.1419": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:55:08.770Z",
+    "provenance": [
+     {
+      "source": {
+       "id": "natural-earth",
+       "publisher": "Natural Earth",
+       "url": "https://www.naturalearthdata.com/"
+      },
+      "retrievedAt": "2026-10-19T04:55:08.770Z"
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      },
+      "retrievedAt": "2026-10-19T04:55:08.770Z"
+     },
+     {
+      "source": {
+       "id": "federal-regions",
+       "publisher": "EPA, FEMA, Federal Reserve System",
+       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
+      },
+      "retrievedAt": "2026-10-19T04:55:08.770Z"
+     },
+     {
+      "source": {
+       "id": "usgs-wbd",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
+      },
+      "retrievedAt": "2026-10-19T04:55:08.770Z"
+     },
+     {
+      "source": {
+       "id": "epa-ecoregions",
+       "publisher": "U.S. Environmental Protection Agency",
+       "url": "https://www.epa.gov/eco-research/ecoregions"
+      },
+      "retrievedAt": "2026-10-19T04:55:08.770Z"
+     },
+     {
+      "source": {
+       "id": "fema-nfhl",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/flood-maps/national-flood-hazard-layer"
+      },
+      "retrievedAt": "2026-10-19T04:55:08.770Z"
+     },
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "retrievedAt": "2026-10-19T04:55:08.770Z"
+     },
+     {
+      "source": {
+       "id": "usgs-epqs",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://apps.nationalmap.gov/epqs/"
+      },
+      "retrievedAt": "2026-10-19T04:55:08.770Z"
+     },
+     {
+      "source": {
+       "id": "wikipedia",
+       "publisher": "Wikimedia Foundation",
+       "url": "https://en.wikipedia.org/"
+      },
+      "retrievedAt": "2026-10-19T04:55:08.770Z"
+     }
+    ],
+    "data": {
+     "point": {
+      "lon": -108.227,
+      "lat": 47.142,
+      "elevationM": 940.3
+     },
+     "nodes": [
+      {
+       "kind": "flood",
+       "name": "Flood zone X",
+       "code": "X",
+       "source": "fema-nfhl",
+       "facts": {
+        "special flood hazard area": "no",
+        "FIRM panel": "30069C0500A"
+       }
+      },
+      {
+       "kind": "huc12",
+       "name": "Cottonwood Creek",
+       "code": "100402050105",
+       "source": "usgs-wbd",
+       "facts": {
+        "drains to": "100402050106"
+       }
+      },
+      {
+       "kind": "flood-community",
+       "name": "Petroleum County",
+       "code": "300161",
+       "source": "fema-nfhl",
+       "facts": {}
+      },
+      {
+       "kind": "huc10",
+       "name": "Sage Hen Creek-Musselshell River",
+       "code": "1004020501",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "nws-zone",
+       "name": "Petroleum (MTZ021)",
+       "code": "MTZ021",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "zcta",
+       "name": "59087",
+       "code": "59087",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "tract",
+       "name": "Census Tract 1",
+       "code": "30069000100",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "school",
+       "name": "Winnett K-12 Schools",
+       "code": "3028470",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "unified"
+       }
+      },
+      {
+       "kind": "county",
+       "name": "Petroleum County, MT",
+       "code": "30069",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc8",
+       "name": "Lower Musselshell",
+       "code": "10040205",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "eco4",
+       "name": "Missouri Breaks Woodland-Scrubland",
+       "code": "43l",
+       "source": "epa-ecoregions",
+       "facts": {}
+      },
+      {
+       "kind": "sldl",
+       "name": "Montana State House District 37",
+       "code": "30037",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "sldu",
+       "name": "Montana State Senate District 19",
+       "code": "30019",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc6",
+       "name": "Musselshell",
+       "code": "100402",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "nws-office",
+       "name": "NWS Glasgow, MT",
+       "code": "GGW",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "huc4",
+       "name": "Missouri-Musselshell",
+       "code": "1004",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "eco3",
+       "name": "Northwestern Great Plains",
+       "code": "43",
+       "source": "epa-ecoregions",
+       "facts": {}
+      },
+      {
+       "kind": "cd",
+       "name": "MT-02",
+       "code": "3002",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "state",
+       "name": "Montana",
+       "code": "30",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "epa-region",
+       "name": "EPA Region 8 (Denver)",
+       "code": "8",
+       "source": "federal-regions",
+       "facts": {}
+      },
+      {
+       "kind": "fema-region",
+       "name": "FEMA Region VIII (Denver)",
+       "code": "8",
+       "source": "federal-regions",
+       "facts": {}
+      },
+      {
+       "kind": "huc2",
+       "name": "Missouri Region",
+       "code": "10",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "fed-district",
+       "name": "Fed district 9 (Minneapolis)",
+       "code": "9",
+       "source": "federal-regions",
+       "facts": {}
+      },
+      {
+       "kind": "census-division",
+       "name": "Mountain Division",
+       "code": "8",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "timezone",
+       "name": "America/Denver",
+       "code": "America/Denver",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "census-region",
+       "name": "West Region",
+       "code": "4",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "country",
+       "name": "United States",
+       "code": "USA",
+       "source": "natural-earth",
+       "facts": {}
+      },
+      {
+       "kind": "continent",
+       "name": "North America",
+       "code": "north-america",
+       "source": "natural-earth",
+       "facts": {}
+      }
+     ],
+     "failed": [],
+     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
+    }
+   }
+  },
+  "/api/hazards?op=nri&fips=30069": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "STCOFIPS": "30069",
+      "POPULATION": 496,
+      "RISK_SCORE": 1.304071246819339,
+      "RISK_RATNG": "Very Low",
+      "EAL_VALT": 1647225.0975035988,
+      "EAL_RATNG": "Very Low",
+      "SOVI_SCORE": 27.38549618,
+      "SOVI_RATNG": "Relatively Low",
+      "NRI_VER": "December 2025",
+      "AVLN_RISKR": "Not Applicable",
+      "CFLD_RISKR": "Not Applicable",
+      "CWAV_RISKR": "Relatively Low",
+      "DRGT_RISKR": "Very Low",
+      "ERQK_RISKR": "Very Low",
+      "HAIL_RISKR": "Very Low",
+      "HWAV_RISKR": "Very Low",
+      "HRCN_RISKR": "Not Applicable",
+      "ISTM_RISKR": "Very Low",
+      "IFLD_RISKR": "Very Low",
+      "LNDS_RISKR": "Very Low",
+      "LTNG_RISKR": "Relatively Moderate",
+      "SWND_RISKR": "Very Low",
+      "TRND_RISKR": "Very Low",
+      "TSUN_RISKR": "Not Applicable",
+      "VLCN_RISKR": "Not Applicable",
+      "WFIR_RISKR": "Relatively Low",
+      "WNTW_RISKR": "Very Low"
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-nri",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://hazards.fema.gov/nri/"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
+      "retrievedAt": "2026-10-19T02:32:04.324Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:04.324Z"
+   }
+  },
+  "/api/hazards?op=history&fips=30069&years=10&declarations=15": {
+   "status": 200,
+   "body": {
+    "data": {
+     "declarations": [
+      {
+       "disasterNumber": 4801,
+       "declarationType": "DR",
+       "declarationDate": "2024-07-18",
+       "incidentType": "Severe Storm",
+       "declarationTitle": "SEVERE WINTER STORM AND FLOODING"
+      },
+      {
+       "disasterNumber": 4745,
+       "declarationType": "DR",
+       "declarationDate": "2023-10-11",
+       "incidentType": "Flood",
+       "declarationTitle": "FLOODING"
+      },
+      {
+       "disasterNumber": 4508,
+       "declarationType": "DR",
+       "declarationDate": "2020-03-31",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19 PANDEMIC"
+      },
+      {
+       "disasterNumber": 3476,
+       "declarationType": "EM",
+       "declarationDate": "2020-03-13",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19"
+      },
+      {
+       "disasterNumber": 4388,
+       "declarationType": "DR",
+       "declarationDate": "2018-08-30",
+       "incidentType": "Flood",
+       "declarationTitle": "FLOODING"
+      },
+      {
+       "disasterNumber": 5194,
+       "declarationType": "FM",
+       "declarationDate": "2017-07-27",
+       "incidentType": "Fire",
+       "declarationTitle": "LODGEPOLE FIRE COMPLEX"
+      },
+      {
+       "disasterNumber": 4198,
+       "declarationType": "DR",
+       "declarationDate": "2014-10-09",
+       "incidentType": "Severe Storm",
+       "declarationTitle": "SEVERE STORMS, STRAIGHT-LINE WINDS, AND FLOODING"
+      },
+      {
+       "disasterNumber": 4127,
+       "declarationType": "DR",
+       "declarationDate": "2013-07-10",
+       "incidentType": "Flood",
+       "declarationTitle": "FLOODING"
+      },
+      {
+       "disasterNumber": 1996,
+       "declarationType": "DR",
+       "declarationDate": "2011-06-17",
+       "incidentType": "Severe Storm",
+       "declarationTitle": "SEVERE STORMS AND FLOODING"
+      },
+      {
+       "disasterNumber": 3253,
+       "declarationType": "EM",
+       "declarationDate": "2005-09-13",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE KATRINA EVACUATION"
+      },
+      {
+       "disasterNumber": 1340,
+       "declarationType": "DR",
+       "declarationDate": "2000-08-30",
+       "incidentType": "Fire",
+       "declarationTitle": "WILDFIRES"
+      },
+      {
+       "disasterNumber": 761,
+       "declarationType": "DR",
+       "declarationDate": "1986-03-15",
+       "incidentType": "Flood",
+       "declarationTitle": "HEAVY RAINS, LANDSLIDES & FLOODING"
+      }
+     ],
+     "declarationRows": 12,
+     "droughtNow": {
+      "mapDate": "2026-10-13",
+      "validStart": "2026-10-13",
+      "validEnd": "2026-10-19",
+      "none": 98.51,
+      "d0": 1.49,
+      "d1": 0,
+      "d2": 0,
+      "d3": 0,
+      "d4": 0
+     },
+     "missing": []
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-openfema",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      },
+      "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'30'%20and%20fipsCountyCode%20eq%20'069'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
+      "retrievedAt": "2026-10-19T02:32:04.550Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=30069&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
+      "retrievedAt": "2026-10-19T02:32:05.595Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=30069&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
+      "retrievedAt": "2026-10-19T02:32:05.489Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/MT-069/tavg/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T02:32:04.663Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/MT-069/pcp/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T02:32:04.865Z"
+     },
+     {
+      "source": {
+       "id": "noaa-spc",
+       "publisher": "NOAA National Weather Service, Storm Prediction Center",
+       "url": "https://www.spc.noaa.gov/wcm/"
+      },
+      "upstreamUrl": "https://www.spc.noaa.gov/wcm/data/1950-2025_all_tornadoes.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "usgs-landslide-susc",
+       "publisher": "U.S. Geological Survey (Belair, Jones, Martinez, Mirus and Wood)",
+       "url": "https://doi.org/10.5066/P13KAGU3"
+      },
+      "upstreamUrl": "https://www.sciencebase.gov/catalog/file/get/65ccea5bd34ef4b119cb3bac?name=county_analysis.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "ncei-storm-events",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/stormevents/"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:05.599Z"
+   }
+  },
+  "/api/live": {
+   "status": 200,
+   "body": {
+    "data": {
+     "items": [],
+     "failed": [],
+     "unmapped": 0
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     },
+     {
+      "source": {
+       "id": "usgs-earthquakes",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://earthquake.usgs.gov/"
+      },
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:49.835Z"
+   }
+  },
+  "/api/civic?op=svi&level=place&fips=30069": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "rpl": [
+       0.0013,
+       0.0255,
+       0.0045,
+       0.0016,
+       0.043
+      ]
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "cdc-svi",
+       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
+       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
+      },
+      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
+      "retrievedAt": "2026-10-19T02:32:04.123Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:04.123Z"
+   }
+  },
+  "/api/infra?op=hospitals&bbox=-108.4766,46.8919,-107.9766,47.3919": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:54:58.091Z",
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "hifld-hospitals",
+       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
+       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
+      "retrievedAt": "2026-10-19T04:54:58.091Z"
+     },
+     {
+      "source": {
+       "id": "cms-provider-data",
+       "publisher": "Centers for Medicare & Medicaid Services",
+       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+      },
+      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "data": {
+     "features": []
+    }
+   }
+  },
+  "/api/infra?op=dams&bbox=-108.4766,46.8919,-107.9766,47.3919": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:54:58.476Z",
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "usace-nid",
+       "publisher": "U.S. Army Corps of Engineers",
+       "url": "https://nid.sec.usace.army.mil/"
+      },
+      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+      "retrievedAt": "2026-10-19T04:54:58.476Z"
+     }
+    ],
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -108.43921210327649,
+         47.34800702855289
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02589",
+        "name": "Dam MT02589",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1960,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Fergus, Montana; state: Montana; dam purpose: Irrigation; dam type: Earth; hazard potential: Low; year completed: 1960"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.44351211304317,
+         47.39040703226226
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02590",
+        "name": "Dam MT02590",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1964,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Fergus, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1964"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.36291209041325,
+         47.37110703808217
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00166",
+        "name": "Dam MT00166",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1966,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Fergus, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1966"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.35361208410895,
+         47.35100703701062
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00162",
+        "name": "Dam MT00162",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1964,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Fergus, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1964"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.23821205177687,
+         47.32380704534353
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00140",
+        "name": "Dam MT00140",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1961,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1961"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.22021206112858,
+         47.389407053474834
+        ]
+       },
+       "properties": {
+        "id": "nid:MT03266",
+        "name": "Dam MT03266",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1960,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1960"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.36118204306224,
+         47.14223701585227
+        ]
+       },
+       "properties": {
+        "id": "nid:MT03993",
+        "name": "Ostleer Dam",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Not Rated",
+         "owner type": "Federal"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Ostleer Dam; county: Petroleum, Montana; state: Montana; dam purpose: Fish and Wildlife Pond; dam type: Other; hazard potential: Low; condition assessment: Not Rated"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.33901202840966,
+         47.095307013331855
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00138",
+        "name": "Dam MT00138",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1957,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Irrigation; dam type: Earth; hazard potential: Low; year completed: 1957"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.34581204044449,
+         47.146807017758015
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02720",
+        "name": "Dam MT02720",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1967,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1967"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.31071204242713,
+         47.196307025950745
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02722",
+        "name": "Dam MT02722",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1945,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1945"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.30023204317631,
+         47.211837028470356
+        ]
+       },
+       "properties": {
+        "id": "nid:MT03823",
+        "name": "Dam MT03823",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1989,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Irrigation; dam type: Earth; hazard potential: Low; year completed: 1989"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.19641196012776,
+         46.91980700937929
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00136",
+        "name": "Dam MT00136",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1958,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Irrigation; dam type: Earth; hazard potential: Low; year completed: 1958"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.08661193052208,
+         46.89870701757516
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02719",
+        "name": "Dam MT02719",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1960,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1960"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.15591198838328,
+         47.1067070317625
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02682",
+        "name": "Dam MT02682",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1949,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1949"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.08261193348932,
+         46.91820701990091
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02680",
+        "name": "Dam MT02680",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1957,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1957"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.13101198079171,
+         47.09770703322097
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02683",
+        "name": "Dam MT02683",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1969,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1969"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.04241192050623,
+         46.899807021827606
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02679",
+        "name": "Dam MT02679",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1955,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1955"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.20071196530594,
+         46.940707011057334
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02154",
+        "name": "Dam MT02154",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1944,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Irrigation; dam type: Earth; hazard potential: Low; year completed: 1944"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.19131197811835,
+         47.01530701935995
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02270",
+        "name": "Dam MT02270",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1960,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Irrigation; dam type: Earth; hazard potential: Low; year completed: 1960"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.02411191580731,
+         46.897507023311356
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02266",
+        "name": "Dam MT02266",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1960,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1960"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -107.98211192051086,
+         46.96980703449081
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02174",
+        "name": "Dam MT02174",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1963,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1963"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.01231196580378,
+         47.159707050573786
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00810",
+        "name": "Dam MT00810",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1971,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Water Supply; dam type: Earth; hazard potential: Low; year completed: 1971"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.41161208288764,
+         47.280007024558124
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02155",
+        "name": "Dam MT02155",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1964,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1964"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.39421207517147,
+         47.262007024456075
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02232",
+        "name": "Dam MT02232",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1938,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1938"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.30391206854289,
+         47.331307039823706
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02235",
+        "name": "Dam MT02235",
+        "details": {
+         "hazard potential": "Significant",
+         "year completed": 1976,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Irrigation; dam type: Earth; hazard potential: Significant; year completed: 1976"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.13173204021673,
+         47.387667061731726
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00807",
+        "name": "Drag Creek Retention Dam",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Fair",
+         "year completed": 1964,
+         "owner type": "Federal"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Drag Creek Retention Dam; county: Petroleum, Montana; state: Montana; dam purpose: Flood Risk Reduction; dam type: Gravity; hazard potential: Low; condition assessment: Fair; year completed: 1964"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.21451196364795,
+         46.91650700735019
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02153",
+        "name": "Dam MT02153",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1959,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1959"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.23591197349592,
+         46.941007007777856
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00008",
+        "name": "Petrolia",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Poor",
+         "year completed": 1951,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Petrolia; county: Petroleum, Montana; state: Montana; dam purpose: Irrigation; dam type: Earth; hazard potential: High; condition assessment: Poor; year completed: 1951"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.47121201992321,
+         46.9023069817929
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00012",
+        "name": "Yellow Water Main Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Fair",
+         "year completed": 1938,
+         "owner type": "State"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Yellow Water Main Dam; county: Petroleum, Montana; state: Montana; dam purpose: Irrigation; dam type: Rockfill; hazard potential: High; condition assessment: Fair; year completed: 1938"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.39761201139126,
+         46.94410699286405
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02269",
+        "name": "Dam MT02269",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1945,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1945"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.41401201600897,
+         46.94830699173406
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02268",
+        "name": "Dam MT02268",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1936,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1936"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.29651201661095,
+         47.085507016383986
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02253",
+        "name": "Dam MT02253",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1971,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Irrigation; dam type: Earth; hazard potential: Low; year completed: 1971"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.46329206006381,
+         47.11010700301913
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02236",
+        "name": "Little Bear/Us #37 Dam",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Poor",
+         "owner type": "Federal"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Little Bear/Us #37 Dam; county: Petroleum, Montana; state: Montana; dam purpose: Irrigation; dam type: Gravity; hazard potential: Low; condition assessment: Poor"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.35219205466875,
+         47.209307023290336
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00809",
+        "name": "South Fork Dry Blood Creek Detention Dam",
+        "details": {
+         "hazard potential": "Low",
+         "condition assessment": "Fair",
+         "year completed": 1963,
+         "owner type": "Federal"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: South Fork Dry Blood Creek Detention Dam; county: Petroleum, Montana; state: Montana; dam purpose: Flood Risk Reduction; dam type: Gravity; hazard potential: Low; condition assessment: Fair; year completed: 1963"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.33591205612446,
+         47.23480702733638
+        ]
+       },
+       "properties": {
+        "id": "nid:MT02233",
+        "name": "Dam MT02233",
+        "details": {
+         "hazard potential": "Low",
+         "year completed": 1959,
+         "owner type": "Private"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Petroleum, Montana; state: Montana; dam purpose: Fire Protection, Stock, Or Small Fish Pond; dam type: Earth; hazard potential: Low; year completed: 1959"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -108.37791206412864,
+         47.22650702253296
+        ]
+       },
+       "properties": {
+        "id": "nid:MT00808",
+        "name": "Dry Blood Creek Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Fair",
+         "year completed": 1964,
+         "owner type": "Federal"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Dry Blood Creek Dam; county: Petroleum, Montana; state: Montana; dam purpose: Flood Risk Reduction; dam type: Gravity; hazard potential: High; condition assessment: Fair; year completed: 1964"
+        }
+       }
+      }
+     ]
+    }
+   }
+  },
+  "/api/companies?op=county&fips=30069": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "pulled": null,
+    "provenance": [
+     {
+      "source": {
+       "id": "sec-edgar",
+       "publisher": "U.S. Securities and Exchange Commission",
+       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+      },
+      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
+     },
+     {
+      "source": {
+       "id": "census-zcta-county",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
+      }
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      }
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:04.225Z"
+   }
+  },
   "/api/releases?op=calendar": {
    "status": 200,
    "body": {
@@ -311,774 +1704,79 @@
     "generatedAt": "2026-10-19T02:31:47.351Z"
    }
   },
-  "/api/live": {
+  "/api/water?op=pfas&bbox=-108.24,47.14,-108.22,47.16&polygons=1": {
    "status": 200,
    "body": {
-    "data": {
-     "items": [],
-     "failed": [],
-     "unmapped": 0
-    },
+    "generatedAt": "2026-10-19T04:54:58.078Z",
     "provenance": [
      {
       "source": {
-       "id": "nws-api",
-       "publisher": "NOAA National Weather Service",
-       "url": "https://www.weather.gov/documentation/services-web-api"
+       "id": "epa-cws-boundaries",
+       "publisher": "U.S. EPA; the original data provider of each polygon (a state agency, the system, or EPA's Office of Research and Development for modelled boundaries)",
+       "url": "https://www.epa.gov/ground-water-and-drinking-water"
       },
-      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0",
+      "retrievedAt": "2026-10-19T04:54:58.078Z"
      },
      {
       "source": {
-       "id": "usgs-earthquakes",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://earthquake.usgs.gov/"
+       "id": "epa-ucmr5-pat",
+       "publisher": "U.S. EPA Office of Enforcement and Compliance Assurance (ECHO PFAS Analytic Tools); data from EPA's Office of Ground Water and Drinking Water, UCMR 5",
+       "url": "https://www.epa.gov/dwucmr/fifth-unregulated-contaminant-monitoring-rule"
       },
-      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/PFAS_Analytic_Tools_Layers/FeatureServer/1",
+      "retrievedAt": "2026-10-19T04:54:58.078Z"
      }
     ],
-    "generatedAt": "2026-10-19T02:31:49.835Z"
-   }
-  },
-  "/api/civic?op=svi&level=place&fips=30069": {
-   "status": 200,
-   "body": {
-    "data": {
-     "row": {
-      "rpl": [
-       0.0013,
-       0.0255,
-       0.0045,
-       0.0016,
-       0.043
-      ]
-     }
-    },
-    "provenance": [
+    "coverage": [
      {
-      "source": {
-       "id": "cdc-svi",
-       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
-       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
-      },
-      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
-      "retrievedAt": "2026-10-19T02:32:04.123Z"
+      "id": "service-areas",
+      "name": "EPA community water system service areas",
+      "state": "covered",
+      "count": 0
+     },
+     {
+      "id": "estimated-locations",
+      "name": "EPA UCMR 5 systems placed by estimated location",
+      "state": "covered",
+      "count": 0
+     },
+     {
+      "id": "results",
+      "name": "EPA UCMR 5 results",
+      "state": "covered",
+      "count": 0
      }
     ],
-    "generatedAt": "2026-10-19T02:32:04.123Z"
-   }
-  },
-  "/api/companies?op=county&fips=30069": {
-   "status": 200,
-   "body": {
+    "bbox": [
+     -108.24,
+     47.14,
+     -108.22,
+     47.16
+    ],
+    "polygons": true,
     "data": {
      "features": []
-    },
-    "pulled": null,
-    "provenance": [
-     {
-      "source": {
-       "id": "sec-edgar",
-       "publisher": "U.S. Securities and Exchange Commission",
-       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
-      },
-      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
-     },
-     {
-      "source": {
-       "id": "census-zcta-county",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
-      }
-     },
-     {
-      "source": {
-       "id": "census-tigerweb",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://tigerweb.geo.census.gov/"
-      }
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:04.225Z"
-   }
-  },
-  "/api/infra?op=hospitals&bbox=-108.5012,46.8678,-108.0012,47.3678": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": []
-    },
-    "truncated": false,
-    "provenance": [
-     {
-      "source": {
-       "id": "hifld-hospitals",
-       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
-       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
-      },
-      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
-      "retrievedAt": "2026-10-19T02:32:04.259Z"
-     },
-     {
-      "source": {
-       "id": "cms-provider-data",
-       "publisher": "Centers for Medicare & Medicaid Services",
-       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
-      },
-      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:04.259Z"
-   }
-  },
-  "/api/hazards?op=nri&fips=30069": {
-   "status": 200,
-   "body": {
-    "data": {
-     "row": {
-      "STCOFIPS": "30069",
-      "POPULATION": 496,
-      "RISK_SCORE": 1.304071246819339,
-      "RISK_RATNG": "Very Low",
-      "EAL_VALT": 1647225.0975035988,
-      "EAL_RATNG": "Very Low",
-      "SOVI_SCORE": 27.38549618,
-      "SOVI_RATNG": "Relatively Low",
-      "NRI_VER": "December 2025",
-      "AVLN_RISKR": "Not Applicable",
-      "CFLD_RISKR": "Not Applicable",
-      "CWAV_RISKR": "Relatively Low",
-      "DRGT_RISKR": "Very Low",
-      "ERQK_RISKR": "Very Low",
-      "HAIL_RISKR": "Very Low",
-      "HWAV_RISKR": "Very Low",
-      "HRCN_RISKR": "Not Applicable",
-      "ISTM_RISKR": "Very Low",
-      "IFLD_RISKR": "Very Low",
-      "LNDS_RISKR": "Very Low",
-      "LTNG_RISKR": "Relatively Moderate",
-      "SWND_RISKR": "Very Low",
-      "TRND_RISKR": "Very Low",
-      "TSUN_RISKR": "Not Applicable",
-      "VLCN_RISKR": "Not Applicable",
-      "WFIR_RISKR": "Relatively Low",
-      "WNTW_RISKR": "Very Low"
-     }
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "fema-nri",
-       "publisher": "Federal Emergency Management Agency",
-       "url": "https://hazards.fema.gov/nri/"
-      },
-      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
-      "retrievedAt": "2026-10-19T02:32:04.324Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:04.324Z"
-   }
-  },
-  "/api/infra?op=dams&bbox=-108.5012,46.8678,-108.0012,47.3678": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": [
-      {
-       "geometry": {
-        "coordinates": [
-         -108.49421211355376,
-         47.33630702216559
-        ]
-       },
-       "properties": {
-        "id": "nid:MT02598",
-        "name": "Dam MT02598",
-        "details": {
-         "hazard potential": "Low",
-         "year completed": 1960,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -108.43921210327649,
-         47.34800702855289
-        ]
-       },
-       "properties": {
-        "id": "nid:MT02589",
-        "name": "Dam MT02589",
-        "details": {
-         "hazard potential": "Low",
-         "year completed": 1960,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -108.35361208410895,
-         47.35100703701062
-        ]
-       },
-       "properties": {
-        "id": "nid:MT00162",
-        "name": "Dam MT00162",
-        "details": {
-         "hazard potential": "Low",
-         "year completed": 1964,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -108.23821205177687,
-         47.32380704534353
-        ]
-       },
-       "properties": {
-        "id": "nid:MT00140",
-        "name": "Dam MT00140",
-        "details": {
-         "hazard potential": "Low",
-         "year completed": 1961,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -108.36118204306224,
-         47.14223701585227
-        ]
-       },
-       "properties": {
-        "id": "nid:MT03993",
-        "name": "Ostleer Dam",
-        "details": {
-         "hazard potential": "Low",
-         "condition assessment": "Not Rated",
-         "owner type": "Federal"
-        },
-        "extra": {
-         "embedText": "name: Ostleer Dam"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -108.33901202840966,
-         47.095307013331855
-        ]
-       },
-       "properties": {
-        "id": "nid:MT00138",
-        "name": "Dam MT00138",
-        "details": {
-         "hazard potential": "Low",
-         "year completed": 1957,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -108.34581204044449,
-         47.146807017758015
-        ]
-       },
-       "properties": {
-        "id": "nid:MT02720",
-        "name": "Dam MT02720",
-        "details": {
-         "hazard potential": "Low",
-         "year completed": 1967,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -108.31071204242713,
-         47.196307025950745
-        ]
-       },
-       "properties": {
-        "id": "nid:MT02722",
-        "name": "Dam MT02722",
-        "details": {
-         "hazard potential": "Low",
-         "year completed": 1945,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -108.30023204317631,
-         47.211837028470356
-        ]
-       },
-       "properties": {
-        "id": "nid:MT03823",
-        "name": "Dam MT03823",
-        "details": {
-         "hazard potential": "Low",
-         "year completed": 1989,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -108.19641196012776,
-         46.91980700937929
-        ]
-       },
-       "properties": {
-        "id": "nid:MT00136",
-        "name": "Dam MT00136",
-        "details": {
-         "hazard potential": "Low",
-         "year completed": 1958,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -108.08661193052208,
-         46.89870701757516
-        ]
-       },
-       "properties": {
-        "id": "nid:MT02719",
-        "name": "Dam MT02719",
-        "details": {
-         "hazard potential": "Low",
-         "year completed": 1960,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -108.15591198838328,
-         47.1067070317625
-        ]
-       },
-       "properties": {
-        "id": "nid:MT02682",
-        "name": "Dam MT02682",
-        "details": {
-         "hazard potential": "Low",
-         "year completed": 1949,
-         "owner type": "Private"
-        },
-        "extra": {}
-       }
-      }
-     ]
-    },
-    "truncated": false,
-    "provenance": [
-     {
-      "source": {
-       "id": "usace-nid",
-       "publisher": "U.S. Army Corps of Engineers",
-       "url": "https://nid.sec.usace.army.mil/"
-      },
-      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
-      "retrievedAt": "2026-10-19T02:32:04.349Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:04.349Z"
-   }
-  },
-  "/api/hazards?op=history&fips=30069&years=10&declarations=15": {
-   "status": 200,
-   "body": {
-    "data": {
-     "declarations": [
-      {
-       "disasterNumber": 4801,
-       "declarationType": "DR",
-       "declarationDate": "2024-07-18",
-       "incidentType": "Severe Storm",
-       "declarationTitle": "SEVERE WINTER STORM AND FLOODING"
-      },
-      {
-       "disasterNumber": 4745,
-       "declarationType": "DR",
-       "declarationDate": "2023-10-11",
-       "incidentType": "Flood",
-       "declarationTitle": "FLOODING"
-      },
-      {
-       "disasterNumber": 4508,
-       "declarationType": "DR",
-       "declarationDate": "2020-03-31",
-       "incidentType": "Biological",
-       "declarationTitle": "COVID-19 PANDEMIC"
-      },
-      {
-       "disasterNumber": 3476,
-       "declarationType": "EM",
-       "declarationDate": "2020-03-13",
-       "incidentType": "Biological",
-       "declarationTitle": "COVID-19"
-      },
-      {
-       "disasterNumber": 4388,
-       "declarationType": "DR",
-       "declarationDate": "2018-08-30",
-       "incidentType": "Flood",
-       "declarationTitle": "FLOODING"
-      },
-      {
-       "disasterNumber": 5194,
-       "declarationType": "FM",
-       "declarationDate": "2017-07-27",
-       "incidentType": "Fire",
-       "declarationTitle": "LODGEPOLE FIRE COMPLEX"
-      },
-      {
-       "disasterNumber": 4198,
-       "declarationType": "DR",
-       "declarationDate": "2014-10-09",
-       "incidentType": "Severe Storm",
-       "declarationTitle": "SEVERE STORMS, STRAIGHT-LINE WINDS, AND FLOODING"
-      },
-      {
-       "disasterNumber": 4127,
-       "declarationType": "DR",
-       "declarationDate": "2013-07-10",
-       "incidentType": "Flood",
-       "declarationTitle": "FLOODING"
-      },
-      {
-       "disasterNumber": 1996,
-       "declarationType": "DR",
-       "declarationDate": "2011-06-17",
-       "incidentType": "Severe Storm",
-       "declarationTitle": "SEVERE STORMS AND FLOODING"
-      },
-      {
-       "disasterNumber": 3253,
-       "declarationType": "EM",
-       "declarationDate": "2005-09-13",
-       "incidentType": "Hurricane",
-       "declarationTitle": "HURRICANE KATRINA EVACUATION"
-      },
-      {
-       "disasterNumber": 1340,
-       "declarationType": "DR",
-       "declarationDate": "2000-08-30",
-       "incidentType": "Fire",
-       "declarationTitle": "WILDFIRES"
-      },
-      {
-       "disasterNumber": 761,
-       "declarationType": "DR",
-       "declarationDate": "1986-03-15",
-       "incidentType": "Flood",
-       "declarationTitle": "HEAVY RAINS, LANDSLIDES & FLOODING"
-      }
-     ],
-     "declarationRows": 12,
-     "droughtNow": {
-      "mapDate": "2026-10-13",
-      "validStart": "2026-10-13",
-      "validEnd": "2026-10-19",
-      "none": 98.51,
-      "d0": 1.49,
-      "d1": 0,
-      "d2": 0,
-      "d3": 0,
-      "d4": 0
-     },
-     "missing": []
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "fema-openfema",
-       "publisher": "Federal Emergency Management Agency",
-       "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
-      },
-      "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'30'%20and%20fipsCountyCode%20eq%20'069'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
-      "retrievedAt": "2026-10-19T02:32:04.550Z"
-     },
-     {
-      "source": {
-       "id": "usdm",
-       "publisher": "National Drought Mitigation Center, USDA, NOAA",
-       "url": "https://droughtmonitor.unl.edu/"
-      },
-      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=30069&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
-      "retrievedAt": "2026-10-19T02:32:05.595Z"
-     },
-     {
-      "source": {
-       "id": "usdm",
-       "publisher": "National Drought Mitigation Center, USDA, NOAA",
-       "url": "https://droughtmonitor.unl.edu/"
-      },
-      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=30069&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
-      "retrievedAt": "2026-10-19T02:32:05.489Z"
-     },
-     {
-      "source": {
-       "id": "noaa-cag",
-       "publisher": "NOAA National Centers for Environmental Information",
-       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
-      },
-      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/MT-069/tavg/12/12/1895-2026/data.json",
-      "retrievedAt": "2026-10-19T02:32:04.663Z"
-     },
-     {
-      "source": {
-       "id": "noaa-cag",
-       "publisher": "NOAA National Centers for Environmental Information",
-       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
-      },
-      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/MT-069/pcp/12/12/1895-2026/data.json",
-      "retrievedAt": "2026-10-19T02:32:04.865Z"
-     },
-     {
-      "source": {
-       "id": "noaa-spc",
-       "publisher": "NOAA National Weather Service, Storm Prediction Center",
-       "url": "https://www.spc.noaa.gov/wcm/"
-      },
-      "upstreamUrl": "https://www.spc.noaa.gov/wcm/data/1950-2025_all_tornadoes.csv",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
-     },
-     {
-      "source": {
-       "id": "usgs-landslide-susc",
-       "publisher": "U.S. Geological Survey (Belair, Jones, Martinez, Mirus and Wood)",
-       "url": "https://doi.org/10.5066/P13KAGU3"
-      },
-      "upstreamUrl": "https://www.sciencebase.gov/catalog/file/get/65ccea5bd34ef4b119cb3bac?name=county_analysis.csv",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
-     },
-     {
-      "source": {
-       "id": "ncei-storm-events",
-       "publisher": "NOAA National Centers for Environmental Information",
-       "url": "https://www.ncei.noaa.gov/stormevents/"
-      },
-      "upstreamUrl": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:05.599Z"
-   }
-  },
-  "/api/fabric?op=stack&lon=-108.2512&lat=47.1178": {
-   "status": 200,
-   "body": {
-    "data": {
-     "point": {
-      "elevationM": 893.4
-     },
-     "nodes": [
-      {
-       "kind": "huc12",
-       "name": "Brush Creek",
-       "code": "100402040708",
-       "source": "usgs-wbd",
-       "facts": {
-        "drains to": "100402040710"
-       }
-      },
-      {
-       "kind": "zcta",
-       "name": "59087",
-       "code": "59087",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "tract",
-       "name": "Census Tract 1",
-       "code": "30069000100",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "school",
-       "name": "Winnett K-12 Schools",
-       "code": "3028470",
-       "source": "census-tigerweb",
-       "facts": {
-        "type": "unified"
-       }
-      },
-      {
-       "kind": "county",
-       "name": "Petroleum County, MT",
-       "code": "30069",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "nws-office",
-       "name": "NWS Glasgow, MT",
-       "code": "GGW",
-       "source": "nws-api",
-       "facts": {}
-      },
-      {
-       "kind": "eco3",
-       "name": "Northwestern Great Plains",
-       "code": "43",
-       "source": "epa-ecoregions",
-       "facts": {}
-      },
-      {
-       "kind": "cd",
-       "name": "MT-02",
-       "code": "3002",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "state",
-       "name": "Montana",
-       "code": "30",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "timezone",
-       "name": "America/Denver",
-       "code": "America/Denver",
-       "source": "nws-api",
-       "facts": {}
-      },
-      {
-       "kind": "country",
-       "name": "United States",
-       "code": "USA",
-       "source": "natural-earth",
-       "facts": {}
-      }
-     ],
-     "failed": [
-      {
-       "source": "fema-nfhl",
-       "error": "This operation was aborted (not retried for 5 min)"
-      }
-     ],
-     "answered": [
-      "natural-earth",
-      "census-tigerweb",
-      "federal-regions",
-      "usgs-wbd",
-      "epa-ecoregions",
-      "nws-api",
-      "usgs-epqs",
-      "wikipedia"
-     ],
-     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "natural-earth",
-       "publisher": "Natural Earth",
-       "url": "https://www.naturalearthdata.com/"
-      },
-      "retrievedAt": "2026-10-19T02:32:10.319Z"
-     },
-     {
-      "source": {
-       "id": "census-tigerweb",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://tigerweb.geo.census.gov/"
-      },
-      "retrievedAt": "2026-10-19T02:32:10.319Z"
-     },
-     {
-      "source": {
-       "id": "federal-regions",
-       "publisher": "EPA, FEMA, Federal Reserve System",
-       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
-      },
-      "retrievedAt": "2026-10-19T02:32:10.319Z"
-     },
-     {
-      "source": {
-       "id": "usgs-wbd",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
-      },
-      "retrievedAt": "2026-10-19T02:32:10.319Z"
-     },
-     {
-      "source": {
-       "id": "epa-ecoregions",
-       "publisher": "U.S. Environmental Protection Agency",
-       "url": "https://www.epa.gov/eco-research/ecoregions"
-      },
-      "retrievedAt": "2026-10-19T02:32:10.319Z"
-     },
-     {
-      "source": {
-       "id": "nws-api",
-       "publisher": "NOAA National Weather Service",
-       "url": "https://www.weather.gov/documentation/services-web-api"
-      },
-      "retrievedAt": "2026-10-19T02:32:10.319Z"
-     },
-     {
-      "source": {
-       "id": "usgs-epqs",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://apps.nationalmap.gov/epqs/"
-      },
-      "retrievedAt": "2026-10-19T02:32:10.319Z"
-     },
-     {
-      "source": {
-       "id": "wikipedia",
-       "publisher": "Wikimedia Foundation",
-       "url": "https://en.wikipedia.org/"
-      },
-      "retrievedAt": "2026-10-19T02:32:10.319Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:10.319Z"
+    }
    }
   }
- }
+ },
+ "filled": [
+  {
+   "at": "2026-10-19T04:55:08.710Z",
+   "from": "https://www.arxiviq.com",
+   "routes": [
+    "/api/fabric?op=stack&lon=-108.2266&lat=47.1419",
+    "/api/infra?op=hospitals&bbox=-108.4766,46.8919,-107.9766,47.3919",
+    "/api/infra?op=dams&bbox=-108.4766,46.8919,-107.9766,47.3919"
+   ]
+  },
+  {
+   "at": "2026-10-19T05:09:55.169Z",
+   "from": "https://www.arxiviq.com",
+   "routes": [
+    "/api/water?op=pfas&bbox=-108.24,47.14,-108.22,47.16&polygons=1"
+   ]
+  }
+ ]
 }

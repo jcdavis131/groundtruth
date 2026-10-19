@@ -93,716 +93,280 @@
     "generatedAt": "2026-10-19T02:32:27.332Z"
    }
   },
-  "/api/releases?op=calendar": {
+  "/api/fabric?op=stack&lon=-66.0691&lat=18.4222": {
    "status": 200,
    "body": {
-    "data": {
-     "from": "2026-10-19",
-     "to": "2026-11-18",
-     "releases": [
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-10-22",
-        "latest": "2026-10-22",
-        "nominal": "2026-10-22"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-10-29",
-        "latest": "2026-10-29",
-        "nominal": "2026-10-29"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-11-05",
-        "latest": "2026-11-05",
-        "nominal": "2026-11-05"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-11-12",
-        "latest": "2026-11-12",
-        "nominal": "2026-11-12"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      }
-     ]
-    },
+    "generatedAt": "2026-10-19T04:55:14.424Z",
     "provenance": [
      {
       "source": {
-       "id": "bts-border",
-       "publisher": "U.S. Bureau of Transportation Statistics",
-       "url": "https://data.bts.gov/"
+       "id": "natural-earth",
+       "publisher": "Natural Earth",
+       "url": "https://www.naturalearthdata.com/"
       },
-      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "usgs-water",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://api.waterdata.usgs.gov/"
-      },
-      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.freddiemac.com/pmms",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "usdm",
-       "publisher": "National Drought Mitigation Center, USDA, NOAA",
-       "url": "https://droughtmonitor.unl.edu/"
-      },
-      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "bts-supply-chain",
-       "publisher": "U.S. Bureau of Transportation Statistics",
-       "url": "https://data.bts.gov/"
-      },
-      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.bea.gov/news/schedule",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "zillow-zhvi",
-       "publisher": "Zillow Research",
-       "url": "https://www.zillow.com/research/data/"
-      },
-      "upstreamUrl": "https://www.zillow.com/research/data/",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "zillow-zori",
-       "publisher": "Zillow Research",
-       "url": "https://www.zillow.com/research/data/"
-      },
-      "upstreamUrl": "https://www.zillow.com/research/data/",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:31:47.351Z"
-   }
-  },
-  "/api/live": {
-   "status": 200,
-   "body": {
-    "data": {
-     "items": [],
-     "failed": [],
-     "unmapped": 0
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "nws-api",
-       "publisher": "NOAA National Weather Service",
-       "url": "https://www.weather.gov/documentation/services-web-api"
-      },
-      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
-     },
-     {
-      "source": {
-       "id": "usgs-earthquakes",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://earthquake.usgs.gov/"
-      },
-      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:31:49.835Z"
-   }
-  },
-  "/api/companies?op=county&fips=72127": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": []
-    },
-    "pulled": null,
-    "provenance": [
-     {
-      "source": {
-       "id": "sec-edgar",
-       "publisher": "U.S. Securities and Exchange Commission",
-       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
-      },
-      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
-     },
-     {
-      "source": {
-       "id": "census-zcta-county",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
-      }
+      "retrievedAt": "2026-10-19T04:55:14.424Z"
      },
      {
       "source": {
        "id": "census-tigerweb",
        "publisher": "U.S. Census Bureau",
        "url": "https://tigerweb.geo.census.gov/"
-      }
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:27.412Z"
-   }
-  },
-  "/api/civic?op=svi&level=place&fips=72127": {
-   "status": 404,
-   "body": {
-    "error": "not in this release: CDC/ATSDR SVI 2022 has no row for FIPS 72127 (SVI US covers the states and DC)"
-   }
-  },
-  "/api/infra?op=hospitals&bbox=-66.3128,18.1432,-65.8128,18.6432": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": [
-      {
-       "geometry": {
-        "coordinates": [
-         -66.0654695300168,
-         18.4559932899785
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0004400902",
-        "name": "PRESBYTERIAN COMMUNITY HOSP",
-        "details": {
-         "type": "general acute care",
-         "owner type": "NON-PROFIT"
-        },
-        "extra": {
-         "status": "OPEN",
-         "embedText": "name: PRESBYTERIAN COMMUNITY HOSP"
-        }
-       }
       },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.0687220700475,
-         18.4118219398622
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0004500939",
-        "name": "ASOCIACION HOSPITAL DEL MAESTRO, INC",
-        "details": {
-         "type": "general acute care",
-         "owner type": "NON-PROFIT"
-        },
-        "extra": {
-         "status": "OPEN",
-         "embedText": "name: ASOCIACION HOSPITAL DEL MAESTRO, INC"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -65.8267029599347,
-         18.1507030502567
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0003900792",
-        "name": "HIMA SAN PABLO HUMACAO",
-        "details": {
-         "type": "general acute care",
-         "owner type": "PROPRIETARY"
-        },
-        "extra": {
-         "status": "OPEN",
-         "embedText": "name: HIMA SAN PABLO HUMACAO"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.0737156502016,
-         18.4460195199515
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0006800910",
-        "name": "DOCTOR'S CENTER DE SAN JUAN",
-        "details": {
-         "type": "general acute care",
-         "owner type": "PROPRIETARY"
-        },
-        "extra": {
-         "status": "OPEN",
-         "embedText": "name: DOCTOR'S CENTER DE SAN JUAN"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -65.835080020352,
-         18.1560003003509
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0004100791",
-        "name": "RYDER MEMORIAL HOSPITAL INC",
-        "details": {
-         "type": "general acute care",
-         "owner type": "PROPRIETARY"
-        },
-        "extra": {
-         "status": "OPEN",
-         "cms": {
-          "ccn": "400007",
-          "rating": null
-         },
-         "embedText": "name: RYDER MEMORIAL HOSPITAL INC"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -65.8340325703576,
-         18.1527464299304
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0004000791",
-        "name": "HOSPITAL MENONITA HUMACAO, INC",
-        "details": {
-         "type": "general acute care",
-         "owner type": "PROPRIETARY"
-        },
-        "extra": {
-         "status": "OPEN",
-         "cms": {
-          "ccn": "400011",
-          "rating": null
-         },
-         "embedText": "name: HOSPITAL MENONITA HUMACAO, INC"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.0725339802258,
-         18.3963367302522
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0005700919",
-        "name": "HOSPITAL ONCOLOGICO DR ISAAC GONZALEZ MARTINEZ",
-        "details": {
-         "type": "general acute care",
-         "owner type": "PROPRIETARY"
-        },
-        "extra": {
-         "status": "OPEN",
-         "embedText": "name: HOSPITAL ONCOLOGICO DR ISAAC GONZALEZ MARTINEZ"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.1634489002266,
-         18.3968147599682
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0007100960",
-        "name": "BELLA VISTA HOSPITAL",
-        "details": {
-         "type": "general acute care",
-         "owner type": "NON-PROFIT"
-        },
-        "extra": {
-         "status": "OPEN",
-         "cms": {
-          "ccn": "400014",
-          "rating": null
-         },
-         "embedText": "name: BELLA VISTA HOSPITAL"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.0746524304479,
-         18.3950354802748
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0006100936",
-        "name": "SAN JUAN MUNICIPAL HOSPITAL",
-        "details": {
-         "type": "general acute care",
-         "owner type": "NON-PROFIT"
-        },
-        "extra": {
-         "status": "OPEN",
-         "embedText": "name: SAN JUAN MUNICIPAL HOSPITAL"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.0510959599564,
-         18.4098626696379
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0006000919",
-        "name": "AUXILIO MUTUO HOSPITAL",
-        "details": {
-         "type": "general acute care",
-         "owner type": "PROPRIETARY"
-        },
-        "extra": {
-         "status": "OPEN",
-         "embedText": "name: AUXILIO MUTUO HOSPITAL"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.2617073698086,
-         18.1437944600612
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0003400705",
-        "name": "MENNONITE GENERAL HOSPITAL INC",
-        "details": {
-         "type": "general acute care",
-         "owner type": "PROPRIETARY"
-        },
-        "extra": {
-         "status": "OPEN",
-         "cms": {
-          "ccn": "400018",
-          "rating": null
-         },
-         "embedText": "name: MENNONITE GENERAL HOSPITAL INC"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.069560589873,
-         18.4446548702907
-        ]
-       },
-       "properties": {
-        "id": "hifld-hosp:0004800909",
-        "name": "HOSPITAL PAVIA SANTURCE",
-        "details": {
-         "type": "general acute care",
-         "owner type": "PROPRIETARY"
-        },
-        "extra": {
-         "status": "OPEN",
-         "embedText": "name: HOSPITAL PAVIA SANTURCE"
-        }
-       }
-      }
-     ]
-    },
-    "truncated": false,
-    "provenance": [
-     {
-      "source": {
-       "id": "hifld-hospitals",
-       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
-       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
-      },
-      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
-      "retrievedAt": "2026-10-19T02:32:27.529Z"
+      "retrievedAt": "2026-10-19T04:55:14.424Z"
      },
      {
       "source": {
-       "id": "cms-provider-data",
-       "publisher": "Centers for Medicare & Medicaid Services",
-       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+       "id": "federal-regions",
+       "publisher": "EPA, FEMA, Federal Reserve System",
+       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
       },
-      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:27.529Z"
-   }
-  },
-  "/api/infra?op=dams&bbox=-66.3128,18.1432,-65.8128,18.6432": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": [
-      {
-       "geometry": {
-        "coordinates": [
-         -66.23590861618784,
-         18.34352507543894
-        ]
-       },
-       "properties": {
-        "id": "nid:PR00017",
-        "name": "La Plata Dam",
-        "details": {
-         "hazard potential": "High",
-         "condition assessment": "Satisfactory",
-         "year completed": 1974,
-         "owner type": "Public Utility"
-        },
-        "extra": {
-         "embedText": "name: La Plata Dam"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.20550120543547,
-         18.267543953536077
-        ]
-       },
-       "properties": {
-        "id": "nid:PR00019",
-        "name": "Comerio I Dam",
-        "details": {
-         "hazard potential": "High",
-         "condition assessment": "Poor",
-         "year completed": 1907,
-         "owner type": "Local Government"
-        },
-        "extra": {
-         "embedText": "name: Comerio I Dam"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.20637940560128,
-         18.26150075174028
-        ]
-       },
-       "properties": {
-        "id": "nid:PR00018",
-        "name": "Comerio Ii Dam",
-        "details": {
-         "hazard potential": "High",
-         "condition assessment": "Poor",
-         "year completed": 1913,
-         "owner type": "Local Government"
-        },
-        "extra": {
-         "embedText": "name: Comerio Ii Dam"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.14058488409168,
-         18.197114933804585
-        ]
-       },
-       "properties": {
-        "id": "nid:PR00020",
-        "name": "Cidra Dam",
-        "details": {
-         "hazard potential": "High",
-         "condition assessment": "Satisfactory",
-         "year completed": 1946,
-         "owner type": "Public Utility"
-        },
-        "extra": {
-         "embedText": "name: Cidra Dam"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.05066925880372,
-         18.342511578121652
-        ]
-       },
-       "properties": {
-        "id": "nid:PR00022",
-        "name": "Las Curias Dam",
-        "details": {
-         "hazard potential": "High",
-         "condition assessment": "Satisfactory",
-         "year completed": 1946,
-         "owner type": "Public Utility"
-        },
-        "extra": {
-         "embedText": "name: Las Curias Dam"
-        }
-       }
-      },
-      {
-       "geometry": {
-        "coordinates": [
-         -66.01583754775812,
-         18.32800927441078
-        ]
-       },
-       "properties": {
-        "id": "nid:PR00024",
-        "name": "Loiza Dam",
-        "details": {
-         "hazard potential": "High",
-         "condition assessment": "Satisfactory",
-         "year completed": 1954,
-         "owner type": "Public Utility"
-        },
-        "extra": {
-         "embedText": "name: Loiza Dam"
-        }
-       }
-      }
-     ]
-    },
-    "truncated": false,
-    "provenance": [
+      "retrievedAt": "2026-10-19T04:55:14.424Z"
+     },
      {
       "source": {
-       "id": "usace-nid",
-       "publisher": "U.S. Army Corps of Engineers",
-       "url": "https://nid.sec.usace.army.mil/"
+       "id": "usgs-wbd",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
       },
-      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
-      "retrievedAt": "2026-10-19T02:32:27.633Z"
+      "retrievedAt": "2026-10-19T04:55:14.424Z"
+     },
+     {
+      "source": {
+       "id": "epa-ecoregions",
+       "publisher": "U.S. Environmental Protection Agency",
+       "url": "https://www.epa.gov/eco-research/ecoregions"
+      },
+      "retrievedAt": "2026-10-19T04:55:14.424Z"
+     },
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "retrievedAt": "2026-10-19T04:55:14.424Z"
+     },
+     {
+      "source": {
+       "id": "usgs-epqs",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://apps.nationalmap.gov/epqs/"
+      },
+      "retrievedAt": "2026-10-19T04:55:14.424Z"
+     },
+     {
+      "source": {
+       "id": "wikipedia",
+       "publisher": "Wikimedia Foundation",
+       "url": "https://en.wikipedia.org/"
+      },
+      "retrievedAt": "2026-10-19T04:55:14.424Z"
      }
     ],
-    "generatedAt": "2026-10-19T02:32:27.633Z"
+    "data": {
+     "point": {
+      "lon": -66.069,
+      "lat": 18.422,
+      "elevationM": 3.7
+     },
+     "nodes": [
+      {
+       "kind": "tract",
+       "name": "Census Tract 105",
+       "code": "72127010500",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "zcta",
+       "name": "00918",
+       "code": "00918",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "sldl",
+       "name": "Puerto Rico State House District 2",
+       "code": "72002",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "cdp",
+       "name": "San Juan zona urbana",
+       "code": "7276770",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "county",
+       "name": "San Juan Municipio, PR",
+       "code": "72127",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc12",
+       "name": "Laguna San Jose-Frontal Atlantic Ocean",
+       "code": "210100050501",
+       "source": "usgs-wbd",
+       "facts": {
+        "drains to": "210100050800"
+       }
+      },
+      {
+       "kind": "huc10",
+       "name": "Laguna San Jose-Frontal Atlantic Ocean",
+       "code": "2101000505",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "sldu",
+       "name": "Puerto Rico State Senate District 1",
+       "code": "72001",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "urban",
+       "name": "San Juan, PR Urban Area",
+       "code": "79093",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "nws-zone",
+       "name": "San Juan and Vicinity (PRZ001)",
+       "code": "PRZ001",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "huc8",
+       "name": "Eastern Puerto Rico",
+       "code": "21010005",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "cbsa",
+       "name": "San Juan-Bayamón-Caguas, PR Metro Area",
+       "code": "41980",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "metropolitan"
+       }
+      },
+      {
+       "kind": "csa",
+       "name": "San Juan-Bayamón, PR CSA",
+       "code": "490",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "school",
+       "name": "Puerto Rico Department of Education",
+       "code": "7200030",
+       "source": "census-tigerweb",
+       "facts": {
+        "type": "unified"
+       }
+      },
+      {
+       "kind": "cd",
+       "name": "PR-Resident Commissioner District (at Large)",
+       "code": "7298",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "state",
+       "name": "Puerto Rico",
+       "code": "72",
+       "source": "census-tigerweb",
+       "facts": {}
+      },
+      {
+       "kind": "huc6",
+       "name": "Puerto Rico",
+       "code": "210100",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "huc4",
+       "name": "Puerto Rico",
+       "code": "2101",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "huc2",
+       "name": "Caribbean Region",
+       "code": "21",
+       "source": "usgs-wbd",
+       "facts": {}
+      },
+      {
+       "kind": "nws-office",
+       "name": "NWS San Juan, PR",
+       "code": "SJU",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "epa-region",
+       "name": "EPA Region 2 (New York)",
+       "code": "2",
+       "source": "federal-regions",
+       "facts": {}
+      },
+      {
+       "kind": "fema-region",
+       "name": "FEMA Region II (New York)",
+       "code": "2",
+       "source": "federal-regions",
+       "facts": {}
+      },
+      {
+       "kind": "fed-district",
+       "name": "Fed district 2 (New York)",
+       "code": "2",
+       "source": "federal-regions",
+       "facts": {}
+      },
+      {
+       "kind": "timezone",
+       "name": "America/Puerto Rico",
+       "code": "America/Puerto_Rico",
+       "source": "nws-api",
+       "facts": {}
+      },
+      {
+       "kind": "country",
+       "name": "Puerto Rico",
+       "code": "PRI",
+       "source": "natural-earth",
+       "facts": {}
+      },
+      {
+       "kind": "continent",
+       "name": "North America",
+       "code": "north-america",
+       "source": "natural-earth",
+       "facts": {}
+      }
+     ],
+     "failed": [
+      {
+       "source": "fema-nfhl",
+       "error": "This operation was aborted (not retried for 5 min)"
+      }
+     ],
+     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
+    }
    }
   },
   "/api/hazards?op=nri&fips=72127": {
@@ -1046,184 +610,3096 @@
     "generatedAt": "2026-10-19T02:32:28.844Z"
    }
   },
-  "/api/fabric?op=stack&lon=-66.0628&lat=18.3932": {
+  "/api/live": {
    "status": 200,
    "body": {
     "data": {
-     "point": {
-      "elevationM": 16
-     },
-     "nodes": [
-      {
-       "kind": "tract",
-       "name": "Census Tract 9800",
-       "code": "72127980000",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "zcta",
-       "name": "00927",
-       "code": "00927",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "huc12",
-       "name": "Rio Puerto Nuevo",
-       "code": "210100050502",
-       "source": "usgs-wbd",
-       "facts": {
-        "drains to": "210100050800"
-       }
-      },
-      {
-       "kind": "county",
-       "name": "San Juan Municipio, PR",
-       "code": "72127",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "cbsa",
-       "name": "San Juan-Bayamón-Caguas, PR Metro Area",
-       "code": "41980",
-       "source": "census-tigerweb",
-       "facts": {
-        "type": "metropolitan"
-       }
-      },
-      {
-       "kind": "school",
-       "name": "Puerto Rico Department of Education",
-       "code": "7200030",
-       "source": "census-tigerweb",
-       "facts": {
-        "type": "unified"
-       }
-      },
-      {
-       "kind": "cd",
-       "name": "PR-Resident Commissioner District (at Large)",
-       "code": "7298",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "state",
-       "name": "Puerto Rico",
-       "code": "72",
-       "source": "census-tigerweb",
-       "facts": {}
-      },
-      {
-       "kind": "nws-office",
-       "name": "NWS San Juan, PR",
-       "code": "SJU",
-       "source": "nws-api",
-       "facts": {}
-      },
-      {
-       "kind": "timezone",
-       "name": "America/Puerto Rico",
-       "code": "America/Puerto_Rico",
-       "source": "nws-api",
-       "facts": {}
-      },
-      {
-       "kind": "country",
-       "name": "Puerto Rico",
-       "code": "PRI",
-       "source": "natural-earth",
-       "facts": {}
-      }
-     ],
-     "failed": [
-      {
-       "source": "fema-nfhl",
-       "error": "This operation was aborted (not retried for 5 min)"
-      }
-     ],
-     "answered": [
-      "natural-earth",
-      "census-tigerweb",
-      "federal-regions",
-      "usgs-wbd",
-      "epa-ecoregions",
-      "nws-api",
-      "usgs-epqs",
-      "wikipedia"
-     ],
-     "coverage": "United States: Census, USGS, EPA, FEMA and NWS constructs, plus the country."
+     "items": [],
+     "failed": [],
+     "unmapped": 0
     },
     "provenance": [
-     {
-      "source": {
-       "id": "natural-earth",
-       "publisher": "Natural Earth",
-       "url": "https://www.naturalearthdata.com/"
-      },
-      "retrievedAt": "2026-10-19T02:32:30.079Z"
-     },
-     {
-      "source": {
-       "id": "census-tigerweb",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://tigerweb.geo.census.gov/"
-      },
-      "retrievedAt": "2026-10-19T02:32:30.079Z"
-     },
-     {
-      "source": {
-       "id": "federal-regions",
-       "publisher": "EPA, FEMA, Federal Reserve System",
-       "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
-      },
-      "retrievedAt": "2026-10-19T02:32:30.079Z"
-     },
-     {
-      "source": {
-       "id": "usgs-wbd",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
-      },
-      "retrievedAt": "2026-10-19T02:32:30.079Z"
-     },
-     {
-      "source": {
-       "id": "epa-ecoregions",
-       "publisher": "U.S. Environmental Protection Agency",
-       "url": "https://www.epa.gov/eco-research/ecoregions"
-      },
-      "retrievedAt": "2026-10-19T02:32:30.079Z"
-     },
      {
       "source": {
        "id": "nws-api",
        "publisher": "NOAA National Weather Service",
        "url": "https://www.weather.gov/documentation/services-web-api"
       },
-      "retrievedAt": "2026-10-19T02:32:30.079Z"
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
      },
      {
       "source": {
-       "id": "usgs-epqs",
+       "id": "usgs-earthquakes",
        "publisher": "U.S. Geological Survey",
-       "url": "https://apps.nationalmap.gov/epqs/"
+       "url": "https://earthquake.usgs.gov/"
       },
-      "retrievedAt": "2026-10-19T02:32:30.079Z"
-     },
-     {
-      "source": {
-       "id": "wikipedia",
-       "publisher": "Wikimedia Foundation",
-       "url": "https://en.wikipedia.org/"
-      },
-      "retrievedAt": "2026-10-19T02:32:30.079Z"
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
      }
     ],
-    "generatedAt": "2026-10-19T02:32:30.079Z"
+    "generatedAt": "2026-10-19T02:31:49.835Z"
+   }
+  },
+  "/api/civic?op=svi&level=place&fips=72127": {
+   "status": 404,
+   "body": {
+    "error": "not in this release: CDC/ATSDR SVI 2022 has no row for FIPS 72127 (SVI US covers the states and DC)"
+   }
+  },
+  "/api/infra?op=hospitals&bbox=-66.3191,18.1722,-65.8191,18.6722": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:55:11.802Z",
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "hifld-hospitals",
+       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
+       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
+      "retrievedAt": "2026-10-19T04:55:11.802Z"
+     },
+     {
+      "source": {
+       "id": "cms-provider-data",
+       "publisher": "Centers for Medicare & Medicaid Services",
+       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+      },
+      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0654695300168,
+         18.4559932899785
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0004400902",
+        "name": "PRESBYTERIAN COMMUNITY HOSP",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: PRESBYTERIAN COMMUNITY HOSP; city: SAN JUAN; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0687220700475,
+         18.4118219398622
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0004500939",
+        "name": "ASOCIACION HOSPITAL DEL MAESTRO, INC",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: ASOCIACION HOSPITAL DEL MAESTRO, INC; city: SAN JUAN; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0737156502016,
+         18.4460195199515
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0006800910",
+        "name": "DOCTOR'S CENTER DE SAN JUAN",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: DOCTOR'S CENTER DE SAN JUAN; city: FERNANDEZ JUNCOS; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0725339802258,
+         18.3963367302522
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0005700919",
+        "name": "HOSPITAL ONCOLOGICO DR ISAAC GONZALEZ MARTINEZ",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSPITAL ONCOLOGICO DR ISAAC GONZALEZ MARTINEZ; city: SAN JUAN; state: PR; hospital type: GENERAL ACUTE CARE; helipad: yes"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.1634489002266,
+         18.3968147599682
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0007100960",
+        "name": "BELLA VISTA HOSPITAL",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "400014",
+          "rating": null,
+          "ratingFootnote": "16",
+          "cmsType": "Acute Care Hospitals",
+          "ownership": "Voluntary non-profit - Church",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: BELLA VISTA HOSPITAL; city: MAYAGUEZ; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0746524304479,
+         18.3950354802748
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0006100936",
+        "name": "SAN JUAN MUNICIPAL HOSPITAL",
+        "details": {
+         "type": "general acute care",
+         "owner type": "NON-PROFIT"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: SAN JUAN MUNICIPAL HOSPITAL; city: RIO PIEDRAS; state: PR; hospital type: GENERAL ACUTE CARE; helipad: yes"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0510959599564,
+         18.4098626696379
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0006000919",
+        "name": "AUXILIO MUTUO HOSPITAL",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: AUXILIO MUTUO HOSPITAL; city: HATO REY; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.069560589873,
+         18.4446548702907
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0004800909",
+        "name": "HOSPITAL PAVIA SANTURCE",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSPITAL PAVIA SANTURCE; city: FERNANDEZ JUNCOS; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.1627065100179,
+         18.3969575301731
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003000960",
+        "name": "BAYAMON MEDICAL CENTER",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: BAYAMON MEDICAL CENTER; city: BAYAMON; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0730416801766,
+         18.397719850366
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0196784791",
+        "name": "HOSPITAL UNIVERSITARIO DE ADULTO",
+        "details": {
+         "type": "general acute care",
+         "owner type": "GOVERNMENT - STATE"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "400061",
+          "rating": null,
+          "ratingFootnote": "16",
+          "cmsType": "Acute Care Hospitals",
+          "ownership": "Government - State",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSPITAL UNIVERSITARIO DE ADULTO; city: RIO PIEDRAS; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0390982999736,
+         18.3987659700871
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0005300929",
+        "name": "HOSPITAL SAN FRANCISCO",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "400098",
+          "rating": null,
+          "ratingFootnote": "16",
+          "cmsType": "Acute Care Hospitals",
+          "ownership": "Proprietary",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSPITAL SAN FRANCISCO; city: SAN JUAN; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.1663510595672,
+         18.3979957800551
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003100674",
+        "name": "DOCTORS' CENTER BAYAMON",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: DOCTORS' CENTER BAYAMON; city: BAYAMON; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0498902097411,
+         18.2207161097153
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003600726",
+        "name": "HOSPITAL MENONITA CAGUAS INC",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSPITAL MENONITA CAGUAS INC; city: CAGUAS; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.1536744403162,
+         18.3676591503843
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003200956",
+        "name": "HOSPITAL REGIONAL BAYAMON",
+        "details": {
+         "type": "general acute care",
+         "owner type": "GOVERNMENT - STATE"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSPITAL REGIONAL BAYAMON; city: BAYAMON; state: PR; hospital type: GENERAL ACUTE CARE; helipad: yes"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0982615098757,
+         18.3899033500976
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0005600922",
+        "name": "METROPOLITAN HOSPITAL",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "400106",
+          "rating": null,
+          "ratingFootnote": "16",
+          "cmsType": "Acute Care Hospitals",
+          "ownership": "Proprietary",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: METROPOLITAN HOSPITAL; city: SAN JUAN; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.1475230602199,
+         18.3974253796277
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0002900960",
+        "name": "HIMA SAN PABLO BAYAMON",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HIMA SAN PABLO BAYAMON; city: BAYAMON; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -65.9718986699116,
+         18.3884716996742
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0004200984",
+        "name": "HOSPITAL UPR, DR FEDERICO TRILLA",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "400112",
+          "rating": null,
+          "ratingFootnote": "16",
+          "cmsType": "Acute Care Hospitals",
+          "ownership": "Voluntary non-profit - Private",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSPITAL UPR, DR FEDERICO TRILLA; city: CAROLINA; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.031945869664,
+         18.2179394103761
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003500726",
+        "name": "HIMA SAN PABLO - CAGUAS",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HIMA SAN PABLO - CAGUAS; city: CAGUAS; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0976403598911,
+         18.3624311603132
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0007300970",
+        "name": "PROFESSIONAL HOSPITAL GUAYNABO INC",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: PROFESSIONAL HOSPITAL GUAYNABO INC; city: GUAYNABO; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0728407899296,
+         18.3955074001022
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0004300922",
+        "name": "ADMIN DE SERVICIOS MEDICOS PUERTO RIC",
+        "details": {
+         "type": "general acute care",
+         "owner type": "GOVERNMENT - LOCAL"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: ADMIN DE SERVICIOS MEDICOS PUERTO RIC; city: SAN JUAN; state: PR; hospital type: GENERAL ACUTE CARE; helipad: yes"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0559758996339,
+         18.4194128702454
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0004900919",
+        "name": "HOSPITAL PAVIA HATO REY, INC",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "400128",
+          "rating": null,
+          "ratingFootnote": "16",
+          "cmsType": "Acute Care Hospitals",
+          "ownership": "Proprietary",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSPITAL PAVIA HATO REY, INC; city: HATO REY; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -65.9557900002867,
+         18.3804430002527
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0196500984",
+        "name": "DOCTOR CENTER HOSPITAL SAN FERNANDO DE LA CAROLINA",
+        "details": {
+         "type": "general acute care",
+         "owner type": "GOVERNMENT - STATE"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: DOCTOR CENTER HOSPITAL SAN FERNANDO DE LA CAROLINA; city: CAROLINA; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0462254301316,
+         18.3725923504102
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0005400926",
+        "name": "HIMA SAN PABLO CUPEY",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HIMA SAN PABLO CUPEY; city: SAN JUAN; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0629360204041,
+         18.4471351000916
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0005000914",
+        "name": "SAN JORGE CHILDRENS HOSPITAL INC",
+        "details": {
+         "type": "children",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "400134",
+          "rating": null,
+          "ratingFootnote": "16",
+          "cmsType": "Acute Care Hospitals",
+          "ownership": "Proprietary",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: SAN JORGE CHILDRENS HOSPITAL INC; city: SAN JUAN; state: PR; hospital type: CHILDREN; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0731319500829,
+         18.3945986002978
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0004700936",
+        "name": "UNIVERSITY PEDIATRIC HOSPITAL",
+        "details": {
+         "type": "children",
+         "owner type": "GOVERNMENT - STATE"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "403301",
+          "rating": null,
+          "ratingFootnote": "19",
+          "cmsType": "Childrens",
+          "ownership": "Government - State",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: UNIVERSITY PEDIATRIC HOSPITAL; city: SAN JUAN; state: PR; hospital type: CHILDREN; helipad: yes"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.1614012300623,
+         18.176038959746
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0003800739",
+        "name": "FIRST HOSPITAL PANAMERICANO",
+        "details": {
+         "type": "psychiatric",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: FIRST HOSPITAL PANAMERICANO; city: CIDRA; state: PR; hospital type: PSYCHIATRIC; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0223613504356,
+         18.3845888602325
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0005800926",
+        "name": "SAN JUAN CAPESTRANO HOSPITAL INC",
+        "details": {
+         "type": "psychiatric",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: SAN JUAN CAPESTRANO HOSPITAL INC; city: RIO PIEDRAS; state: PR; hospital type: PSYCHIATRIC; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0793354800764,
+         18.3903941398963
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0013700921",
+        "name": "SAN JUAN VA MEDICAL CENTER",
+        "details": {
+         "type": "military",
+         "owner type": "GOVERNMENT - FEDERAL"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "40003F",
+          "rating": 2,
+          "ratingFootnote": null,
+          "cmsType": "Acute Care - Veterans Administration",
+          "ownership": "Veterans Health Administration",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: SAN JUAN VA MEDICAL CENTER; city: SAN JUAN; state: PR; hospital type: MILITARY; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.1542977399694,
+         18.3675336302929
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0196600956",
+        "name": "HOSPITAL PSIQUIATRICO DE NINOS Y ADOLESCENTES",
+        "details": {
+         "type": "psychiatric",
+         "owner type": "not published"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSPITAL PSIQUIATRICO DE NINOS Y ADOLESCENTES; city: BAYAMON; state: PR; hospital type: PSYCHIATRIC; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0761875497589,
+         18.3909331403048
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0006900928",
+        "name": "HOSP PSIQUIATRIA FORENSE DE RIO PIEDRAS",
+        "details": {
+         "type": "general acute care",
+         "owner type": "not published"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSP PSIQUIATRIA FORENSE DE RIO PIEDRAS; city: SANTURCE; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.1480918599831,
+         18.4177064300147
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0007200960",
+        "name": "CENTRO MEDICO CORRECIONAL",
+        "details": {
+         "type": "general acute care",
+         "owner type": "GOVERNMENT - STATE"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: CENTRO MEDICO CORRECIONAL; city: BAYAMON; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.073450869975,
+         18.3968188702679
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0006200936",
+        "name": "ENCOMPASS HEALTH REHABILITATION OF PR",
+        "details": {
+         "type": "general acute care",
+         "owner type": "not published"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: ENCOMPASS HEALTH REHABILITATION OF PR; city: MONACILLO URBANO; state: PR; hospital type: GENERAL ACUTE CARE; helipad: yes"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0724496400987,
+         18.3919329503739
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0006300936",
+        "name": "HOSP PSIQUIATRICO CORRECCIONAL",
+        "details": {
+         "type": "psychiatric",
+         "owner type": "not published"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSP PSIQUIATRICO CORRECCIONAL; city: MONACILLO URBANO; state: PR; hospital type: PSYCHIATRIC; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0723078203699,
+         18.39721599022
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0005100919",
+        "name": "HOSP PEDIATRICO UNIVERSITARIO DR ANTONIO ORTIZ",
+        "details": {
+         "type": "children",
+         "owner type": "not published"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSP PEDIATRICO UNIVERSITARIO DR ANTONIO ORTIZ; city: MONACILLO URBANO; state: PR; hospital type: CHILDREN; helipad: yes"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.075878269688,
+         18.3905246701686
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0005200922",
+        "name": "HOSP PSIQUIATRICO DR RAMON FERNANDEZ MARINA",
+        "details": {
+         "type": "psychiatric",
+         "owner type": "not published"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSP PSIQUIATRICO DR RAMON FERNANDEZ MARINA; city: MONACILLO URBANO; state: PR; hospital type: PSYCHIATRIC; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.1539832361952,
+         18.3676093742606
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0196785015",
+        "name": "HOSPITAL UNIVERSITARIO DR RUIZ ARNAU",
+        "details": {
+         "type": "general acute care",
+         "owner type": "GOVERNMENT - STATE"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "400105",
+          "rating": null,
+          "ratingFootnote": "16",
+          "cmsType": "Acute Care Hospitals",
+          "ownership": "Government - State",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: HOSPITAL UNIVERSITARIO DR RUIZ ARNAU; city: BAYAMON; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.2902697004243,
+         18.4558957000842
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0196785018",
+        "name": "DOCTORS CENTER HOSPITAL ORLANDO HEALTH DORADO",
+        "details": {
+         "type": "general acute care",
+         "owner type": "PROPRIETARY"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": null,
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: DOCTORS CENTER HOSPITAL ORLANDO HEALTH DORADO; city: DORADO; state: PR; hospital type: GENERAL ACUTE CARE; helipad: no"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.0734658942982,
+         18.3958140849005
+        ]
+       },
+       "properties": {
+        "id": "hifld-hosp:0196785546",
+        "name": "ASEM",
+        "details": {
+         "type": "general acute care",
+         "owner type": "GOVERNMENT - STATE"
+        },
+        "extra": {
+         "status": "OPEN",
+         "cms": {
+          "ccn": "400127",
+          "rating": null,
+          "ratingFootnote": "16",
+          "cmsType": "Acute Care Hospitals",
+          "ownership": "Government - State",
+          "emergency": "Yes",
+          "birthingFriendly": null
+         },
+         "embedText": "collection: Hospitals (HIFLD); agency: Homeland Infrastructure Foundation-Level Data, FEMA; name: ASEM; city: SAN JUAN; state: PR; hospital type: GENERAL ACUTE CARE"
+        }
+       }
+      }
+     ]
+    }
+   }
+  },
+  "/api/infra?op=dams&bbox=-66.3191,18.1722,-65.8191,18.6722": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:55:11.954Z",
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "usace-nid",
+       "publisher": "U.S. Army Corps of Engineers",
+       "url": "https://nid.sec.usace.army.mil/"
+      },
+      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+      "retrievedAt": "2026-10-19T04:55:11.954Z"
+     }
+    ],
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "coordinates": [
+         -66.23590861618784,
+         18.34352507543894
+        ]
+       },
+       "properties": {
+        "id": "nid:PR00017",
+        "name": "La Plata Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Satisfactory",
+         "year completed": 1974,
+         "owner type": "Public Utility"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: La Plata Dam; county: Toa Alta, Puerto Rico; state: Puerto Rico; dam purpose: Water Supply; dam type: Gravity; hazard potential: High; condition assessment: Satisfactory; year completed: 1974"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.20550120543547,
+         18.267543953536077
+        ]
+       },
+       "properties": {
+        "id": "nid:PR00019",
+        "name": "Comerio I Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Poor",
+         "year completed": 1907,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Comerio I Dam; county: Comerío, Puerto Rico; state: Puerto Rico; dam purpose: Hydroelectric; dam type: Gravity; hazard potential: High; condition assessment: Poor; year completed: 1907"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.20637940560128,
+         18.26150075174028
+        ]
+       },
+       "properties": {
+        "id": "nid:PR00018",
+        "name": "Comerio Ii Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Poor",
+         "year completed": 1913,
+         "owner type": "Local Government"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Comerio Ii Dam; county: Comerío, Puerto Rico; state: Puerto Rico; dam purpose: Hydroelectric; dam type: Buttress; hazard potential: High; condition assessment: Poor; year completed: 1913"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.14058488409168,
+         18.197114933804585
+        ]
+       },
+       "properties": {
+        "id": "nid:PR00020",
+        "name": "Cidra Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Satisfactory",
+         "year completed": 1946,
+         "owner type": "Public Utility"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Cidra Dam; county: Cidra, Puerto Rico; state: Puerto Rico; dam purpose: Water Supply; dam type: Gravity; hazard potential: High; condition assessment: Satisfactory; year completed: 1946"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.05066925880372,
+         18.342511578121652
+        ]
+       },
+       "properties": {
+        "id": "nid:PR00022",
+        "name": "Las Curias Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Satisfactory",
+         "year completed": 1946,
+         "owner type": "Public Utility"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Las Curias Dam; county: San Juan, Puerto Rico; state: Puerto Rico; dam purpose: Recreation; dam type: Earth; hazard potential: High; condition assessment: Satisfactory; year completed: 1946"
+        }
+       }
+      },
+      {
+       "geometry": {
+        "coordinates": [
+         -66.01583754775812,
+         18.32800927441078
+        ]
+       },
+       "properties": {
+        "id": "nid:PR00024",
+        "name": "Loiza Dam",
+        "details": {
+         "hazard potential": "High",
+         "condition assessment": "Satisfactory",
+         "year completed": 1954,
+         "owner type": "Public Utility"
+        },
+        "extra": {
+         "embedText": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; name: Loiza Dam; county: Trujillo Alto, Puerto Rico; state: Puerto Rico; dam purpose: Hydroelectric; dam type: Gravity; hazard potential: High; condition assessment: Satisfactory; year completed: 1954"
+        }
+       }
+      }
+     ]
+    }
+   }
+  },
+  "/api/companies?op=county&fips=72127": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "pulled": null,
+    "provenance": [
+     {
+      "source": {
+       "id": "sec-edgar",
+       "publisher": "U.S. Securities and Exchange Commission",
+       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+      },
+      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
+     },
+     {
+      "source": {
+       "id": "census-zcta-county",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
+      }
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      }
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:27.412Z"
+   }
+  },
+  "/api/releases?op=calendar": {
+   "status": 200,
+   "body": {
+    "data": {
+     "from": "2026-10-19",
+     "to": "2026-11-18",
+     "releases": [
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-22",
+        "latest": "2026-10-22",
+        "nominal": "2026-10-22"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-29",
+        "latest": "2026-10-29",
+        "nominal": "2026-10-29"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-05",
+        "latest": "2026-11-05",
+        "nominal": "2026-11-05"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-12",
+        "latest": "2026-11-12",
+        "nominal": "2026-11-12"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      }
+     ]
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "bts-border",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "usgs-water",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://api.waterdata.usgs.gov/"
+      },
+      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.freddiemac.com/pmms",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "bts-supply-chain",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
+      },
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.bea.gov/news/schedule",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:47.351Z"
+   }
+  },
+  "/api/water?op=pfas&bbox=-66.08,18.42,-66.06,18.44&polygons=1": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:55:12.848Z",
+    "provenance": [
+     {
+      "source": {
+       "id": "epa-cws-boundaries",
+       "publisher": "U.S. EPA; the original data provider of each polygon (a state agency, the system, or EPA's Office of Research and Development for modelled boundaries)",
+       "url": "https://www.epa.gov/ground-water-and-drinking-water"
+      },
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0",
+      "retrievedAt": "2026-10-19T04:55:12.848Z"
+     },
+     {
+      "source": {
+       "id": "epa-ucmr5-pat",
+       "publisher": "U.S. EPA Office of Enforcement and Compliance Assurance (ECHO PFAS Analytic Tools); data from EPA's Office of Ground Water and Drinking Water, UCMR 5",
+       "url": "https://www.epa.gov/dwucmr/fifth-unregulated-contaminant-monitoring-rule"
+      },
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/PFAS_Analytic_Tools_Layers/FeatureServer/1",
+      "retrievedAt": "2026-10-19T04:55:12.848Z"
+     }
+    ],
+    "coverage": [
+     {
+      "id": "service-areas",
+      "name": "EPA community water system service areas",
+      "state": "covered",
+      "count": 1
+     },
+     {
+      "id": "estimated-locations",
+      "name": "EPA UCMR 5 systems placed by estimated location",
+      "state": "covered",
+      "count": 0
+     },
+     {
+      "id": "results",
+      "name": "EPA UCMR 5 results",
+      "state": "covered",
+      "count": 1
+     }
+    ],
+    "bbox": [
+     -66.08,
+     18.42,
+     -66.06,
+     18.44
+    ],
+    "polygons": true,
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+         [
+          [
+           -66.05324,
+           18.45559
+          ],
+          [
+           -66.04892,
+           18.45385
+          ],
+          [
+           -66.04873,
+           18.45122
+          ],
+          [
+           -66.04795,
+           18.45336
+          ],
+          [
+           -66.04354,
+           18.45408
+          ],
+          [
+           -66.04223,
+           18.45503
+          ],
+          [
+           -66.03895,
+           18.45566
+          ],
+          [
+           -66.03746,
+           18.45416
+          ],
+          [
+           -66.03579,
+           18.4497
+          ],
+          [
+           -66.03824,
+           18.44552
+          ],
+          [
+           -66.04152,
+           18.44565
+          ],
+          [
+           -66.04135,
+           18.44425
+          ],
+          [
+           -66.04278,
+           18.44276
+          ],
+          [
+           -66.04213,
+           18.44162
+          ],
+          [
+           -66.04251,
+           18.44021
+          ],
+          [
+           -66.04059,
+           18.43837
+          ],
+          [
+           -66.03695,
+           18.43719
+          ],
+          [
+           -66.03476,
+           18.43764
+          ],
+          [
+           -66.03347,
+           18.43656
+          ],
+          [
+           -66.03296,
+           18.43386
+          ],
+          [
+           -66.03353,
+           18.432
+          ],
+          [
+           -66.03572,
+           18.42929
+          ],
+          [
+           -66.03791,
+           18.42816
+          ],
+          [
+           -66.03508,
+           18.42571
+          ],
+          [
+           -66.03334,
+           18.42525
+          ],
+          [
+           -66.03062,
+           18.42223
+          ],
+          [
+           -66.02886,
+           18.41756
+          ],
+          [
+           -66.02754,
+           18.41631
+          ],
+          [
+           -66.0287,
+           18.4138
+          ],
+          [
+           -66.02547,
+           18.41238
+          ],
+          [
+           -66.02285,
+           18.41434
+          ],
+          [
+           -66.01691,
+           18.41371
+          ],
+          [
+           -66.01599,
+           18.41267
+          ],
+          [
+           -66.01613,
+           18.40952
+          ],
+          [
+           -66.01486,
+           18.40886
+          ],
+          [
+           -66.0137,
+           18.41069
+          ],
+          [
+           -66.01218,
+           18.41113
+          ],
+          [
+           -66.01217,
+           18.41607
+          ],
+          [
+           -66.01037,
+           18.41666
+          ],
+          [
+           -66.00866,
+           18.41479
+          ],
+          [
+           -66.00424,
+           18.41228
+          ],
+          [
+           -66.00063,
+           18.41183
+          ],
+          [
+           -65.99247,
+           18.40827
+          ],
+          [
+           -65.99086,
+           18.40461
+          ],
+          [
+           -65.99047,
+           18.39915
+          ],
+          [
+           -65.99285,
+           18.39717
+          ],
+          [
+           -65.99645,
+           18.39753
+          ],
+          [
+           -65.99689,
+           18.39523
+          ],
+          [
+           -65.9991,
+           18.394
+          ],
+          [
+           -66.00062,
+           18.39405
+          ],
+          [
+           -66.00164,
+           18.39527
+          ],
+          [
+           -66.00213,
+           18.39434
+          ],
+          [
+           -66.00216,
+           18.39137
+          ],
+          [
+           -66.00307,
+           18.38944
+          ],
+          [
+           -66.00211,
+           18.38853
+          ],
+          [
+           -66.00157,
+           18.38412
+          ],
+          [
+           -65.99991,
+           18.38367
+          ],
+          [
+           -65.99897,
+           18.3809
+          ],
+          [
+           -66.00062,
+           18.37846
+          ],
+          [
+           -66.00773,
+           18.37744
+          ],
+          [
+           -66.00893,
+           18.37843
+          ],
+          [
+           -66.0107,
+           18.37826
+          ],
+          [
+           -66.01128,
+           18.3798
+          ],
+          [
+           -66.01257,
+           18.38023
+          ],
+          [
+           -66.01344,
+           18.37769
+          ],
+          [
+           -66.01891,
+           18.37739
+          ],
+          [
+           -66.02292,
+           18.37823
+          ],
+          [
+           -66.02348,
+           18.38066
+          ],
+          [
+           -66.02509,
+           18.37826
+          ],
+          [
+           -66.02913,
+           18.37791
+          ],
+          [
+           -66.0283,
+           18.37677
+          ],
+          [
+           -66.02842,
+           18.37526
+          ],
+          [
+           -66.03427,
+           18.36829
+          ],
+          [
+           -66.03352,
+           18.36613
+          ],
+          [
+           -66.03397,
+           18.3635
+          ],
+          [
+           -66.03288,
+           18.36201
+          ],
+          [
+           -66.03344,
+           18.35781
+          ],
+          [
+           -66.03172,
+           18.35677
+          ],
+          [
+           -66.0315,
+           18.35557
+          ],
+          [
+           -66.03399,
+           18.35295
+          ],
+          [
+           -66.03348,
+           18.35077
+          ],
+          [
+           -66.03589,
+           18.34982
+          ],
+          [
+           -66.03574,
+           18.34849
+          ],
+          [
+           -66.03712,
+           18.34669
+          ],
+          [
+           -66.03431,
+           18.3445
+          ],
+          [
+           -66.03383,
+           18.34123
+          ],
+          [
+           -66.0358,
+           18.3404
+          ],
+          [
+           -66.03635,
+           18.33877
+          ],
+          [
+           -66.03335,
+           18.33824
+          ],
+          [
+           -66.03245,
+           18.33567
+          ],
+          [
+           -66.03296,
+           18.33456
+          ],
+          [
+           -66.03911,
+           18.33528
+          ],
+          [
+           -66.0398,
+           18.33728
+          ],
+          [
+           -66.03809,
+           18.33821
+          ],
+          [
+           -66.03965,
+           18.34033
+          ],
+          [
+           -66.04032,
+           18.33855
+          ],
+          [
+           -66.04184,
+           18.33821
+          ],
+          [
+           -66.04542,
+           18.34021
+          ],
+          [
+           -66.04638,
+           18.34224
+          ],
+          [
+           -66.0484,
+           18.34207
+          ],
+          [
+           -66.05026,
+           18.34481
+          ],
+          [
+           -66.05237,
+           18.34572
+          ],
+          [
+           -66.05312,
+           18.34446
+          ],
+          [
+           -66.04798,
+           18.34052
+          ],
+          [
+           -66.04863,
+           18.33811
+          ],
+          [
+           -66.04802,
+           18.33657
+          ],
+          [
+           -66.04933,
+           18.3356
+          ],
+          [
+           -66.04831,
+           18.3336
+          ],
+          [
+           -66.04544,
+           18.33541
+          ],
+          [
+           -66.04438,
+           18.33443
+          ],
+          [
+           -66.04448,
+           18.33217
+          ],
+          [
+           -66.04157,
+           18.332
+          ],
+          [
+           -66.03534,
+           18.33401
+          ],
+          [
+           -66.03436,
+           18.33323
+          ],
+          [
+           -66.03382,
+           18.33104
+          ],
+          [
+           -66.03458,
+           18.3296
+          ],
+          [
+           -66.03675,
+           18.32983
+          ],
+          [
+           -66.03468,
+           18.32829
+          ],
+          [
+           -66.03729,
+           18.32557
+          ],
+          [
+           -66.03525,
+           18.32429
+          ],
+          [
+           -66.03613,
+           18.32216
+          ],
+          [
+           -66.03988,
+           18.32269
+          ],
+          [
+           -66.04198,
+           18.32514
+          ],
+          [
+           -66.04297,
+           18.32516
+          ],
+          [
+           -66.03972,
+           18.32171
+          ],
+          [
+           -66.03986,
+           18.31991
+          ],
+          [
+           -66.04098,
+           18.31843
+          ],
+          [
+           -66.0384,
+           18.31788
+          ],
+          [
+           -66.03821,
+           18.31916
+          ],
+          [
+           -66.03707,
+           18.31971
+          ],
+          [
+           -66.03567,
+           18.31859
+          ],
+          [
+           -66.03603,
+           18.31742
+          ],
+          [
+           -66.03786,
+           18.31723
+          ],
+          [
+           -66.0385,
+           18.31519
+          ],
+          [
+           -66.04,
+           18.31463
+          ],
+          [
+           -66.03937,
+           18.31327
+          ],
+          [
+           -66.03988,
+           18.31215
+          ],
+          [
+           -66.04468,
+           18.31024
+          ],
+          [
+           -66.04846,
+           18.31138
+          ],
+          [
+           -66.04933,
+           18.31272
+          ],
+          [
+           -66.05094,
+           18.31254
+          ],
+          [
+           -66.05334,
+           18.31464
+          ],
+          [
+           -66.0539,
+           18.31434
+          ],
+          [
+           -66.05343,
+           18.31248
+          ],
+          [
+           -66.05173,
+           18.31156
+          ],
+          [
+           -66.05219,
+           18.30819
+          ],
+          [
+           -66.05046,
+           18.30926
+          ],
+          [
+           -66.04921,
+           18.3079
+          ],
+          [
+           -66.04869,
+           18.31004
+          ],
+          [
+           -66.04668,
+           18.30958
+          ],
+          [
+           -66.0462,
+           18.30771
+          ],
+          [
+           -66.04683,
+           18.30642
+          ],
+          [
+           -66.04582,
+           18.30423
+          ],
+          [
+           -66.04642,
+           18.30259
+          ],
+          [
+           -66.04966,
+           18.30119
+          ],
+          [
+           -66.0522,
+           18.30175
+          ],
+          [
+           -66.05298,
+           18.30294
+          ],
+          [
+           -66.05659,
+           18.30315
+          ],
+          [
+           -66.05745,
+           18.30203
+          ],
+          [
+           -66.05918,
+           18.30231
+          ],
+          [
+           -66.06116,
+           18.30127
+          ],
+          [
+           -66.06423,
+           18.30338
+          ],
+          [
+           -66.06534,
+           18.30633
+          ],
+          [
+           -66.06659,
+           18.30652
+          ],
+          [
+           -66.06723,
+           18.30135
+          ],
+          [
+           -66.06901,
+           18.30078
+          ],
+          [
+           -66.07201,
+           18.29692
+          ],
+          [
+           -66.07321,
+           18.29651
+          ],
+          [
+           -66.07483,
+           18.29782
+          ],
+          [
+           -66.07494,
+           18.29949
+          ],
+          [
+           -66.07212,
+           18.30148
+          ],
+          [
+           -66.07379,
+           18.30167
+          ],
+          [
+           -66.07505,
+           18.30036
+          ],
+          [
+           -66.07728,
+           18.30067
+          ],
+          [
+           -66.07971,
+           18.30414
+          ],
+          [
+           -66.08371,
+           18.30335
+          ],
+          [
+           -66.08476,
+           18.30173
+          ],
+          [
+           -66.08657,
+           18.30293
+          ],
+          [
+           -66.08617,
+           18.30501
+          ],
+          [
+           -66.08365,
+           18.30666
+          ],
+          [
+           -66.07956,
+           18.30779
+          ],
+          [
+           -66.07746,
+           18.30729
+          ],
+          [
+           -66.07667,
+           18.30431
+          ],
+          [
+           -66.07462,
+           18.30428
+          ],
+          [
+           -66.07565,
+           18.3055
+          ],
+          [
+           -66.07493,
+           18.30698
+          ],
+          [
+           -66.07684,
+           18.30698
+          ],
+          [
+           -66.0782,
+           18.30918
+          ],
+          [
+           -66.07992,
+           18.30925
+          ],
+          [
+           -66.08072,
+           18.31181
+          ],
+          [
+           -66.08281,
+           18.31066
+          ],
+          [
+           -66.08554,
+           18.31191
+          ],
+          [
+           -66.0857,
+           18.31326
+          ],
+          [
+           -66.08373,
+           18.31548
+          ],
+          [
+           -66.08587,
+           18.31539
+          ],
+          [
+           -66.08777,
+           18.31796
+          ],
+          [
+           -66.08761,
+           18.31931
+          ],
+          [
+           -66.08364,
+           18.32163
+          ],
+          [
+           -66.08221,
+           18.32099
+          ],
+          [
+           -66.08208,
+           18.31958
+          ],
+          [
+           -66.08048,
+           18.31913
+          ],
+          [
+           -66.07925,
+           18.32076
+          ],
+          [
+           -66.07744,
+           18.32013
+          ],
+          [
+           -66.07694,
+           18.31897
+          ],
+          [
+           -66.07446,
+           18.32
+          ],
+          [
+           -66.07796,
+           18.32246
+          ],
+          [
+           -66.07816,
+           18.32454
+          ],
+          [
+           -66.08178,
+           18.32541
+          ],
+          [
+           -66.08222,
+           18.32467
+          ],
+          [
+           -66.0809,
+           18.32485
+          ],
+          [
+           -66.07998,
+           18.32381
+          ],
+          [
+           -66.08122,
+           18.32223
+          ],
+          [
+           -66.08252,
+           18.32277
+          ],
+          [
+           -66.0827,
+           18.32408
+          ],
+          [
+           -66.08392,
+           18.32329
+          ],
+          [
+           -66.08516,
+           18.32357
+          ],
+          [
+           -66.08626,
+           18.32678
+          ],
+          [
+           -66.08873,
+           18.32781
+          ],
+          [
+           -66.0876,
+           18.33215
+          ],
+          [
+           -66.08878,
+           18.33374
+          ],
+          [
+           -66.09328,
+           18.33645
+          ],
+          [
+           -66.09536,
+           18.33669
+          ],
+          [
+           -66.09615,
+           18.33853
+          ],
+          [
+           -66.09901,
+           18.34001
+          ],
+          [
+           -66.09827,
+           18.34198
+          ],
+          [
+           -66.10062,
+           18.34273
+          ],
+          [
+           -66.10023,
+           18.34449
+          ],
+          [
+           -66.09753,
+           18.34627
+          ],
+          [
+           -66.0978,
+           18.34833
+          ],
+          [
+           -66.09896,
+           18.34862
+          ],
+          [
+           -66.09976,
+           18.35008
+          ],
+          [
+           -66.09815,
+           18.35389
+          ],
+          [
+           -66.09899,
+           18.35532
+          ],
+          [
+           -66.09865,
+           18.35646
+          ],
+          [
+           -66.09735,
+           18.357
+          ],
+          [
+           -66.09463,
+           18.3561
+          ],
+          [
+           -66.09245,
+           18.35779
+          ],
+          [
+           -66.08717,
+           18.35835
+          ],
+          [
+           -66.09038,
+           18.35882
+          ],
+          [
+           -66.09305,
+           18.36086
+          ],
+          [
+           -66.09311,
+           18.36452
+          ],
+          [
+           -66.09132,
+           18.36664
+          ],
+          [
+           -66.09381,
+           18.36958
+          ],
+          [
+           -66.09336,
+           18.37328
+          ],
+          [
+           -66.09225,
+           18.37442
+          ],
+          [
+           -66.09411,
+           18.37476
+          ],
+          [
+           -66.09597,
+           18.37696
+          ],
+          [
+           -66.09872,
+           18.37831
+          ],
+          [
+           -66.10253,
+           18.37872
+          ],
+          [
+           -66.10699,
+           18.38184
+          ],
+          [
+           -66.10645,
+           18.38458
+          ],
+          [
+           -66.10821,
+           18.38686
+          ],
+          [
+           -66.10868,
+           18.38939
+          ],
+          [
+           -66.10717,
+           18.39094
+          ],
+          [
+           -66.10864,
+           18.39245
+          ],
+          [
+           -66.10799,
+           18.39456
+          ],
+          [
+           -66.10937,
+           18.39888
+          ],
+          [
+           -66.10673,
+           18.40326
+          ],
+          [
+           -66.10141,
+           18.40338
+          ],
+          [
+           -66.09696,
+           18.40198
+          ],
+          [
+           -66.09609,
+           18.40374
+          ],
+          [
+           -66.0965,
+           18.40679
+          ],
+          [
+           -66.09972,
+           18.40976
+          ],
+          [
+           -66.10069,
+           18.41166
+          ],
+          [
+           -66.10079,
+           18.413
+          ],
+          [
+           -66.09816,
+           18.41855
+          ],
+          [
+           -66.0992,
+           18.41986
+          ],
+          [
+           -66.10118,
+           18.42033
+          ],
+          [
+           -66.10143,
+           18.42245
+          ],
+          [
+           -66.10079,
+           18.4235
+          ],
+          [
+           -66.09858,
+           18.42345
+          ],
+          [
+           -66.09518,
+           18.42728
+          ],
+          [
+           -66.09348,
+           18.42737
+          ],
+          [
+           -66.09065,
+           18.42431
+          ],
+          [
+           -66.09185,
+           18.42273
+          ],
+          [
+           -66.0922,
+           18.42027
+          ],
+          [
+           -66.09443,
+           18.41965
+          ],
+          [
+           -66.09618,
+           18.42186
+          ],
+          [
+           -66.0973,
+           18.42114
+          ],
+          [
+           -66.09595,
+           18.42075
+          ],
+          [
+           -66.09423,
+           18.41801
+          ],
+          [
+           -66.09124,
+           18.41809
+          ],
+          [
+           -66.08538,
+           18.42023
+          ],
+          [
+           -66.08447,
+           18.42132
+          ],
+          [
+           -66.08245,
+           18.42133
+          ],
+          [
+           -66.0812,
+           18.42403
+          ],
+          [
+           -66.07743,
+           18.42438
+          ],
+          [
+           -66.07605,
+           18.42796
+          ],
+          [
+           -66.07478,
+           18.42796
+          ],
+          [
+           -66.07402,
+           18.42649
+          ],
+          [
+           -66.07289,
+           18.42631
+          ],
+          [
+           -66.07202,
+           18.42775
+          ],
+          [
+           -66.07325,
+           18.42803
+          ],
+          [
+           -66.07376,
+           18.42915
+          ],
+          [
+           -66.07256,
+           18.43215
+          ],
+          [
+           -66.07069,
+           18.43203
+          ],
+          [
+           -66.06934,
+           18.43015
+          ],
+          [
+           -66.06816,
+           18.43316
+          ],
+          [
+           -66.06499,
+           18.43285
+          ],
+          [
+           -66.06318,
+           18.43385
+          ],
+          [
+           -66.0608,
+           18.43291
+          ],
+          [
+           -66.05946,
+           18.43416
+          ],
+          [
+           -66.06101,
+           18.43477
+          ],
+          [
+           -66.06178,
+           18.43659
+          ],
+          [
+           -66.06671,
+           18.43623
+          ],
+          [
+           -66.06743,
+           18.43939
+          ],
+          [
+           -66.0742,
+           18.44091
+          ],
+          [
+           -66.07921,
+           18.44352
+          ],
+          [
+           -66.0813,
+           18.44291
+          ],
+          [
+           -66.08286,
+           18.44518
+          ],
+          [
+           -66.08277,
+           18.44817
+          ],
+          [
+           -66.08373,
+           18.44741
+          ],
+          [
+           -66.08565,
+           18.44754
+          ],
+          [
+           -66.08647,
+           18.4487
+          ],
+          [
+           -66.08572,
+           18.45048
+          ],
+          [
+           -66.08868,
+           18.44936
+          ],
+          [
+           -66.08955,
+           18.45024
+          ],
+          [
+           -66.08962,
+           18.45263
+          ],
+          [
+           -66.09301,
+           18.45304
+          ],
+          [
+           -66.09381,
+           18.45579
+          ],
+          [
+           -66.09303,
+           18.45708
+          ],
+          [
+           -66.09042,
+           18.45715
+          ],
+          [
+           -66.09002,
+           18.45524
+          ],
+          [
+           -66.08914,
+           18.45486
+          ],
+          [
+           -66.08802,
+           18.45573
+          ],
+          [
+           -66.08868,
+           18.46062
+          ],
+          [
+           -66.09069,
+           18.45924
+          ],
+          [
+           -66.09463,
+           18.46023
+          ],
+          [
+           -66.09541,
+           18.46147
+          ],
+          [
+           -66.0996,
+           18.46039
+          ],
+          [
+           -66.10061,
+           18.46213
+          ],
+          [
+           -66.1042,
+           18.46391
+          ],
+          [
+           -66.10512,
+           18.46198
+          ],
+          [
+           -66.10696,
+           18.46284
+          ],
+          [
+           -66.11166,
+           18.46282
+          ],
+          [
+           -66.11443,
+           18.46204
+          ],
+          [
+           -66.11486,
+           18.46058
+          ],
+          [
+           -66.11714,
+           18.45965
+          ],
+          [
+           -66.11867,
+           18.46043
+          ],
+          [
+           -66.11851,
+           18.46242
+          ],
+          [
+           -66.12216,
+           18.46555
+          ],
+          [
+           -66.12253,
+           18.46672
+          ],
+          [
+           -66.12075,
+           18.46916
+          ],
+          [
+           -66.11875,
+           18.46991
+          ],
+          [
+           -66.11364,
+           18.47002
+          ],
+          [
+           -66.10949,
+           18.46753
+          ],
+          [
+           -66.10745,
+           18.46757
+          ],
+          [
+           -66.10603,
+           18.46889
+          ],
+          [
+           -66.1025,
+           18.46704
+          ],
+          [
+           -66.10119,
+           18.4678
+          ],
+          [
+           -66.09421,
+           18.46674
+          ],
+          [
+           -66.0927,
+           18.46767
+          ],
+          [
+           -66.09148,
+           18.46601
+          ],
+          [
+           -66.08835,
+           18.4655
+          ],
+          [
+           -66.08458,
+           18.46299
+          ],
+          [
+           -66.08462,
+           18.45967
+          ],
+          [
+           -66.08577,
+           18.45828
+          ],
+          [
+           -66.08378,
+           18.45882
+          ],
+          [
+           -66.0806,
+           18.45814
+          ],
+          [
+           -66.07719,
+           18.45544
+          ],
+          [
+           -66.07891,
+           18.45817
+          ],
+          [
+           -66.08353,
+           18.45962
+          ],
+          [
+           -66.08362,
+           18.46111
+          ],
+          [
+           -66.08203,
+           18.46221
+          ],
+          [
+           -66.07704,
+           18.46106
+          ],
+          [
+           -66.07402,
+           18.45827
+          ],
+          [
+           -66.06656,
+           18.45843
+          ],
+          [
+           -66.06086,
+           18.45576
+          ],
+          [
+           -66.05324,
+           18.45559
+          ]
+         ]
+        ]
+       },
+       "properties": {
+        "id": "pfas:PR0002591",
+        "details": {
+         "population served": 1077332
+        },
+        "extra": {
+         "state": "detected",
+         "pwsid": "PR0002591",
+         "maxNgL": 49,
+         "modelled": false,
+         "placement": "service-area",
+         "results": [
+          {
+           "contaminant": "6:2 FTS",
+           "maxNgL": 49,
+           "detections": 1,
+           "results": 20
+          },
+          {
+           "contaminant": "8:2 FTS",
+           "maxNgL": 15.3,
+           "detections": 1,
+           "results": 20
+          },
+          {
+           "contaminant": "PFOA",
+           "maxNgL": 10.9,
+           "detections": 2,
+           "results": 20
+          },
+          {
+           "contaminant": "PFBA",
+           "maxNgL": 8.6,
+           "detections": 6,
+           "results": 20
+          },
+          {
+           "contaminant": "PFOS",
+           "maxNgL": 7.8,
+           "detections": 10,
+           "results": 20
+          },
+          {
+           "contaminant": "PFDA",
+           "maxNgL": 7.5,
+           "detections": 1,
+           "results": 20
+          },
+          {
+           "contaminant": "PFPeA",
+           "maxNgL": 4,
+           "detections": 2,
+           "results": 20
+          },
+          {
+           "contaminant": "PFHxA",
+           "maxNgL": 3.5,
+           "detections": 2,
+           "results": 20
+          },
+          {
+           "contaminant": "11Cl-PF3OUdS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "4:2 FTS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "9Cl-PF3ONS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "ADONA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "HFPO-DA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "NEtFOSAA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "NFDHA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "NMeFOSAA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "PFBS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "PFDoA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "PFEESA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "PFHpA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "PFHpS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "PFHxS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "PFMBA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "PFMPA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "PFNA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "PFPeS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "PFTA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "PFTrDA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          },
+          {
+           "contaminant": "PFUnA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 20
+          }
+         ]
+        }
+       }
+      }
+     ]
+    }
    }
   }
- }
+ },
+ "filled": [
+  {
+   "at": "2026-10-19T04:55:14.368Z",
+   "from": "https://www.arxiviq.com",
+   "routes": [
+    "/api/fabric?op=stack&lon=-66.0691&lat=18.4222",
+    "/api/infra?op=hospitals&bbox=-66.3191,18.1722,-65.8191,18.6722",
+    "/api/infra?op=dams&bbox=-66.3191,18.1722,-65.8191,18.6722"
+   ]
+  },
+  {
+   "at": "2026-10-19T05:09:59.296Z",
+   "from": "https://www.arxiviq.com",
+   "routes": [
+    "/api/water?op=pfas&bbox=-66.08,18.42,-66.06,18.44&polygons=1"
+   ]
+  }
+ ]
 }

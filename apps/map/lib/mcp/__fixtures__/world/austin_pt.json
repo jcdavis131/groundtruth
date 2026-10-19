@@ -11,6 +11,8 @@
    "body": {
     "data": {
      "point": {
+      "lon": -97.743,
+      "lat": 30.267,
       "elevationM": 148.2
      },
      "nodes": [
@@ -307,348 +309,6 @@
     "generatedAt": "2026-10-19T02:32:46.279Z"
    }
   },
-  "/api/releases?op=calendar": {
-   "status": 200,
-   "body": {
-    "data": {
-     "from": "2026-10-19",
-     "to": "2026-11-18",
-     "releases": [
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-10-22",
-        "latest": "2026-10-22",
-        "nominal": "2026-10-22"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-10-29",
-        "latest": "2026-10-29",
-        "nominal": "2026-10-29"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-11-05",
-        "latest": "2026-11-05",
-        "nominal": "2026-11-05"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "usdm",
-       "sourceId": "usdm",
-       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
-       "precision": "official",
-       "window": {
-        "earliest": "2026-11-12",
-        "latest": "2026-11-12",
-        "nominal": "2026-11-12"
-       },
-       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
-      },
-      {
-       "id": "zillow-zhvi",
-       "sourceId": "zillow-zhvi",
-       "title": "Zillow ZHVI typical home value (monthly)",
-       "precision": "approximate",
-       "window": {
-        "earliest": "2026-11-14",
-        "latest": "2026-11-21",
-        "nominal": "2026-11-14"
-       },
-       "scheduleUrl": "https://www.zillow.com/research/data/"
-      },
-      {
-       "id": "zillow-zori",
-       "sourceId": "zillow-zori",
-       "title": "Zillow ZORI typical rent (monthly)",
-       "precision": "approximate",
-       "window": {
-        "earliest": "2026-11-14",
-        "latest": "2026-11-21",
-        "nominal": "2026-11-14"
-       },
-       "scheduleUrl": "https://www.zillow.com/research/data/"
-      }
-     ]
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "bts-border",
-       "publisher": "U.S. Bureau of Transportation Statistics",
-       "url": "https://data.bts.gov/"
-      },
-      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "usgs-water",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://api.waterdata.usgs.gov/"
-      },
-      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.freddiemac.com/pmms",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "usdm",
-       "publisher": "National Drought Mitigation Center, USDA, NOAA",
-       "url": "https://droughtmonitor.unl.edu/"
-      },
-      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "bts-supply-chain",
-       "publisher": "U.S. Bureau of Transportation Statistics",
-       "url": "https://data.bts.gov/"
-      },
-      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
-      "retrievedAt": "2026-10-19T02:31:47.350Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.bea.gov/news/schedule",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "zillow-zhvi",
-       "publisher": "Zillow Research",
-       "url": "https://www.zillow.com/research/data/"
-      },
-      "upstreamUrl": "https://www.zillow.com/research/data/",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "zillow-zori",
-       "publisher": "Zillow Research",
-       "url": "https://www.zillow.com/research/data/"
-      },
-      "upstreamUrl": "https://www.zillow.com/research/data/",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     },
-     {
-      "source": {
-       "id": "fred",
-       "publisher": "Federal Reserve Bank of St. Louis",
-       "url": "https://fred.stlouisfed.org/"
-      },
-      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
-      "retrievedAt": "2026-10-19T02:31:47.351Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:31:47.351Z"
-   }
-  },
-  "/api/live": {
-   "status": 200,
-   "body": {
-    "data": {
-     "items": [],
-     "failed": [],
-     "unmapped": 0
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "nws-api",
-       "publisher": "NOAA National Weather Service",
-       "url": "https://www.weather.gov/documentation/services-web-api"
-      },
-      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
-     },
-     {
-      "source": {
-       "id": "usgs-earthquakes",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://earthquake.usgs.gov/"
-      },
-      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:31:49.835Z"
-   }
-  },
-  "/api/companies?op=county&fips=48453": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": [
-      {
-       "properties": {
-        "extra": {
-         "cik": 1318605,
-         "ticker": "TSLA",
-         "exchange": "Nasdaq"
-        }
-       }
-      },
-      {
-       "properties": {
-        "extra": {
-         "cik": 1341439,
-         "ticker": "ORCL",
-         "exchange": "NYSE"
-        }
-       }
-      }
-     ]
-    },
-    "pulled": null,
-    "provenance": [
-     {
-      "source": {
-       "id": "sec-edgar",
-       "publisher": "U.S. Securities and Exchange Commission",
-       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
-      },
-      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
-     },
-     {
-      "source": {
-       "id": "census-zcta-county",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
-      }
-     },
-     {
-      "source": {
-       "id": "census-tigerweb",
-       "publisher": "U.S. Census Bureau",
-       "url": "https://tigerweb.geo.census.gov/"
-      }
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:46.318Z"
-   }
-  },
-  "/api/civic?op=svi&level=place&fips=48453": {
-   "status": 200,
-   "body": {
-    "data": {
-     "row": {
-      "rpl": [
-       0.5702,
-       0.5527,
-       0.0935,
-       0.882,
-       0.7805
-      ]
-     }
-    },
-    "provenance": [
-     {
-      "source": {
-       "id": "cdc-svi",
-       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
-       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
-      },
-      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
-      "retrievedAt": "2026-10-19T02:32:46.376Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:46.376Z"
-   }
-  },
   "/api/hazards?op=nri&fips=48453": {
    "status": 200,
    "body": {
@@ -695,6 +355,267 @@
      }
     ],
     "generatedAt": "2026-10-19T02:32:46.451Z"
+   }
+  },
+  "/api/hazards?op=history&fips=48453&years=10&declarations=15": {
+   "status": 200,
+   "body": {
+    "data": {
+     "declarations": [
+      {
+       "disasterNumber": 4879,
+       "declarationType": "DR",
+       "declarationDate": "2025-07-06",
+       "incidentType": "Flood",
+       "declarationTitle": "SEVERE STORMS, STRAIGHT-LINE WINDS, AND FLOODING"
+      },
+      {
+       "disasterNumber": 4705,
+       "declarationType": "DR",
+       "declarationDate": "2023-04-21",
+       "incidentType": "Winter Storm",
+       "declarationTitle": "SEVERE WINTER STORM"
+      },
+      {
+       "disasterNumber": 4586,
+       "declarationType": "DR",
+       "declarationDate": "2021-02-19",
+       "incidentType": "Severe Ice Storm",
+       "declarationTitle": "SEVERE WINTER STORMS"
+      },
+      {
+       "disasterNumber": 3554,
+       "declarationType": "EM",
+       "declarationDate": "2021-02-14",
+       "incidentType": "Severe Ice Storm",
+       "declarationTitle": "SEVERE WINTER STORM"
+      },
+      {
+       "disasterNumber": 3540,
+       "declarationType": "EM",
+       "declarationDate": "2020-08-24",
+       "incidentType": "Hurricane",
+       "declarationTitle": "TROPICAL STORMS MARCO AND LAURA"
+      },
+      {
+       "disasterNumber": 4485,
+       "declarationType": "DR",
+       "declarationDate": "2020-03-25",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19 PANDEMIC"
+      },
+      {
+       "disasterNumber": 3458,
+       "declarationType": "EM",
+       "declarationDate": "2020-03-13",
+       "incidentType": "Biological",
+       "declarationTitle": "COVID-19"
+      },
+      {
+       "disasterNumber": 4416,
+       "declarationType": "DR",
+       "declarationDate": "2019-02-25",
+       "incidentType": "Flood",
+       "declarationTitle": "SEVERE STORMS AND FLOODING"
+      },
+      {
+       "disasterNumber": 4332,
+       "declarationType": "DR",
+       "declarationDate": "2017-08-25",
+       "incidentType": "Hurricane",
+       "declarationTitle": "HURRICANE HARVEY"
+      },
+      {
+       "disasterNumber": 4272,
+       "declarationType": "DR",
+       "declarationDate": "2016-06-11",
+       "incidentType": "Flood",
+       "declarationTitle": "SEVERE STORMS AND FLOODING"
+      },
+      {
+       "disasterNumber": 4245,
+       "declarationType": "DR",
+       "declarationDate": "2015-11-25",
+       "incidentType": "Severe Storm",
+       "declarationTitle": "SEVERE STORMS, TORNADOES, STRAIGHT-LINE WINDS, AND FLOODING"
+      },
+      {
+       "disasterNumber": 4223,
+       "declarationType": "DR",
+       "declarationDate": "2015-05-29",
+       "incidentType": "Severe Storm",
+       "declarationTitle": "SEVERE STORMS, TORNADOES, STRAIGHT-LINE WINDS AND FLOODING"
+      },
+      {
+       "disasterNumber": 4159,
+       "declarationType": "DR",
+       "declarationDate": "2013-12-20",
+       "incidentType": "Severe Storm",
+       "declarationTitle": "SEVERE STORMS AND FLOODING"
+      },
+      {
+       "disasterNumber": 4029,
+       "declarationType": "DR",
+       "declarationDate": "2011-09-09",
+       "incidentType": "Fire",
+       "declarationTitle": "WILDFIRES"
+      },
+      {
+       "disasterNumber": 2959,
+       "declarationType": "FM",
+       "declarationDate": "2011-09-05",
+       "incidentType": "Fire",
+       "declarationTitle": "PEDERNALES BEND FIRE"
+      }
+     ],
+     "declarationRows": 37,
+     "droughtNow": {
+      "mapDate": "2026-10-13",
+      "validStart": "2026-10-13",
+      "validEnd": "2026-10-19",
+      "none": 0,
+      "d0": 0,
+      "d1": 21.1,
+      "d2": 78.9,
+      "d3": 0,
+      "d4": 0
+     },
+     "missing": []
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "fema-openfema",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+      },
+      "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'48'%20and%20fipsCountyCode%20eq%20'453'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
+      "retrievedAt": "2026-10-19T02:32:46.514Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=48453&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
+      "retrievedAt": "2026-10-19T02:32:46.909Z"
+     },
+     {
+      "source": {
+       "id": "usdm",
+       "publisher": "National Drought Mitigation Center, USDA, NOAA",
+       "url": "https://droughtmonitor.unl.edu/"
+      },
+      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=48453&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
+      "retrievedAt": "2026-10-19T02:32:47.012Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/TX-453/tavg/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T02:32:46.573Z"
+     },
+     {
+      "source": {
+       "id": "noaa-cag",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/TX-453/pcp/12/12/1895-2026/data.json",
+      "retrievedAt": "2026-10-19T02:32:46.810Z"
+     },
+     {
+      "source": {
+       "id": "noaa-spc",
+       "publisher": "NOAA National Weather Service, Storm Prediction Center",
+       "url": "https://www.spc.noaa.gov/wcm/"
+      },
+      "upstreamUrl": "https://www.spc.noaa.gov/wcm/data/1950-2025_all_tornadoes.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "usgs-landslide-susc",
+       "publisher": "U.S. Geological Survey (Belair, Jones, Martinez, Mirus and Wood)",
+       "url": "https://doi.org/10.5066/P13KAGU3"
+      },
+      "upstreamUrl": "https://www.sciencebase.gov/catalog/file/get/65ccea5bd34ef4b119cb3bac?name=county_analysis.csv",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     },
+     {
+      "source": {
+       "id": "ncei-storm-events",
+       "publisher": "NOAA National Centers for Environmental Information",
+       "url": "https://www.ncei.noaa.gov/stormevents/"
+      },
+      "upstreamUrl": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:47.017Z"
+   }
+  },
+  "/api/live": {
+   "status": 200,
+   "body": {
+    "data": {
+     "items": [],
+     "failed": [],
+     "unmapped": 0
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     },
+     {
+      "source": {
+       "id": "usgs-earthquakes",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://earthquake.usgs.gov/"
+      },
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:49.835Z"
+   }
+  },
+  "/api/civic?op=svi&level=place&fips=48453": {
+   "status": 200,
+   "body": {
+    "data": {
+     "row": {
+      "rpl": [
+       0.5702,
+       0.5527,
+       0.0935,
+       0.882,
+       0.7805
+      ]
+     }
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "cdc-svi",
+       "publisher": "Centers for Disease Control and Prevention / Agency for Toxic Substances and Disease Registry, Geospatial Research, Analysis, and Services Program",
+       "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
+      },
+      "upstreamUrl": "https://services3.arcgis.com/ZvidGQkLaDJxRSJ2/arcgis/rest/services/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
+      "retrievedAt": "2026-10-19T02:32:46.376Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:46.376Z"
    }
   },
   "/api/infra?op=hospitals&bbox=-97.8431,30.1672,-97.6431,30.3672": {
@@ -1248,140 +1169,185 @@
     "generatedAt": "2026-10-19T02:32:46.581Z"
    }
   },
-  "/api/hazards?op=history&fips=48453&years=10&declarations=15": {
+  "/api/companies?op=county&fips=48453": {
    "status": 200,
    "body": {
     "data": {
-     "declarations": [
+     "features": [
       {
-       "disasterNumber": 4879,
-       "declarationType": "DR",
-       "declarationDate": "2025-07-06",
-       "incidentType": "Flood",
-       "declarationTitle": "SEVERE STORMS, STRAIGHT-LINE WINDS, AND FLOODING"
+       "properties": {
+        "extra": {
+         "cik": 1318605,
+         "ticker": "TSLA",
+         "exchange": "Nasdaq"
+        }
+       }
       },
       {
-       "disasterNumber": 4705,
-       "declarationType": "DR",
-       "declarationDate": "2023-04-21",
-       "incidentType": "Winter Storm",
-       "declarationTitle": "SEVERE WINTER STORM"
-      },
-      {
-       "disasterNumber": 4586,
-       "declarationType": "DR",
-       "declarationDate": "2021-02-19",
-       "incidentType": "Severe Ice Storm",
-       "declarationTitle": "SEVERE WINTER STORMS"
-      },
-      {
-       "disasterNumber": 3554,
-       "declarationType": "EM",
-       "declarationDate": "2021-02-14",
-       "incidentType": "Severe Ice Storm",
-       "declarationTitle": "SEVERE WINTER STORM"
-      },
-      {
-       "disasterNumber": 3540,
-       "declarationType": "EM",
-       "declarationDate": "2020-08-24",
-       "incidentType": "Hurricane",
-       "declarationTitle": "TROPICAL STORMS MARCO AND LAURA"
-      },
-      {
-       "disasterNumber": 4485,
-       "declarationType": "DR",
-       "declarationDate": "2020-03-25",
-       "incidentType": "Biological",
-       "declarationTitle": "COVID-19 PANDEMIC"
-      },
-      {
-       "disasterNumber": 3458,
-       "declarationType": "EM",
-       "declarationDate": "2020-03-13",
-       "incidentType": "Biological",
-       "declarationTitle": "COVID-19"
-      },
-      {
-       "disasterNumber": 4416,
-       "declarationType": "DR",
-       "declarationDate": "2019-02-25",
-       "incidentType": "Flood",
-       "declarationTitle": "SEVERE STORMS AND FLOODING"
-      },
-      {
-       "disasterNumber": 4332,
-       "declarationType": "DR",
-       "declarationDate": "2017-08-25",
-       "incidentType": "Hurricane",
-       "declarationTitle": "HURRICANE HARVEY"
-      },
-      {
-       "disasterNumber": 4272,
-       "declarationType": "DR",
-       "declarationDate": "2016-06-11",
-       "incidentType": "Flood",
-       "declarationTitle": "SEVERE STORMS AND FLOODING"
-      },
-      {
-       "disasterNumber": 4245,
-       "declarationType": "DR",
-       "declarationDate": "2015-11-25",
-       "incidentType": "Severe Storm",
-       "declarationTitle": "SEVERE STORMS, TORNADOES, STRAIGHT-LINE WINDS, AND FLOODING"
-      },
-      {
-       "disasterNumber": 4223,
-       "declarationType": "DR",
-       "declarationDate": "2015-05-29",
-       "incidentType": "Severe Storm",
-       "declarationTitle": "SEVERE STORMS, TORNADOES, STRAIGHT-LINE WINDS AND FLOODING"
-      },
-      {
-       "disasterNumber": 4159,
-       "declarationType": "DR",
-       "declarationDate": "2013-12-20",
-       "incidentType": "Severe Storm",
-       "declarationTitle": "SEVERE STORMS AND FLOODING"
-      },
-      {
-       "disasterNumber": 4029,
-       "declarationType": "DR",
-       "declarationDate": "2011-09-09",
-       "incidentType": "Fire",
-       "declarationTitle": "WILDFIRES"
-      },
-      {
-       "disasterNumber": 2959,
-       "declarationType": "FM",
-       "declarationDate": "2011-09-05",
-       "incidentType": "Fire",
-       "declarationTitle": "PEDERNALES BEND FIRE"
+       "properties": {
+        "extra": {
+         "cik": 1341439,
+         "ticker": "ORCL",
+         "exchange": "NYSE"
+        }
+       }
       }
-     ],
-     "declarationRows": 37,
-     "droughtNow": {
-      "mapDate": "2026-10-13",
-      "validStart": "2026-10-13",
-      "validEnd": "2026-10-19",
-      "none": 0,
-      "d0": 0,
-      "d1": 21.1,
-      "d2": 78.9,
-      "d3": 0,
-      "d4": 0
+     ]
+    },
+    "pulled": null,
+    "provenance": [
+     {
+      "source": {
+       "id": "sec-edgar",
+       "publisher": "U.S. Securities and Exchange Commission",
+       "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces"
+      },
+      "upstreamUrl": "https://www.sec.gov/files/company_tickers_exchange.json"
      },
-     "missing": []
+     {
+      "source": {
+       "id": "census-zcta-county",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://www.census.gov/geographies/reference-files/time-series/geo/relationship-files.html"
+      }
+     },
+     {
+      "source": {
+       "id": "census-tigerweb",
+       "publisher": "U.S. Census Bureau",
+       "url": "https://tigerweb.geo.census.gov/"
+      }
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:46.318Z"
+   }
+  },
+  "/api/releases?op=calendar": {
+   "status": 200,
+   "body": {
+    "data": {
+     "from": "2026-10-19",
+     "to": "2026-11-18",
+     "releases": [
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-22",
+        "latest": "2026-10-22",
+        "nominal": "2026-10-22"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-10-29",
+        "latest": "2026-10-29",
+        "nominal": "2026-10-29"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-05",
+        "latest": "2026-11-05",
+        "nominal": "2026-11-05"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "usdm",
+       "sourceId": "usdm",
+       "title": "U.S. Drought Monitor map (weekly, Thursday 08:30 ET)",
+       "precision": "official",
+       "window": {
+        "earliest": "2026-11-12",
+        "latest": "2026-11-12",
+        "nominal": "2026-11-12"
+       },
+       "scheduleUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx"
+      },
+      {
+       "id": "zillow-zhvi",
+       "sourceId": "zillow-zhvi",
+       "title": "Zillow ZHVI typical home value (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-14",
+        "latest": "2026-11-21",
+        "nominal": "2026-11-14"
+       },
+       "scheduleUrl": "https://www.zillow.com/research/data/"
+      },
+      {
+       "id": "zillow-zori",
+       "sourceId": "zillow-zori",
+       "title": "Zillow ZORI typical rent (monthly)",
+       "precision": "approximate",
+       "window": {
+        "earliest": "2026-11-14",
+        "latest": "2026-11-21",
+        "nominal": "2026-11-14"
+       },
+       "scheduleUrl": "https://www.zillow.com/research/data/"
+      }
+     ]
     },
     "provenance": [
      {
       "source": {
-       "id": "fema-openfema",
-       "publisher": "Federal Emergency Management Agency",
-       "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
+       "id": "bts-border",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
       },
-      "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'48'%20and%20fipsCountyCode%20eq%20'453'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
-      "retrievedAt": "2026-10-19T02:32:46.514Z"
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "usgs-water",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://api.waterdata.usgs.gov/"
+      },
+      "upstreamUrl": "https://waterdata.usgs.gov/nwis",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.eia.gov/petroleum/data.php",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrs/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.freddiemac.com/pmms",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
@@ -1389,67 +1355,3979 @@
        "publisher": "National Drought Mitigation Center, USDA, NOAA",
        "url": "https://droughtmonitor.unl.edu/"
       },
-      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=48453&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
-      "retrievedAt": "2026-10-19T02:32:46.909Z"
+      "upstreamUrl": "https://droughtmonitor.unl.edu/About/WhatistheUSDM.aspx",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
-       "id": "usdm",
-       "publisher": "National Drought Mitigation Center, USDA, NOAA",
-       "url": "https://droughtmonitor.unl.edu/"
+       "id": "bts-supply-chain",
+       "publisher": "U.S. Bureau of Transportation Statistics",
+       "url": "https://data.bts.gov/"
       },
-      "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=48453&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
-      "retrievedAt": "2026-10-19T02:32:47.012Z"
+      "upstreamUrl": "https://data.bts.gov/Research-and-Statistics/Supply-Chain-Indicators/y5ut-ibwt",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
-       "id": "noaa-cag",
-       "publisher": "NOAA National Centers for Environmental Information",
-       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
       },
-      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/TX-453/tavg/12/12/1895-2026/data.json",
-      "retrievedAt": "2026-10-19T02:32:46.573Z"
+      "upstreamUrl": "https://www.spglobal.com/spdji/en/index-family/indicators/sp-corelogic-case-shiller/",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
-       "id": "noaa-cag",
-       "publisher": "NOAA National Centers for Environmental Information",
-       "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
       },
-      "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/TX-453/pcp/12/12/1895-2026/data.json",
-      "retrievedAt": "2026-10-19T02:32:46.810Z"
+      "upstreamUrl": "https://www.bls.gov/schedule/news_release/empsit.htm",
+      "retrievedAt": "2026-10-19T02:31:47.350Z"
      },
      {
       "source": {
-       "id": "noaa-spc",
-       "publisher": "NOAA National Weather Service, Storm Prediction Center",
-       "url": "https://www.spc.noaa.gov/wcm/"
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
       },
-      "upstreamUrl": "https://www.spc.noaa.gov/wcm/data/1950-2025_all_tornadoes.csv",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
+      "upstreamUrl": "https://www.bea.gov/data/consumer-spending/motor-vehicles",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
      },
      {
       "source": {
-       "id": "usgs-landslide-susc",
-       "publisher": "U.S. Geological Survey (Belair, Jones, Martinez, Mirus and Wood)",
-       "url": "https://doi.org/10.5066/P13KAGU3"
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
       },
-      "upstreamUrl": "https://www.sciencebase.gov/catalog/file/get/65ccea5bd34ef4b119cb3bac?name=county_analysis.csv",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
+      "upstreamUrl": "https://www.bea.gov/news/schedule",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
      },
      {
       "source": {
-       "id": "ncei-storm-events",
-       "publisher": "NOAA National Centers for Environmental Information",
-       "url": "https://www.ncei.noaa.gov/stormevents/"
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
       },
-      "upstreamUrl": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
+      "upstreamUrl": "https://www.census.gov/retail/release_schedule.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zhvi",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "zillow-zori",
+       "publisher": "Zillow Research",
+       "url": "https://www.zillow.com/research/data/"
+      },
+      "upstreamUrl": "https://www.zillow.com/research/data/",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
+     },
+     {
+      "source": {
+       "id": "fred",
+       "publisher": "Federal Reserve Bank of St. Louis",
+       "url": "https://fred.stlouisfed.org/"
+      },
+      "upstreamUrl": "https://www.census.gov/construction/nrc/index.html",
+      "retrievedAt": "2026-10-19T02:31:47.351Z"
      }
     ],
-    "generatedAt": "2026-10-19T02:32:47.017Z"
+    "generatedAt": "2026-10-19T02:31:47.351Z"
+   }
+  },
+  "/api/water?op=pfas&bbox=-97.76,30.26,-97.74,30.28&polygons=1": {
+   "status": 200,
+   "body": {
+    "generatedAt": "2026-10-19T04:54:11.757Z",
+    "provenance": [
+     {
+      "source": {
+       "id": "epa-cws-boundaries",
+       "publisher": "U.S. EPA; the original data provider of each polygon (a state agency, the system, or EPA's Office of Research and Development for modelled boundaries)",
+       "url": "https://www.epa.gov/ground-water-and-drinking-water"
+      },
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0",
+      "retrievedAt": "2026-10-19T04:54:11.757Z"
+     },
+     {
+      "source": {
+       "id": "epa-ucmr5-pat",
+       "publisher": "U.S. EPA Office of Enforcement and Compliance Assurance (ECHO PFAS Analytic Tools); data from EPA's Office of Ground Water and Drinking Water, UCMR 5",
+       "url": "https://www.epa.gov/dwucmr/fifth-unregulated-contaminant-monitoring-rule"
+      },
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/PFAS_Analytic_Tools_Layers/FeatureServer/1",
+      "retrievedAt": "2026-10-19T04:54:11.757Z"
+     }
+    ],
+    "coverage": [
+     {
+      "id": "service-areas",
+      "name": "EPA community water system service areas",
+      "state": "covered",
+      "count": 1
+     },
+     {
+      "id": "estimated-locations",
+      "name": "EPA UCMR 5 systems placed by estimated location",
+      "state": "covered",
+      "count": 0
+     },
+     {
+      "id": "results",
+      "name": "EPA UCMR 5 results",
+      "state": "covered",
+      "count": 1
+     }
+    ],
+    "bbox": [
+     -97.76,
+     30.26,
+     -97.74,
+     30.28
+    ],
+    "polygons": true,
+    "data": {
+     "features": [
+      {
+       "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+         [
+          [
+           -97.74417,
+           30.50595
+          ],
+          [
+           -97.74754,
+           30.50484
+          ],
+          [
+           -97.74631,
+           30.5049
+          ],
+          [
+           -97.74499,
+           30.50112
+          ],
+          [
+           -97.74937,
+           30.5
+          ],
+          [
+           -97.74896,
+           30.50061
+          ],
+          [
+           -97.74954,
+           30.50058
+          ],
+          [
+           -97.74728,
+           30.49497
+          ],
+          [
+           -97.74844,
+           30.49405
+          ],
+          [
+           -97.74918,
+           30.49174
+          ],
+          [
+           -97.75077,
+           30.49078
+          ],
+          [
+           -97.7495,
+           30.48794
+          ],
+          [
+           -97.74581,
+           30.48547
+          ],
+          [
+           -97.74386,
+           30.48273
+          ],
+          [
+           -97.74518,
+           30.48227
+          ],
+          [
+           -97.74583,
+           30.48499
+          ],
+          [
+           -97.74696,
+           30.48466
+          ],
+          [
+           -97.74661,
+           30.48376
+          ],
+          [
+           -97.74836,
+           30.48325
+          ],
+          [
+           -97.74782,
+           30.48191
+          ],
+          [
+           -97.74917,
+           30.48192
+          ],
+          [
+           -97.74914,
+           30.48506
+          ],
+          [
+           -97.75019,
+           30.4858
+          ],
+          [
+           -97.75144,
+           30.48477
+          ],
+          [
+           -97.75185,
+           30.48616
+          ],
+          [
+           -97.75259,
+           30.48616
+          ],
+          [
+           -97.75241,
+           30.48519
+          ],
+          [
+           -97.75536,
+           30.48501
+          ],
+          [
+           -97.75639,
+           30.48801
+          ],
+          [
+           -97.75462,
+           30.48856
+          ],
+          [
+           -97.75514,
+           30.48983
+          ],
+          [
+           -97.75895,
+           30.4887
+          ],
+          [
+           -97.75731,
+           30.4839
+          ],
+          [
+           -97.7637,
+           30.48189
+          ],
+          [
+           -97.76373,
+           30.47738
+          ],
+          [
+           -97.76476,
+           30.47721
+          ],
+          [
+           -97.7603,
+           30.4668
+          ],
+          [
+           -97.75559,
+           30.46278
+          ],
+          [
+           -97.75411,
+           30.46054
+          ],
+          [
+           -97.75028,
+           30.46171
+          ],
+          [
+           -97.74526,
+           30.46148
+          ],
+          [
+           -97.74499,
+           30.45907
+          ],
+          [
+           -97.74694,
+           30.45694
+          ],
+          [
+           -97.74657,
+           30.45582
+          ],
+          [
+           -97.74319,
+           30.45487
+          ],
+          [
+           -97.74207,
+           30.45574
+          ],
+          [
+           -97.73969,
+           30.45032
+          ],
+          [
+           -97.74614,
+           30.44954
+          ],
+          [
+           -97.74214,
+           30.44407
+          ],
+          [
+           -97.7345,
+           30.44653
+          ],
+          [
+           -97.73481,
+           30.44726
+          ],
+          [
+           -97.73711,
+           30.44661
+          ],
+          [
+           -97.73811,
+           30.44979
+          ],
+          [
+           -97.73024,
+           30.45214
+          ],
+          [
+           -97.7287,
+           30.44825
+          ],
+          [
+           -97.72241,
+           30.45014
+          ],
+          [
+           -97.7168,
+           30.45949
+          ],
+          [
+           -97.71442,
+           30.4583
+          ],
+          [
+           -97.71831,
+           30.45199
+          ],
+          [
+           -97.72041,
+           30.45315
+          ],
+          [
+           -97.72195,
+           30.45007
+          ],
+          [
+           -97.71627,
+           30.44915
+          ],
+          [
+           -97.71208,
+           30.44583
+          ],
+          [
+           -97.71135,
+           30.44688
+          ],
+          [
+           -97.71068,
+           30.44654
+          ],
+          [
+           -97.70823,
+           30.45039
+          ],
+          [
+           -97.70463,
+           30.44867
+          ],
+          [
+           -97.70206,
+           30.45284
+          ],
+          [
+           -97.70029,
+           30.45255
+          ],
+          [
+           -97.70173,
+           30.45029
+          ],
+          [
+           -97.69951,
+           30.44911
+          ],
+          [
+           -97.69841,
+           30.45062
+          ],
+          [
+           -97.69742,
+           30.45012
+          ],
+          [
+           -97.6989,
+           30.45663
+          ],
+          [
+           -97.70285,
+           30.45875
+          ],
+          [
+           -97.70171,
+           30.46061
+          ],
+          [
+           -97.69993,
+           30.45972
+          ],
+          [
+           -97.70106,
+           30.45787
+          ],
+          [
+           -97.69552,
+           30.4551
+          ],
+          [
+           -97.69468,
+           30.46292
+          ],
+          [
+           -97.69866,
+           30.46486
+          ],
+          [
+           -97.69119,
+           30.47241
+          ],
+          [
+           -97.6937,
+           30.47499
+          ],
+          [
+           -97.69432,
+           30.47715
+          ],
+          [
+           -97.68804,
+           30.4784
+          ],
+          [
+           -97.68687,
+           30.47569
+          ],
+          [
+           -97.68552,
+           30.47697
+          ],
+          [
+           -97.67967,
+           30.47415
+          ],
+          [
+           -97.68019,
+           30.47324
+          ],
+          [
+           -97.67801,
+           30.47217
+          ],
+          [
+           -97.67945,
+           30.46991
+          ],
+          [
+           -97.67572,
+           30.46816
+          ],
+          [
+           -97.67629,
+           30.46643
+          ],
+          [
+           -97.67301,
+           30.46471
+          ],
+          [
+           -97.67447,
+           30.46238
+          ],
+          [
+           -97.67263,
+           30.46447
+          ],
+          [
+           -97.66884,
+           30.46261
+          ],
+          [
+           -97.66795,
+           30.45977
+          ],
+          [
+           -97.66847,
+           30.45955
+          ],
+          [
+           -97.66772,
+           30.45906
+          ],
+          [
+           -97.66867,
+           30.45751
+          ],
+          [
+           -97.66563,
+           30.456
+          ],
+          [
+           -97.66418,
+           30.45617
+          ],
+          [
+           -97.66225,
+           30.45189
+          ],
+          [
+           -97.66106,
+           30.45196
+          ],
+          [
+           -97.66117,
+           30.45137
+          ],
+          [
+           -97.66027,
+           30.45335
+          ],
+          [
+           -97.65884,
+           30.45262
+          ],
+          [
+           -97.65968,
+           30.45076
+          ],
+          [
+           -97.65918,
+           30.45053
+          ],
+          [
+           -97.65833,
+           30.45238
+          ],
+          [
+           -97.65708,
+           30.45121
+          ],
+          [
+           -97.658,
+           30.44987
+          ],
+          [
+           -97.64589,
+           30.44407
+          ],
+          [
+           -97.65302,
+           30.43352
+          ],
+          [
+           -97.65032,
+           30.4298
+          ],
+          [
+           -97.65161,
+           30.42797
+          ],
+          [
+           -97.65999,
+           30.43204
+          ],
+          [
+           -97.65777,
+           30.43567
+          ],
+          [
+           -97.65859,
+           30.43607
+          ],
+          [
+           -97.65792,
+           30.43731
+          ],
+          [
+           -97.65993,
+           30.4385
+          ],
+          [
+           -97.65996,
+           30.43668
+          ],
+          [
+           -97.6624,
+           30.4332
+          ],
+          [
+           -97.66387,
+           30.43391
+          ],
+          [
+           -97.66443,
+           30.43303
+          ],
+          [
+           -97.66337,
+           30.42895
+          ],
+          [
+           -97.66529,
+           30.42876
+          ],
+          [
+           -97.66434,
+           30.42607
+          ],
+          [
+           -97.66634,
+           30.42713
+          ],
+          [
+           -97.66761,
+           30.4251
+          ],
+          [
+           -97.66497,
+           30.42387
+          ],
+          [
+           -97.66299,
+           30.427
+          ],
+          [
+           -97.65967,
+           30.42656
+          ],
+          [
+           -97.65984,
+           30.4252
+          ],
+          [
+           -97.65909,
+           30.42638
+          ],
+          [
+           -97.65784,
+           30.42579
+          ],
+          [
+           -97.66159,
+           30.41993
+          ],
+          [
+           -97.65596,
+           30.41763
+          ],
+          [
+           -97.65631,
+           30.41709
+          ],
+          [
+           -97.65489,
+           30.41536
+          ],
+          [
+           -97.65083,
+           30.42038
+          ],
+          [
+           -97.65179,
+           30.42084
+          ],
+          [
+           -97.64992,
+           30.42363
+          ],
+          [
+           -97.64634,
+           30.42193
+          ],
+          [
+           -97.65192,
+           30.41329
+          ],
+          [
+           -97.64996,
+           30.41231
+          ],
+          [
+           -97.64923,
+           30.41077
+          ],
+          [
+           -97.64758,
+           30.41331
+          ],
+          [
+           -97.64706,
+           30.41306
+          ],
+          [
+           -97.64891,
+           30.41024
+          ],
+          [
+           -97.64825,
+           30.40988
+          ],
+          [
+           -97.64606,
+           30.41434
+          ],
+          [
+           -97.64527,
+           30.41441
+          ],
+          [
+           -97.64295,
+           30.41801
+          ],
+          [
+           -97.63358,
+           30.4135
+          ],
+          [
+           -97.63531,
+           30.41005
+          ],
+          [
+           -97.63869,
+           30.41486
+          ],
+          [
+           -97.64091,
+           30.41139
+          ],
+          [
+           -97.63725,
+           30.41025
+          ],
+          [
+           -97.63646,
+           30.40928
+          ],
+          [
+           -97.63636,
+           30.40864
+          ],
+          [
+           -97.63754,
+           30.40838
+          ],
+          [
+           -97.63582,
+           30.40794
+          ],
+          [
+           -97.63622,
+           30.40368
+          ],
+          [
+           -97.63507,
+           30.40906
+          ],
+          [
+           -97.62402,
+           30.40798
+          ],
+          [
+           -97.62535,
+           30.4085
+          ],
+          [
+           -97.62522,
+           30.40999
+          ],
+          [
+           -97.62374,
+           30.4087
+          ],
+          [
+           -97.62387,
+           30.40798
+          ],
+          [
+           -97.62183,
+           30.40715
+          ],
+          [
+           -97.62207,
+           30.40637
+          ],
+          [
+           -97.62137,
+           30.4062
+          ],
+          [
+           -97.62016,
+           30.40815
+          ],
+          [
+           -97.61975,
+           30.40638
+          ],
+          [
+           -97.61823,
+           30.40623
+          ],
+          [
+           -97.61739,
+           30.40717
+          ],
+          [
+           -97.61574,
+           30.40684
+          ],
+          [
+           -97.61711,
+           30.40468
+          ],
+          [
+           -97.61315,
+           30.4028
+          ],
+          [
+           -97.61155,
+           30.3978
+          ],
+          [
+           -97.61273,
+           30.39601
+          ],
+          [
+           -97.6141,
+           30.39688
+          ],
+          [
+           -97.61567,
+           30.39569
+          ],
+          [
+           -97.61662,
+           30.3968
+          ],
+          [
+           -97.61621,
+           30.39785
+          ],
+          [
+           -97.6178,
+           30.39865
+          ],
+          [
+           -97.61874,
+           30.39744
+          ],
+          [
+           -97.6177,
+           30.39696
+          ],
+          [
+           -97.61925,
+           30.39619
+          ],
+          [
+           -97.61891,
+           30.3954
+          ],
+          [
+           -97.61551,
+           30.39452
+          ],
+          [
+           -97.61712,
+           30.39261
+          ],
+          [
+           -97.6166,
+           30.3918
+          ],
+          [
+           -97.61538,
+           30.39201
+          ],
+          [
+           -97.61427,
+           30.39373
+          ],
+          [
+           -97.61298,
+           30.39342
+          ],
+          [
+           -97.61337,
+           30.39265
+          ],
+          [
+           -97.61265,
+           30.39193
+          ],
+          [
+           -97.61406,
+           30.3896
+          ],
+          [
+           -97.60751,
+           30.38639
+          ],
+          [
+           -97.60955,
+           30.3832
+          ],
+          [
+           -97.60599,
+           30.38138
+          ],
+          [
+           -97.60861,
+           30.37747
+          ],
+          [
+           -97.60496,
+           30.37681
+          ],
+          [
+           -97.60521,
+           30.37779
+          ],
+          [
+           -97.60352,
+           30.37987
+          ],
+          [
+           -97.59931,
+           30.37782
+          ],
+          [
+           -97.59986,
+           30.37695
+          ],
+          [
+           -97.60015,
+           30.37767
+          ],
+          [
+           -97.60129,
+           30.37733
+          ],
+          [
+           -97.60134,
+           30.37643
+          ],
+          [
+           -97.59712,
+           30.37556
+          ],
+          [
+           -97.59333,
+           30.37281
+          ],
+          [
+           -97.59784,
+           30.36596
+          ],
+          [
+           -97.60318,
+           30.36855
+          ],
+          [
+           -97.60493,
+           30.36584
+          ],
+          [
+           -97.60781,
+           30.36758
+          ],
+          [
+           -97.61283,
+           30.36871
+          ],
+          [
+           -97.61325,
+           30.36622
+          ],
+          [
+           -97.61137,
+           30.36688
+          ],
+          [
+           -97.60589,
+           30.36435
+          ],
+          [
+           -97.60675,
+           30.36293
+          ],
+          [
+           -97.60607,
+           30.36262
+          ],
+          [
+           -97.60662,
+           30.36174
+          ],
+          [
+           -97.60584,
+           30.35899
+          ],
+          [
+           -97.5945,
+           30.35378
+          ],
+          [
+           -97.59281,
+           30.35641
+          ],
+          [
+           -97.59121,
+           30.35568
+          ],
+          [
+           -97.5918,
+           30.35475
+          ],
+          [
+           -97.59014,
+           30.35399
+          ],
+          [
+           -97.58829,
+           30.35709
+          ],
+          [
+           -97.5838,
+           30.35412
+          ],
+          [
+           -97.58628,
+           30.35065
+          ],
+          [
+           -97.58388,
+           30.34965
+          ],
+          [
+           -97.5811,
+           30.34975
+          ],
+          [
+           -97.58497,
+           30.34893
+          ],
+          [
+           -97.58011,
+           30.34449
+          ],
+          [
+           -97.57857,
+           30.34104
+          ],
+          [
+           -97.58028,
+           30.33924
+          ],
+          [
+           -97.5791,
+           30.33909
+          ],
+          [
+           -97.57787,
+           30.32636
+          ],
+          [
+           -97.58011,
+           30.32769
+          ],
+          [
+           -97.58138,
+           30.32663
+          ],
+          [
+           -97.58518,
+           30.33212
+          ],
+          [
+           -97.58423,
+           30.33315
+          ],
+          [
+           -97.58251,
+           30.33213
+          ],
+          [
+           -97.58112,
+           30.33361
+          ],
+          [
+           -97.58164,
+           30.33576
+          ],
+          [
+           -97.58009,
+           30.33693
+          ],
+          [
+           -97.57999,
+           30.33864
+          ],
+          [
+           -97.58048,
+           30.33905
+          ],
+          [
+           -97.58604,
+           30.33403
+          ],
+          [
+           -97.58764,
+           30.33822
+          ],
+          [
+           -97.58886,
+           30.3391
+          ],
+          [
+           -97.58818,
+           30.34054
+          ],
+          [
+           -97.59948,
+           30.33628
+          ],
+          [
+           -97.60097,
+           30.33404
+          ],
+          [
+           -97.59757,
+           30.33274
+          ],
+          [
+           -97.59863,
+           30.33148
+          ],
+          [
+           -97.60178,
+           30.33269
+          ],
+          [
+           -97.60411,
+           30.32855
+          ],
+          [
+           -97.60499,
+           30.32865
+          ],
+          [
+           -97.60779,
+           30.33391
+          ],
+          [
+           -97.60935,
+           30.33349
+          ],
+          [
+           -97.61031,
+           30.33171
+          ],
+          [
+           -97.61283,
+           30.33176
+          ],
+          [
+           -97.61422,
+           30.32818
+          ],
+          [
+           -97.61558,
+           30.32892
+          ],
+          [
+           -97.61982,
+           30.32911
+          ],
+          [
+           -97.61995,
+           30.33064
+          ],
+          [
+           -97.62309,
+           30.33014
+          ],
+          [
+           -97.62374,
+           30.32929
+          ],
+          [
+           -97.62225,
+           30.32856
+          ],
+          [
+           -97.62488,
+           30.32706
+          ],
+          [
+           -97.62652,
+           30.32208
+          ],
+          [
+           -97.62947,
+           30.32339
+          ],
+          [
+           -97.63041,
+           30.3219
+          ],
+          [
+           -97.62585,
+           30.31963
+          ],
+          [
+           -97.62615,
+           30.31831
+          ],
+          [
+           -97.62456,
+           30.31743
+          ],
+          [
+           -97.62134,
+           30.32162
+          ],
+          [
+           -97.62378,
+           30.32278
+          ],
+          [
+           -97.62193,
+           30.32558
+          ],
+          [
+           -97.60949,
+           30.31955
+          ],
+          [
+           -97.61503,
+           30.31095
+          ],
+          [
+           -97.6086,
+           30.30791
+          ],
+          [
+           -97.61022,
+           30.30487
+          ],
+          [
+           -97.6123,
+           30.30198
+          ],
+          [
+           -97.61834,
+           30.30535
+          ],
+          [
+           -97.62193,
+           30.2993
+          ],
+          [
+           -97.61839,
+           30.29605
+          ],
+          [
+           -97.6176,
+           30.29419
+          ],
+          [
+           -97.61755,
+           30.29275
+          ],
+          [
+           -97.61895,
+           30.29067
+          ],
+          [
+           -97.6159,
+           30.28911
+          ],
+          [
+           -97.6183,
+           30.28527
+          ],
+          [
+           -97.6134,
+           30.28295
+          ],
+          [
+           -97.61209,
+           30.28482
+          ],
+          [
+           -97.60797,
+           30.2833
+          ],
+          [
+           -97.60973,
+           30.28055
+          ],
+          [
+           -97.60913,
+           30.27994
+          ],
+          [
+           -97.59996,
+           30.2761
+          ],
+          [
+           -97.59611,
+           30.28215
+          ],
+          [
+           -97.59414,
+           30.28098
+          ],
+          [
+           -97.59537,
+           30.27904
+          ],
+          [
+           -97.59249,
+           30.27759
+          ],
+          [
+           -97.59298,
+           30.27682
+          ],
+          [
+           -97.59197,
+           30.27635
+          ],
+          [
+           -97.59537,
+           30.27093
+          ],
+          [
+           -97.59701,
+           30.2717
+          ],
+          [
+           -97.5955,
+           30.27333
+          ],
+          [
+           -97.60507,
+           30.27771
+          ],
+          [
+           -97.60725,
+           30.27448
+          ],
+          [
+           -97.60984,
+           30.27572
+          ],
+          [
+           -97.6131,
+           30.27067
+          ],
+          [
+           -97.61034,
+           30.26941
+          ],
+          [
+           -97.61636,
+           30.25982
+          ],
+          [
+           -97.61969,
+           30.26097
+          ],
+          [
+           -97.62045,
+           30.26004
+          ],
+          [
+           -97.62246,
+           30.26082
+          ],
+          [
+           -97.62164,
+           30.2621
+          ],
+          [
+           -97.62304,
+           30.26413
+          ],
+          [
+           -97.62432,
+           30.26196
+          ],
+          [
+           -97.62638,
+           30.26322
+          ],
+          [
+           -97.62835,
+           30.26014
+          ],
+          [
+           -97.6304,
+           30.26063
+          ],
+          [
+           -97.63106,
+           30.26153
+          ],
+          [
+           -97.62989,
+           30.26162
+          ],
+          [
+           -97.63018,
+           30.26324
+          ],
+          [
+           -97.62742,
+           30.26755
+          ],
+          [
+           -97.6328,
+           30.26997
+          ],
+          [
+           -97.63535,
+           30.26605
+          ],
+          [
+           -97.63925,
+           30.26774
+          ],
+          [
+           -97.64116,
+           30.26948
+          ],
+          [
+           -97.64197,
+           30.27292
+          ],
+          [
+           -97.64291,
+           30.2731
+          ],
+          [
+           -97.64313,
+           30.27646
+          ],
+          [
+           -97.64437,
+           30.27707
+          ],
+          [
+           -97.64672,
+           30.27342
+          ],
+          [
+           -97.64318,
+           30.26997
+          ],
+          [
+           -97.64247,
+           30.26727
+          ],
+          [
+           -97.64388,
+           30.26571
+          ],
+          [
+           -97.64584,
+           30.26589
+          ],
+          [
+           -97.65231,
+           30.26903
+          ],
+          [
+           -97.65279,
+           30.26826
+          ],
+          [
+           -97.65506,
+           30.26941
+          ],
+          [
+           -97.65257,
+           30.27321
+          ],
+          [
+           -97.65819,
+           30.27499
+          ],
+          [
+           -97.66218,
+           30.26586
+          ],
+          [
+           -97.66626,
+           30.26395
+          ],
+          [
+           -97.67146,
+           30.26398
+          ],
+          [
+           -97.67239,
+           30.26246
+          ],
+          [
+           -97.65965,
+           30.26426
+          ],
+          [
+           -97.65709,
+           30.26634
+          ],
+          [
+           -97.65463,
+           30.26534
+          ],
+          [
+           -97.65584,
+           30.26308
+          ],
+          [
+           -97.65841,
+           30.26313
+          ],
+          [
+           -97.65846,
+           30.26374
+          ],
+          [
+           -97.65912,
+           30.26272
+          ],
+          [
+           -97.66411,
+           30.26038
+          ],
+          [
+           -97.66595,
+           30.26149
+          ],
+          [
+           -97.66629,
+           30.25986
+          ],
+          [
+           -97.66942,
+           30.25886
+          ],
+          [
+           -97.66963,
+           30.25981
+          ],
+          [
+           -97.6707,
+           30.25959
+          ],
+          [
+           -97.66991,
+           30.25605
+          ],
+          [
+           -97.67171,
+           30.25473
+          ],
+          [
+           -97.67224,
+           30.25496
+          ],
+          [
+           -97.67169,
+           30.2578
+          ],
+          [
+           -97.67468,
+           30.259
+          ],
+          [
+           -97.67871,
+           30.25305
+          ],
+          [
+           -97.67707,
+           30.25368
+          ],
+          [
+           -97.67516,
+           30.25294
+          ],
+          [
+           -97.67429,
+           30.2537
+          ],
+          [
+           -97.67264,
+           30.25259
+          ],
+          [
+           -97.67577,
+           30.24937
+          ],
+          [
+           -97.67867,
+           30.24793
+          ],
+          [
+           -97.68475,
+           30.24646
+          ],
+          [
+           -97.69545,
+           30.24567
+          ],
+          [
+           -97.69501,
+           30.24713
+          ],
+          [
+           -97.69658,
+           30.24734
+          ],
+          [
+           -97.6977,
+           30.24889
+          ],
+          [
+           -97.69782,
+           30.24774
+          ],
+          [
+           -97.69685,
+           30.24677
+          ],
+          [
+           -97.69872,
+           30.24657
+          ],
+          [
+           -97.69985,
+           30.24778
+          ],
+          [
+           -97.70002,
+           30.24995
+          ],
+          [
+           -97.70565,
+           30.25115
+          ],
+          [
+           -97.71771,
+           30.25124
+          ],
+          [
+           -97.71848,
+           30.25052
+          ],
+          [
+           -97.71495,
+           30.25067
+          ],
+          [
+           -97.71852,
+           30.25033
+          ],
+          [
+           -97.71958,
+           30.24882
+          ],
+          [
+           -97.72064,
+           30.24899
+          ],
+          [
+           -97.72171,
+           30.24765
+          ],
+          [
+           -97.72456,
+           30.24678
+          ],
+          [
+           -97.72519,
+           30.24718
+          ],
+          [
+           -97.72443,
+           30.24909
+          ],
+          [
+           -97.72665,
+           30.2496
+          ],
+          [
+           -97.72794,
+           30.24885
+          ],
+          [
+           -97.7252,
+           30.24787
+          ],
+          [
+           -97.72558,
+           30.24707
+          ],
+          [
+           -97.73556,
+           30.25109
+          ],
+          [
+           -97.73869,
+           30.25333
+          ],
+          [
+           -97.74132,
+           30.25918
+          ],
+          [
+           -97.73959,
+           30.26172
+          ],
+          [
+           -97.74141,
+           30.25978
+          ],
+          [
+           -97.74659,
+           30.26345
+          ],
+          [
+           -97.75627,
+           30.26631
+          ],
+          [
+           -97.76922,
+           30.27214
+          ],
+          [
+           -97.76947,
+           30.27361
+          ],
+          [
+           -97.77111,
+           30.27406
+          ],
+          [
+           -97.78118,
+           30.28198
+          ],
+          [
+           -97.785,
+           30.28673
+          ],
+          [
+           -97.78532,
+           30.28829
+          ],
+          [
+           -97.78409,
+           30.29778
+          ],
+          [
+           -97.78288,
+           30.29827
+          ],
+          [
+           -97.78333,
+           30.29937
+          ],
+          [
+           -97.7752,
+           30.30891
+          ],
+          [
+           -97.77317,
+           30.30984
+          ],
+          [
+           -97.77372,
+           30.3107
+          ],
+          [
+           -97.77207,
+           30.31139
+          ],
+          [
+           -97.77106,
+           30.31082
+          ],
+          [
+           -97.77277,
+           30.3118
+          ],
+          [
+           -97.77455,
+           30.31148
+          ],
+          [
+           -97.77506,
+           30.30993
+          ],
+          [
+           -97.77583,
+           30.3105
+          ],
+          [
+           -97.77494,
+           30.3129
+          ],
+          [
+           -97.7746,
+           30.32017
+          ],
+          [
+           -97.776,
+           30.32438
+          ],
+          [
+           -97.78198,
+           30.33457
+          ],
+          [
+           -97.78066,
+           30.33517
+          ],
+          [
+           -97.78284,
+           30.33791
+          ],
+          [
+           -97.78352,
+           30.33765
+          ],
+          [
+           -97.78677,
+           30.34381
+          ],
+          [
+           -97.78918,
+           30.34612
+          ],
+          [
+           -97.7881,
+           30.34727
+          ],
+          [
+           -97.78878,
+           30.34805
+          ],
+          [
+           -97.78828,
+           30.34898
+          ],
+          [
+           -97.78565,
+           30.34844
+          ],
+          [
+           -97.78561,
+           30.34924
+          ],
+          [
+           -97.78836,
+           30.3493
+          ],
+          [
+           -97.79079,
+           30.34628
+          ],
+          [
+           -97.79201,
+           30.34728
+          ],
+          [
+           -97.7909,
+           30.35157
+          ],
+          [
+           -97.78504,
+           30.35209
+          ],
+          [
+           -97.78509,
+           30.35099
+          ],
+          [
+           -97.78219,
+           30.35315
+          ],
+          [
+           -97.78268,
+           30.35564
+          ],
+          [
+           -97.78407,
+           30.35678
+          ],
+          [
+           -97.78474,
+           30.35647
+          ],
+          [
+           -97.78332,
+           30.3545
+          ],
+          [
+           -97.78492,
+           30.3528
+          ],
+          [
+           -97.78816,
+           30.35257
+          ],
+          [
+           -97.78827,
+           30.35337
+          ],
+          [
+           -97.79119,
+           30.35213
+          ],
+          [
+           -97.79464,
+           30.3522
+          ],
+          [
+           -97.79564,
+           30.35006
+          ],
+          [
+           -97.79938,
+           30.35325
+          ],
+          [
+           -97.80381,
+           30.3547
+          ],
+          [
+           -97.80465,
+           30.35581
+          ],
+          [
+           -97.80263,
+           30.35609
+          ],
+          [
+           -97.80213,
+           30.35738
+          ],
+          [
+           -97.80966,
+           30.36098
+          ],
+          [
+           -97.8121,
+           30.35688
+          ],
+          [
+           -97.81143,
+           30.3546
+          ],
+          [
+           -97.80968,
+           30.35467
+          ],
+          [
+           -97.80815,
+           30.35355
+          ],
+          [
+           -97.80955,
+           30.3521
+          ],
+          [
+           -97.80655,
+           30.35333
+          ],
+          [
+           -97.80639,
+           30.35271
+          ],
+          [
+           -97.80971,
+           30.34968
+          ],
+          [
+           -97.81071,
+           30.35183
+          ],
+          [
+           -97.8128,
+           30.35216
+          ],
+          [
+           -97.81158,
+           30.35471
+          ],
+          [
+           -97.81202,
+           30.35519
+          ],
+          [
+           -97.81461,
+           30.3515
+          ],
+          [
+           -97.81521,
+           30.3519
+          ],
+          [
+           -97.81206,
+           30.35579
+          ],
+          [
+           -97.81234,
+           30.35664
+          ],
+          [
+           -97.81284,
+           30.35583
+          ],
+          [
+           -97.81359,
+           30.35606
+          ],
+          [
+           -97.81294,
+           30.35748
+          ],
+          [
+           -97.81373,
+           30.35632
+          ],
+          [
+           -97.81563,
+           30.3572
+          ],
+          [
+           -97.81379,
+           30.35858
+          ],
+          [
+           -97.81236,
+           30.35757
+          ],
+          [
+           -97.81108,
+           30.3591
+          ],
+          [
+           -97.8142,
+           30.35995
+          ],
+          [
+           -97.81411,
+           30.3628
+          ],
+          [
+           -97.81142,
+           30.36212
+          ],
+          [
+           -97.80727,
+           30.36407
+          ],
+          [
+           -97.8032,
+           30.3633
+          ],
+          [
+           -97.80277,
+           30.36398
+          ],
+          [
+           -97.8034,
+           30.36462
+          ],
+          [
+           -97.8025,
+           30.36612
+          ],
+          [
+           -97.80512,
+           30.36964
+          ],
+          [
+           -97.80829,
+           30.36924
+          ],
+          [
+           -97.80963,
+           30.3705
+          ],
+          [
+           -97.8036,
+           30.37118
+          ],
+          [
+           -97.80496,
+           30.37202
+          ],
+          [
+           -97.80542,
+           30.37556
+          ],
+          [
+           -97.80641,
+           30.37542
+          ],
+          [
+           -97.80817,
+           30.37266
+          ],
+          [
+           -97.81003,
+           30.3727
+          ],
+          [
+           -97.81191,
+           30.37039
+          ],
+          [
+           -97.8128,
+           30.37128
+          ],
+          [
+           -97.82347,
+           30.36808
+          ],
+          [
+           -97.82998,
+           30.37604
+          ],
+          [
+           -97.82816,
+           30.37745
+          ],
+          [
+           -97.82978,
+           30.37895
+          ],
+          [
+           -97.83025,
+           30.37832
+          ],
+          [
+           -97.83194,
+           30.37931
+          ],
+          [
+           -97.83273,
+           30.3818
+          ],
+          [
+           -97.83477,
+           30.3827
+          ],
+          [
+           -97.83277,
+           30.38589
+          ],
+          [
+           -97.81851,
+           30.37914
+          ],
+          [
+           -97.81829,
+           30.38369
+          ],
+          [
+           -97.8116,
+           30.38225
+          ],
+          [
+           -97.80794,
+           30.38056
+          ],
+          [
+           -97.80586,
+           30.38269
+          ],
+          [
+           -97.80512,
+           30.38215
+          ],
+          [
+           -97.80499,
+           30.38024
+          ],
+          [
+           -97.80367,
+           30.37941
+          ],
+          [
+           -97.80506,
+           30.37779
+          ],
+          [
+           -97.80504,
+           30.37964
+          ],
+          [
+           -97.80624,
+           30.37911
+          ],
+          [
+           -97.8048,
+           30.37626
+          ],
+          [
+           -97.8036,
+           30.37829
+          ],
+          [
+           -97.80241,
+           30.37753
+          ],
+          [
+           -97.80158,
+           30.38147
+          ],
+          [
+           -97.80069,
+           30.38237
+          ],
+          [
+           -97.8037,
+           30.38491
+          ],
+          [
+           -97.80241,
+           30.38624
+          ],
+          [
+           -97.80583,
+           30.39037
+          ],
+          [
+           -97.80689,
+           30.39383
+          ],
+          [
+           -97.80479,
+           30.39364
+          ],
+          [
+           -97.80249,
+           30.39722
+          ],
+          [
+           -97.79833,
+           30.39568
+          ],
+          [
+           -97.79888,
+           30.39299
+          ],
+          [
+           -97.79687,
+           30.39088
+          ],
+          [
+           -97.79845,
+           30.38724
+          ],
+          [
+           -97.79906,
+           30.3872
+          ],
+          [
+           -97.79856,
+           30.38562
+          ],
+          [
+           -97.79548,
+           30.38493
+          ],
+          [
+           -97.79527,
+           30.38362
+          ],
+          [
+           -97.78628,
+           30.38162
+          ],
+          [
+           -97.78589,
+           30.37946
+          ],
+          [
+           -97.78425,
+           30.3779
+          ],
+          [
+           -97.78132,
+           30.37903
+          ],
+          [
+           -97.77785,
+           30.37896
+          ],
+          [
+           -97.77163,
+           30.38339
+          ],
+          [
+           -97.77139,
+           30.38453
+          ],
+          [
+           -97.77213,
+           30.38511
+          ],
+          [
+           -97.77158,
+           30.38559
+          ],
+          [
+           -97.77425,
+           30.38915
+          ],
+          [
+           -97.77671,
+           30.38842
+          ],
+          [
+           -97.77705,
+           30.38954
+          ],
+          [
+           -97.77931,
+           30.39066
+          ],
+          [
+           -97.7787,
+           30.39165
+          ],
+          [
+           -97.78102,
+           30.39219
+          ],
+          [
+           -97.7806,
+           30.39274
+          ],
+          [
+           -97.78164,
+           30.39333
+          ],
+          [
+           -97.77907,
+           30.39385
+          ],
+          [
+           -97.7788,
+           30.39536
+          ],
+          [
+           -97.78252,
+           30.39729
+          ],
+          [
+           -97.78378,
+           30.40195
+          ],
+          [
+           -97.78508,
+           30.40387
+          ],
+          [
+           -97.78671,
+           30.405
+          ],
+          [
+           -97.78813,
+           30.40491
+          ],
+          [
+           -97.79234,
+           30.40885
+          ],
+          [
+           -97.79166,
+           30.40989
+          ],
+          [
+           -97.79028,
+           30.40924
+          ],
+          [
+           -97.79084,
+           30.4084
+          ],
+          [
+           -97.78349,
+           30.40493
+          ],
+          [
+           -97.78248,
+           30.41371
+          ],
+          [
+           -97.78686,
+           30.41567
+          ],
+          [
+           -97.78597,
+           30.4168
+          ],
+          [
+           -97.78704,
+           30.41737
+          ],
+          [
+           -97.79129,
+           30.41416
+          ],
+          [
+           -97.79057,
+           30.41359
+          ],
+          [
+           -97.79268,
+           30.41338
+          ],
+          [
+           -97.79403,
+           30.41458
+          ],
+          [
+           -97.79277,
+           30.41532
+          ],
+          [
+           -97.79174,
+           30.41452
+          ],
+          [
+           -97.79068,
+           30.4154
+          ],
+          [
+           -97.79171,
+           30.41684
+          ],
+          [
+           -97.79263,
+           30.41648
+          ],
+          [
+           -97.79285,
+           30.41862
+          ],
+          [
+           -97.79219,
+           30.41971
+          ],
+          [
+           -97.79066,
+           30.42016
+          ],
+          [
+           -97.79066,
+           30.4215
+          ],
+          [
+           -97.79222,
+           30.42129
+          ],
+          [
+           -97.7929,
+           30.42266
+          ],
+          [
+           -97.79437,
+           30.42184
+          ],
+          [
+           -97.79371,
+           30.4209
+          ],
+          [
+           -97.79858,
+           30.41836
+          ],
+          [
+           -97.80149,
+           30.41786
+          ],
+          [
+           -97.80223,
+           30.41672
+          ],
+          [
+           -97.8065,
+           30.41769
+          ],
+          [
+           -97.80644,
+           30.41875
+          ],
+          [
+           -97.80952,
+           30.41898
+          ],
+          [
+           -97.80957,
+           30.42014
+          ],
+          [
+           -97.80786,
+           30.42195
+          ],
+          [
+           -97.81116,
+           30.42422
+          ],
+          [
+           -97.81184,
+           30.42575
+          ],
+          [
+           -97.81319,
+           30.42499
+          ],
+          [
+           -97.81437,
+           30.42561
+          ],
+          [
+           -97.8134,
+           30.42871
+          ],
+          [
+           -97.81484,
+           30.43114
+          ],
+          [
+           -97.8136,
+           30.43227
+          ],
+          [
+           -97.81351,
+           30.43514
+          ],
+          [
+           -97.81441,
+           30.43823
+          ],
+          [
+           -97.81567,
+           30.43891
+          ],
+          [
+           -97.8161,
+           30.438
+          ],
+          [
+           -97.81556,
+           30.43797
+          ],
+          [
+           -97.81522,
+           30.43442
+          ],
+          [
+           -97.8169,
+           30.43363
+          ],
+          [
+           -97.81743,
+           30.43109
+          ],
+          [
+           -97.81659,
+           30.42911
+          ],
+          [
+           -97.81763,
+           30.42864
+          ],
+          [
+           -97.81992,
+           30.42961
+          ],
+          [
+           -97.8209,
+           30.43091
+          ],
+          [
+           -97.82063,
+           30.43282
+          ],
+          [
+           -97.82477,
+           30.43354
+          ],
+          [
+           -97.8258,
+           30.4347
+          ],
+          [
+           -97.82695,
+           30.43454
+          ],
+          [
+           -97.82459,
+           30.43071
+          ],
+          [
+           -97.82556,
+           30.42986
+          ],
+          [
+           -97.82871,
+           30.4305
+          ],
+          [
+           -97.83023,
+           30.43342
+          ],
+          [
+           -97.83124,
+           30.43245
+          ],
+          [
+           -97.83042,
+           30.43101
+          ],
+          [
+           -97.83206,
+           30.4305
+          ],
+          [
+           -97.83225,
+           30.43136
+          ],
+          [
+           -97.83693,
+           30.43005
+          ],
+          [
+           -97.83586,
+           30.42964
+          ],
+          [
+           -97.83617,
+           30.42725
+          ],
+          [
+           -97.83907,
+           30.42482
+          ],
+          [
+           -97.84027,
+           30.42542
+          ],
+          [
+           -97.84203,
+           30.42127
+          ],
+          [
+           -97.84022,
+           30.42058
+          ],
+          [
+           -97.83952,
+           30.42224
+          ],
+          [
+           -97.83542,
+           30.4209
+          ],
+          [
+           -97.83783,
+           30.41491
+          ],
+          [
+           -97.84197,
+           30.4162
+          ],
+          [
+           -97.8433,
+           30.41289
+          ],
+          [
+           -97.84812,
+           30.41482
+          ],
+          [
+           -97.84879,
+           30.41351
+          ],
+          [
+           -97.84473,
+           30.41147
+          ],
+          [
+           -97.84651,
+           30.41023
+          ],
+          [
+           -97.84477,
+           30.40933
+          ],
+          [
+           -97.84427,
+           30.41012
+          ],
+          [
+           -97.84223,
+           30.40939
+          ],
+          [
+           -97.84398,
+           30.40805
+          ],
+          [
+           -97.84661,
+           30.41006
+          ],
+          [
+           -97.84729,
+           30.40901
+          ],
+          [
+           -97.84565,
+           30.40822
+          ],
+          [
+           -97.84604,
+           30.4076
+          ],
+          [
+           -97.84806,
+           30.40825
+          ],
+          [
+           -97.84935,
+           30.40715
+          ],
+          [
+           -97.84883,
+           30.40633
+          ],
+          [
+           -97.84968,
+           30.40555
+          ],
+          [
+           -97.84728,
+           30.40565
+          ],
+          [
+           -97.84761,
+           30.40451
+          ],
+          [
+           -97.84614,
+           30.40327
+          ],
+          [
+           -97.84641,
+           30.40066
+          ],
+          [
+           -97.84416,
+           30.40113
+          ],
+          [
+           -97.84414,
+           30.40227
+          ],
+          [
+           -97.84279,
+           30.4034
+          ],
+          [
+           -97.84126,
+           30.40231
+          ],
+          [
+           -97.83855,
+           30.40331
+          ],
+          [
+           -97.83726,
+           30.40496
+          ],
+          [
+           -97.83644,
+           30.40475
+          ],
+          [
+           -97.83641,
+           30.40377
+          ],
+          [
+           -97.83751,
+           30.40435
+          ],
+          [
+           -97.83832,
+           30.4031
+          ],
+          [
+           -97.84216,
+           30.40128
+          ],
+          [
+           -97.84195,
+           30.39948
+          ],
+          [
+           -97.84013,
+           30.39863
+          ],
+          [
+           -97.83729,
+           30.39901
+          ],
+          [
+           -97.83758,
+           30.39742
+          ],
+          [
+           -97.83535,
+           30.39635
+          ],
+          [
+           -97.83574,
+           30.39467
+          ],
+          [
+           -97.83453,
+           30.39454
+          ],
+          [
+           -97.83406,
+           30.39508
+          ],
+          [
+           -97.83479,
+           30.39543
+          ],
+          [
+           -97.83318,
+           30.39567
+          ],
+          [
+           -97.83357,
+           30.39638
+          ],
+          [
+           -97.83113,
+           30.39815
+          ],
+          [
+           -97.83146,
+           30.39965
+          ],
+          [
+           -97.81966,
+           30.40042
+          ],
+          [
+           -97.8253,
+           30.39195
+          ],
+          [
+           -97.82855,
+           30.39216
+          ],
+          [
+           -97.82996,
+           30.39119
+          ],
+          [
+           -97.83209,
+           30.39194
+          ],
+          [
+           -97.8371,
+           30.39199
+          ],
+          [
+           -97.83701,
+           30.39042
+          ],
+          [
+           -97.83869,
+           30.38782
+          ],
+          [
+           -97.84335,
+           30.39006
+          ],
+          [
+           -97.84417,
+           30.38914
+          ],
+          [
+           -97.84632,
+           30.38898
+          ],
+          [
+           -97.84499,
+           30.38217
+          ],
+          [
+           -97.84738,
+           30.38337
+          ],
+          [
+           -97.84765,
+           30.38555
+          ],
+          [
+           -97.84879,
+           30.38317
+          ],
+          [
+           -97.84988,
+           30.3829
+          ],
+          [
+           -97.847,
+           30.38078
+          ],
+          [
+           -97.8481,
+           30.37937
+          ],
+          [
+           -97.84902,
+           30.37981
+          ],
+          [
+           -97.85081,
+           30.37763
+          ],
+          [
+           -97.84526,
+           30.37795
+          ],
+          [
+           -97.84376,
+           30.37725
+          ],
+          [
+           -97.84329,
+           30.37554
+          ],
+          [
+           -97.84494,
+           30.37378
+          ],
+          [
+           -97.84238,
+           30.37494
+          ],
+          [
+           -97.84138,
+           30.37448
+          ],
+          [
+           -97.8435,
+           30.37191
+          ],
+          [
+           -97.83164,
+           30.36011
+          ],
+          [
+           -97.83053,
+           30.35984
+          ],
+          [
+           -97.83095,
+           30.35854
+          ],
+          [
+           -97.83261,
+           30.3581
+          ],
+          [
+           -97.8324,
+           30.35539
+          ],
+          [
+           -97.83354,
+           30.3537
+          ],
+          [
+           -97.83706,
+           30.35493
+          ],
+          [
+           -97.84117,
+           30.34841
+          ],
+          [
+           -97.84773,
+           30.35165
+          ],
+          [
+           -97.84707,
+           30.35235
+          ],
+          [
+           -97.84773,
+           30.35319
+          ],
+          [
+           -97.84883,
+           30.35286
+          ],
+          [
+           -97.84853,
+           30.35205
+          ],
+          [
+           -97.85162,
+           30.35437
+          ],
+          [
+           -97.85206,
+           30.35381
+          ],
+          [
+           -97.85542,
+           30.35532
+          ],
+          [
+           -97.85568,
+           30.35482
+          ],
+          [
+           -97.86235,
+           30.3555
+          ],
+          [
+           -97.87391,
+           30.34739
+          ],
+          [
+           -97.87626,
+           30.34625
+          ],
+          [
+           -97.87676,
+           30.34691
+          ],
+          [
+           -97.87416,
+           30.34972
+          ],
+          [
+           -97.8655,
+           30.35464
+          ],
+          [
+           -97.86326,
+           30.35874
+          ],
+          [
+           -97.86155,
+           30.35971
+          ],
+          [
+           -97.86177,
+           30.36271
+          ],
+          [
+           -97.86098,
+           30.36396
+          ],
+          [
+           -97.85966,
+           30.3644
+          ],
+          [
+           -97.85868,
+           30.36161
+          ],
+          [
+           -97.85621,
+           30.36267
+          ],
+          [
+           -97.86043,
+           30.36631
+          ],
+          [
+           -97.86222,
+           30.36599
+          ],
+          [
+           -97.86288,
+           30.36502
+          ],
+          [
+           -97.86419,
+           30.36711
+          ],
+          [
+           -97.86366,
+           30.37046
+          ],
+          [
+           -97.86437,
+           30.37064
+          ],
+          [
+           -97.86431,
+           30.37257
+          ],
+          [
+           -97.86319,
+           30.37283
+          ],
+          [
+           -97.86301,
+           30.37138
+          ],
+          [
+           -97.86088,
+           30.37037
+          ],
+          [
+           -97.86063,
+           30.37194
+          ],
+          [
+           -97.85819,
+           30.37156
+          ],
+          [
+           -97.85706,
+           30.37359
+          ],
+          [
+           -97.8537,
+           30.37581
+          ],
+          [
+           -97.85329,
+           30.37666
+          ],
+          [
+           -97.85742,
+           30.37804
+          ],
+          [
+           -97.85601,
+           30.37815
+          ],
+          [
+           -97.85434,
+           30.38001
+          ],
+          [
+           -97.85658,
+           30.38263
+          ],
+          [
+           -97.85196,
+           30.38247
+          ],
+          [
+           -97.85229,
+           30.38469
+          ],
+          [
+           -97.84995,
+           30.3882
+          ],
+          [
+           -97.85157,
+           30.38907
+          ],
+          [
+           -97.84993,
+           30.38889
+          ],
+          [
+           -97.8487,
+           30.39057
+          ],
+          [
+           -97.84935,
+           30.39181
+          ],
+          [
+           -97.85045,
+           30.39133
+          ],
+          [
+           -97.85205,
+           30.3919
+          ],
+          [
+           -97.85148,
+           30.3925
+          ],
+          [
+           -97.85248,
+           30.39374
+          ],
+          [
+           -97.85224,
+           30.39709
+          ],
+          [
+           -97.8502,
+           30.39735
+          ],
+          [
+           -97.85563,
+           30.39998
+          ],
+          [
+           -97.85623,
+           30.40023
+          ],
+          [
+           -97.8583,
+           30.39728
+          ],
+          [
+           -97.86125,
+           30.39639
+          ],
+          [
+           -97.86246,
+           30.39935
+          ],
+          [
+           -97.86053,
+           30.39842
+          ],
+          [
+           -97.85934,
+           30.40035
+          ],
+          [
+           -97.8615,
+           30.40155
+          ],
+          [
+           -97.86158,
+           30.40423
+          ],
+          [
+           -97.85972,
+           30.40381
+          ],
+          [
+           -97.85916,
+           30.40258
+          ],
+          [
+           -97.85807,
+           30.40431
+          ],
+          [
+           -97.85578,
+           30.40482
+          ],
+          [
+           -97.85529,
+           30.4066
+          ],
+          [
+           -97.85365,
+           30.40547
+          ],
+          [
+           -97.85241,
+           30.4074
+          ],
+          [
+           -97.85333,
+           30.40784
+          ],
+          [
+           -97.85277,
+           30.40926
+          ],
+          [
+           -97.85391,
+           30.4097
+          ],
+          [
+           -97.85228,
+           30.41311
+          ],
+          [
+           -97.85375,
+           30.4136
+          ],
+          [
+           -97.85374,
+           30.41256
+          ],
+          [
+           -97.8557,
+           30.41276
+          ],
+          [
+           -97.85478,
+           30.41427
+          ],
+          [
+           -97.857,
+           30.4179
+          ],
+          [
+           -97.86067,
+           30.41881
+          ],
+          [
+           -97.86305,
+           30.42211
+          ],
+          [
+           -97.86487,
+           30.42292
+          ],
+          [
+           -97.86337,
+           30.42525
+          ],
+          [
+           -97.86257,
+           30.42494
+          ],
+          [
+           -97.85821,
+           30.42737
+          ],
+          [
+           -97.85839,
+           30.42883
+          ],
+          [
+           -97.85658,
+           30.42932
+          ],
+          [
+           -97.85606,
+           30.42816
+          ],
+          [
+           -97.85506,
+           30.4286
+          ],
+          [
+           -97.85468,
+           30.42792
+          ],
+          [
+           -97.85697,
+           30.42627
+          ],
+          [
+           -97.85624,
+           30.42502
+          ],
+          [
+           -97.85892,
+           30.4222
+          ],
+          [
+           -97.85711,
+           30.42286
+          ],
+          [
+           -97.85472,
+           30.42249
+          ],
+          [
+           -97.85257,
+           30.42674
+          ],
+          [
+           -97.84947,
+           30.42457
+          ],
+          [
+           -97.84932,
+           30.42254
+          ],
+          [
+           -97.85195,
+           30.41892
+          ],
+          [
+           -97.85336,
+           30.41813
+          ],
+          [
+           -97.85059,
+           30.41797
+          ],
+          [
+           -97.84746,
+           30.42529
+          ],
+          [
+           -97.84968,
+           30.42713
+          ],
+          [
+           -97.85066,
+           30.43048
+          ],
+          [
+           -97.84647,
+           30.42842
+          ],
+          [
+           -97.8413,
+           30.43999
+          ],
+          [
+           -97.84173,
+           30.43824
+          ],
+          [
+           -97.839,
+           30.43705
+          ],
+          [
+           -97.83463,
+           30.44145
+          ],
+          [
+           -97.83077,
+           30.44884
+          ],
+          [
+           -97.83364,
+           30.45051
+          ],
+          [
+           -97.83245,
+           30.45232
+          ],
+          [
+           -97.82973,
+           30.451
+          ],
+          [
+           -97.82885,
+           30.45276
+          ],
+          [
+           -97.83097,
+           30.45381
+          ],
+          [
+           -97.82941,
+           30.45503
+          ],
+          [
+           -97.8284,
+           30.45434
+          ],
+          [
+           -97.82713,
+           30.45577
+          ],
+          [
+           -97.82565,
+           30.45578
+          ],
+          [
+           -97.82021,
+           30.46066
+          ],
+          [
+           -97.80812,
+           30.46487
+          ],
+          [
+           -97.8086,
+           30.4658
+          ],
+          [
+           -97.81104,
+           30.4648
+          ],
+          [
+           -97.81346,
+           30.4708
+          ],
+          [
+           -97.81138,
+           30.4716
+          ],
+          [
+           -97.81244,
+           30.47197
+          ],
+          [
+           -97.81308,
+           30.47338
+          ],
+          [
+           -97.81375,
+           30.47258
+          ],
+          [
+           -97.814,
+           30.47321
+          ],
+          [
+           -97.81234,
+           30.47417
+          ],
+          [
+           -97.81223,
+           30.47519
+          ],
+          [
+           -97.81286,
+           30.47539
+          ],
+          [
+           -97.81215,
+           30.47701
+          ],
+          [
+           -97.80759,
+           30.47843
+          ],
+          [
+           -97.80594,
+           30.47794
+          ],
+          [
+           -97.80358,
+           30.47953
+          ],
+          [
+           -97.80158,
+           30.47696
+          ],
+          [
+           -97.80172,
+           30.47588
+          ],
+          [
+           -97.80104,
+           30.47618
+          ],
+          [
+           -97.80036,
+           30.47498
+          ],
+          [
+           -97.79919,
+           30.47534
+          ],
+          [
+           -97.80355,
+           30.48326
+          ],
+          [
+           -97.80414,
+           30.48676
+          ],
+          [
+           -97.80036,
+           30.48815
+          ],
+          [
+           -97.80089,
+           30.48938
+          ],
+          [
+           -97.80224,
+           30.48794
+          ],
+          [
+           -97.80387,
+           30.48768
+          ],
+          [
+           -97.80191,
+           30.49178
+          ],
+          [
+           -97.80181,
+           30.49462
+          ],
+          [
+           -97.80068,
+           30.49377
+          ],
+          [
+           -97.80056,
+           30.49319
+          ],
+          [
+           -97.80137,
+           30.49324
+          ],
+          [
+           -97.80051,
+           30.49209
+          ],
+          [
+           -97.79984,
+           30.49246
+          ],
+          [
+           -97.8007,
+           30.49582
+          ],
+          [
+           -97.79529,
+           30.49753
+          ],
+          [
+           -97.79633,
+           30.4998
+          ],
+          [
+           -97.79434,
+           30.50039
+          ],
+          [
+           -97.79519,
+           30.50192
+          ],
+          [
+           -97.79314,
+           30.50156
+          ],
+          [
+           -97.79289,
+           30.50079
+          ],
+          [
+           -97.79125,
+           30.50206
+          ],
+          [
+           -97.79026,
+           30.50178
+          ],
+          [
+           -97.789,
+           30.5028
+          ],
+          [
+           -97.78396,
+           30.50411
+          ],
+          [
+           -97.77561,
+           30.50328
+          ],
+          [
+           -97.76628,
+           30.50723
+          ],
+          [
+           -97.76294,
+           30.50754
+          ],
+          [
+           -97.76349,
+           30.50682
+          ],
+          [
+           -97.76201,
+           30.50627
+          ],
+          [
+           -97.7616,
+           30.50798
+          ],
+          [
+           -97.75772,
+           30.50901
+          ],
+          [
+           -97.75474,
+           30.51314
+          ],
+          [
+           -97.74854,
+           30.51664
+          ],
+          [
+           -97.74417,
+           30.50595
+          ]
+         ]
+        ]
+       },
+       "properties": {
+        "id": "pfas:TX2270001",
+        "details": {
+         "population served": 1115323
+        },
+        "extra": {
+         "state": "detected",
+         "pwsid": "TX2270001",
+         "maxNgL": 8.4,
+         "modelled": false,
+         "placement": "service-area",
+         "results": [
+          {
+           "contaminant": "PFBA",
+           "maxNgL": 8.4,
+           "detections": 4,
+           "results": 12
+          },
+          {
+           "contaminant": "PFHxS",
+           "maxNgL": 6.2,
+           "detections": 6,
+           "results": 12
+          },
+          {
+           "contaminant": "PFBS",
+           "maxNgL": 5.1,
+           "detections": 4,
+           "results": 12
+          },
+          {
+           "contaminant": "PFOS",
+           "maxNgL": 4.8,
+           "detections": 2,
+           "results": 12
+          },
+          {
+           "contaminant": "PFPeA",
+           "maxNgL": 4.1,
+           "detections": 4,
+           "results": 12
+          },
+          {
+           "contaminant": "PFHxA",
+           "maxNgL": 3.3,
+           "detections": 2,
+           "results": 12
+          },
+          {
+           "contaminant": "11Cl-PF3OUdS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "4:2 FTS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "6:2 FTS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "8:2 FTS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "9Cl-PF3ONS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "ADONA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "HFPO-DA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "NEtFOSAA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "NFDHA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "NMeFOSAA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFDA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFDoA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFEESA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFHpA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFHpS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFMBA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFMPA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFNA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFOA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFPeS",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFTA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFTrDA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          },
+          {
+           "contaminant": "PFUnA",
+           "maxNgL": null,
+           "detections": 0,
+           "results": 12
+          }
+         ]
+        }
+       }
+      }
+     ]
+    }
    }
   }
  },
- "derivedFrom": "recorded live at the time below, with FEMA NFHL's two nodes and provenance entry for this point taken from the same route's reply at 2026-10-19T01:25:14Z (NFHL failed on every fabric call when this was recorded)"
+ "derivedFrom": "recorded live at the time below, with FEMA NFHL's two nodes and provenance entry for this point taken from the same route's reply at 2026-10-19T01:25:14Z (NFHL failed on every fabric call when this was recorded)",
+ "filled": [
+  {
+   "at": "2026-10-19T05:09:26.783Z",
+   "from": "https://www.arxiviq.com",
+   "routes": [
+    "/api/water?op=pfas&bbox=-97.76,30.26,-97.74,30.28&polygons=1"
+   ]
+  }
+ ]
 }

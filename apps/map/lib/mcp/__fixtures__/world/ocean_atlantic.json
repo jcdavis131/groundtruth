@@ -10,7 +10,10 @@
    "status": 200,
    "body": {
     "data": {
-     "point": {},
+     "point": {
+      "lon": -60,
+      "lat": 35
+     },
      "nodes": [],
      "failed": [],
      "answered": [
@@ -29,6 +32,88 @@
      }
     ],
     "generatedAt": "2026-10-19T02:32:30.392Z"
+   }
+  },
+  "/api/live": {
+   "status": 200,
+   "body": {
+    "data": {
+     "items": [],
+     "failed": [],
+     "unmapped": 0
+    },
+    "provenance": [
+     {
+      "source": {
+       "id": "nws-api",
+       "publisher": "NOAA National Weather Service",
+       "url": "https://www.weather.gov/documentation/services-web-api"
+      },
+      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     },
+     {
+      "source": {
+       "id": "usgs-earthquakes",
+       "publisher": "U.S. Geological Survey",
+       "url": "https://earthquake.usgs.gov/"
+      },
+      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
+      "retrievedAt": "2026-10-19T02:31:49.835Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:31:49.835Z"
+   }
+  },
+  "/api/infra?op=hospitals&bbox=-60.1,34.9,-59.9,35.1": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "hifld-hospitals",
+       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
+       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
+      },
+      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
+      "retrievedAt": "2026-10-19T02:32:30.595Z"
+     },
+     {
+      "source": {
+       "id": "cms-provider-data",
+       "publisher": "Centers for Medicare & Medicaid Services",
+       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
+      },
+      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
+      "retrievedAt": "2026-10-17T00:00:00.000Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:30.595Z"
+   }
+  },
+  "/api/infra?op=dams&bbox=-60.1,34.9,-59.9,35.1": {
+   "status": 200,
+   "body": {
+    "data": {
+     "features": []
+    },
+    "truncated": false,
+    "provenance": [
+     {
+      "source": {
+       "id": "usace-nid",
+       "publisher": "U.S. Army Corps of Engineers",
+       "url": "https://nid.sec.usace.army.mil/"
+      },
+      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+      "retrievedAt": "2026-10-19T02:32:30.706Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:32:30.706Z"
    }
   },
   "/api/releases?op=calendar": {
@@ -188,87 +273,70 @@
     "generatedAt": "2026-10-19T02:31:47.351Z"
    }
   },
-  "/api/live": {
+  "/api/water?op=pfas&bbox=-60,35,-59.98,35.02&polygons=1": {
    "status": 200,
    "body": {
-    "data": {
-     "items": [],
-     "failed": [],
-     "unmapped": 0
-    },
+    "generatedAt": "2026-10-19T04:54:54.101Z",
     "provenance": [
      {
       "source": {
-       "id": "nws-api",
-       "publisher": "NOAA National Weather Service",
-       "url": "https://www.weather.gov/documentation/services-web-api"
+       "id": "epa-cws-boundaries",
+       "publisher": "U.S. EPA; the original data provider of each polygon (a state agency, the system, or EPA's Office of Research and Development for modelled boundaries)",
+       "url": "https://www.epa.gov/ground-water-and-drinking-water"
       },
-      "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0",
+      "retrievedAt": "2026-10-19T04:54:54.101Z"
      },
      {
       "source": {
-       "id": "usgs-earthquakes",
-       "publisher": "U.S. Geological Survey",
-       "url": "https://earthquake.usgs.gov/"
+       "id": "epa-ucmr5-pat",
+       "publisher": "U.S. EPA Office of Enforcement and Compliance Assurance (ECHO PFAS Analytic Tools); data from EPA's Office of Ground Water and Drinking Water, UCMR 5",
+       "url": "https://www.epa.gov/dwucmr/fifth-unregulated-contaminant-monitoring-rule"
       },
-      "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
+      "upstreamUrl": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/PFAS_Analytic_Tools_Layers/FeatureServer/1",
+      "retrievedAt": "2026-10-19T04:54:54.101Z"
      }
     ],
-    "generatedAt": "2026-10-19T02:31:49.835Z"
-   }
-  },
-  "/api/infra?op=hospitals&bbox=-60.1,34.9,-59.9,35.1": {
-   "status": 200,
-   "body": {
-    "data": {
-     "features": []
-    },
-    "truncated": false,
-    "provenance": [
+    "coverage": [
      {
-      "source": {
-       "id": "hifld-hospitals",
-       "publisher": "Homeland Infrastructure Foundation-Level Data (DHS Geospatial Management Office, Oak Ridge National Laboratory), hosted by FEMA (FEMA_HQ_Preparedness_NIC)",
-       "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"
-      },
-      "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6",
-      "retrievedAt": "2026-10-19T02:32:30.595Z"
+      "id": "service-areas",
+      "name": "EPA community water system service areas",
+      "state": "covered",
+      "count": 0
      },
      {
-      "source": {
-       "id": "cms-provider-data",
-       "publisher": "Centers for Medicare & Medicaid Services",
-       "url": "https://data.cms.gov/provider-data/dataset/xubh-q36u"
-      },
-      "upstreamUrl": "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0",
-      "retrievedAt": "2026-10-17T00:00:00.000Z"
+      "id": "estimated-locations",
+      "name": "EPA UCMR 5 systems placed by estimated location",
+      "state": "covered",
+      "count": 0
+     },
+     {
+      "id": "results",
+      "name": "EPA UCMR 5 results",
+      "state": "covered",
+      "count": 0
      }
     ],
-    "generatedAt": "2026-10-19T02:32:30.595Z"
-   }
-  },
-  "/api/infra?op=dams&bbox=-60.1,34.9,-59.9,35.1": {
-   "status": 200,
-   "body": {
+    "bbox": [
+     -60,
+     35,
+     -59.98,
+     35.02
+    ],
+    "polygons": true,
     "data": {
      "features": []
-    },
-    "truncated": false,
-    "provenance": [
-     {
-      "source": {
-       "id": "usace-nid",
-       "publisher": "U.S. Army Corps of Engineers",
-       "url": "https://nid.sec.usace.army.mil/"
-      },
-      "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
-      "retrievedAt": "2026-10-19T02:32:30.706Z"
-     }
-    ],
-    "generatedAt": "2026-10-19T02:32:30.706Z"
+    }
    }
   }
- }
+ },
+ "filled": [
+  {
+   "at": "2026-10-19T05:09:51.127Z",
+   "from": "https://www.arxiviq.com",
+   "routes": [
+    "/api/water?op=pfas&bbox=-60,35,-59.98,35.02&polygons=1"
+   ]
+  }
+ ]
 }

@@ -68,7 +68,8 @@ describe("HazardHistoryView", () => {
     expect(t).not.toContain("FEMA did not answer");
     expect(t).not.toContain("not published in this geography");
     // One row per designated area: rows are not declarations.
-    expect(t).toContain("2 rows for 1 disasters: FEMA lists one row per designated area");
+    expect(t).toContain("2 rows for 1 disaster: FEMA lists one row per designated area");
+    expect(t).not.toContain("1 disasters");
     expect(t).toContain("COVID-19 PANDEMIC · PA · Chatham Regional Educational Attendance Area");
   });
 
@@ -95,5 +96,19 @@ describe("HazardHistoryView", () => {
     expect(t).toContain("* drawn years only: its zone-coded years are blank and not in the total");
     const clean = render(reply({ storms: { ...reply().storms!, types: [{ type: "Hail", points: [[2020, 3]], blank: [], total: 3 }] } }));
     expect(clean).not.toContain("*");
+  });
+
+  it("a main storm type (Hail, Thunderstorm Wind, Flash Flood) with blank years gets its * and the key", () => {
+    for (const type of ["Hail", "Thunderstorm Wind", "Flash Flood"]) {
+      const t = render(reply({ storms: { ...reply().storms!, types: [{ type, points: [[2020, 3]], blank: [[1997, "zone-coded"]], total: 3 }] } }));
+      expect(t, type).toContain(`3 ${type.toLowerCase()}* reports since 1996`);
+      expect(t, type).toContain("* drawn years only: its zone-coded years are blank and not in the total");
+    }
+  });
+
+  it("more than one distinct disaster is plural", () => {
+    const d = reply();
+    const t = render(reply({ declarations: [...d.declarations, { ...d.declarations[0], disasterNumber: 4585 }] }));
+    expect(t).toContain("3 rows for 2 disasters: FEMA lists one row per designated area");
   });
 });

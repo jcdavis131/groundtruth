@@ -13,6 +13,14 @@
 //     that route lists as missing, or sends no provenance for, gives no value.
 //   - Every item carries sourceId, publisher, upstreamUrl, retrievedAt and a
 //     link: the exact route URL that, fetched, returns the cited thing.
+//   - An item also carries upstreamRecordUrl, a keyless query URL on its own
+//     publisher's host for exactly that record (a GEOID, a disaster number, a
+//     PWSID), or its note says "no record-level URL" and why. Agents cite the
+//     publisher for the fact and use link to reproduce it.
+//   - A county is centred on Census's internal point from the bundled county
+//     table (ctx.countyPoint), never on a map anchor.
+//   - Items about eye's own catalogue are kind "about-eye": claims about what
+//     eye holds, not about the world.
 //   - Missing is absent with a reason (topics[t].missing), never a placeholder;
 //     a value BLS withheld is null with the reason, not 0.
 //   - A sub-route that fails or times out costs only its own items: the reply
@@ -34,11 +42,16 @@ import { envelopeForStatus } from "./errors";
 import type { JsonObject, JsonReply, ToolCtx, ToolReply } from "./tools";
 
 /** Topics a caller can ask for. identity is always included. */
-export const WORLD_TOPICS = ["fabric", "hazards", "economy", "vulnerability", "institutions", "freshness", "collections"] as const;
+export const WORLD_TOPICS = ["fabric", "hazards", "economy", "vulnerability", "institutions", "water", "freshness", "collections"] as const;
 export type WorldTopic = (typeof WORLD_TOPICS)[number];
 
-/** Hard cap on the reply: UTF-8 bytes of the JSON text. */
-export const WORLD_MAX_BYTES = 24_000;
+/**
+ * Hard cap on the reply: UTF-8 bytes of the JSON text. 40,000 since record-level URLs and the water
+ * topic (2026-10-19): they add 150 to 250 bytes an item, and at 24,000 the default Austin and
+ * Collegeville replies dropped 12 and 11 items, and at 32,000 Austin still dropped its 2 companies.
+ * 40,000 keeps every recorded default reply whole, with room for a point with more fabric.
+ */
+export const WORLD_MAX_BYTES = 40_000;
 /** Records per list (hospitals, dams, declarations, alerts, ...) when max_records is not given. */
 export const WORLD_DEFAULT_RECORDS = 3;
 export const WORLD_MAX_RECORDS = 10;
@@ -68,8 +81,12 @@ export interface WorldItem {
   sourceId: string;
   publisher: string;
   upstreamUrl: string;
+  /** The publisher's own keyless URL for exactly this record; absent when none exists (the note says so). */
+  upstreamRecordUrl?: string;
   retrievedAt: string;
   link: string;
+  /** "about-eye": a claim about eye's own catalogue, not about the world; it has no upstream to confirm. */
+  kind?: "about-eye";
 }
 
 export interface WorldSection {
@@ -259,12 +276,135 @@ function isCite(c: Cite | NoCite): c is Cite {
 /** An item, or the fact it would have stated and why it has no citation. */
 type Built = WorldItem | { uncited: string; reason: string };
 
-function item(c: Cite | NoCite, fact: string, value: WorldItem["value"], extra: Partial<Omit<WorldItem, "fact" | "value" | keyof Cite>> = {}): Built {
+/** Why an item has no record-level URL; said in its note as "no record-level URL: <why>". */
+interface NoRecord {
+  noRecord: string;
+}
+
+const noRecord = (why: string): NoRecord => ({ noRecord: why });
+
+type Extra = Partial<Omit<WorldItem, "fact" | "value" | "upstreamRecordUrl" | keyof Cite>> & {
+  /** The publisher's URL for exactly this record, or why there is none. Every call site says which. */
+  record: string | NoRecord;
+};
+
+function item(c: Cite | NoCite, fact: string, value: WorldItem["value"], extra: Extra): Built {
   if (!isCite(c)) return { uncited: fact, reason: c.reason };
   const out = { fact, value } as WorldItem;
-  for (const [k, v] of Object.entries(extra)) if (v !== undefined && v !== null && v !== "") (out as unknown as JsonObject)[k] = v;
-  return Object.assign(out, c);
+  const { record, ...rest } = extra;
+  if (typeof record !== "string") rest.note = [rest.note, `no record-level URL: ${record.noRecord}`].filter(Boolean).join("; ");
+  for (const [k, v] of Object.entries(rest)) if (v !== undefined && v !== null && v !== "") (out as unknown as JsonObject)[k] = v;
+  Object.assign(out, c);
+  if (typeof record === "string") out.upstreamRecordUrl = record;
+  if (rest.kind) {
+    // Keep kind last but one: it qualifies the whole item, so it reads next to the link.
+    delete out.kind;
+    out.kind = rest.kind;
+  }
+  return out;
 }
+
+// ---- record-level URLs at the publisher ------------------------------------------
+//
+// Each is a keyless GET on the cited source's own host that returns exactly the record
+// an item states, checked by hand on 2026-10-18 (see world.test.ts, "record-level URLs").
+
+const enc = encodeURIComponent;
+
+/**
+ * An ArcGIS layer query for one record, on the layer the item's own provenance names; else why not.
+ * `outFields` narrows the reply where `*` would show a field the item withholds (a private dam's name).
+ */
+function arcgisRecord(c: Cite | NoCite, where: string, outFields = "*"): string | NoRecord {
+  if (!isCite(c)) return noRecord("no citation");
+  const base = c.upstreamUrl.replace(/\/+$/, "");
+  if (!/\/(FeatureServer|MapServer)\/\d+$/.test(base)) return noRecord("the cited source is not a single ArcGIS layer this tool can query by id");
+  return `${base}/query?where=${enc(where)}&outFields=${outFields}&returnGeometry=false&f=json`;
+}
+
+const TIGER_CURRENT = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer";
+/** The bundled county table's layer: Census internal points (INTPTLAT/INTPTLON), ACS 2023 vintage. */
+export const TIGER_ACS2023_COUNTIES = "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2023/State_County/MapServer/13";
+
+/** tigerWMS_Current layer per construct, as lib/fabric/parse.ts reads them (TIGER_LAYERS). */
+const TIGER_LAYER: Record<string, number> = { zcta: 2, tract: 8, place: 28, cd: 54, state: 80, county: 82 };
+const SCHOOL_LAYER: Record<string, number> = { unified: 14, secondary: 16, elementary: 18 };
+
+function tigerRecord(kind: string, geoid: string | null, facts: JsonObject = {}): string | NoRecord {
+  if (!geoid) return noRecord("the fabric gave no GEOID");
+  const layer = kind === "cbsa" ? (facts.type === "micropolitan" ? 91 : facts.type === "metropolitan" ? 93 : null) : kind === "school" ? (SCHOOL_LAYER[String(facts.type ?? "")] ?? null) : (TIGER_LAYER[kind] ?? null);
+  if (layer == null) return noRecord(kind === "tribal" ? "TIGERweb files tribal lands in four layers and the fabric does not say which one holds this one" : `the fabric does not say which TIGERweb layer holds this ${kind}`);
+  return `${TIGER_CURRENT}/${layer}/query?where=${enc(`GEOID='${geoid}'`)}&outFields=GEOID,NAME&returnGeometry=false&f=json`;
+}
+
+/** The fabric's per-point upstream calls, as lib/fabric/fetch.ts makes them: the record for this point. */
+function pointRecord(sourceId: string, kind: string, code: string | null, lon: number, lat: number): string | NoRecord {
+  switch (sourceId) {
+    case "nws-api":
+      return `https://api.weather.gov/points/${lat.toFixed(4)},${lon.toFixed(4)}`;
+    case "usgs-epqs":
+      return `https://epqs.nationalmap.gov/v1/json?x=${lon}&y=${lat}&units=Meters&wkid=4326`;
+    case "usgs-wbd":
+      return code ? `https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query?where=${enc(`huc12='${code}'`)}&outFields=huc12,name,tohuc&returnGeometry=false&f=json` : noRecord("the fabric gave no HUC-12 code");
+    case "fema-nfhl":
+      if (kind === "flood-community") return code ? `https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/22/query?where=${enc(`CID='${code}'`)}&outFields=CID,POL_NAME1&returnGeometry=false&f=json` : noRecord("the fabric gave no NFIP community id");
+      return `https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28/query?geometry=${lon},${lat}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=FLD_AR_ID,FLD_ZONE,ZONE_SUBTY,SFHA_TF,DFIRM_ID&returnGeometry=false&f=json`;
+    case "epa-ecoregions":
+      return code ? `https://geodata.epa.gov/arcgis/rest/services/ORD/USEPA_Ecoregions_Level_III_and_IV/MapServer/11/query?where=${enc(`US_L3CODE='${code}'`)}&outFields=US_L3CODE,US_L3NAME&returnGeometry=false&resultRecordCount=1&f=json` : noRecord("the fabric gave no ecoregion code");
+    default:
+      return noRecord(`no query URL is known for ${sourceId}`);
+  }
+}
+
+/** OpenFEMA's declaration rows for one disaster number. */
+const femaDisasterRecord = (n: string) => `https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?$filter=${enc(`disasterNumber eq ${n}`)}`;
+
+/** The BLS QCEW area CSV for the quarter the item states ("2026 Q1") and an area (county FIPS, or SS000 for a state). */
+function qcewRecord(period: string | undefined, area: string | null): string | NoRecord {
+  const m = /^(\d{4}) Q([1-4])$/.exec(period ?? "");
+  if (!m || !area) return noRecord("the screener gave no quarter or area for this value");
+  return `https://data.bls.gov/cew/data/api/${m[1]}/${m[2]}/area/${area}.csv`;
+}
+
+/** NID fields a dam item states (owner type, hazard, condition, year), besides NIDID and, for a named dam, NAME. */
+const DAM_RECORD_FIELDS = ["PRIMARY_OWNER_TYPE", "OWNER_TYPES", "HAZARD_POTENTIAL", "CONDITION_ASSESSMENT", "YEAR_COMPLETED"];
+
+/** USDM's county area-percent statistics for the one map date the item states. */
+function usdmRecord(fips: string, mapDate: string | null): string | NoRecord {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(mapDate ?? "");
+  if (!m) return noRecord("the route gave no map date");
+  const d = `${Number(m[2])}/${Number(m[3])}/${m[1]}`;
+  // statisticsType=2 is categorical (per-class shares summing to 100), as the item states them; 1 is cumulative (D0 includes D1-D4).
+  return `https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=${fips}&startdate=${d}&enddate=${d}&statisticsType=2`;
+}
+
+/** CMS Provider Data: the Hospital General Information row for one CCN, on the dataset the route cites. */
+function cmsRecord(c: Cite | NoCite, ccn: string): string | NoRecord {
+  if (!isCite(c)) return noRecord("no citation");
+  if (!/\/datastore\/query\/[a-z0-9-]+\/\d+$/.test(c.upstreamUrl)) return noRecord("the cited CMS URL is not a datastore query");
+  return `${c.upstreamUrl}?conditions%5B0%5D%5Bproperty%5D=facility_id&conditions%5B0%5D%5Bvalue%5D=${enc(ccn)}&conditions%5B0%5D%5Boperator%5D=%3D`;
+}
+
+/** SEC EDGAR's submissions file for one CIK (keyless; SEC asks for a User-Agent naming the caller). */
+const secRecord = (cik: string) => `https://data.sec.gov/submissions/CIK${cik.padStart(10, "0")}.json`;
+
+const ZILLOW_NO_RECORD = noRecord("Zillow publishes one CSV of every region, with no URL per region");
+
+/**
+ * Schedule pages that answer HTTP 403 to a non-browser client (curl -A groundtruth-eval/0.1,
+ * 2026-10-18), including BLS's machine-readable bls.ics. The release item keeps the page as its
+ * upstreamUrl and says so, rather than citing a page an agent cannot open without saying why.
+ */
+export const SCHEDULE_BLOCKED_PREFIXES = ["https://www.bls.gov/", "https://www.zillow.com/", "https://www.spglobal.com/", "https://www.bts.gov/"] as const;
+export const SCHEDULE_BLOCKED_NOTE = "the publisher's schedule page blocks automated clients (HTTP 403 to a non-browser user agent, checked 2026-10-18)";
+
+function scheduleBlocked(url: string | null): boolean {
+  return !!url && SCHEDULE_BLOCKED_PREFIXES.some((p) => url.startsWith(p));
+}
+
+/** What the reply says about every item, once (not per item, for the byte cap). */
+export const WORLD_REPLY_NOTE =
+  "Cite upstreamRecordUrl for a fact (the publisher's own URL for that exact record), or upstreamUrl where an item's note says it has no record-level URL; `link` is the eye route that reproduces it. kind about-eye marks a claim about eye's own catalogue, not about the world. Missing is listed with its reason, never filled in. Names appear only on places, hospitals and non-private dams.";
 
 function section(): Section {
   return { items: [], cut: [] };
@@ -337,6 +477,26 @@ function segmentTouchesBox(a: number[], b2: number[], box: Box): boolean {
 }
 
 /** Does a polygon (its rings) touch the box: an edge crosses it, or the box sits inside the polygon? */
+/** Is the point inside the polygon (its rings, however nested), even-odd? */
+export function ringsContain(rings: unknown[], lon: number, lat: number): boolean {
+  let inside = false;
+  for (const ring of ringsIn(rings)) {
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [xi, yi] = ring[i];
+      const [xj, yj] = ring[j];
+      if (yi > lat !== yj > lat && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
+    }
+  }
+  return inside;
+}
+
+/** The 0.02-degree cell holding a point, on the grid /api/water?op=pfas snaps to (so the route keeps it as asked). */
+export function waterBox(lon: number, lat: number): Box {
+  const g = 0.02;
+  const f = (x: number) => Number((Math.floor(x / g + 1e-9) * g).toFixed(4));
+  return [f(lon), f(lat), Number((f(lon) + g).toFixed(4)), Number((f(lat) + g).toFixed(4))];
+}
+
 export function ringsTouchBox(rings: unknown[], box: Box): boolean {
   const rs = ringsIn(rings);
   for (const ring of rs) for (let i = 1; i < ring.length; i++) if (segmentTouchesBox(ring[i - 1], ring[i], box)) return true;
@@ -414,12 +574,34 @@ function nodeNote(n: Node): string | undefined {
   return parts.length ? parts.join("; ") : undefined;
 }
 
+/**
+ * The point the fabric read at: the route snaps the asked point to a 0.001 grid and reads every
+ * upstream there, so a record URL built from the asked point can return a different value. Only
+ * the reply's own point (data.point, else meta.snapped) is used; never the query.
+ */
+function fabricPoint(fabric: Got): [number, number] | null {
+  for (const p of [obj(obj(fabric.body.data).point), obj(obj(fabric.body.meta).snapped)]) {
+    const lon = num(p.lon);
+    const lat = num(p.lat);
+    if (lon != null && lat != null) return [lon, lat];
+  }
+  return null;
+}
+
+/** A fabric node's record at its publisher: TIGERweb by GEOID, the rest by code or by the point. */
+function nodeRecord(fabric: Got, n: Node): string | NoRecord {
+  if (n.source === "census-tigerweb") return tigerRecord(n.kind, n.code, n.facts);
+  const at = fabricPoint(fabric);
+  if (!at) return noRecord("the fabric reply does not state the point it was read at");
+  return pointRecord(n.source, n.kind, n.code, at[0], at[1]);
+}
+
 function fabricItems(s: Section, fabric: Got, kinds: Record<string, string>, only?: Set<string>, note?: string): void {
   for (const n of nodesOf(fabric)) {
     const label = kinds[n.kind];
     if (!label || (only && !only.has(n.kind))) continue;
     const extra = [nodeNote(n), note].filter(Boolean).join("; ");
-    push(s, item(cite(fabric, n.source), label, n.name, { code: n.code ?? undefined, note: extra || undefined }));
+    push(s, item(cite(fabric, n.source), label, n.name, { code: n.code ?? undefined, note: extra || undefined, record: nodeRecord(fabric, n) }));
   }
 }
 
@@ -502,8 +684,23 @@ interface Resolved {
   countyFips: string | null;
   stateFips: string | null;
   usps: string | null;
-  point: { lon: number; lat: number; basis: string } | null;
+  point: { lon: number; lat: number; basis: string; census?: { geoid: string; pulled: string | null } } | null;
   box: Box | null;
+}
+
+/** place.point as sent: a county's point carries its own Census citation, record-level. */
+function pointOut(p: Resolved["point"]): JsonObject | null {
+  if (!p) return null;
+  const { census, ...rest } = p;
+  if (!census) return rest;
+  return {
+    ...rest,
+    sourceId: "census-tigerweb",
+    publisher: "U.S. Census Bureau",
+    upstreamUrl: TIGER_ACS2023_COUNTIES,
+    upstreamRecordUrl: `${TIGER_ACS2023_COUNTIES}/query?where=${enc(`GEOID='${census.geoid}'`)}&outFields=GEOID,NAME,INTPTLAT,INTPTLON&returnGeometry=false&f=json`,
+    ...(census.pulled ? { retrievedAt: census.pulled } : {}),
+  };
 }
 
 function bytes(v: unknown): number {
@@ -516,7 +713,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
   const max = input.max_records ?? WORLD_DEFAULT_RECORDS;
   const topics = new Set<WorldTopic>(input.topics ?? WORLD_TOPICS.filter((t) => t !== "collections" || input.about));
   const want = (t: WorldTopic) => topics.has(t);
-  const S: Record<"identity" | WorldTopic, Section> = { identity: section(), fabric: section(), hazards: section(), economy: section(), vulnerability: section(), institutions: section(), freshness: section(), collections: section() };
+  const S: Record<"identity" | WorldTopic, Section> = { identity: section(), fabric: section(), hazards: section(), economy: section(), vulnerability: section(), institutions: section(), water: section(), freshness: section(), collections: section() };
   const id = S.identity;
 
   // ---- phase 1: resolve the place ----
@@ -560,14 +757,22 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     if (screen.ok) {
       r.name = str(row.name);
       r.usps = str(obj(row.values).state);
+    } else miss(id, `${kind} row`, screen.reason ?? "failed");
+    if (r.kind === "county") {
+      // Census's own internal point for the county (INTPTLON/INTPTLAT), from the bundled county table,
+      // never the screener's map anchor (Mobile 01097's was 11 km off it).
+      const cp = ctx.countyPoint?.(geoid) ?? null;
+      if (cp) {
+        r.point = { lon: round(cp.lon, 4), lat: round(cp.lat, 4), basis: "Census internal point (INTPTLON/INTPTLAT) of the county, from eye's county table", census: { geoid, pulled: cp.pulled } };
+        r.box = boxAround(cp.lon, cp.lat, 0.25);
+      } else miss(id, "the county's point", ctx.countyPoint ? `eye's county table has no county ${geoid}, so nothing is centred on it` : "this server was started without eye's county table (ctx.countyPoint), so the county has no point and no search box");
+    } else if (screen.ok) {
+      // A state: the screener's representative point, said as such (no box is searched for a state).
       const geo = arr(row.geo);
       const lon = num(geo[0]);
       const lat = num(geo[1]);
-      if (lon != null && lat != null) {
-        r.point = { lon: round(lon, 4), lat: round(lat, 4), basis: `the ${kind}'s representative point as /api/screen publishes it` };
-        if (r.kind === "county") r.box = boxAround(lon, lat, 0.25);
-      }
-    } else miss(id, `${kind} row`, screen.reason ?? "failed");
+      if (lon != null && lat != null) r.point = { lon: round(lon, 4), lat: round(lat, 4), basis: "the state's representative point as /api/screen publishes it" };
+    }
   }
 
   // ---- phase 2: everything else, in parallel ----
@@ -588,6 +793,8 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     companies: want("institutions") ? (r.kind === "bbox" ? get("/api/companies" + q({ op: "near", bbox: r.box!.join(",") })) : cf ? get("/api/companies" + q({ op: "county", fips: cf })) : null) : null,
     calendar: want("freshness") ? get("/api/releases" + q({ op: "calendar" })) : null,
     catalog: want("collections") && input.about ? get("/api/catalog" + q({ op: "search", q: input.about, limit: max })) : null,
+    // EPA's CWS service areas and UCMR 5 results for the one 0.02-degree cell holding the point (the route's own grid).
+    water: want("water") && r.point && r.kind !== "state" ? get("/api/water" + q({ op: "pfas", bbox: waterBox(r.point.lon, r.point.lat).join(","), polygons: 1 })) : null,
   };
   const keys = Object.keys(calls) as (keyof typeof calls)[];
   const settled = await Promise.all(keys.map((k) => calls[k]));
@@ -600,7 +807,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
   if (screen?.ok && (r.kind === "county" || r.kind === "state")) {
     const row = obj(arr(obj(screen.body.data).rows)[0]);
     const v = obj(row.values);
-    push(id, item(cite(screen, "census-tigerweb"), r.kind, str(row.name), { code: str(v.geoid) ?? undefined }));
+    push(id, item(cite(screen, "census-tigerweb"), r.kind, str(row.name), { code: str(v.geoid) ?? undefined, record: tigerRecord(r.kind, str(v.geoid)) }));
   }
   if (fabric?.ok && (r.kind === "point" || r.kind === "bbox")) {
     fabricItems(id, fabric, IDENTITY_KINDS, undefined, r.kind === "bbox" ? "at the centre of the box" : undefined);
@@ -609,12 +816,12 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
   if (r.kind === "county") {
     const g = got.fabric;
     if (g?.ok) {
-      const at = r.point ? `the county's representative point (${r.point.lon}, ${r.point.lat})` : "the county's representative point";
+      const at = r.point ? `the county's Census internal point (${r.point.lon}, ${r.point.lat})` : "the county's Census internal point";
       const there = nodesOf(g).find((n) => n.kind === "county");
       if (there && there.code !== cf) {
         miss(id, "state and metro area (CBSA) from the place fabric", `the fabric at ${at} resolved to county ${there.code}${there.name ? ` (${there.name})` : ""}, not ${cf}; that county's state and CBSA are not shown for this one`);
       } else {
-        fabricItems(id, g, IDENTITY_KINDS, new Set(["state", "cbsa"]), "read at the county's representative point");
+        fabricItems(id, g, IDENTITY_KINDS, new Set(["state", "cbsa"]), "read at the county's Census internal point");
         identityGaps(id, g, cf, at);
       }
     } else if (g) miss(id, "state and metro area (CBSA) from the place fabric", g.reason ?? "failed");
@@ -633,7 +840,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
       if (obj(g.body.data).truncated === true) id.cut.push("counties touching the box: the route hit its record limit, so some may be missing");
       if (!touching.length) miss(id, "counties touching the box", units.length ? "none of the county outlines the route returned touches the box" : "Census TIGERweb returned no county in the box (offshore or outside the US)");
       for (const u of capList(id, "counties touching the box", touching, max)) {
-        push(id, listRow(item(c, "county touching the box", str(u.name), { code: str(u.code) ?? undefined, note: "its Census TIGERweb outline (generalised) touches the box" })));
+        push(id, listRow(item(c, "county touching the box", str(u.name), { code: str(u.code) ?? undefined, note: "its Census TIGERweb outline (generalised) touches the box", record: tigerRecord("county", str(u.code)) })));
       }
     } else miss(id, "counties touching the box", g.reason ?? "failed");
   }
@@ -649,7 +856,10 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     else if (fabric?.ok) {
       fabricItems(s, fabric, FABRIC_KINDS, undefined, r.kind === "bbox" ? "at the centre of the box" : undefined);
       const elev = num(obj(obj(fabric.body.data).point).elevationM);
-      if (elev != null) push(s, item(cite(fabric, "usgs-epqs"), "elevation", elev, { unit: "m", note: r.kind === "bbox" ? "at the centre of the box" : undefined }));
+      if (elev != null) {
+        const at = fabricPoint(fabric);
+        push(s, item(cite(fabric, "usgs-epqs"), "elevation", elev, { unit: "m", note: r.kind === "bbox" ? "at the centre of the box" : undefined, record: at ? pointRecord("usgs-epqs", "elevation", null, at[0], at[1]) : noRecord("the fabric reply does not state the point it was read at") }));
+      }
       else miss(s, "elevation", "USGS 3DEP gave no elevation for this point");
       fabricFailed(fabric, s);
     } else miss(s, "place fabric", fabric?.reason ?? "not asked");
@@ -665,12 +875,13 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     if (nri) {
       if (row) {
         const c = cite(nri, "fema-nri");
+        const nriRec = arcgisRecord(c, `STCOFIPS='${cf}'`);
         const risk = nriRating(row.RISK_RATNG);
-        if (risk.rating) push(s, item(c, "FEMA NRI overall risk rating", risk.rating, { note: num(row.RISK_SCORE) != null ? `score ${round(num(row.RISK_SCORE)!, 1)} (percentile among US counties, not a likelihood)` : undefined, period: str(row.NRI_VER) ?? undefined }));
+        if (risk.rating) push(s, item(c, "FEMA NRI overall risk rating", risk.rating, { note: num(row.RISK_SCORE) != null ? `score ${round(num(row.RISK_SCORE)!, 1)} (percentile among US counties, not a likelihood)` : undefined, period: str(row.NRI_VER) ?? undefined, record: nriRec }));
         else miss(s, "FEMA NRI overall risk rating", risk.reason!);
         const eal = num(row.EAL_VALT);
         const ealR = nriRating(row.EAL_RATNG);
-        if (eal != null) push(s, item(c, "FEMA NRI expected annual loss", Math.round(eal), { unit: "USD a year (modelled)", note: ealR.rating ? `rating ${ealR.rating}` : `rating not given: ${ealR.reason}` }));
+        if (eal != null) push(s, item(c, "FEMA NRI expected annual loss", Math.round(eal), { unit: "USD a year (modelled)", note: ealR.rating ? `rating ${ealR.rating}` : `rating not given: ${ealR.reason}`, record: nriRec }));
         else miss(s, "FEMA NRI expected annual loss", "FEMA's row has no expected annual loss for this county");
         const by: Record<string, string[]> = {};
         for (const [code, name] of Object.entries(NRI_HAZARDS)) {
@@ -678,7 +889,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
           if (rating === "Very High" || rating === "Relatively High") (by[rating] ??= []).push(name);
         }
         const top = ["Very High", "Relatively High"].filter((k) => by[k]).map((k) => `${k}: ${by[k].join(", ")}`).join("; ");
-        if (top) push(s, item(c, "NRI hazards rated Very High or Relatively High", top));
+        if (top) push(s, item(c, "NRI hazards rated Very High or Relatively High", top, { record: nriRec }));
       } else miss(s, "FEMA National Risk Index", nri.ok ? "FEMA's index has no row for this county" : nri.reason ?? "failed");
     }
     const h = got.history;
@@ -707,7 +918,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         else if (!decls.length) {
           if (gap) miss(s, "FEMA declarations", `the route reports a boundary or join gap for this county (${explainReason(str(gap.reason) ?? "", str(gap.source) ?? "a source", str(gap.detail))}), so an empty FEMA list is not proof that none were declared`);
           else if (rowsTotal !== 0) miss(s, "FEMA declarations", `the route listed none but did not report reading zero rows (declarationRows ${rowsTotal ?? "absent"}), so no count is given`);
-          else push(s, item(fema, "FEMA declarations listed", 0, { note: "OpenFEMA lists no declaration naming this county, at any date (declarationRows 0)" }));
+          else push(s, item(fema, "FEMA declarations listed", 0, { note: "OpenFEMA lists no declaration naming this county, at any date (declarationRows 0)", record: fema.upstreamUrl.includes("fipsCountyCode") ? fema.upstreamUrl : noRecord("the route's OpenFEMA query for this county is not stated") }));
         } else {
           const shown = decls.slice(0, max);
           if (rowsTotal == null || rowsTotal > shown.length) s.cut.push(`FEMA declarations: the latest ${shown.length} distinct shown, any date (FEMA files ${rowsTotal ?? "an unstated number of"} rows for this county; a disaster can have one row per designated area)`);
@@ -720,6 +931,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
                   code: x.disasterNumber != null ? `${str(x.declarationType) ?? ""}-${str(x.disasterNumber)}` : undefined,
                   period: str(x.declarationDate) ?? undefined,
                   note: [str(x.incidentType), filed ? `filed by FEMA under the former county code ${filed} (the route's caveats say how that code relates to this county)` : null].filter(Boolean).join("; ") || undefined,
+                  record: x.disasterNumber != null ? femaDisasterRecord(str(x.disasterNumber)!) : noRecord("FEMA's row has no disaster number"),
                 }),
               ),
             );
@@ -729,7 +941,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         if (Object.keys(dn).length) {
           const usdm = cite(h, "usdm", (p) => String(p.upstreamUrl ?? "").includes("Severity"));
           const shares = ["d0", "d1", "d2", "d3", "d4"].map((k) => `${k.toUpperCase()} ${num(dn[k]) ?? "?"}%`).join(", ");
-          push(s, item(usdm, "U.S. Drought Monitor this week (share of county area per class)", shares, { period: str(dn.mapDate) ?? undefined, note: `none ${num(dn.none) ?? "?"}%; shares as published` }));
+          push(s, item(usdm, "U.S. Drought Monitor this week (share of county area per class)", shares, { period: str(dn.mapDate) ?? undefined, note: `none ${num(dn.none) ?? "?"}%; shares as published`, record: usdmRecord(cf!, str(dn.mapDate)) }));
         } else {
           // The route's own entry for this week's call (it failed, or USDM has no week here), else plain absence.
           const nowGap = arr(d.missing)
@@ -756,7 +968,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
             const lat = num(x.lat);
             return boxesTouch(b, arr(x.bbox).map(Number)) || (lon != null && lat != null && inBox(b, lon, lat));
           });
-        const where = r.kind === "county" ? `the box 0.25 degrees around the county's representative point (${b.join(",")}), not the whole county` : r.kind === "point" ? `the box 0.1 degrees around the point (${b.join(",")})` : `the box ${b.join(",")}`;
+        const where = r.kind === "county" ? `the box 0.25 degrees around the county's Census internal point (${b.join(",")}), not the whole county` : r.kind === "point" ? `the box 0.1 degrees around the point (${b.join(",")})` : `the box ${b.join(",")}`;
         // One count per source, each cited to its own feed, and only when that feed answered in full.
         const alerts = hits.filter((x) => x.kind !== "quake");
         const quakes = hits.filter((x) => x.kind === "quake");
@@ -764,16 +976,16 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         const nws = cite(live, "nws-api");
         if (!isCite(nws)) miss(s, "Severe or Extreme NWS alerts touching the box now", nws.reason);
         else if (unmapped > 0) miss(s, "count of Severe or Extreme NWS alerts touching the box now", `${unmapped} alert${unmapped === 1 ? "" : "s"} in the national list could not be outlined, so a count for this box could miss them; the alerts that do touch it are listed`);
-        else push(s, item(nws, "Severe or Extreme NWS alerts touching the box now", alerts.length, { note: where }));
+        else push(s, item(nws, "Severe or Extreme NWS alerts touching the box now", alerts.length, { note: where, record: noRecord("a count over NWS's national list of active alerts, matched to this box here; NWS has no URL for exactly this box") }));
         const usgs = cite(live, "usgs-earthquakes");
         if (!isCite(usgs)) miss(s, "M4.5+ earthquakes in the past day touching the box", usgs.reason);
-        else push(s, item(usgs, "M4.5+ earthquakes in the past day touching the box", quakes.length, { note: where }));
+        else push(s, item(usgs, "M4.5+ earthquakes in the past day touching the box", quakes.length, { note: where, record: noRecord("a count over USGS's past-day M4.5+ feed, matched to this box here; the feed has no URL for exactly this box") }));
         for (const x of capList(s, "live events", hits, max)) {
           const quake = x.kind === "quake";
           const c = quake ? usgs : nws;
           const t = num(x.time);
           const u = num(x.until);
-          push(s, listRow(item(isCite(c) && typeof x.url === "string" ? { ...c, upstreamUrl: x.url } : c, quake ? "earthquake" : "NWS alert", str(x.title), { note: str(x.subtitle) ?? undefined, period: t != null ? new Date(t).toISOString() + (u != null ? "/" + new Date(u).toISOString() : "") : undefined })));
+          push(s, listRow(item(c, quake ? "earthquake" : "NWS alert", str(x.title), { note: str(x.subtitle) ?? undefined, period: t != null ? new Date(t).toISOString() + (u != null ? "/" + new Date(u).toISOString() : "") : undefined, record: typeof x.url === "string" && /^https:\/\//.test(x.url) ? x.url : noRecord("the live list gave no URL for this event") })));
         }
       } else miss(s, "live events", live.reason ?? "failed");
     }
@@ -794,21 +1006,22 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
           ["jobs.avgWeeklyWage", "average weekly wage (BLS QCEW)", "USD"],
         ] as const) {
           const n = num(v[k]);
-          if (n != null) push(s, item(qcew, fact, n, { unit, period }));
-          else if (withheld) push(s, item(qcew, fact, null, { unit, period, note: "withheld by BLS for confidentiality: null, not 0" }));
+          const record = qcewRecord(period, r.kind === "state" ? `${r.stateFips}000` : cf);
+          if (n != null) push(s, item(qcew, fact, n, { unit, period, record }));
+          else if (withheld) push(s, item(qcew, fact, null, { unit, period, note: "withheld by BLS for confidentiality: null, not 0", record }));
           else miss(s, fact, "not published for this place");
         }
         const home = num(v["home.latest"]);
-        if (home != null) push(s, item(cite(screen, "zillow-zhvi"), "typical home value (Zillow ZHVI)", Math.round(home), { unit: "USD", period: str(v["home.asOf"]) ?? undefined, note: num(v["home.yoyPct"]) != null ? `${round(num(v["home.yoyPct"])!, 1)}% over the year` : undefined }));
+        if (home != null) push(s, item(cite(screen, "zillow-zhvi"), "typical home value (Zillow ZHVI)", Math.round(home), { unit: "USD", period: str(v["home.asOf"]) ?? undefined, note: num(v["home.yoyPct"]) != null ? `${round(num(v["home.yoyPct"])!, 1)}% over the year` : undefined, record: ZILLOW_NO_RECORD }));
         else miss(s, "typical home value (Zillow ZHVI)", "Zillow publishes no value for this place");
         const rent = num(v["rent.latest"]);
-        if (rent != null) push(s, item(cite(screen, "zillow-zori"), "typical asking rent (Zillow ZORI)", Math.round(rent), { unit: "USD a month" }));
+        if (rent != null) push(s, item(cite(screen, "zillow-zori"), "typical asking rent (Zillow ZORI)", Math.round(rent), { unit: "USD a month", record: ZILLOW_NO_RECORD }));
         else miss(s, "typical asking rent (Zillow ZORI)", "Zillow publishes no rent index for this place");
       }
     } else miss(s, "jobs, wages, home value and rent", screen?.reason ?? "no county resolved");
     if (row) {
       const pop = num(row.POPULATION);
-      if (pop != null) push(s, item(cite(nri!, "fema-nri"), "population (as carried in FEMA's NRI row)", pop, { unit: "people", note: `FEMA NRI ${str(row.NRI_VER) ?? ""}`.trim() + "; NRI's own population input, not a Census table eye reads directly" }));
+      if (pop != null) push(s, item(cite(nri!, "fema-nri"), "population (as carried in FEMA's NRI row)", pop, { unit: "people", note: `FEMA NRI ${str(row.NRI_VER) ?? ""}`.trim() + "; NRI's own population input, not a Census table eye reads directly", record: arcgisRecord(cite(nri!, "fema-nri"), `STCOFIPS='${cf}'`) }));
     } else if (cf) miss(s, "population", "eye serves population only through FEMA's NRI row, which did not answer for this county");
   }
 
@@ -820,13 +1033,13 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     if (svi) {
       const rpl = arr(obj(obj(svi.body.data).row).rpl);
       const overall = num(rpl[0]);
-      if (svi.ok && overall != null && overall >= 0) push(s, item(cite(svi, "cdc-svi"), "CDC/ATSDR SVI 2022 overall percentile", overall, { unit: "0 least to 1 most vulnerable among US counties" }));
+      if (svi.ok && overall != null && overall >= 0) push(s, item(cite(svi, "cdc-svi"), "CDC/ATSDR SVI 2022 overall percentile", overall, { unit: "0 least to 1 most vulnerable among US counties", record: arcgisRecord(cite(svi, "cdc-svi"), `FIPS='${cf}'`) }));
       else miss(s, "CDC/ATSDR SVI 2022", svi.ok ? "CDC does not rank this place" : svi.reason ?? "failed");
     }
     const sovi = row ? nriRating(row.SOVI_RATNG) : null;
     if (row && sovi && !sovi.rating) miss(s, "FEMA NRI social vulnerability", sovi.reason!);
     else if (row && sovi?.rating) {
-      push(s, item(cite(nri!, "fema-nri"), "FEMA NRI social vulnerability rating (Census Community Resilience Estimate; not CDC SVI)", sovi.rating, { note: num(row.SOVI_SCORE) != null ? `score ${round(num(row.SOVI_SCORE)!, 1)} of 100` : undefined }));
+      push(s, item(cite(nri!, "fema-nri"), "FEMA NRI social vulnerability rating (Census Community Resilience Estimate; not CDC SVI)", sovi.rating, { note: num(row.SOVI_SCORE) != null ? `score ${round(num(row.SOVI_SCORE)!, 1)} of 100` : undefined, record: arcgisRecord(cite(nri!, "fema-nri"), `STCOFIPS='${cf}'`) }));
     } else if (cf) miss(s, "FEMA NRI social vulnerability", nri?.reason ?? "FEMA's index has no row for this county");
   }
 
@@ -835,8 +1048,8 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     const s = S.institutions;
     if (!r.box) miss(s, "hospitals and dams", r.kind === "state" ? "a state is too large for the record routes; pass a county FIPS, a point or a box" : "no box to search");
     const b = r.box;
-    const boxNote = b ? (r.kind === "county" ? `within 0.25 degrees of the county's representative point, not the whole county` : r.kind === "point" ? "within 0.1 degrees of the point" : "inside the box") : undefined;
-    const records = (g: Got | null, label: string, sourceId: string, build: (p: JsonObject, pt: [number, number] | null, c: Cite) => Built) => {
+    const boxNote = b ? (r.kind === "county" ? `within 0.25 degrees of the county's Census internal point, not the whole county` : r.kind === "point" ? "within 0.1 degrees of the point" : "inside the box") : undefined;
+    const records = (g: Got | null, label: string, sourceId: string, build: (p: JsonObject, pt: [number, number] | null, c: Cite, g: Got) => Built | Built[]) => {
       if (!g || !b) return;
       if (!g.ok) return miss(s, label, g.reason ?? "failed");
       const feats = arr(obj(g.body.data).features)
@@ -852,29 +1065,46 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
       if (routeCut) {
         s.cut.push(`${label}: the route hit its upstream's record limit for this box, so the ${feats.length} it returned inside the box are not all of them`);
         if (!feats.length) miss(s, `${label} found`, "the route hit its record limit and returned none inside the box; a count of 0 would not be true");
-      } else if (!feats.length) push(s, item(c, `${label} found`, 0, { note: boxNote }));
+      } else if (!feats.length) push(s, item(c, `${label} found`, 0, { note: boxNote, record: noRecord("a count of the route's records inside this box; the publisher has no URL for exactly this box") }));
       if (routeCut && feats.length > max) s.cut.push(`${label}: ${max} of at least ${feats.length} shown (max_records)`);
       const shown = routeCut ? feats.slice(0, max) : capList(s, label, feats, max);
-      for (const f of shown) push(s, listRow(build(obj(f.properties), pointOf(f), c)));
+      for (const f of shown) for (const one of [build(obj(f.properties), pointOf(f), c, g)].flat()) push(s, listRow(one));
     };
-    records(got.hospitals, "hospitals", "hifld-hospitals", (p, pt, c) => {
+    records(got.hospitals, "hospitals", "hifld-hospitals", (p, pt, c, g) => {
       const x = obj(p.extra);
-      const cms = obj(x.cms);
-      const rating = num(cms.rating);
-      return item(c, "hospital", publicName(p), {
-        code: str(p.id) ?? undefined,
+      const hid = str(p.id);
+      const hospital = item(c, "hospital", publicName(p), {
+        code: hid ?? undefined,
         point: pt ?? undefined,
-        note: [str(obj(p.details).type), str(x.status)?.toLowerCase(), rating != null ? `CMS overall star rating ${rating}` : cms.ccn ? "CMS lists it but has not rated it" : null, boxNote].filter(Boolean).join("; "),
+        note: [str(obj(p.details).type), str(x.status)?.toLowerCase(), boxNote].filter(Boolean).join("; "),
+        record: hid?.startsWith("hifld-hosp:") ? arcgisRecord(c, `ID='${hid.slice("hifld-hosp:".length)}'`) : noRecord("the route gave no HIFLD id"),
       });
+      // CMS's rating is CMS's fact: its own item, cited to CMS, with CMS's row for the hospital's CCN.
+      const cms = obj(x.cms);
+      const ccn = str(cms.ccn);
+      if (!ccn) return hospital;
+      const rating = num(cms.rating);
+      const cc = cite(g, "cms-provider-data");
+      return [
+        hospital,
+        item(cc, "CMS overall hospital star rating", rating, {
+          code: ccn,
+          note: [`CCN ${ccn}, for hospital ${hid ?? "(no id)"}`, rating == null ? "CMS lists the hospital and publishes no overall rating for it: null, not 0" : "1 to 5 stars"].join("; "),
+          record: cmsRecord(cc, ccn),
+        }),
+      ];
     });
     records(got.dams, "dams", "usace-nid", (p, pt, c) => {
       const d = obj(p.details);
       const name = publicName(p);
       const owner = str(d["owner type"]);
       const unnamed = name ? null : owner && /private/i.test(owner) ? "name withheld (private owner); labelled by NID id" : "name not in the route's record text; labelled by NID id";
+      const nid = str(p.id);
       return item(c, "dam", name, {
-        code: str(p.id) ?? undefined,
+        code: nid ?? undefined,
         point: pt ?? undefined,
+        // A dam labelled by its id gets a record link that leaves NAME out too: the reply withholds it.
+        record: nid?.startsWith("nid:") ? arcgisRecord(c, `NIDID='${nid.slice(4)}'`, (name ? ["NIDID", "NAME", ...DAM_RECORD_FIELDS] : ["NIDID", ...DAM_RECORD_FIELDS]).join(",")) : noRecord("the route gave no NID id"),
         note: [unnamed, str(d["hazard potential"]) ? `hazard potential ${str(d["hazard potential"])}` : null, str(d["condition assessment"]) ? `condition ${str(d["condition assessment"])}` : null, str(d["year completed"]) ? `completed ${str(d["year completed"])}` : null, str(d["owner type"]) ? `owner type ${str(d["owner type"])}` : null, boxNote]
           .filter(Boolean)
           .join("; "),
@@ -894,11 +1124,11 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         const size = num(obj(co.body.bundle).companies);
         const universe = `within eye's SEC bundle${size != null ? ` of ${size} companies` : ""}${pulled ? ` pulled ${pulled}` : " (a committed fixture, pulled: null)"}; not every registrant`;
         if (!pulled) miss(s, `SEC-registered public companies ${where}`, `eye's SEC bundle is a committed fixture (pulled: null), not a full pull of EDGAR registrants, so it cannot say how many are ${where}; any listed are ${universe}`);
-        else if (!feats.length) push(s, item(c, `public companies in eye's SEC bundle ${where}`, 0, { note: universe }));
+        else if (!feats.length) push(s, item(c, `public companies in eye's SEC bundle ${where}`, 0, { note: universe, record: noRecord("a count within eye's SEC bundle; SEC has no URL for it") }));
         for (const f of capList(s, "public companies", feats, max)) {
           const x = obj(obj(f.properties).extra);
           const ticker = str(x.ticker);
-          push(s, listRow(item(c, "public company (by ticker; names are not copied)", ticker, { code: x.cik != null ? `CIK ${str(x.cik)}` : undefined, note: [str(x.exchange), where, universe].filter(Boolean).join("; ") })));
+          push(s, listRow(item(c, "public company (by ticker; names are not copied)", ticker, { code: x.cik != null ? `CIK ${str(x.cik)}` : undefined, note: [str(x.exchange), where, universe].filter(Boolean).join("; "), record: x.cik != null && /^\d{1,10}$/.test(String(x.cik)) ? secRecord(String(x.cik)) : noRecord("the bundle gave no CIK") })));
         }
       } else miss(s, "public companies", co.reason ?? "failed");
     }
@@ -922,9 +1152,101 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
             const hid = str(hit.id);
             if (!hid) continue;
             const card = "/api/catalog" + q({ id: hid });
-            push(s, listRow(item(c, "collection", str(hit.title), { code: hid, note: [num(hit.score) != null ? `cosine ${round(num(hit.score)!, 3)} between descriptions; not proof the collection answers the question` : null, `card: ${card}`].filter(Boolean).join("; ") })));
+            push(s, listRow(item(c, "collection", str(hit.title), { code: hid, note: [num(hit.score) != null ? `cosine ${round(num(hit.score)!, 3)} between descriptions; not proof the collection answers the question` : null, `card: ${card}`].filter(Boolean).join("; "), kind: "about-eye", record: noRecord("a claim about eye's own catalogue, which has no outside publisher") })));
           }
       } else miss(s, "collections", cat.reason ?? "failed");
+    }
+  }
+
+  // ---- water: the community water system serving the point, and its UCMR 5 rows ----
+  if (want("water")) {
+    const s = S.water;
+    const g = got.water;
+    const what = "community water system serving the point";
+    if (!g) miss(s, what, r.kind === "state" ? "a state has no single water system; pass a county FIPS, a point or a box" : "no point to look up");
+    else if (!g.ok) miss(s, what, g.reason ?? "failed");
+    else {
+      const { lon, lat } = r.point!;
+      const at = r.kind === "county" ? "the county's Census internal point" : r.kind === "bbox" ? "the centre of the box" : "the point";
+      const cws = cite(g, "epa-cws-boundaries");
+      const pat = cite(g, "epa-ucmr5-pat");
+      // The route spreads its meta at the top level: coverage[] says whether the service-area layer answered in full.
+      const areas = arr(g.body.coverage).map(obj).find((c) => c.id === "service-areas");
+      const serving = arr(obj(g.body.data).features)
+        .map(obj)
+        .filter((f) => {
+          const geom = obj(f.geometry);
+          return obj(obj(f.properties).extra).placement === "service-area" && (geom.type === "Polygon" || geom.type === "MultiPolygon") && ringsContain(arr(geom.coordinates), lon, lat);
+        });
+      // UCMR 5 rows here belong to "the system serving the point", which only the service-area layer can say.
+      const areasOk = isCite(cws) && str(areas?.state) !== "error";
+      if (!isCite(cws)) miss(s, what, cws.reason);
+      else if (!areasOk) miss(s, what, "EPA's service-area layer did not answer this time (the route's coverage says error): unknown, not none");
+      else if (!serving.length) {
+        miss(
+          s,
+          what,
+          str(areas?.state) === "partial"
+            ? `EPA's service-area layer hit its record limit for this box, so a system serving ${at} may be among those not returned`
+            : `no EPA community water system service area contains ${at}: it may be served by a private well or by a system EPA has no boundary for (EPA answered for the box; this is not a 0)`,
+        );
+      }
+      const ucmr = "UCMR 5 (2023-2025)";
+      for (const f of areasOk ? serving : []) {
+        const props = obj(f.properties);
+        const x = obj(props.extra);
+        const pwsid = str(x.pwsid);
+        if (!pwsid || !/^[A-Z0-9]{2}[0-9]{7}$/.test(pwsid)) continue;
+        const pop = num(obj(props.details)["population served"]);
+        push(
+          s,
+          item(cws, "community water system serving the point (EPA service area)", pwsid, {
+            code: pwsid,
+            note: [pop != null ? `population served ${pop}` : null, x.modelled === true ? "boundary modelled by EPA" : x.modelled === false ? "boundary from the system or state" : "boundary source not said", `EPA's boundary (simplified to about 50 m) contains ${at}; labelled by PWSID, names are not copied`].filter(Boolean).join("; "),
+            record: arcgisRecord(cws, `PWSID='${pwsid}'`),
+          }),
+        );
+        const state = str(x.state);
+        const label = `UCMR 5 PFAS results for ${pwsid}`;
+        if (!state || state === "unknown") miss(s, label, "EPA's UCMR 5 results did not answer for this system this time: unknown, never 'not detected'");
+        else if (!isCite(pat)) miss(s, label, pat.reason);
+        else {
+          const results = arr(x.results).map(obj);
+          const det = results.filter((y) => (num(y.detections) ?? 0) > 0);
+          const status = state === "detected" ? "detected" : state === "not-detected" ? "not detected" : state === "not-in-ucmr5" ? "not in UCMR 5" : null;
+          if (!status) {
+            miss(s, label, `the route gave a state this tool does not know (${state})`);
+            continue;
+          }
+          push(
+            s,
+            item(pat, "UCMR 5 PFAS status of the system", status, {
+              code: pwsid,
+              note:
+                state === "not-in-ucmr5"
+                  ? "EPA's PFAS Analytic Tools hold no UCMR 5 result for this system (of systems serving under 3,300 people, EPA sampled a representative 800)"
+                  : `${det.length} of ${results.length} PFAS at or above UCMR 5's minimum reporting level in at least one result; samples where treated water enters the distribution system, 2023-2025; not a tap, not compared with any health limit`,
+              record: arcgisRecord(pat, `F_PWS_ID='${pwsid}' AND UCMR_Cycle='${ucmr}'`),
+            }),
+          );
+          for (const y of capList(s, `UCMR 5 detections for ${pwsid}`, det, max)) {
+            const c = str(y.contaminant);
+            if (!c) continue;
+            const v = num(y.maxNgL);
+            push(
+              s,
+              listRow(
+                item(pat, `UCMR 5 highest single result: ${c}`, v, {
+                  unit: "ng/L",
+                  code: pwsid,
+                  note: `${num(y.detections)} of ${num(y.results)} results at or above the minimum reporting level${v == null ? "; EPA gives no value: null, not 0" : ""}`,
+                  record: arcgisRecord(pat, `F_PWS_ID='${pwsid}' AND UCMR_Cycle='${ucmr}' AND Contaminant='${c.replace(/'/g, "''")}'`),
+                }),
+              ),
+            );
+          }
+        }
+      }
     }
   }
 
@@ -954,7 +1276,8 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         const sid = String(x.sourceId);
         const it = item({ sourceId: sid, publisher: publishers.get(sid)!, upstreamUrl: str(x.scheduleUrl) ?? cal.url, retrievedAt: typeof cal.body.generatedAt === "string" ? cal.body.generatedAt : new Date().toISOString(), link: cal.url }, "next scheduled release", str(x.title), {
           period: str(w.nominal) ?? undefined,
-          note: [str(x.precision) ? `${str(x.precision)} date` : null, str(w.earliest) && str(w.latest) ? `window ${str(w.earliest)} to ${str(w.latest)}` : null].filter(Boolean).join("; "),
+          note: [str(x.precision) ? `${str(x.precision)} date` : null, str(w.earliest) && str(w.latest) ? `window ${str(w.earliest)} to ${str(w.latest)}` : null, scheduleBlocked(str(x.scheduleUrl)) ? SCHEDULE_BLOCKED_NOTE : null].filter(Boolean).join("; "),
+          record: noRecord("upstreamUrl is the publisher's own schedule for this release"),
         });
         push(s, it);
       }
@@ -975,7 +1298,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     countyFips: r.countyFips,
     stateFips: r.stateFips,
     ...(r.usps ? { usps: r.usps } : {}),
-    point: r.point,
+    point: pointOut(r.point),
     ...(r.kind === "bbox" || r.kind === "point" || r.kind === "county" ? { searchBox: r.box } : {}),
   };
   // An error reply is decided before the cap, so the cap is measured on what the client gets:
@@ -1000,7 +1323,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     place,
     topics: out,
     limits: { maxBytes: WORLD_MAX_BYTES, maxRecords: max },
-    note: "Every item cites sourceId, publisher, upstreamUrl and retrievedAt; `link` is the eye route that returns it. Missing is listed with its reason, never filled in. Names appear only on places, hospitals and non-private dams.",
+    note: WORLD_REPLY_NOTE,
   };
 
   let dropped = 0;

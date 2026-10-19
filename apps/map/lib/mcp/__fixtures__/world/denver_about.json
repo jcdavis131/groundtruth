@@ -16,6 +16,8 @@
    "body": {
     "data": {
      "point": {
+      "lon": -104.99,
+      "lat": 39.74,
       "elevationM": 1595.9
      },
      "nodes": [

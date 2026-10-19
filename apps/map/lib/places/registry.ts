@@ -160,6 +160,15 @@ export function countyByFips(fips: string): CountyRef | null {
   return byGeoid.get(fips) ?? null;
 }
 
+/**
+ * A county's Census internal point (INTPTLON/INTPTLAT as TIGERweb publishes it) and the date this
+ * table was pulled: what the MCP world_context tool centres a county on (lib/mcp/tools.ts CountyPoint).
+ */
+export function countyPoint(fips: string): { lon: number; lat: number; pulled: string | null } | null {
+  const c = byGeoid.get(fips);
+  return c ? { lon: c.lon, lat: c.lat, pulled: countiesFile.meta.pulled } : null;
+}
+
 export function metroByCbsa(cbsa: string): MetroRef | null {
   return byCbsa.get(cbsa) ?? null;
 }
