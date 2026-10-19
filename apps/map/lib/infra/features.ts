@@ -387,6 +387,30 @@ export interface DamExtra {
   storageAcFt?: number;
 }
 
+/**
+ * The owner types under which a dam keeps its published name. NID's PRIMARY_OWNER_TYPE values
+ * (FeatureServer/0, grouped 2026-10-18): Private, Local Government, State, Federal, Public Utility,
+ * Not Listed, Tribal Government and null. Private can be an owner's own name; Not Listed, null and
+ * any value not here are unknown, not public, so they are labelled by id too (fail closed).
+ */
+export const DAM_NAMED_OWNER_TYPES: ReadonlySet<string> = new Set(["federal", "state", "local government", "public utility", "tribal government"]);
+
+/**
+ * Whether a dam keeps its published name as its label and record-text name: its primary owner type
+ * is one of DAM_NAMED_OWNER_TYPES and so is every entry of OWNER_TYPES, NID's comma-separated list
+ * of all its owner types. A dam that is Local Government first and Private too ("Local Government,
+ * Private"), or whose list says only "Private" against its primary, is labelled by id. A missing
+ * OWNER_TYPES is unknown, not public: labelled by id.
+ */
+export function damIsNamed(p: Record<string, unknown>): boolean {
+  const primary = str(p.PRIMARY_OWNER_TYPE)?.toLowerCase();
+  if (!primary || !DAM_NAMED_OWNER_TYPES.has(primary)) return false;
+  const list = str(p.OWNER_TYPES);
+  if (!list) return false;
+  const entries = list.split(",").map((s) => s.trim().toLowerCase());
+  return entries.every((e) => DAM_NAMED_OWNER_TYPES.has(e));
+}
+
 export function buildDams(rows: Row[]): LayerFeature[] {
   const out: LayerFeature[] = [];
   for (const r of rows) {
@@ -410,7 +434,9 @@ export function buildDams(rows: Row[]): LayerFeature[] {
     // A privately owned dam is often named for its owner ("<Surname> Pond Dam"),
     // and the palette matches feature names, so it is labelled by its NID id;
     // the published name stays in the dossier under a key the palette never searches.
-    const isPrivate = str(p.PRIMARY_OWNER_TYPE)?.toLowerCase() === "private";
+    // The same goes for any dam whose owner types are not all public (damIsNamed):
+    // Not Listed, missing, unknown, or Private anywhere in OWNER_TYPES.
+    const named = damIsNamed(p);
     const damName = str(p.NAME);
     out.push({
       type: "Feature",
@@ -418,12 +444,12 @@ export function buildDams(rows: Row[]): LayerFeature[] {
       properties: {
         id: `nid:${nid}`,
         layer: "dams",
-        name: isPrivate || !damName ? `Dam ${nid}` : damName,
+        name: named && damName ? damName : `Dam ${nid}`,
         kind: (hazard ?? "not rated").toLowerCase(),
         source: "USACE National Inventory of Dams",
         details: {
           "NID id": nid,
-          "published name": isPrivate ? damName : undefined,
+          "published name": named ? undefined : damName,
           "hazard potential": hazard ?? "not rated by source",
           "what hazard potential means": "the damage a failure would cause downstream (High: loss of life likely), not the dam's condition or how likely it is to fail",
           "condition assessment": condition,
@@ -440,19 +466,20 @@ export function buildDams(rows: Row[]): LayerFeature[] {
           county: str(p.COUNTYSTATE),
           state: str(p.STATE),
           "owner type": str(p.PRIMARY_OWNER_TYPE),
+          "owner types": str(p.OWNER_TYPES),
           "emergency action plan": str(p.EAP_PREPARED),
           "operational status": str(p.OPERATIONAL_STATUS),
           "NID record updated": isoDay(p.DATA_UPDATED),
         },
-        // Record text: the published name only when the dam is not private (B0; a private dam's name never),
+        // Record text: the published name only when damIsNamed (B0; a dam labelled by id is never named),
         // never the NID id (matched by letters), never a height or storage (measured).
         extra: withEmbedText(
           { hazard, condition, heightFt, storageAcFt } satisfies DamExtra,
           recordText(
             "nid-dams",
             { PRIMARY_PURPOSE: str(p.PRIMARY_PURPOSE), PRIMARY_DAM_TYPE: str(p.PRIMARY_DAM_TYPE), HAZARD_POTENTIAL: hazard, CONDITION_ASSESSMENT: condition, COUNTYSTATE: str(p.COUNTYSTATE), STATE: str(p.STATE), YEAR_COMPLETED: year },
-            // A missing owner type is unknown, not public: named only when a non-private owner type is published.
-            isPrivate || !str(p.PRIMARY_OWNER_TYPE) ? null : damName,
+            // The same name the dam is labelled by, or none.
+            named ? damName : null,
           ),
         ),
       },

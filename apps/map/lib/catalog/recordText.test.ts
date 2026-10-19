@@ -6,7 +6,7 @@
 // label-by-id fixtures.
 
 import { describe, expect, it } from "vitest";
-import { buildDams } from "@/lib/infra/features";
+import { buildDams, damIsNamed } from "@/lib/infra/features";
 import dams from "@/lib/infra/fixtures/dams-sanantonio.json";
 import { recordFixtures } from "@/lib/embed/__fixtures__/records";
 import { COLLECTIONS } from "./collections";
@@ -135,7 +135,7 @@ describe("record text", () => {
       const row = rows.find((r) => `nid:${r.properties.NIDID}` === f.properties.id)!.properties;
       const name = String(row.NAME ?? `no name ${i}`);
       const t = receivedRecordText(f.properties) ?? "";
-      if (String(row.PRIMARY_OWNER_TYPE).toLowerCase() === "private") {
+      if (!damIsNamed(row)) {
         privates++;
         expect(t, name).not.toContain(name);
       } else {
