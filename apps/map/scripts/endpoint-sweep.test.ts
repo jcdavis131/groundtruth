@@ -238,7 +238,8 @@ describe("known-outage age tiers", () => {
     const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
     const known = JSON.parse(fs.readFileSync(path.join(root, "scripts", "endpoint-sweep.known.json"), "utf8")).outages;
     const { targets } = discoverTargets(root);
-    const rows = assessKnown(known, [...targets.keys()], NOW);
+    type Row = { entry: { match: string }; failing: boolean };
+    const rows: Row[] = assessKnown(known, [...targets.keys()], NOW);
     expect(rows.length).toBeGreaterThan(0);
     expect(rows.filter((r) => r.failing)).toEqual([]);
     expect(rows.find((r) => r.entry.match.includes("geopub.epa.gov"))).toMatchObject({ matched: true, tier: "info", days: 0 });
