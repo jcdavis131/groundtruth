@@ -11,7 +11,11 @@
 // review's follow-ups (cuts, trimmed reply, NID id, census and borough types,
 // visible notes, the live region, Escape and its propagation, the scroll under
 // reduced motion) and the second review's five fixes (parameter codes, route
-// and box words in notes, the error sentence, upstream names, county or state).
+// and box words in notes, the error sentence, upstream names, county or state),
+// then the hallway-test polish (where a live count was made, the county's
+// middle in kilometres, the D0-D4 and ng/L glosses, magnitudes in words, open
+// water, Point details, the county water sentence) and a break for each note
+// rewrite the second review listed without one.
 //
 // Each break is an exact string swap (no regex), so an anchor that no longer
 // matches the code fails loudly instead of passing for free.
@@ -253,7 +257,7 @@ export const MUTANTS = [
     name: "fix2-county-box-clause",
     rule: "fix 2: the county box clause is a plain sentence",
     file: PLAIN,
-    from: `  [/^the box ([\\d.]+) degrees around the county's Census internal point \\([^)]*\\)/, "counted within $1 degrees of the county's Census internal point"],\n`,
+    from: "  [/^the box ([\\d.]+) degrees around the county's Census internal point \\([^)]*\\)/, (_a, d) => `counted near the middle of the county (${aboutKm(d)})`],\n",
     to: ``,
   },
   {
@@ -290,6 +294,169 @@ export const MUTANTS = [
     file: PLAIN,
     from: '${m[1] ?? "county or state"}',
     to: "county",
+  },
+  // Hallway-test polish (2026-10-19): words a newcomer reads
+  {
+    name: "polish1-fact-box",
+    rule: "polish 1: a fact label never says touching the box",
+    file: PLAIN,
+    from: `.replace(/touching the box/g, `,
+    to: `.replace(/(?!)/g, `,
+  },
+  {
+    name: "polish1-fact-never-county",
+    rule: "polish 1: a county's live count says in this county",
+    file: PLAIN,
+    from: `kind === "county" ? "in this county" : "near this place"`,
+    to: `"near this place"`,
+  },
+  {
+    name: "polish2-eye-reads-directly",
+    rule: "polish 2: the population note never says eye reads",
+    file: PLAIN,
+    from: `  [/, not a Census table eye reads directly/g, ", not a Census table"],\n`,
+    to: ``,
+  },
+  {
+    name: "polish2-null-not-0",
+    rule: "polish 2: a note never says null, not 0",
+    file: PLAIN,
+    from: `  [/: null, not 0$/, ""],\n`,
+    to: ``,
+  },
+  {
+    name: "polish3-within-internal-point",
+    rule: "polish 3: within 0.25 degrees of the internal point reads near the middle of the county",
+    file: PLAIN,
+    from: "  [/\\bwithin ([\\d.]+) degrees of the county's Census internal point/g, (_a, d) => `near the middle of the county (${aboutKm(d)})`],\n",
+    to: ``,
+  },
+  {
+    name: "polish3-internal-point-anywhere",
+    rule: "polish 3: the county's Census internal point reads the middle of the county",
+    file: PLAIN,
+    from: `  [/the county's Census internal point/g, "the middle of the county"],\n`,
+    to: ``,
+  },
+  {
+    name: "polish3-degrees-not-km",
+    rule: "polish 3: degrees become rough kilometres",
+    file: PLAIN,
+    from: "return `about ${Math.round(Number(degrees) * 100)} km`;",
+    to: "return `about ${degrees} degrees`;",
+  },
+  {
+    name: "polish3-subtitle-internal-point",
+    rule: "polish 3: the subtitle says centred on the middle of the county",
+    file: PLAIN,
+    from: `return "centred on the middle of the county";`,
+    to: `return "centred on Census's internal point for the county";`,
+  },
+  {
+    name: "polish3-fact-names-not-copied",
+    rule: "polish 3: a fact drops names are not copied",
+    file: PLAIN,
+    from: `    .replace(/;\\s*names are not copied/g, "")\n`,
+    to: ``,
+  },
+  {
+    name: "polish3-note-names-not-copied",
+    rule: "polish 3: a note drops names are not copied",
+    file: PLAIN,
+    from: `  [/,? names are not copied/g, ""],\n`,
+    to: ``,
+  },
+  {
+    name: "polish3-drought-unglossed",
+    rule: "polish 3: Drought Monitor classes D0-D4 are glossed on first use",
+    file: GLOSSARY,
+    from: `const TERM_TOKEN = /\\bD[0-4]\\b|`,
+    to: `const TERM_TOKEN = /`,
+  },
+  {
+    name: "polish3-ngl-unglossed",
+    rule: "polish 3: ng/L reads ng/L (parts per trillion) on first use",
+    file: GLOSSARY,
+    from: `  "ng/L": "parts per trillion",\n`,
+    to: ``,
+  },
+  {
+    name: "polish3-value-terms-unglossed",
+    rule: "polish 3: terms are glossed inside a record's value",
+    file: ANSWER,
+    from: `: g.gloss(l.text, false),`,
+    to: `: [l.text],`,
+  },
+  {
+    name: "polish3-magnitude-code",
+    rule: "polish 3: M4.5+ reads magnitude 4.5 or larger",
+    file: PLAIN,
+    from: `const MAGNITUDE = /\\bM(\\d+(?:\\.\\d+)?)\\+/g;`,
+    to: `const MAGNITUDE = /(?!)/g;`,
+  },
+  {
+    name: "polish4-ocean-bare-point",
+    rule: "polish 4: a place with no name is titled Open water (lat, lon)",
+    file: FORMAT,
+    from: "return `Open water (${pt.lat.toFixed(1)}, ${pt.lon.toFixed(1)})`;",
+    to: "return `${pt.lat.toFixed(4)}, ${pt.lon.toFixed(4)}`;",
+  },
+  {
+    name: "polish5-place-fabric-what",
+    rule: "polish 5: the what place fabric reads Point details",
+    file: PLAIN,
+    from: `  if (w === "place fabric") return "Point details";\n`,
+    to: ``,
+  },
+  {
+    name: "polish6-water-county-spot",
+    rule: "polish 6: no water service area for a county says the middle of this county",
+    file: PLAIN,
+    from: `m[1] ? "the middle of this county" : "this spot"`,
+    to: `"this spot"`,
+  },
+  // The second review's note rewrites that had no break of their own
+  {
+    name: "review-record-level-url",
+    rule: "review: notes drop the no record-level URL: prefix",
+    file: PLAIN,
+    from: `  [/^no record-level URL:\\s*/, ""],\n`,
+    to: ``,
+  },
+  {
+    name: "review-http-403",
+    rule: "review: HTTP 403 to a non-browser user agent reads blocks automated readers",
+    file: PLAIN,
+    from: `  [/blocks automated clients \\(HTTP 403 to a non-browser user agent, (checked [^)]*)\\)/g, "blocks automated readers ($1)"],\n`,
+    to: ``,
+  },
+  {
+    name: "review-hifld-id",
+    rule: "review: a note drops the hifld-hosp: id",
+    file: PLAIN,
+    from: `  [/,? for hospital hifld-hosp:\\S+/g, ""],\n`,
+    to: ``,
+  },
+  {
+    name: "review-route-caveats",
+    rule: "review: a note drops the route's caveats aside",
+    file: PLAIN,
+    from: `  [/ \\(the route's caveats say how that code relates to this county\\)/g, ""],\n`,
+    to: ``,
+  },
+  {
+    name: "review-publisher-snake-id",
+    rule: "review: a publisher drops a bracketed id like (FEMA_HQ_Preparedness_NIC)",
+    file: PLAIN,
+    from: `return dropCode(p.replace(/\\s*\\([A-Za-z0-9]+(?:_[A-Za-z0-9]+)+\\)/g, "").trim());`,
+    to: `return dropCode(p.trim());`,
+  },
+  {
+    name: "review-basis-api-route",
+    rule: "review: a point's basis never shows an /api/ route",
+    file: PLAIN,
+    from: `.replace(/\\/api\\/\\S+/g, "this atlas")`,
+    to: ``,
   },
 ];
 

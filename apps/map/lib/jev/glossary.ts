@@ -46,8 +46,28 @@ export const GLOSSARY: Readonly<Record<string, string>> = {
   ZORI: "Zillow Observed Rent Index",
 };
 
+/**
+ * Short terms that are not acronyms but still need words on first use: the
+ * Drought Monitor's classes ("D0 55.72%") and the unit of a PFAS result. They
+ * are glossed in a record's value too, which acronyms are not.
+ */
+export const TERMS: Readonly<Record<string, string>> = {
+  D0: "abnormally dry",
+  D1: "moderate drought",
+  D2: "severe drought",
+  D3: "extreme drought",
+  D4: "exceptional drought",
+  "ng/L": "parts per trillion",
+};
+
+/** A term from TERMS: a Drought Monitor class or "ng/L". */
+const TERM_TOKEN = /\bD[0-4]\b|\bng\/L\b/;
+
 /** A word with two or more capital letters ("FEMA", "PFHxS", "EPA" in "EPA's"). */
 export const ACRONYM_TOKEN = /\b[A-Za-z0-9]*[A-Z][A-Za-z0-9]*[A-Z][A-Za-z0-9]*\b/g;
+
+/** A term or an acronym, terms first. */
+const TOKEN = new RegExp(`${TERM_TOKEN.source}|${ACRONYM_TOKEN.source}`, "g");
 
 /** Words with 2+ capitals in `text` that the glossary does not have. Words with a digit are codes (TX2270001), not acronyms. */
 export function unglossed(text: string): string[] {
@@ -75,12 +95,13 @@ export class Glosser {
     this.seen = new Set(seen);
   }
 
-  gloss(text: string): Seg[] {
+  /** `acronyms: false` glosses TERMS only: for a record's value, whose acronyms are the publisher's own words. */
+  gloss(text: string, acronyms = true): Seg[] {
     const out: Seg[] = [];
     let last = 0;
-    for (const m of text.matchAll(ACRONYM_TOKEN)) {
+    for (const m of text.matchAll(TOKEN)) {
       const w = m[0];
-      const full = GLOSSARY[w];
+      const full = Object.hasOwn(TERMS, w) ? TERMS[w] : acronyms ? GLOSSARY[w] : undefined;
       if (!full) continue;
       const at = m.index ?? 0;
       if (at > last) out.push(text.slice(last, at));
