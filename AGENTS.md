@@ -15,6 +15,7 @@ The rules are the README's. Until each project cuts over, most records still liv
 | Professional athletes only by Cam's 2026-10-18 exception: name, team, team city, arena, season, school, birthplace city, region and country, every field cited; never a birth date, age, address, family, contact or health | `data/athletes/validate.mjs` against `data/athletes/allowlist.json`; its test is `data/athletes/validate.test.mjs`, run by `.github/workflows/athletes.yml`. Birthplaces by ids only (rule A5a): `data/athletes/lib/birthplace.mjs`, tested by `data/athletes/build.test.mjs`, and re-checked on every record by `build.mjs` before it writes. The policy is in `apps/map/docs/PEOPLE.md` (Athletes) | Checked here, for athlete records |
 | Large data, caches and model weights don't go in git | `scripts/guard.mjs` (size, weights), run by `.github/workflows/guard.yml` on every PR | Checked here |
 | No `.env` files, token-shaped strings, CRLF, home-directory paths or submodules | `scripts/guard.mjs` (env, secret, crlf, path, submodule); its own test is `scripts/guard.test.mjs` | Checked here |
+| Workflow actions are pinned to a full commit sha, never a tag or branch (local `./` actions excepted); `.github/dependabot.yml` bumps them weekly | `scripts/guard.mjs` (pin), tested in `scripts/guard.test.mjs` | Checked here |
 
 A new rule that a script can check lands with a `guard.mjs` case and a test in `guard.test.mjs`. A rule that needs judgement goes in a doc, and the table says "review only".
 
