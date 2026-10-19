@@ -7,7 +7,7 @@
 import { describe, expect, it } from "vitest";
 import { COLLECTIONS } from "./collections";
 import { SOURCES } from "@/lib/provenance/sources";
-import { EMBED_TEXT, PLACE_FIELD_RANK, PUBLIC_NAME_RULE, RECORD_HEAD, RECORD_VECTOR_CARDS, fieldLabel, type CollectionId } from "./embedFields";
+import { EMBED_TEXT, PLACE_FIELD_RANK, PUBLIC_NAME_RULE, RECORD_HEAD, RECORD_VECTOR_CARDS, fieldLabel } from "./embedFields";
 import { receivedRecordText, recordText } from "./recordText";
 import { recordFixtures } from "@/lib/embed/__fixtures__/records";
 import { buildLihtc } from "@/lib/civic/taxcredit";
