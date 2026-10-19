@@ -1,8 +1,12 @@
 // The policy record for notable people (SEC Form 3/4/5 reporting owners):
 // docs/PEOPLE.md quotes Cam's 2026-10-01 decision verbatim and tags every
-// guardrail and open decision as his words or a proposed default, every
-// [Cam <date>] tag carries a date he decided something on (the C table), and
+// guardrail and open decision as their words or a proposed default, every
+// [Cam <date>] tag carries a date they decided something on (the C table), and
 // the retired institutions-only phrases stay out of the policy docs and UI copy.
+// The athlete exception (Cam 2026-10-18, C5) is checked the same way: its quote,
+// its status line and the tags on A1-A10 and AD1-AD5, and rule A5a (Cam 2026-10-19, C6): birthplaces
+// are joined by ids, never by name. The athlete record's field
+// allowlist and never-list are checked by data/athletes/validate.test.mjs.
 // RETIRED grows with each change that ships people behaviour.
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
@@ -18,7 +22,12 @@ const CAM_TAG = /\[Cam (\d{4}-\d{2}-\d{2})\]/g;
 // The dates Cam decided something about people or parcels, as recorded in
 // the C table. A [Cam <date>] tag anywhere in docs/PEOPLE.md must carry one of
 // them; a new decision adds a C row and its date here.
-const CAM_DATES = ["2026-09-25", "2026-09-27", "2026-10-01"];
+const CAM_DATES = ["2026-09-25", "2026-09-27", "2026-10-01", "2026-10-18", "2026-10-19"];
+
+// Cam's choice on 2026-10-18, word for word.
+const C5 = "Map + models, scoped";
+// Cam's approval of rule A5a on 2026-10-19, word for word.
+const C6 = "go ahead with A5a";
 
 /** The dates of every [Cam <date>] tag in a text. */
 function camDates(text: string): string[] {
@@ -86,8 +95,8 @@ describe("docs/PEOPLE.md", () => {
     expect(quote).toContain("[Cam 2026-10-01]");
   });
 
-  it("tags Cam's own words C1-C4 with his name and date", () => {
-    expect(tagProblems(people, "C", 4, /^\[Cam \d{4}-\d{2}-\d{2}\]$/)).toEqual([]);
+  it("tags Cam's own words C1-C6 with their name and date", () => {
+    expect(tagProblems(people, "C", 6,/^\[Cam \d{4}-\d{2}-\d{2}\]$/)).toEqual([]);
     expect(rows(people, "C").get(1)![0]).toContain(C1);
   });
 
@@ -119,6 +128,50 @@ describe("docs/PEOPLE.md", () => {
 
   it("says nothing returns a reporting owner's name yet", () => {
     expect(people).toMatch(/Status, 2026-10-01: policy only/);
+  });
+});
+
+describe("docs/PEOPLE.md, Athletes", () => {
+  const people = read("docs/PEOPLE.md");
+  const athletes = people.split("\n## Athletes\n")[1]?.split("\n## ")[0] ?? "";
+
+  it("has an Athletes section that says nothing carries an athlete yet", () => {
+    expect(athletes).not.toBe("");
+    expect(athletes).toMatch(/Status, 2026-10-18: policy only/);
+  });
+
+  it("quotes Cam's 2026-10-18 choice verbatim, tagged as theirs, in the C table and the section", () => {
+    const quote = athletes.split("\n").find((l) => l.startsWith(">") && l.includes(`"${C5}"`));
+    expect(quote).toBeDefined();
+    expect(quote).toContain("[Cam 2026-10-18]");
+    expect(rows(people, "C").get(5)![0]).toContain(`"${C5}"`);
+  });
+
+  it("tags each athlete guardrail A1-A10 as Cam's words or a proposed default", () => {
+    expect(tagProblems(athletes, "A", 10, CAM_OR_PROPOSED)).toEqual([]);
+  });
+
+  it("carries A5a, Cam's 2026-10-19 rule that birthplaces are joined by ids, tagged as theirs", () => {
+    const a5a = athletes.split("\n").filter((l) => /^\|\s*A5a\s*\|/.test(l));
+    expect(a5a).toHaveLength(1);
+    expect(a5a[0].match(TAG)).toEqual(["[Cam 2026-10-19]"]);
+    for (const id of ["P19", "P131", "P774", "P590", "P1566", "P569"]) expect(a5a[0]).toContain(id);
+    expect(rows(people, "C").get(6)![0]).toContain(`"${C6}"`);
+  });
+
+  it("never says a birthplace is joined by name", () => {
+    expect(people).not.toMatch(/joined to a city record by name/);
+    expect(people).not.toMatch(/by name, then region, then country/);
+  });
+
+  it("tags each athlete open decision AD1-AD5 as Cam's words or a proposed default", () => {
+    expect(tagProblems(athletes, "AD", 5, CAM_OR_PROPOSED)).toEqual([]);
+  });
+
+  it("keeps the never-list in Cam's words and points at the record check", () => {
+    for (const never of ["birth date", "age", "address", "family", "contact details"]) expect(athletes).toContain(never);
+    expect(athletes).toContain("data/athletes/allowlist.json");
+    expect(athletes).toContain("data/athletes/validate.test.mjs");
   });
 });
 

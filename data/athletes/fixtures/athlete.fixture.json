@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "athlete/1",
+  "id": "nba:fixture-1",
+  "name": "Test Fixture Player",
+  "league": "NBA",
+  "team": "Fixture City Testers",
+  "teamCity": "Fixture City",
+  "arena": "Fixture Arena",
+  "season": "2025-26",
+  "school": "Fixture State University",
+  "birthCity": "Fixture Town",
+  "birthRegion": "Fixture Region",
+  "birthCountry": "Fixture Country",
+  "sources": [
+    {
+      "sourceId": "nba-stats",
+      "upstreamId": "fixture-1",
+      "url": "https://example.invalid/fixture/roster",
+      "retrievedAt": "2026-10-18T12:00:00Z",
+      "fields": ["name", "league", "team", "teamCity", "arena", "season", "school"]
+    },
+    {
+      "sourceId": "wikidata",
+      "upstreamId": "Q0",
+      "url": "https://example.invalid/fixture/place-of-birth",
+      "retrievedAt": "2026-10-18T12:00:00Z",
+      "fields": ["birthCity", "birthRegion", "birthCountry"]
+    }
+  ]
+}

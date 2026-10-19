@@ -12,6 +12,7 @@ The rules are the README's. Until each project cuts over, most records still liv
 | Missing means missing. No placeholder or made-up values | eye: `lib/catalog/placeExport.test.ts` (every county valued, null with a reason, or 0 only from a complete census) | Checked for place exports only. Everything else is review |
 | Public, keyless sources only. No paid APIs | Nothing yet | Review only. One eye source needs a free key today (AISStream); whether it stays is Cam's call |
 | No search or embedding of private individuals | eye: `lib/search/allowlist.test.ts`, `lib/catalog/recordText.test.ts`, `lib/catalog/collections.test.ts` ("never lets an address, contact or person-name field be searched or embedded") | Checked in eye |
+| Professional athletes only by Cam's 2026-10-18 exception: name, team, team city, arena, season, school, birthplace city, region and country, every field cited; never a birth date, age, address, family, contact or health | `data/athletes/validate.mjs` against `data/athletes/allowlist.json`; its test is `data/athletes/validate.test.mjs`, run by `.github/workflows/athletes.yml`. The policy is in `apps/map/docs/PEOPLE.md` (Athletes) | Checked here, for athlete records |
 | Large data, caches and model weights don't go in git | `scripts/guard.mjs` (size, weights), run by `.github/workflows/guard.yml` on every PR | Checked here |
 | No `.env` files, token-shaped strings, CRLF, home-directory paths or submodules | `scripts/guard.mjs` (env, secret, crlf, path, submodule); its own test is `scripts/guard.test.mjs` | Checked here |
 

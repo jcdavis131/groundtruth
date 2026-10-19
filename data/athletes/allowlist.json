@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "athlete/1",
+  "decision": "Cam 2026-10-18, \"Map + models, scoped\"; apps/map/docs/PEOPLE.md, Athletes",
+  "fields": {
+    "schemaVersion": { "required": true, "what": "\"athlete/1\"" },
+    "id": { "required": true, "what": "the league's own player id with a source prefix (nba:<PERSON_ID>, nfl:<gsis_id>); never built from a name" },
+    "name": { "required": true, "what": "the player's name as the league's roster publishes it" },
+    "league": { "required": true, "what": "a professional league from the leagues list below" },
+    "team": { "required": false, "what": "the team's name as the league publishes it" },
+    "teamCity": { "required": false, "what": "the team's city as the league publishes it", "needs": "team" },
+    "arena": { "required": false, "what": "the team's home arena or stadium, by name", "needs": "team" },
+    "season": { "required": false, "what": "the season the team fields describe: 2025 or 2025-26", "needs": "team" },
+    "school": { "required": false, "what": "the school or college the league lists" },
+    "birthCity": { "required": false, "what": "birthplace, city level: the city's name" },
+    "birthRegion": { "required": false, "what": "birthplace: the state, province or region's name" },
+    "birthCountry": { "required": false, "what": "birthplace: the country's name" },
+    "sources": { "required": true, "what": "one entry per source read; together they cite every field the record carries" }
+  },
+  "sourceFields": {
+    "sourceId": { "required": true, "what": "the source's key (nba-stats, nflverse-players, wikidata)" },
+    "upstreamId": { "required": false, "what": "the record's id at that source (a Wikidata Q-id, a league id)" },
+    "url": { "required": true, "what": "the https URL the fields were read from" },
+    "retrievedAt": { "required": true, "what": "when it was read: ISO 8601 UTC ending in Z" },
+    "fields": { "required": true, "what": "the record fields this source supplied" }
+  },
+  "leagues": ["NBA", "NFL"],
+  "leaguesWhy": "v1 is the NBA and the NFL. MLB, NHL, MLS and NWSL can roster players under 18, and ruling them out would need the age the never-list bans; see AD5 in apps/map/docs/PEOPLE.md.",
+  "denied": {
+    "why": "Cam's never-list: birth date, age, addresses, family, contact details, health beyond league-published availability. A key that is not on the allowlist fails anyway; a key matching one of these fails with the code denied, so the reason is named.",
+    "keyParts": [
+      "birth", "born", "dob", "age", "dateof", "address", "street", "zip", "postal", "residen", "homeaddress", "livesin", "location", "coord", "latitude", "longitude",
+      "family", "spouse", "wife", "husband", "partner", "child", "kids", "son", "daughter", "parent", "mother", "father", "sibling",
+      "brother", "sister", "relative", "phone", "mobile", "cell", "email", "contact", "social", "instagram", "twitter",
+      "health", "injur", "medical", "illness", "condition", "status", "availability", "height", "weight", "salary", "contract"
+    ]
+  }
+}
