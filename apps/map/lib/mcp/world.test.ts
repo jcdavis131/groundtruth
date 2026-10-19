@@ -747,6 +747,15 @@ describe("world_context: invariant over recorded live replies", () => {
     });
   }
 
+  it("Chugach 02063 (recorded from this branch's preview): Valdez-Cordova's declarations, marked, never a 0", async () => {
+    const rec = recorded.find(([k]) => k === "chugach_02063")![1];
+    const r = await runRecorded(rec);
+    const ds = topicsOf(r).hazards.items.filter((i) => i.fact === "FEMA declaration");
+    expect(ds.map((i) => i.code)).toEqual(expect.arrayContaining(["DR-4533", "EM-3446"]));
+    expect(ds.every((i) => /former county code 02261/.test(String(i.note)))).toBe(true);
+    expect(allItems(r).some((i) => i.fact === "FEMA declarations listed")).toBe(false);
+  });
+
   it("CT 09110: no FEMA declaration count, and the reason in plain words", async () => {
     const rec = recorded.find(([k]) => k === "ct_09110")![1];
     const r = await runRecorded(rec);

@@ -716,7 +716,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
                 item(fema, "FEMA declaration", str(x.declarationTitle), {
                   code: x.disasterNumber != null ? `${str(x.declarationType) ?? ""}-${str(x.disasterNumber)}` : undefined,
                   period: str(x.declarationDate) ?? undefined,
-                  note: [str(x.incidentType), filed ? `filed by FEMA under the former county code ${filed}, which covered more than or other than this county (see the route's caveats)` : null].filter(Boolean).join("; ") || undefined,
+                  note: [str(x.incidentType), filed ? `filed by FEMA under the former county code ${filed} (the route's caveats say how that code relates to this county)` : null].filter(Boolean).join("; ") || undefined,
                 }),
               ),
             );
@@ -790,10 +790,10 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
           else miss(s, fact, "not published for this place");
         }
         const home = num(v["home.latest"]);
-        if (home != null) push(s, item(cite(screen, "zillow-zhvi"),"typical home value (Zillow ZHVI)", Math.round(home), { unit: "USD", period: str(v["home.asOf"]) ?? undefined, note: num(v["home.yoyPct"]) != null ? `${round(num(v["home.yoyPct"])!, 1)}% over the year` : undefined }));
+        if (home != null) push(s, item(cite(screen, "zillow-zhvi"), "typical home value (Zillow ZHVI)", Math.round(home), { unit: "USD", period: str(v["home.asOf"]) ?? undefined, note: num(v["home.yoyPct"]) != null ? `${round(num(v["home.yoyPct"])!, 1)}% over the year` : undefined }));
         else miss(s, "typical home value (Zillow ZHVI)", "Zillow publishes no value for this place");
         const rent = num(v["rent.latest"]);
-        if (rent != null) push(s, item(cite(screen, "zillow-zori"),"typical asking rent (Zillow ZORI)", Math.round(rent), { unit: "USD a month" }));
+        if (rent != null) push(s, item(cite(screen, "zillow-zori"), "typical asking rent (Zillow ZORI)", Math.round(rent), { unit: "USD a month" }));
         else miss(s, "typical asking rent (Zillow ZORI)", "Zillow publishes no rent index for this place");
       }
     } else miss(s, "jobs, wages, home value and rent", screen?.reason ?? "no county resolved");
@@ -811,7 +811,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     if (svi) {
       const rpl = arr(obj(obj(svi.body.data).row).rpl);
       const overall = num(rpl[0]);
-      if (svi.ok && overall != null && overall >= 0) push(s, item(cite(svi, "cdc-svi"),"CDC/ATSDR SVI 2022 overall percentile", overall, { unit: "0 least to 1 most vulnerable among US counties" }));
+      if (svi.ok && overall != null && overall >= 0) push(s, item(cite(svi, "cdc-svi"), "CDC/ATSDR SVI 2022 overall percentile", overall, { unit: "0 least to 1 most vulnerable among US counties" }));
       else miss(s, "CDC/ATSDR SVI 2022", svi.ok ? "CDC does not rank this place" : svi.reason ?? "failed");
     }
     const sovi = row ? nriRating(row.SOVI_RATNG) : null;

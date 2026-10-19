@@ -1,6 +1,6 @@
 {
- "recorded": "2026-10-19T02:33:00.284Z",
- "from": "https://www.arxiviq.com",
+ "recorded": "2026-10-19T02:41:25.940Z",
+ "from": "the PR preview deployment of this branch",
  "input": {
   "lon": -104.99,
   "lat": 39.74,
@@ -19,6 +19,16 @@
       "elevationM": 1595.9
      },
      "nodes": [
+      {
+       "kind": "flood",
+       "name": "Flood zone X",
+       "code": "X",
+       "source": "fema-nfhl",
+       "facts": {
+        "special flood hazard area": "no",
+        "FIRM panel": "0800460201H"
+       }
+      },
       {
        "kind": "tract",
        "name": "Census Tract 20",
@@ -73,6 +83,13 @@
        "facts": {}
       },
       {
+       "kind": "flood-community",
+       "name": "City And County Of Denver",
+       "code": "080046",
+       "source": "fema-nfhl",
+       "facts": {}
+      },
+      {
        "kind": "cbsa",
        "name": "Denver-Aurora-Centennial, CO Metro Area",
        "code": "19740",
@@ -117,18 +134,14 @@
        "facts": {}
       }
      ],
-     "failed": [
-      {
-       "source": "fema-nfhl",
-       "error": "This operation was aborted (not retried for 5 min)"
-      }
-     ],
+     "failed": [],
      "answered": [
       "natural-earth",
       "census-tigerweb",
       "federal-regions",
       "usgs-wbd",
       "epa-ecoregions",
+      "fema-nfhl",
       "nws-api",
       "usgs-epqs",
       "wikipedia"
@@ -142,7 +155,7 @@
        "publisher": "Natural Earth",
        "url": "https://www.naturalearthdata.com/"
       },
-      "retrievedAt": "2026-10-19T02:32:59.487Z"
+      "retrievedAt": "2026-10-19T02:41:25.143Z"
      },
      {
       "source": {
@@ -150,7 +163,7 @@
        "publisher": "U.S. Census Bureau",
        "url": "https://tigerweb.geo.census.gov/"
       },
-      "retrievedAt": "2026-10-19T02:32:59.487Z"
+      "retrievedAt": "2026-10-19T02:41:25.143Z"
      },
      {
       "source": {
@@ -158,7 +171,7 @@
        "publisher": "EPA, FEMA, Federal Reserve System",
        "url": "https://www.federalreserve.gov/aboutthefed/federal-reserve-system.htm"
       },
-      "retrievedAt": "2026-10-19T02:32:59.487Z"
+      "retrievedAt": "2026-10-19T02:41:25.143Z"
      },
      {
       "source": {
@@ -166,7 +179,7 @@
        "publisher": "U.S. Geological Survey",
        "url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
       },
-      "retrievedAt": "2026-10-19T02:32:59.487Z"
+      "retrievedAt": "2026-10-19T02:41:25.143Z"
      },
      {
       "source": {
@@ -174,7 +187,15 @@
        "publisher": "U.S. Environmental Protection Agency",
        "url": "https://www.epa.gov/eco-research/ecoregions"
       },
-      "retrievedAt": "2026-10-19T02:32:59.487Z"
+      "retrievedAt": "2026-10-19T02:41:25.143Z"
+     },
+     {
+      "source": {
+       "id": "fema-nfhl",
+       "publisher": "Federal Emergency Management Agency",
+       "url": "https://www.fema.gov/flood-maps/national-flood-hazard-layer"
+      },
+      "retrievedAt": "2026-10-19T02:41:25.143Z"
      },
      {
       "source": {
@@ -182,7 +203,7 @@
        "publisher": "NOAA National Weather Service",
        "url": "https://www.weather.gov/documentation/services-web-api"
       },
-      "retrievedAt": "2026-10-19T02:32:59.487Z"
+      "retrievedAt": "2026-10-19T02:41:25.143Z"
      },
      {
       "source": {
@@ -190,7 +211,7 @@
        "publisher": "U.S. Geological Survey",
        "url": "https://apps.nationalmap.gov/epqs/"
       },
-      "retrievedAt": "2026-10-19T02:32:59.487Z"
+      "retrievedAt": "2026-10-19T02:41:25.143Z"
      },
      {
       "source": {
@@ -198,10 +219,10 @@
        "publisher": "Wikimedia Foundation",
        "url": "https://en.wikipedia.org/"
       },
-      "retrievedAt": "2026-10-19T02:32:59.487Z"
+      "retrievedAt": "2026-10-19T02:41:25.143Z"
      }
     ],
-    "generatedAt": "2026-10-19T02:32:59.487Z"
+    "generatedAt": "2026-10-19T02:41:25.143Z"
    }
   },
   "/api/live": {
@@ -220,7 +241,7 @@
        "url": "https://www.weather.gov/documentation/services-web-api"
       },
       "upstreamUrl": "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
+      "retrievedAt": "2026-10-19T02:41:20.596Z"
      },
      {
       "source": {
@@ -229,10 +250,10 @@
        "url": "https://earthquake.usgs.gov/"
       },
       "upstreamUrl": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson",
-      "retrievedAt": "2026-10-19T02:31:49.835Z"
+      "retrievedAt": "2026-10-19T02:41:20.596Z"
      }
     ],
-    "generatedAt": "2026-10-19T02:31:49.835Z"
+    "generatedAt": "2026-10-19T02:41:20.596Z"
    }
   },
   "/api/hazards?op=nri&fips=08031": {
@@ -277,10 +298,10 @@
        "url": "https://hazards.fema.gov/nri/"
       },
       "upstreamUrl": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0",
-      "retrievedAt": "2026-10-19T02:32:59.783Z"
+      "retrievedAt": "2026-10-19T02:41:25.417Z"
      }
     ],
-    "generatedAt": "2026-10-19T02:32:59.783Z"
+    "generatedAt": "2026-10-19T02:41:25.417Z"
    }
   },
   "/api/catalog?op=search&q=wildfire%20smoke&limit=3": {
@@ -306,8 +327,18 @@
      ],
      "matched": true
     },
-    "provenance": [],
-    "generatedAt": "2026-10-19T02:32:59.949Z"
+    "provenance": [
+     {
+      "source": {
+       "id": "eye-catalog",
+       "publisher": "Embedding Atlas",
+       "url": "https://www.arxiviq.com/catalog"
+      },
+      "upstreamUrl": "https://www.arxiviq.com/catalog",
+      "retrievedAt": "2026-10-19T02:41:25.732Z"
+     }
+    ],
+    "generatedAt": "2026-10-19T02:41:25.735Z"
    }
   },
   "/api/hazards?op=history&fips=08031&years=10&declarations=15": {
@@ -415,7 +446,7 @@
        "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2"
       },
       "upstreamUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=fipsStateCode%20eq%20'08'%20and%20fipsCountyCode%20eq%20'031'&%24select=disasterNumber,declarationDate,incidentType,declarationTitle,declarationType,incidentBeginDate,incidentEndDate,ihProgramDeclared,iaProgramDeclared,paProgramDeclared,hmProgramDeclared,designatedArea,fipsStateCode,fipsCountyCode,placeCode,tribalRequest&%24top=1000&%24inlinecount=allpages&%24orderby=declarationDate%20desc",
-      "retrievedAt": "2026-10-19T02:32:59.858Z"
+      "retrievedAt": "2026-10-19T02:41:25.711Z"
      },
      {
       "source": {
@@ -424,7 +455,7 @@
        "url": "https://droughtmonitor.unl.edu/"
       },
       "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDSCI?aoi=08031&startdate=1/1/2000&enddate=10/19/2026&statisticsType=1",
-      "retrievedAt": "2026-10-19T02:33:00.499Z"
+      "retrievedAt": "2026-10-19T02:41:26.159Z"
      },
      {
       "source": {
@@ -433,7 +464,7 @@
        "url": "https://droughtmonitor.unl.edu/"
       },
       "upstreamUrl": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=08031&startdate=9/29/2026&enddate=10/19/2026&statisticsType=2",
-      "retrievedAt": "2026-10-19T02:33:00.444Z"
+      "retrievedAt": "2026-10-19T02:41:26.126Z"
      },
      {
       "source": {
@@ -442,7 +473,7 @@
        "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
       },
       "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/CO-031/tavg/12/12/1895-2026/data.json",
-      "retrievedAt": "2026-10-19T02:32:59.882Z"
+      "retrievedAt": "2026-10-19T02:41:25.840Z"
      },
      {
       "source": {
@@ -451,7 +482,7 @@
        "url": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series"
       },
       "upstreamUrl": "https://www.ncei.noaa.gov/access/monitoring/climate-at-a-glance/county/time-series/CO-031/pcp/12/12/1895-2026/data.json",
-      "retrievedAt": "2026-10-19T02:33:00.137Z"
+      "retrievedAt": "2026-10-19T02:41:25.877Z"
      },
      {
       "source": {
@@ -481,7 +512,7 @@
       "retrievedAt": "2026-10-17T00:00:00.000Z"
      }
     ],
-    "generatedAt": "2026-10-19T02:33:00.501Z"
+    "generatedAt": "2026-10-19T02:41:26.164Z"
    }
   }
  }
