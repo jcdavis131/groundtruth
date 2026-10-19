@@ -30,6 +30,17 @@ REGIONS = {
         "boundaryUrl": f"{EYE}/api/economy?op=areas&level=state",
         "boundaryId": "state:48",
     },
+    # Second state (2026-10-19): Mobile County is already the place the hallway test, the world_context evals
+    # and the preview checks use, and the Gulf coast exercises the outline tolerance as Texas's coast does.
+    "alabama": {
+        "id": "alabama",
+        "name": "Alabama",
+        "stateFips": "01",
+        "stateUsps": "AL",
+        "stateName": "Alabama",
+        "boundaryUrl": f"{EYE}/api/economy?op=areas&level=state",
+        "boundaryId": "state:01",
+    },
 }
 
 # The 20M outline is generalised: a coastal or river-border point can fall a little outside it. A record is in
@@ -114,7 +125,7 @@ COLLECTIONS = {
             }
         ],
         # Said in the manifest when eye named dams this build labels by id (build.withheld_fields).
-        "relabelNote": "This build labelled {n} dams by NID id that eye's answers still named, and took their name out of the record text: eye's rule before 2026-10-19 named Not Listed dams and dams with no owner type. eye's answers here carry no OWNER_TYPES, so a dam that is Private only in NID's OWNER_TYPES list is not seen and keeps its name (34 in Texas per NID's FeatureServer/0 on 2026-10-18); a rebuild from eye's answers after it requests OWNER_TYPES labels them by id.",
+        "relabelNote": "This build labelled {n} dams by NID id that eye's answers still named, and took their name out of the record text: eye's rule before 2026-10-19 named Not Listed dams and dams with no owner type. eye's answers here carry no OWNER_TYPES, so a dam that is Private only in NID's OWNER_TYPES list is not seen and keeps its name (NID's FeatureServer/0 OWNER_TYPES says which); a rebuild from eye's answers after it requests OWNER_TYPES labels them by id.",
         "publisher": {
             "layer": NID,
             "stateWhere": lambda r: f"STATE='{r['stateName']}'",
