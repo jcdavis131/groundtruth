@@ -1,0 +1,21 @@
+# Influences
+
+Ideas groundtruth took from outside repos: what each idea became here, and the check that keeps it. We read these repos as data. Nothing from them was installed or run, and no code was copied, so each row is a clean-room idea with a credit, unless it says otherwise. The review behind this list, including what we turned down and why, is `writeups/intake-2026-10-18/PLAN.md` (outside this repository).
+
+| Idea | From | Here | Kept honest by |
+|---|---|---|---|
+| A typed MCP error: code, a fixed category, whether to retry, what to do next | [morluto/rea](https://github.com/morluto/rea) `docs/error-contract.schema.json`, MIT | `apps/map/lib/mcp/errors.ts` | `apps/map/lib/mcp/server.test.ts` validates every error reply against `ERROR_ENVELOPE_SCHEMA` |
+| Missing coverage is unknown, not absence: every reply says what it covered | rea `docs/tool-design.md`, MIT | `apps/map/lib/mcp/coverage.ts`; world_context's missing entries | `server.test.ts` (`coverageStatus`); `apps/map/lib/mcp/world.test.ts`, whose invariant over recorded replies fails a 0 from a source the route lists as missing |
+| Prove the green: a test only counts once it has been seen to fail | rea `.agents/skills/rea-ci-tests-audit/` | Every independent verify since 2026-10-19 breaks the change on purpose and checks the tests go red | Review only. Results are in each PR's verify notes (for example #16: 12 of 12 broken versions caught) |
+| PRs report only checks that ran, with exit codes, and never claim a human reviewed | rea `AGENTS.md`; [mattpocock/skills](https://github.com/mattpocock/skills) `pr/` at `49dd158`, MIT | `AGENTS.md`, `.github/PULL_REQUEST_TEMPLATE.md` | Review only |
+| Agent instructions as pointers, with each checkable rule enforced by a script; a glossary of our words | mattpocock/skills `writing-for-agents`, `domain-modeling/GLOSSARY-FORMAT.md` at `49dd158`, MIT | `AGENTS.md`, `CLAUDE.md`, `GLOSSARY.md` | The rules table in `AGENTS.md` names the check behind each rule |
+| A git guardrail that fails closed | mattpocock/skills `misc/git-guardrails-claude-code/` at `49dd158`, MIT | `scripts/hooks/git-guard.mjs` | `scripts/hooks/git-guard.test.mjs`, run by `.github/workflows/guard.yml` |
+| Anything left for Cam carries a one-line summary and an evidence link | [mvschwarz/openrig](https://github.com/mvschwarz/openrig) `packages/daemon/src/domain/human-route-enforcer.ts` at `0463591`, Apache-2.0 | `AGENTS.md` | Review only |
+| A snapshot manifest with a schema plus valid and invalid fixtures, one thing broken in each | openrig `docs/reference/schemas/bundle-status.v1.schema.json` at `0463591`, Apache-2.0 | `data/schema/manifest.schema.json`, `data/schema/fixtures/` | `data/schema/validate.test.mjs`, run by `.github/workflows/data.yml`, which also fails if an invalid fixture drifts from `make-invalid.mjs` |
+| A controlled licence vocabulary (ids), with the free-text caveat kept as a note | [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted) `licenses.yml` (list text CC-BY-SA-3.0; idea only, no text taken) | `apps/map/lib/provenance/licenceTerms.ts` | `apps/map/lib/provenance/licenceTerms.test.ts` fails on an unknown id |
+
+Not yet taken, with the reason in PLAN.md:
+- [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes): motion as a function of studio time. This belongs on the newsroom branch.
+- [trimstray/the-book-of-secret-knowledge](https://github.com/trimstray/the-book-of-secret-knowledge): security.txt, Dependabot and a host-hygiene pass. These wait on Cam's settings D1, D3 and D7.
+
+When an idea from outside lands, add its row here in the same PR.

@@ -9,7 +9,7 @@ Files:
 - `schema/record.schema.json` and `schema/manifest.schema.json`: JSON Schema 2020-12.
 - `schema/validate.mjs`: the validator. Plain Node, no install. It reads the two schemas and adds the checks a schema can't express (below).
 - `schema/validate.test.mjs`: the tests, run by `.github/workflows/data.yml`.
-- `schema/fixtures/`: three real snapshots built from eye's live API, plus invalid copies with one thing broken in each.
+- `schema/fixtures/`: three real snapshots built from eye's live API, plus invalid copies with one thing broken in each. The valid-and-invalid fixture pattern follows openrig's `docs/reference/schemas/bundle-status.v1.schema.json` (Apache-2.0, `mvschwarz/openrig` at `0463591`); no text or code was copied.
 
 ```
 node data/schema/validate.mjs record <file.json | file.jsonl> ...
