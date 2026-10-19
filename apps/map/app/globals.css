@@ -533,6 +533,28 @@ html:not(.dark) * {
   }
 }
 
+/* Ask Jev (?jev=1): each section fades up in topic order from a visible resting
+   state (it starts readable, never at 0). The component applies no class at all
+   under reduced motion; this guard is the second line. */
+.jev-fade {
+  animation: jev-fade 360ms ease-out both;
+}
+@keyframes jev-fade {
+  from {
+    opacity: 0.45;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jev-fade {
+    animation: none;
+  }
+}
+
 /* ---------- Frame ---------- */
 .scanlines {
   background: repeating-linear-gradient(

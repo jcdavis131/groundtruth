@@ -14,7 +14,7 @@
 // Letter-by-letter matches always come first and are never repeated below.
 
 import { useEffect, useMemo, useState } from "react";
-import { Grid3x3, Library, MapPin, Radar, Sparkles, Terminal } from "lucide-react";
+import { Grid3x3, Library, MapPin, MessageCircleQuestionMark, Radar, Sparkles, Terminal } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -40,6 +40,14 @@ import { RecordIndex, featureKey, type RecordHit } from "@/lib/embed/recordIndex
 // The group stays flagged (semanticRecordsOn) until a blind query set passes.
 import { GATE_CONFIG } from "@/lib/embed/gateConfig";
 import { trackRecordOpen, trackResultOpen, trackSearch } from "@/lib/analytics/events";
+import { askJevAboutPick } from "@/lib/jev/store";
+import { useJevOn } from "./AskJevOverlay";
+
+/**
+ * Place hits Jev can be asked about (?jev=1): a county or a state (asked by FIPS), or a
+ * city or town (asked at its point; world_context names its metro). Never an address.
+ */
+export const JEV_PLACE_TYPES = new Set(["county", "state", "city", "town", "village", "municipality"]);
 
 /** A catalogue card ranked by meaning (/api/catalog?op=search). */
 export interface CardSearchHit {
@@ -134,6 +142,7 @@ export default function SearchCommand() {
   const setOpen = useGlobe((s) => s.setSearchOpen);
   const setLayer = useGlobe((s) => s.setLayer);
   const seed = useGlobe((s) => s.searchSeed);
+  const jev = useJevOn();
   const [q, setQ] = useState("");
   // What was typed in the home page's search field carries into the palette
   // once per opening (adjusted during render, not in an effect).
@@ -377,7 +386,7 @@ export default function SearchCommand() {
         )}
         {places.length > 0 && (
           <CommandGroup heading="Places">
-            {places.map((h, i) => (
+            {places.map((h, i) => [
               <CommandItem
                 key={`${h.lat},${h.lon},${i}`}
                 value={`place:${i}:${h.name}`}
@@ -391,8 +400,23 @@ export default function SearchCommand() {
                 <MapPin className="size-3.5 text-primary" />
                 <span className="truncate">{h.name}</span>
                 <span className="ml-auto text-[9px] uppercase tracking-widest text-muted-foreground">{h.type}</span>
-              </CommandItem>
-            ))}
+              </CommandItem>,
+              jev && JEV_PLACE_TYPES.has(h.type) ? (
+                <CommandItem
+                  key={`jev:${h.lat},${h.lon},${i}`}
+                  value={`place-jev:${i}:${h.name}`}
+                  onSelect={() => {
+                    flyTo(h.lon, h.lat, { height: heightForPlace(h) });
+                    void askJevAboutPick(h.name.split(",")[0], h);
+                    close();
+                  }}
+                  className="pl-7 font-mono text-[11px] text-muted-foreground"
+                >
+                  <MessageCircleQuestionMark className="size-3.5" />
+                  <span className="truncate">Ask Jev about this place</span>
+                </CommandItem>
+              ) : null,
+            ])}
           </CommandGroup>
         )}
         <CommandGroup heading="Commands">
