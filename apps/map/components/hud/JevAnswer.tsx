@@ -14,7 +14,7 @@
 // reducedMotion no animation class or delay is applied at all, and globals.css
 // turns the keyframe off under prefers-reduced-motion as well.
 
-import { Glosser, type Seg } from "@/lib/jev/glossary";
+import { Glosser, firstUse, type Seg } from "@/lib/jev/glossary";
 import { jevSections, truncatedNote, JEV_SECTIONS, JEV_TITLES, type JevBundle, type JevLine, type JevSection } from "@/lib/jev/format";
 
 export const JEV_FADE_CLASS = "jev-fade";
@@ -33,9 +33,7 @@ export function Gl({ segs }: { segs: readonly Seg[] }) {
         typeof s === "string" ? (
           s
         ) : s.first ? (
-          <span key={i}>
-            {s.abbr} ({s.full})
-          </span>
+          <span key={i}>{firstUse(s)}</span>
         ) : (
           <abbr key={i} title={s.full} className="no-underline">
             {s.abbr}

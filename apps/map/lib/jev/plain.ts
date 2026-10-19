@@ -126,9 +126,9 @@ export function upstreamName(idOrName: string | null | undefined): string {
   return Object.hasOwn(UPSTREAM_NAMES, k) ? UPSTREAM_NAMES[k] : SOME_SOURCE;
 }
 
-/** A gap's `what` as a person reads it: no upstream ids, parameter codes as words, other trailing codes dropped. */
-export function plainWhat(what: string): string {
-  const w = what.trim();
+/** A gap's `what` as a person reads it: no upstream ids, parameter codes as words, other trailing codes dropped. `kind` is the kind of place asked about. */
+export function plainWhat(what: string, kind?: string | null): string {
+  const w = waterWords(what.trim(), kind);
   if (w === "place fabric") return "Point details";
   const fabric = /^place fabric: (.+)$/.exec(w);
   if (fabric) {
@@ -180,14 +180,53 @@ export function plainReason(what: string, reason: string): PlainGap {
 // ---- notes ------------------------------------------------------------------
 
 /** Whole clauses (a note splits on "; ") that are only for agents: dropped. */
-const DROP_CLAUSES = [/^not every registrant$/];
+const DROP_CLAUSES = [/^not every registrant$/, /^shares as published$/];
 
 /** Four numbers in brackets: a search box's corners, "(-88.4466,30.4346,-87.9466,30.9346)". */
 const BOX_TUPLE = /\s*\(-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?\)/g;
 
-/** Degrees as rough kilometres, about 100 km to a degree: "0.25" is "about 25 km", "0.1" is "about 10 km". */
-export function aboutKm(degrees: string): string {
-  return `about ${Math.round(Number(degrees) * 100)} km`;
+/** Kilometres in a degree of latitude (north-south), near enough everywhere. */
+const KM_PER_DEGREE = 111;
+
+/**
+ * A search box's half-width in degrees as rough kilometres. A degree north-south
+ * is about 111 km everywhere; east-west it shrinks with the latitude (111 x
+ * cos(lat)). The smaller of the two is said, so "about N km" never overstates
+ * how far the count reached. With no latitude, north-south only.
+ */
+export function aboutKm(degrees: string, lat?: number | null): string {
+  const d = Number(degrees);
+  const ns = KM_PER_DEGREE * d;
+  const ew = typeof lat === "number" ? KM_PER_DEGREE * Math.abs(Math.cos((lat * Math.PI) / 180)) * d : ns;
+  return `about ${Math.round(Math.min(ns, ew))} km`;
+}
+
+/** Digits with thousands separators: "279000" is "279,000". */
+export function withCommas(digits: string): string {
+  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+/**
+ * Former county codes FEMA still files declarations under, by the area's old
+ * name. Alaska's Valdez-Cordova Census Area (02261) was split in 2019 into
+ * Chugach (02063) and Copper River (02066); Connecticut's 8 counties were
+ * replaced by planning regions in 2022.
+ */
+const FORMER_AREAS: Readonly<Record<string, string>> = {
+  "02261": "Valdez-Cordova",
+  "09001": "Fairfield County",
+  "09003": "Hartford County",
+  "09005": "Litchfield County",
+  "09007": "Middlesex County",
+  "09009": "New Haven County",
+  "09011": "New London County",
+  "09013": "Tolland County",
+  "09015": "Windham County",
+};
+
+/** "filed by FEMA under the former county code 02261", as a person reads it. */
+export function formerArea(code: string): string {
+  return Object.hasOwn(FORMER_AREAS, code) ? `FEMA still files this under the old ${FORMER_AREAS[code]} area` : "FEMA still files this under an old county code";
 }
 
 /** "M4.5+": an earthquake magnitude, written as words. */
@@ -195,12 +234,15 @@ const MAGNITUDE = /\bM(\d+(?:\.\d+)?)\+/g;
 const MAGNITUDE_WORDS = "magnitude $1 or larger";
 
 /** Phrase rewrites inside a note (one clause at a time), in order. */
-const NOTE_REWRITES: readonly [RegExp, string | ((all: string, degrees: string) => string)][] = [
+/** A rewrite's replacement: fixed text, or a function of the match (whole, then groups) and the place's latitude. */
+type NoteTo = string | ((m: string[], lat: number | null | undefined) => string);
+
+const NOTE_REWRITES: readonly [RegExp, NoteTo][] = [
   // Live counts in a search box: say where they were counted, without the box's corners or the route.
-  [/^the box ([\d.]+) degrees around the county's Census internal point \([^)]*\)/, (_a, d) => `counted near the middle of the county (${aboutKm(d)})`],
-  [/^the box ([\d.]+) degrees around the point \([^)]*\)/, (_a, d) => `counted within ${aboutKm(d)} of the spot you picked`],
-  [/^within ([\d.]+) degrees of the point$/, (_a, d) => `within ${aboutKm(d)} of the spot you picked`],
-  [/\bwithin ([\d.]+) degrees of the county's Census internal point/g, (_a, d) => `near the middle of the county (${aboutKm(d)})`],
+  [/^the box ([\d.]+) degrees around the county's Census internal point \([^)]*\)/, (m, lat) => `counted near the middle of the county (${aboutKm(m[1], lat)})`],
+  [/^the box ([\d.]+) degrees around the point \([^)]*\)/, (m, lat) => `counted within ${aboutKm(m[1], lat)} of the spot you picked`],
+  [/^within ([\d.]+) degrees of the point$/, (m, lat) => `within ${aboutKm(m[1], lat)} of the spot you picked`],
+  [/\bwithin ([\d.]+) degrees of the county's Census internal point/g, (m, lat) => `near the middle of the county (${aboutKm(m[1], lat)})`],
   [/the county's Census internal point/g, "the middle of the county"],
   [/,? names are not copied/g, ""],
   [MAGNITUDE, MAGNITUDE_WORDS],
@@ -214,45 +256,93 @@ const NOTE_REWRITES: readonly [RegExp, string | ((all: string, degrees: string) 
   [/,? for hospital hifld-hosp:\S+/g, ""],
   [/: null, not 0$/, ""],
   [/ \(the route's caveats say how that code relates to this county\)/g, ""],
+  // After the caveats aside is gone: the old area's name, not its code.
+  [/^filed by FEMA under the former county code (\d{5})$/, (m) => formerArea(m[1])],
+  // Counts with thousands separators.
+  [/\bpopulation served (\d{4,})\b/g, (m) => `population served ${withCommas(m[1])}`],
+  // The Drought Monitor's share of the area in no class, and a one-day release window.
+  [/^none (\d+(?:\.\d+)?%)$/, "no drought $1"],
+  [/^window (\d{4}-\d{2}-\d{2}) to \1$/, "on $1"],
   [/blocks automated clients \(HTTP 403 to a non-browser user agent, (checked [^)]*)\)/g, "blocks automated readers ($1)"],
   [/, not a Census table eye reads directly/g, ", not a Census table"],
   [/labelled by NID id/g, "labelled by its NID id"],
   [/\beye's\b/g, "this atlas's"],
 ];
 
-/** An item's note as a person reads it. */
-export function plainNote(note: string): string {
+/** A rewrite applied to one clause. A function's match arrives as strings only (replace's offset and whole-input arguments are left out). */
+function rewrite(s: string, re: RegExp, to: NoteTo, lat: number | null | undefined): string {
+  if (typeof to === "string") return s.replace(re, to);
+  return s.replace(re, (...a: unknown[]) => {
+    const groups = a.findIndex((x) => typeof x === "number");
+    return to((groups < 0 ? a : a.slice(0, groups)) as string[], lat);
+  });
+}
+
+/** An item's note as a person reads it. `lat` is the place's latitude, for distances in kilometres. */
+export function plainNote(note: string, lat?: number | null): string {
   const clauses = note
     .split(/;\s+/)
-    .map((c) => NOTE_REWRITES.reduce((s, [re, to]) => (typeof to === "string" ? s.replace(re, to) : s.replace(re, to)), c.trim()))
+    .map((c) => NOTE_REWRITES.reduce((s, [re, to]) => rewrite(s, re, to, lat), c.trim()))
     .filter((c) => c && !DROP_CLAUSES.some((re) => re.test(c)));
   return clauses.join("; ");
 }
 
+/** world_context asks for water at a point: for a county, that point is its middle. */
+const WATER_AT_POINT = /community water system serving the point/g;
+
+/** The water system's label for the kind of place asked about: the county's middle, the spot picked, else no place at all. */
+function waterWords(s: string, kind?: string | null): string {
+  return s.replace(
+    WATER_AT_POINT,
+    kind === "county" ? "community water system at the middle of this county" : kind === "point" ? "community water system serving this spot" : "community water system",
+  );
+}
+
 /**
  * A fact's label as a person reads it: where a live count was made (near the
- * place asked about, or in the county when a county was asked), no aside about
- * copying names, and an earthquake magnitude in words.
+ * place asked about, or near the middle of the county when a county was asked:
+ * the count is a box around that middle, not the whole county), the water
+ * system's place, no aside about copying names, and a magnitude in words.
  */
 export function plainFact(fact: string, kind?: string | null): string {
-  return fact
-    .replace(/touching the box/g, kind === "county" ? "in this county" : "near this place")
+  return waterWords(fact, kind)
+    .replace(/touching the box/g, kind === "county" ? "near the middle of this county" : "near this place")
     .replace(/;\s*names are not copied/g, "")
     .replace(MAGNITUDE, MAGNITUDE_WORDS);
 }
 
+/** Publisher lines written for the record, as a person reads them. */
+const PUBLISHER_REWRITES: readonly [RegExp, string][] = [
+  // EPA's service-area layer credits each polygon's own provider.
+  [/^U\.S\. EPA; the original data provider of each polygon \(.*\)$/, "U.S. EPA, with boundaries from states and water systems"],
+];
+
 /** A publisher's name without the agent-facing ids some carry in brackets ("(FEMA_HQ_Preparedness_NIC)"). */
 export function plainPublisher(p: string): string {
-  return dropCode(p.replace(/\s*\([A-Za-z0-9]+(?:_[A-Za-z0-9]+)+\)/g, "").trim());
+  const q = PUBLISHER_REWRITES.reduce((s, [re, to]) => s.replace(re, to), p.trim());
+  return dropCode(q.replace(/\s*\([A-Za-z0-9]+(?:_[A-Za-z0-9]+)+\)/g, "").trim());
 }
 
 /** The place's point basis, as the subtitle says it. */
 export function plainBasis(basis: string | undefined | null): string | null {
   if (!basis) return null;
   if (/internal point/i.test(basis)) return "centred on the middle of the county";
-  if (/representative point/i.test(basis)) return "centred on the state's representative point";
+  if (/representative point/i.test(basis)) return "centred on the middle of the state";
   if (basis === "as given") return null;
   return basis.replace(/\/api\/\S+/g, "this atlas").replace(/\beye's\b/g, "this atlas's");
+}
+
+/** A 0-to-1 scale's unit as the source writes it: "0 least to 1 most vulnerable among US counties". */
+const ZERO_TO_ONE = /^0 least to 1 most (.+)$/;
+
+/**
+ * A value on a 0-to-1 scale as a person reads it: two decimals, then the scale
+ * in brackets ("0.83 (0 = least, 1 = most vulnerable among US counties)"). Null
+ * when the unit is not such a scale.
+ */
+export function plainScale(v: unknown, unit: string | undefined | null): string | null {
+  const m = typeof v === "number" && unit ? ZERO_TO_ONE.exec(unit.trim()) : null;
+  return m ? `${(v as number).toFixed(2)} (0 = least, 1 = most ${m[1]})` : null;
 }
 
 // ---- record cuts ------------------------------------------------------------
