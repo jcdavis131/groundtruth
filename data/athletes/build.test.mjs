@@ -9,7 +9,7 @@ import { project, readTable, splitCsvLine } from "./lib/csv.mjs";
 import { fipsToGeoid, gnisToAnsi, P131_REGIONS, regionByP131, resolveBirthplace, traceProblems } from "./lib/birthplace.mjs";
 import { arenaHold, ARENA_HOLDS, covers, nameFor, teamItems, venueFor, withOccupantMoves } from "./lib/arena.mjs";
 import { refuseNeverList } from "./lib/net.mjs";
-import { birthFields, eraAbbr, homeArenas, present } from "./build.mjs";
+import { birthFields, eraAbbr, homeArenas, placeGraph, present } from "./build.mjs";
 import { validateAthlete } from "./validate.mjs";
 
 let failed = 0;
@@ -187,6 +187,47 @@ check(JSON.stringify([...P131_REGIONS]) === JSON.stringify(["Q1183"]), "the only
 check(regionByP131("Q9000019", graph) === null && !("birthRegion" in shipped(["Q9000019"]).rec), "a settlement whose P131 has two parents gets no region from the chain");
 check(regionByP131("Q9000001", graph) === null && shipped(["Q9000001"]).rec.birthRegion === "California", "a mainland place keeps its region from the place record");
 check(regionByP131("Q1183", graph) === null, "Puerto Rico itself is not inside Puerto Rico");
+
+// placeGraph must fetch the region items a settlement's P131 chain needs, by QID, not only the parents of
+// finer-than-city items. The fake client answers from a fixture graph and records every QID it was asked for.
+// Q9000020 is a barrio (P19), inside Q9000021, a city, inside Q9000022, a municipio, inside Puerto Rico (Q1183).
+// No athlete's P19 is the municipio or Q1183, so only a walk that follows the region chain reaches them.
+{
+  const wdGraph = new Map(
+    [
+      node("Q9000020", { label: "Fixture Barrio Two", settle: true, finer: true, parents: ["Q9000021"], iso: ["US"] }),
+      node("Q9000021", { label: "Fixture Ciudad", settle: true, fips: ["72-88888"], parents: ["Q9000022"], iso: ["US"] }),
+      node("Q9000022", { label: "Fixture Municipio", coarse: true, parents: ["Q1183"], iso: ["US"] }),
+      node("Q1183", { label: "Puerto Rico", coarse: true, parents: ["Q30"], iso: ["US"] }),
+      node("Q30", { label: "United States", coarse: true, iso: ["US"] }),
+    ].map((n) => [n.qid, n]),
+  );
+  const E = "http://www.wikidata.org/entity/";
+  const asked = [];
+  const client = {
+    async sparql(q) {
+      const qids = [...q.match(/VALUES \?pl \{([^}]*)\}/)[1].matchAll(/wd:(Q\d+)/g)].map((m) => m[1]);
+      asked.push(...qids);
+      const rows = qids.filter((x) => wdGraph.has(x)).map((x) => {
+        const n = wdGraph.get(x);
+        const v = (s) => ({ value: s });
+        return {
+          pl: v(E + x), label: v(n.label), settle: v(String(n.settle)), finer: v(String(n.finer)), coarse: v(String(n.coarse)),
+          fipsL: v(n.fips.join("|")), gnisL: v(n.gnis.join("|")), gnL: v(n.geonames.join("|")), isoL: v(n.iso.join("|")), upL: v(n.parents.map((p) => E + p).join("|")),
+        };
+      });
+      return { rows };
+    },
+  };
+  const g = await placeGraph(client, ["Q9000020"], () => {});
+  check(g.has("Q9000022") && g.has("Q1183"), "the place graph fetches the municipio and Puerto Rico (Q1183) the region chain needs, though no P19 names them", JSON.stringify([...g.keys()]));
+  check(asked.every((x) => /^Q\d+$/.test(x)) && asked.filter((x) => x === "Q1183").length === 1, "each item is asked for by QID, once", JSON.stringify(asked));
+  const ciudad = { ...gaz("7288888", "08888888", null), regionCode: "US.PR" };
+  const p2 = { ...places, gazByGeoid: new Map([...places.gazByGeoid, ["7288888", ciudad]]) };
+  const res = { ...resolveBirthplace(["Q9000020"], g, p2), playerQid: "Q9000016" };
+  const b = birthFields(res, g, at);
+  check(res.regionQid === "Q1183" && b?.fields.birthRegion === "Puerto Rico", "a barrio two P131 levels below Puerto Rico gets Puerto Rico as its region", JSON.stringify({ regionQid: res.regionQid, fields: b?.fields }));
+}
 
 // ---------------------------------------------------------------- NFL arenas
 
