@@ -8,7 +8,7 @@
 export const GLOSSARY: Readonly<Record<string, string>> = {
   ATSDR: "Agency for Toxic Substances and Disease Registry",
   BLS: "U.S. Bureau of Labor Statistics",
-  CBSA: "Core-Based Statistical Area, a metro or micro area",
+  CBSA: "Core-Based Statistical Area",
   CCN: "the Medicare certification number of a hospital",
   CDC: "Centers for Disease Control and Prevention",
   CMS: "Centers for Medicare & Medicaid Services",
@@ -80,8 +80,23 @@ export function unglossed(text: string): string[] {
   return [...out];
 }
 
-/** A run of text: plain, or an acronym written out in full (first use) or with its expansion as a title. */
-export type Seg = string | { abbr: string; full: string; first: boolean };
+/**
+ * A run of text: plain, or an acronym written out in full (first use) or with
+ * its expansion as a title. `paren` marks an acronym that already stands alone
+ * in brackets, "metro area (CBSA)": its first use is written "(CBSA, Core-Based
+ * Statistical Area)", so brackets never nest.
+ */
+export type Seg = string | { abbr: string; full: string; first: boolean; paren?: boolean };
+
+/** True when the acronym at `at` is the whole of a bracket: "(CBSA)". */
+function inOwnParens(text: string, at: number, w: string): boolean {
+  return text[at - 1] === "(" && text[at + w.length] === ")";
+}
+
+/** A first use as the reader sees it: "FEMA (Federal Emergency Management Agency)", or "CBSA, Core-Based Statistical Area" inside its own brackets. */
+export function firstUse(s: { abbr: string; full: string; paren?: boolean }): string {
+  return s.paren ? `${s.abbr}, ${s.full}` : `${s.abbr} (${s.full})`;
+}
 
 /**
  * Splits text into segments, spelling each acronym out the first time this
@@ -105,7 +120,9 @@ export class Glosser {
       if (!full) continue;
       const at = m.index ?? 0;
       if (at > last) out.push(text.slice(last, at));
-      out.push({ abbr: w, full, first: !this.seen.has(w) });
+      const seg: Exclude<Seg, string> = { abbr: w, full, first: !this.seen.has(w) };
+      if (inOwnParens(text, at, w)) seg.paren = true;
+      out.push(seg);
       this.seen.add(w);
       last = at + w.length;
     }
@@ -116,5 +133,5 @@ export class Glosser {
 
 /** The segments as the text a reader sees (the first use with its expansion in brackets). */
 export function segText(segs: readonly Seg[]): string {
-  return segs.map((s) => (typeof s === "string" ? s : s.first ? `${s.abbr} (${s.full})` : s.abbr)).join("");
+  return segs.map((s) => (typeof s === "string" ? s : s.first ? firstUse(s) : s.abbr)).join("");
 }

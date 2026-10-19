@@ -26,7 +26,8 @@ function esc(s: string): string {
 /** Visible text with each first-use expansion folded back to the bare acronym. */
 function plainOf(html: string): string {
   const t = html.replace(/<[^>]*>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&amp;/g, "&");
-  return Object.entries(GLOSSARY).reduce((acc, [a, f]) => acc.split(`${a} (${f})`).join(a), t);
+  // An acronym alone in brackets is spelled out inside them: "(CBSA, Core-Based Statistical Area)".
+  return Object.entries(GLOSSARY).reduce((acc, [a, f]) => acc.split(`(${a}, ${f})`).join(`(${a})`).split(`${a} (${f})`).join(a), t);
 }
 
 function render(bundle: JevBundle, reducedMotion = false): string {
@@ -69,9 +70,9 @@ describe.each(FIXTURES)("JevAnswer over $name", ({ bundle }) => {
     for (const [k, t] of shownTopics(bundle)) {
       const gaps = gapsOf(secs.get(k)!).map(plainOf);
       const missing = t.missing ?? [];
-      expect(gaps, k).toEqual(missing.map((m) => gapSentence(m)));
+      expect(gaps, k).toEqual(missing.map((m) => gapSentence(m, bundle.place?.kind)));
       for (const [i, g] of gaps.entries()) {
-        expect(g.startsWith(`${plainWhat(missing[i].what)}: `)).toBe(true);
+        expect(g.startsWith(`${plainWhat(missing[i].what, bundle.place?.kind)}: `)).toBe(true);
         expect(g.trim()).not.toBe("0");
       }
       // A topic with gaps and no items draws no value at all, so nothing can read as 0.
@@ -87,10 +88,10 @@ describe.each(FIXTURES)("JevAnswer over $name", ({ bundle }) => {
         if (it.value !== null) return;
         const v = valueOf(lines[i]);
         expect(it.note, `${k} item ${i} has a note`).toBeTruthy();
-        expect(plainOf(v ?? "")).toBe(plainNote(it.note!));
+        expect(plainOf(v ?? "")).toBe(plainNote(it.note!, bundle.place?.point?.lat));
         expect(v).not.toBe("0");
         expect(lines[i]).toContain("data-jev-from-note");
-        expect(gapsOf(secs.get(k)!).map(plainOf)).not.toContain(plainNote(it.note!));
+        expect(gapsOf(secs.get(k)!).map(plainOf)).not.toContain(plainNote(it.note!, bundle.place?.point?.lat));
       });
     }
   });

@@ -32,6 +32,17 @@ describe("toLine", () => {
     expect(l.asOf).toBe("2026-10-19");
   });
 
+  it("writes counts with thousands separators", () => {
+    expect(toLine({ ...base, value: 279000, unit: "people" }).text).toBe("279,000 people");
+  });
+
+  it("reads a 0-to-1 scale (CDC's SVI percentile) with two decimals and the scale in words", () => {
+    expect(toLine({ ...base, value: 0.8304, unit: "0 least to 1 most vulnerable among US counties" }).text).toBe("0.83 (0 = least, 1 = most vulnerable among US counties)");
+    expect(toLine({ ...base, value: 0.5877, unit: "0 least to 1 most vulnerable among US counties" }).text).toBe("0.59 (0 = least, 1 = most vulnerable among US counties)");
+    // Any other unit is left as the source wrote it.
+    expect(toLine({ ...base, value: 0.5, unit: "share" }).text).toBe("0.5 share");
+  });
+
   it("links upstreamRecordUrl, else link", () => {
     expect(sourceHref({ link: "L", upstreamRecordUrl: "R" })).toBe("R");
     expect(sourceHref({ link: "L" })).toBe("L");

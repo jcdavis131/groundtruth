@@ -14,8 +14,12 @@
 // and box words in notes, the error sentence, upstream names, county or state),
 // then the hallway-test polish (where a live count was made, the county's
 // middle in kilometres, the D0-D4 and ng/L glosses, magnitudes in words, open
-// water, Point details, the county water sentence) and a break for each note
-// rewrite the second review listed without one.
+// water, Point details, the county water sentence), a break for each note
+// rewrite the second review listed without one, and the second hallway pass
+// (county labels say the county's middle, the state's middle, the water
+// system's place and publisher, counts with commas, the SVI scale, the drought
+// and one-day window notes, the old Valdez-Cordova area, no nested brackets,
+// kilometres by latitude).
 //
 // Each break is an exact string swap (no regex), so an anchor that no longer
 // matches the code fails loudly instead of passing for free.
@@ -71,7 +75,7 @@ export const MUTANTS = [
     name: "null-value-as-0",
     rule: "audit: a null value renders its note, never 0",
     file: FORMAT,
-    from: `text: isNull ? (it.note ? plainNote(it.note) : "the source states no value here")`,
+    from: `text: isNull ? (it.note ? plainNote(it.note, lat) : "the source states no value here")`,
     to: `text: isNull ? "0"`,
   },
   {
@@ -257,7 +261,7 @@ export const MUTANTS = [
     name: "fix2-county-box-clause",
     rule: "fix 2: the county box clause is a plain sentence",
     file: PLAIN,
-    from: "  [/^the box ([\\d.]+) degrees around the county's Census internal point \\([^)]*\\)/, (_a, d) => `counted near the middle of the county (${aboutKm(d)})`],\n",
+    from: "  [/^the box ([\\d.]+) degrees around the county's Census internal point \\([^)]*\\)/, (m, lat) => `counted near the middle of the county (${aboutKm(m[1], lat)})`],\n",
     to: ``,
   },
   {
@@ -305,9 +309,9 @@ export const MUTANTS = [
   },
   {
     name: "polish1-fact-never-county",
-    rule: "polish 1: a county's live count says in this county",
+    rule: "polish 1: a county's live count says near the middle of this county",
     file: PLAIN,
-    from: `kind === "county" ? "in this county" : "near this place"`,
+    from: `kind === "county" ? "near the middle of this county" : "near this place"`,
     to: `"near this place"`,
   },
   {
@@ -328,7 +332,7 @@ export const MUTANTS = [
     name: "polish3-within-internal-point",
     rule: "polish 3: within 0.25 degrees of the internal point reads near the middle of the county",
     file: PLAIN,
-    from: "  [/\\bwithin ([\\d.]+) degrees of the county's Census internal point/g, (_a, d) => `near the middle of the county (${aboutKm(d)})`],\n",
+    from: "  [/\\bwithin ([\\d.]+) degrees of the county's Census internal point/g, (m, lat) => `near the middle of the county (${aboutKm(m[1], lat)})`],\n",
     to: ``,
   },
   {
@@ -342,7 +346,7 @@ export const MUTANTS = [
     name: "polish3-degrees-not-km",
     rule: "polish 3: degrees become rough kilometres",
     file: PLAIN,
-    from: "return `about ${Math.round(Number(degrees) * 100)} km`;",
+    from: "return `about ${Math.round(Math.min(ns, ew))} km`;",
     to: "return `about ${degrees} degrees`;",
   },
   {
@@ -415,6 +419,147 @@ export const MUTANTS = [
     from: `m[1] ? "the middle of this county" : "this spot"`,
     to: `"this spot"`,
   },
+  // Second hallway pass (2026-10-19)
+  {
+    name: "hallway2-county-fact-overclaims",
+    rule: "hallway 2.1: a county's live count says near the middle of this county, not in this county",
+    file: PLAIN,
+    from: `kind === "county" ? "near the middle of this county" : "near this place"`,
+    to: `kind === "county" ? "in this county" : "near this place"`,
+  },
+  {
+    name: "hallway2-state-representative-point",
+    rule: "hallway 2.2: a state's subtitle says centred on the middle of the state",
+    file: PLAIN,
+    from: `return "centred on the middle of the state";`,
+    to: `return "centred on the state's representative point";`,
+  },
+  {
+    name: "hallway2-water-county-point",
+    rule: "hallway 2.3: a county's water system is at the middle of this county",
+    file: PLAIN,
+    from: `kind === "county" ? "community water system at the middle of this county"`,
+    to: `kind === "county" ? "community water system serving the point"`,
+  },
+  {
+    name: "hallway2-water-spot-point",
+    rule: "hallway 2.3: a point's water system is serving this spot",
+    file: PLAIN,
+    from: `kind === "point" ? "community water system serving this spot"`,
+    to: `kind === "point" ? "community water system serving the point"`,
+  },
+  {
+    name: "hallway2-water-gap-no-kind",
+    rule: "hallway 2.3: a gap's what names the water system's place by kind",
+    file: FORMAT,
+    from: `const what = plainWhat(m.what, kind);`,
+    to: `const what = plainWhat(m.what);`,
+  },
+  {
+    name: "hallway2-water-publisher",
+    rule: "hallway 2.4: the water publisher reads U.S. EPA, with boundaries from states and water systems",
+    file: PLAIN,
+    from: `  [/^U\\.S\\. EPA; the original data provider of each polygon \\(.*\\)$/, "U.S. EPA, with boundaries from states and water systems"],\n`,
+    to: ``,
+  },
+  {
+    name: "hallway2-population-no-commas",
+    rule: "hallway 2.5: population served 279000 reads 279,000",
+    file: PLAIN,
+    from: "  [/\\bpopulation served (\\d{4,})\\b/g, (m) => `population served ${withCommas(m[1])}`],\n",
+    to: ``,
+  },
+  {
+    name: "hallway2-commas-wrong",
+    rule: "hallway 2.5: thousands separators every three digits from the right",
+    file: PLAIN,
+    from: `return digits.replace(/\\B(?=(\\d{3})+(?!\\d))/g, ",");`,
+    to: `return digits.replace(/\\B(?=(\\d{3})(?!\\d))/g, ",");`,
+  },
+  {
+    name: "hallway2-svi-raw",
+    rule: "hallway 2.5: the SVI value reads 0.83 (0 = least, 1 = most vulnerable among US counties)",
+    file: FORMAT,
+    from: `  if (scale) return scale;\n`,
+    to: ``,
+  },
+  {
+    name: "hallway2-svi-four-decimals",
+    rule: "hallway 2.5: the SVI value has two decimals",
+    file: PLAIN,
+    from: "return m ? `${(v as number).toFixed(2)} (0 = least",
+    to: "return m ? `${v as number} (0 = least",
+  },
+  {
+    name: "hallway2-drought-none",
+    rule: "hallway 2.5: the drought note says no drought, not none",
+    file: PLAIN,
+    from: `  [/^none (\\d+(?:\\.\\d+)?%)$/, "no drought $1"],\n`,
+    to: ``,
+  },
+  {
+    name: "hallway2-drought-shares-kept",
+    rule: "hallway 2.5: the drought note drops shares as published",
+    file: PLAIN,
+    from: `, /^shares as published$/];`,
+    to: `];`,
+  },
+  {
+    name: "hallway2-one-day-window",
+    rule: "hallway 2.5: a one-day window reads on that date",
+    file: PLAIN,
+    from: `  [/^window (\\d{4}-\\d{2}-\\d{2}) to \\1$/, "on $1"],\n`,
+    to: ``,
+  },
+  {
+    name: "hallway2-former-county-code",
+    rule: "hallway 2.5: a former county code reads as the old Valdez-Cordova area",
+    file: PLAIN,
+    from: `  [/^filed by FEMA under the former county code (\\d{5})$/, (m) => formerArea(m[1])],\n`,
+    to: ``,
+  },
+  {
+    name: "hallway2-former-area-name",
+    rule: "hallway 2.5: the old area is named, not only an old code",
+    file: PLAIN,
+    from: `  "02261": "Valdez-Cordova",\n`,
+    to: ``,
+  },
+  {
+    name: "hallway2-nested-gloss",
+    rule: "hallway 2.6: an acronym alone in brackets is glossed inside them, never nested",
+    file: GLOSSARY,
+    from: `      if (inOwnParens(text, at, w)) seg.paren = true;\n`,
+    to: ``,
+  },
+  {
+    name: "hallway2-cbsa-gloss-repeats",
+    rule: "hallway 2.6: CBSA's expansion does not repeat metro or micro area",
+    file: GLOSSARY,
+    from: `  CBSA: "Core-Based Statistical Area",`,
+    to: `  CBSA: "Core-Based Statistical Area, a metro or micro area",`,
+  },
+  {
+    name: "hallway2-km-flat",
+    rule: "hallway 2.7: east-west kilometres shrink with latitude",
+    file: PLAIN,
+    from: `KM_PER_DEGREE * Math.abs(Math.cos((lat * Math.PI) / 180)) * d`,
+    to: `KM_PER_DEGREE * d`,
+  },
+  {
+    name: "hallway2-km-larger-axis",
+    rule: "hallway 2.7: the smaller of north-south and east-west is said",
+    file: PLAIN,
+    from: `Math.round(Math.min(ns, ew))`,
+    to: `Math.round(Math.max(ns, ew))`,
+  },
+  {
+    name: "hallway2-km-no-latitude",
+    rule: "hallway 2.7: each place's notes are measured at its own latitude",
+    file: FORMAT,
+    from: `toSection(k, topics[k], b.place?.kind, typeof lat === "number" ? lat : null)`,
+    to: `toSection(k, topics[k], b.place?.kind, null)`,
+  },
   // The second review's note rewrites that had no break of their own
   {
     name: "review-record-level-url",
@@ -448,8 +593,8 @@ export const MUTANTS = [
     name: "review-publisher-snake-id",
     rule: "review: a publisher drops a bracketed id like (FEMA_HQ_Preparedness_NIC)",
     file: PLAIN,
-    from: `return dropCode(p.replace(/\\s*\\([A-Za-z0-9]+(?:_[A-Za-z0-9]+)+\\)/g, "").trim());`,
-    to: `return dropCode(p.trim());`,
+    from: `return dropCode(q.replace(/\\s*\\([A-Za-z0-9]+(?:_[A-Za-z0-9]+)+\\)/g, "").trim());`,
+    to: `return dropCode(q);`,
   },
   {
     name: "review-basis-api-route",
