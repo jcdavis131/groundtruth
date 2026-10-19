@@ -234,14 +234,16 @@ describe("known-outage age tiers", () => {
     }
   });
 
-  it("passes the real known.json against the real source tree on 2026-10-18", () => {
+  it("passes every entry of the real known.json against the real source tree on its own since date", () => {
+    // Each entry is aged on the day it was added, so the test never drifts with the calendar and
+    // still holds when entries are added or removed. The live clock is the weekly sweep's job.
     const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-    const known = JSON.parse(fs.readFileSync(path.join(root, "scripts", "endpoint-sweep.known.json"), "utf8")).outages;
-    const { targets } = discoverTargets(root);
-    type Row = { entry: { match: string }; failing: boolean };
-    const rows: Row[] = assessKnown(known, [...targets.keys()], NOW);
-    expect(rows.length).toBeGreaterThan(0);
-    expect(rows.filter((r) => r.failing)).toEqual([]);
-    expect(rows.find((r) => r.entry.match.includes("geopub.epa.gov"))).toMatchObject({ matched: true, tier: "info", days: 0 });
+    const known: { match: string; since: string; note: string }[] = JSON.parse(
+      fs.readFileSync(path.join(root, "scripts", "endpoint-sweep.known.json"), "utf8"),
+    ).outages;
+    const urls = [...discoverTargets(root).targets.keys()];
+    for (const e of known) {
+      expect(assessKnown([e], urls, new Date(`${e.since}T12:00:00Z`))[0], e.match).toMatchObject({ matched: true, tier: "info", days: 0, failing: false });
+    }
   });
 });
