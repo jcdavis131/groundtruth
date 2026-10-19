@@ -298,6 +298,30 @@ function fabricItems(s: Section, fabric: Got, kinds: Record<string, string>, onl
   }
 }
 
+/**
+ * What the fabric's identity nodes leave out, said with its reason: a TIGERweb
+ * failure, no county under the point (offshore, or outside the US), no state,
+ * or a county that is in no CBSA. `expect` is the county FIPS asked for, when
+ * one was (its own county item comes from the screener, not from here).
+ */
+function identityGaps(s: Section, fabric: Got, expect: string | null, at: string): void {
+  const nodes = nodesOf(fabric);
+  const has = (k: string) => nodes.some((n) => n.kind === k);
+  const failed = arr(obj(fabric.body.data).failed).map((f) => obj(f));
+  const tiger = failed.find((f) => str(f.source ?? f.id) === "census-tigerweb");
+  if (tiger) {
+    miss(s, expect ? "state and metro area (CBSA)" : "county, state and metro area (CBSA)", `Census TIGERweb failed on this call (/api/fabric failed[]${str(tiger.error) ? `: ${str(tiger.error)}` : ""})`);
+    return;
+  }
+  if (!has("county")) {
+    const why = str(obj(fabric.body.data).coverage);
+    miss(s, expect ? "state and metro area (CBSA)" : "county, state and metro area (CBSA)", `the place fabric answered but has no county polygon at ${at}: it is offshore or outside the US${why ? ` (the fabric says: ${why})` : ""}`);
+    return;
+  }
+  if (!has("state")) miss(s, "state", `the place fabric returned no state at ${at}`);
+  if (!has("cbsa")) miss(s, "metro area (CBSA)", "none: this county is in no metropolitan or micropolitan statistical area (Census TIGERweb answered and returned no CBSA here)");
+}
+
 function fabricFailed(fabric: Got, s: Section): void {
   for (const f of arr(obj(fabric.body.data).failed)) {
     const id = str(typeof f === "string" ? f : obj(f).id ?? obj(f).source);
@@ -433,19 +457,31 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
   if (got.screen) screen = got.screen;
 
   // ---- identity ----
-  if (fabric?.ok && (r.kind === "point" || r.kind === "bbox")) fabricItems(id, fabric, IDENTITY_KINDS, undefined, r.kind === "bbox" ? "at the centre of the box" : undefined);
-  if (r.kind === "county") {
-    if (got.fabric?.ok) fabricItems(id, got.fabric, IDENTITY_KINDS, COUNTY_WIDE, "read at the county's representative point");
-    else if (got.fabric) miss(id, "metro area (CBSA) code", got.fabric.reason ?? "failed");
-  }
+  // A county FIPS: the screener's row names the county asked for. The fabric read at
+  // its representative point adds state and CBSA only when it lands in that county.
   if (screen?.ok && (r.kind === "county" || r.kind === "state")) {
     const row = obj(arr(obj(screen.body.data).rows)[0]);
     const v = obj(row.values);
-    const c = cite(screen, provOf(screen.body, "census-tigerweb"));
-    if (!id.items.some((i) => i.fact === r.kind)) push(id, item(c, r.kind, str(row.name), { code: str(v.geoid) ?? undefined }));
-    if (r.kind === "county" && str(v.metro)) push(id, item(c, "metro area name (screener)", str(v.metro)));
+    push(id, item(cite(screen, provOf(screen.body, "census-tigerweb")), r.kind, str(row.name), { code: str(v.geoid) ?? undefined }));
   }
-  if (r.kind === "state") miss(id, "metro area", "a state has no single metro; pass a county FIPS or a point");
+  if (fabric?.ok && (r.kind === "point" || r.kind === "bbox")) {
+    fabricItems(id, fabric, IDENTITY_KINDS, undefined, r.kind === "bbox" ? "at the centre of the box" : undefined);
+    identityGaps(id, fabric, null, r.kind === "bbox" ? "the centre of the box" : "this point");
+  }
+  if (r.kind === "county") {
+    const g = got.fabric;
+    if (g?.ok) {
+      const at = r.point ? `the county's representative point (${r.point.lon}, ${r.point.lat})` : "the county's representative point";
+      const there = nodesOf(g).find((n) => n.kind === "county");
+      if (there && there.code !== cf) {
+        miss(id, "state and metro area (CBSA) from the place fabric", `the fabric at ${at} resolved to county ${there.code}${there.name ? ` (${there.name})` : ""}, not ${cf}; that county's state and CBSA are not shown for this one`);
+      } else {
+        fabricItems(id, g, IDENTITY_KINDS, new Set(["state", "cbsa"]), "read at the county's representative point");
+        identityGaps(id, g, cf, at);
+      }
+    } else if (g) miss(id, "state and metro area (CBSA) from the place fabric", g.reason ?? "failed");
+  }
+  if (r.kind === "state") miss(id, "metro area (CBSA)", "a state has no single metro; pass a county FIPS or a point");
   if (got.nriBox) {
     if (got.nriBox.ok) {
       const rows = arr(obj(got.nriBox.body.data).rows).map(obj);
@@ -459,7 +495,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
   if (r.stateFips === "09" && (r.kind === "county" || r.kind === "point" || r.kind === "bbox")) {
     miss(id, "Connecticut county id", "Census uses planning regions (09110-09190) as county equivalents; some sources publish only legacy counties (09001-09015), so a county-keyed fact can be absent here for that reason alone");
   }
-  if (!cf && r.kind !== "state") miss(id, "county", r.point ? "no US county under this point (or the fabric did not answer)" : "the place could not be resolved");
+  if (!cf && r.kind !== "state" && !fabric?.ok) miss(id, "county", r.point ? "the place fabric did not answer, so no county was resolved" : "the place could not be resolved");
 
   // ---- fabric ----
   if (want("fabric")) {
@@ -479,7 +515,8 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
   const row = nri?.ok ? nriRow(nri) : null;
   if (want("hazards")) {
     const s = S.hazards;
-    if (!cf) miss(s, "county hazard baseline", r.kind === "state" ? "county-level sources only; pass a county FIPS" : "no county resolved");
+    if (!cf) miss(s, "county hazard baseline (FEMA NRI, declarations, drought)", r.kind === "state" ? "not asked for a state: county-level sources only; pass a county FIPS" : "no county resolved");
+    if (r.kind === "state") miss(s, "live events (NWS alerts, earthquakes)", "not asked for a state: the live list is matched to a search box; pass a county FIPS, a point or a box");
     if (nri) {
       if (row) {
         const c = cite(nri, provOf(nri.body, "fema-nri"));
@@ -605,8 +642,15 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
           return pt != null && inBox(b, pt[0], pt[1]);
         });
       const c = cite(g, provOf(g.body, sourceId));
-      if (!feats.length) push(s, item(c, `${label} found`, 0, { note: boxNote }));
-      for (const f of capList(s, label, feats, max)) push(s, build(obj(f.properties), pointOf(f), c));
+      // The route's own flag: its upstream's record limit was hit, so what came back is not every record in the box.
+      const routeCut = g.body.truncated === true;
+      if (routeCut) {
+        s.cut.push(`${label}: the route hit its upstream's record limit for this box, so the ${feats.length} it returned inside the box are not all of them`);
+        if (!feats.length) miss(s, `${label} found`, "the route hit its record limit and returned none inside the box; a count of 0 would not be true");
+      } else if (!feats.length) push(s, item(c, `${label} found`, 0, { note: boxNote }));
+      if (routeCut && feats.length > max) s.cut.push(`${label}: ${max} of at least ${feats.length} shown (max_records)`);
+      const shown = routeCut ? feats.slice(0, max) : capList(s, label, feats, max);
+      for (const f of shown) push(s, build(obj(f.properties), pointOf(f), c));
     };
     records(got.hospitals, "hospitals", "hifld-hospitals", (p, pt, c) => {
       const x = obj(p.extra);
@@ -620,10 +664,13 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     });
     records(got.dams, "dams", "usace-nid", (p, pt, c) => {
       const d = obj(p.details);
-      return item(c, "dam", publicName(p), {
+      const name = publicName(p);
+      const owner = str(d["owner type"]);
+      const unnamed = name ? null : owner && /private/i.test(owner) ? "name withheld (private owner); labelled by NID id" : "name not in the route's record text; labelled by NID id";
+      return item(c, "dam", name, {
         code: str(p.id) ?? undefined,
         point: pt ?? undefined,
-        note: [str(d["hazard potential"]) ? `hazard potential ${str(d["hazard potential"])}` : null, str(d["condition assessment"]) ? `condition ${str(d["condition assessment"])}` : null, str(d["year completed"]) ? `completed ${str(d["year completed"])}` : null, str(d["owner type"]) ? `owner type ${str(d["owner type"])}` : null, boxNote]
+        note: [unnamed, str(d["hazard potential"]) ? `hazard potential ${str(d["hazard potential"])}` : null, str(d["condition assessment"]) ? `condition ${str(d["condition assessment"])}` : null, str(d["year completed"]) ? `completed ${str(d["year completed"])}` : null, str(d["owner type"]) ? `owner type ${str(d["owner type"])}` : null, boxNote]
           .filter(Boolean)
           .join("; "),
       });
@@ -634,11 +681,17 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         const feats = arr(obj(co.body.data).features).map(obj);
         const c = cite(co, provOf(co.body, "sec-edgar"));
         const where = r.kind === "bbox" ? "inside the box" : "headquartered in the county";
-        if (!feats.length) push(s, item(c, `SEC-registered public companies ${where}`, 0));
+        // The route reads a bundled SEC snapshot. `pulled` is the date of a full pull; null means the
+        // committed hand-checked fixture, so a count from it is a count within that bundle, never a census.
+        const pulled = str(co.body.pulled);
+        const size = num(obj(co.body.bundle).companies);
+        const universe = `within eye's SEC bundle${size != null ? ` of ${size} companies` : ""}${pulled ? ` pulled ${pulled}` : " (a committed fixture, pulled: null)"}; not every registrant`;
+        if (!pulled) miss(s, `SEC-registered public companies ${where}`, `eye's SEC bundle is a committed fixture (pulled: null), not a full pull of EDGAR registrants, so it cannot say how many are ${where}; any listed are ${universe}`);
+        else if (!feats.length) push(s, item(c, `public companies in eye's SEC bundle ${where}`, 0, { note: universe }));
         for (const f of capList(s, "public companies", feats, max)) {
           const x = obj(obj(f.properties).extra);
           const ticker = str(x.ticker);
-          push(s, item(c, "public company (by ticker; names are not copied)", ticker, { code: x.cik != null ? `CIK ${str(x.cik)}` : undefined, note: [str(x.exchange), where].filter(Boolean).join("; ") }));
+          push(s, item(c, "public company (by ticker; names are not copied)", ticker, { code: x.cik != null ? `CIK ${str(x.cik)}` : undefined, note: [str(x.exchange), where, universe].filter(Boolean).join("; ") }));
         }
       } else miss(s, "public companies", co.reason ?? "failed");
     }
@@ -752,6 +805,12 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
   while (cs && bytes(payload) > WORLD_MAX_BYTES && cs.basis.length > 1) cs.basis.pop();
 
   if (!total) {
+    // Every route refusing with 401/403 is this server being turned away (deployment protection, a
+    // missing credential), not an upstream outage: retrying the same call will not help.
+    const answered = [fabric, screen, ...settled].filter((g): g is Got => !!g);
+    if (answered.length && answered.every((g) => g.status === 401 || g.status === 403)) {
+      return { status: 403, payload: { error: `auth refusal: every route this tool called answered HTTP 401 or 403 (${answered.length} calls), so the server behind this MCP is refusing it (deployment protection or a missing credential); this is not an upstream outage and retrying will not help`, refusal: "auth", ...payload } };
+    }
     return { status: 502, payload: { error: "no source answered for this place; every part of the bundle is missing (see topics[*].missing)", ...payload } };
   }
   return { status: 200, payload };

@@ -139,6 +139,7 @@ const HOSPITALS = {
       feature(-95.0, 29.0, { id: "hifld-hosp:far", name: "FAR AWAY HOSPITAL", extra: { embedText: "name: FAR AWAY HOSPITAL" } }),
     ],
   },
+  truncated: false,
   provenance: [prov("hifld-hospitals", "Homeland Infrastructure Foundation-Level Data", "https://services.arcgis.com/x/Hospitals_RAPT/FeatureServer/6")],
 };
 
@@ -150,11 +151,14 @@ const DAMS = {
       feature(-97.7, 30.25, { id: "nid:TX09999", name: "Jane Doe Pond Dam", details: { "hazard potential": "Low", "owner type": "Private", representative: "Jane Doe" }, extra: { embedText: "collection: Dams; county: Travis; hazard potential: Low" } }),
     ],
   },
+  truncated: false,
   provenance: [prov("usace-nid", "U.S. Army Corps of Engineers", "https://geospatial.sec.usace.army.mil/x/NID/FeatureServer/0")],
 };
 
 const COMPANIES = {
   data: { type: "FeatureCollection", features: [feature(-97.62, 30.22, { id: "cik:123", name: "Smith Family Holdings Inc", details: { HQ: "Austin, TX 78725" }, extra: { cik: 123, ticker: "SFH", exchange: "NYSE" } })] },
+  // As the live route answers today: the committed 25-company fixture, pulled: null.
+  pulled: null,
   provenance: [prov("sec-edgar", "U.S. Securities and Exchange Commission")],
 };
 
@@ -267,7 +271,8 @@ describe("world_context: shape", () => {
     expect(f.calls[0]).toBe('/api/screen?kind=county&q=geoid%20%3D%3D%20%2248453%22%20LIMIT%201');
     expect(f.calls).toContain("/api/fabric?op=stack&lon=-97.6911&lat=30.2395");
     expect(r.payload.place).toMatchObject({ kind: "county", name: "Travis County, TX", countyFips: "48453", usps: "TX" });
-    expect(facts(r, "identity").sort()).toEqual(["county", "metro area name (screener)", "metro or micro area (CBSA)", "state"]);
+    expect(facts(r, "identity").sort()).toEqual(["county", "metro or micro area (CBSA)", "state"]);
+    expect(topicsOf(r).identity.items.find((i) => i.fact === "county")).toMatchObject({ code: "48453", sourceId: "census-tigerweb" });
     expect(topicsOf(r).fabric.items).toEqual([]);
     expect(topicsOf(r).fabric.missing![0].reason).toMatch(/per point; call world_context with lon\/lat \(the county's point is -97.6911, 30.2395\)/);
     expect(topicsOf(r).institutions.items.every((i) => i.fact !== "hospital" || /not the whole county/.test(String(i.note)))).toBe(true);
@@ -281,6 +286,10 @@ describe("world_context: shape", () => {
     expect(facts(r, "economy")).toEqual(["covered employment (BLS QCEW, all industries)", "average weekly wage (BLS QCEW)"]);
     expect(topicsOf(r).hazards.missing![0].reason).toMatch(/county-level sources only/);
     expect(topicsOf(r).institutions.missing![0].reason).toMatch(/a state is too large/);
+    // Hazards and live events are said to be not asked, not silently absent.
+    const hz = topicsOf(r).hazards.missing!;
+    expect(hz.find((m) => m.what.startsWith("county hazard baseline"))!.reason).toMatch(/^not asked for a state/);
+    expect(hz.find((m) => m.what.startsWith("live events"))!.reason).toMatch(/^not asked for a state/);
   });
 
   it("a box lists the counties FEMA's index returns for it and keeps only records inside it", async () => {
@@ -409,8 +418,110 @@ describe("world_context: privacy", () => {
     const inst = topicsOf(r).institutions.items;
     expect(inst.find((i) => i.code === "nid:TX00001")!.value).toBe("Tom Miller Dam");
     // A private dam is labelled by its id only.
-    expect(inst.find((i) => i.code === "nid:TX09999")!.value).toBeNull();
+    const priv = inst.find((i) => i.code === "nid:TX09999")!;
+    expect(priv.value).toBeNull();
+    expect(priv.note).toMatch(/^name withheld \(private owner\); labelled by NID id/);
     expect(inst.find((i) => i.code === "CIK 123")!.value).toBe("SFH");
+  });
+});
+
+const fabricWith = (nodes: JsonObject[], extra: JsonObject = {}) => ({ ...STACK, data: { ...STACK.data, nodes, ...extra } });
+const node = (kind: string, code: string, name = code) => ({ id: `${kind}:${code}`, kind, name, code, facts: {}, source: "census-tigerweb" });
+
+describe("world_context: identity gaps", () => {
+  it("a county whose point is offshore (fabric has no county) keeps the screener's county and says why state and CBSA are absent", async () => {
+    const offshore = fabricWith([{ id: "timezone:America/Adak", kind: "timezone", name: "America/Adak", code: "America/Adak", facts: {}, source: "nws-api" }], { coverage: "Outside the United States only the country is known here" });
+    const r = await run({ fips: "48453", topics: ["economy"] }, { "/api/fabric?op=stack": offshore }).reply;
+    const id = topicsOf(r).identity;
+    expect(id.items.map((i) => i.fact)).toEqual(["county"]);
+    expect(id.missing).toContainEqual({ what: "state and metro area (CBSA)", reason: expect.stringMatching(/no county polygon at the county's representative point \(-97.6911, 30.2395\): it is offshore/) });
+    expect(id.coverageStatus).toMatchObject({ status: "partial" });
+  });
+
+  it("a county whose point lands in a neighbouring county never shows that county's state or CBSA", async () => {
+    const neighbour = fabricWith([node("county", "48491", "Williamson County, TX"), node("cbsa", "12420", "Austin Metro"), node("state", "48", "Texas")]);
+    const r = await run({ fips: "48453", topics: ["economy"] }, { "/api/fabric?op=stack": neighbour }).reply;
+    const id = topicsOf(r).identity;
+    expect(id.items.map((i) => [i.fact, i.code])).toEqual([["county", "48453"]]);
+    expect(JSON.stringify(id.items)).not.toContain("Williamson");
+    expect(id.missing![0].reason).toMatch(/resolved to county 48491 \(Williamson County, TX\), not 48453/);
+  });
+
+  it("a county in no CBSA says so explicitly", async () => {
+    const rural = fabricWith([node("county", "48453", "Travis County, TX"), node("state", "48", "Texas")]);
+    for (const input of [{ fips: "48453", topics: ["economy"] }, { lon: -97.74, lat: 30.27, topics: ["economy"] }]) {
+      const r = await run(input, { "/api/fabric?op=stack": rural }).reply;
+      expect(topicsOf(r).identity.missing).toContainEqual({ what: "metro area (CBSA)", reason: expect.stringMatching(/^none: this county is in no metropolitan or micropolitan statistical area/) });
+      expect(facts(r, "identity")).not.toContain("metro or micro area (CBSA)");
+    }
+  });
+
+  it("a point with no county under it records the gap with the fabric's reason", async () => {
+    const sea = fabricWith([], { coverage: "Outside the United States only the country is known here" });
+    const r = await run({ lon: -173.97, lat: 52.87, topics: ["economy"] }, { "/api/fabric?op=stack": sea }).reply;
+    expect(topicsOf(r).identity.missing).toContainEqual({ what: "county, state and metro area (CBSA)", reason: expect.stringMatching(/no county polygon at this point: it is offshore or outside the US \(the fabric says: Outside/) });
+  });
+
+  it("does not claim 'no CBSA' when TIGERweb itself failed", async () => {
+    const down = fabricWith([node("timezone", "America/Chicago")], { failed: [{ source: "census-tigerweb", error: "TIGERweb 503" }] });
+    const r = await run({ lon: -97.74, lat: 30.27, topics: ["economy"] }, { "/api/fabric?op=stack": down }).reply;
+    const m = topicsOf(r).identity.missing!;
+    expect(m).toContainEqual({ what: "county, state and metro area (CBSA)", reason: "Census TIGERweb failed on this call (/api/fabric failed[]: TIGERweb 503)" });
+    expect(m.some((x) => /^none:/.test(x.reason))).toBe(false);
+  });
+});
+
+describe("world_context: companies are counted only within the bundle", () => {
+  it("the committed fixture (pulled: null) gives no count, marks institutions partial and states the universe on each company", async () => {
+    const empty = { ...COMPANIES, data: { type: "FeatureCollection", features: [] } };
+    const r = await run({ fips: "48453", topics: ["institutions"] }, { "/api/companies": empty }).reply;
+    const inst = topicsOf(r).institutions;
+    expect(inst.items.some((i) => /compan/i.test(i.fact))).toBe(false);
+    expect(inst.missing).toContainEqual({ what: "SEC-registered public companies headquartered in the county", reason: expect.stringMatching(/committed fixture \(pulled: null\), not a full pull/) });
+    expect(inst.coverageStatus).toMatchObject({ status: "partial" });
+
+    const one = await run({ bbox: [-97.8, 30.2, -97.6, 30.35], topics: ["institutions"] }, { "/api/companies": { ...COMPANIES, bundle: { companies: 25, geocoded: 25, withFacts: 0 } } }).reply;
+    const co = topicsOf(one).institutions.items.find((i) => i.code === "CIK 123")!;
+    expect(co.note).toMatch(/within eye's SEC bundle of 25 companies \(a committed fixture, pulled: null\); not every registrant/);
+  });
+
+  it("a full pull may say 0, still within the bundle", async () => {
+    const full = { ...COMPANIES, pulled: "2026-10-01", bundle: { companies: 6000, geocoded: 5900, withFacts: 5000 }, data: { type: "FeatureCollection", features: [] } };
+    const r = await run({ bbox: [-97.8, 30.2, -97.6, 30.35], topics: ["institutions"] }, { "/api/companies": full }).reply;
+    expect(topicsOf(r).institutions.items.find((i) => i.fact.startsWith("public companies"))).toMatchObject({ value: 0, note: "within eye's SEC bundle of 6000 companies pulled 2026-10-01; not every registrant" });
+  });
+});
+
+describe("world_context: the route's own truncated flag", () => {
+  it("a capped hospital or dam reply is not shown as every record, and never as 0", async () => {
+    const cut = { ...HOSPITALS, truncated: true };
+    const none = { ...DAMS, truncated: true, data: { type: "FeatureCollection", features: [] } };
+    const r = await run({ lon: -97.74, lat: 30.27, topics: ["institutions"] }, { "/api/infra?op=hospitals": cut, "/api/infra?op=dams": none }).reply;
+    const inst = topicsOf(r).institutions;
+    expect(inst.coverageStatus!.basis).toContain("hospitals: the route hit its upstream's record limit for this box, so the 1 it returned inside the box are not all of them");
+    expect(inst.items.some((i) => i.fact === "dams found")).toBe(false);
+    expect(inst.missing).toContainEqual({ what: "dams found", reason: expect.stringMatching(/hit its record limit/) });
+  });
+
+  it("a capped reply longer than max_records says 'of at least'", async () => {
+    const many = Array.from({ length: 5 }, (_, i) => feature(-97.74 + i * 0.001, 30.27, { id: `nid:TX${i}`, name: `D${i}`, details: { "owner type": "Private" }, extra: {} }));
+    const r = await run({ lon: -97.74, lat: 30.27, topics: ["institutions"] }, { "/api/infra?op=dams": { ...DAMS, truncated: true, data: { type: "FeatureCollection", features: many } } }).reply;
+    expect(topicsOf(r).institutions.coverageStatus!.basis).toContain("dams: 3 of at least 5 shown (max_records)");
+    expect(topicsOf(r).institutions.items.filter((i) => i.fact === "dam")).toHaveLength(3);
+  });
+});
+
+describe("world_context: auth refusal", () => {
+  it("every route answering 401/403 is an auth refusal, not a retryable upstream failure", async () => {
+    const refused: Record<string, Answer> = Object.fromEntries(BASE.map(([k], i) => [k, { status: i % 2 ? 401 : 403, body: { error: "non-JSON reply" } }]));
+    for (const input of [{ lon: -97.74, lat: 30.27 }, { fips: "48453" }]) {
+      const r = await run(input, refused).reply;
+      expect(r.status).toBe(403);
+      expect(r.payload.refusal).toBe("auth");
+      expect(String(r.payload.error)).toMatch(/^auth refusal/);
+      expect(toCallResult(r).structuredContent).toMatchObject({ retryable: false, category: "invalid_input" });
+      expect(toCallResult(r).structuredContent).not.toMatchObject({ code: "upstream_failure" });
+    }
   });
 });
 
