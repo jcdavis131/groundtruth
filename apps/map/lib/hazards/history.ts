@@ -132,10 +132,53 @@ export const FEMA_LEGACY: ReadonlyArray<FemaLegacyCode> = [
   { oldFips: "46113", name: "Shannon County, SD", successors: ["46102"], change: "rename", what: "Shannon County, SD, renamed Oglala Lakota County (2015-05-01)", citation: CENSUS_CHANGES_2010 },
   { oldFips: "02270", name: "Wade Hampton Census Area, AK", successors: ["02158"], change: "rename", what: "Wade Hampton Census Area, AK, renamed Kusilvak Census Area (2015-07-01)", citation: CENSUS_CHANGES_2010 },
   { oldFips: "02261", name: "Valdez-Cordova Census Area, AK", successors: ["02063", "02066"], change: "split", what: "Valdez-Cordova Census Area, AK, split into Chugach and Copper River Census Areas (2019-01-02)", citation: CENSUS_CHANGES_2010 },
-  { oldFips: "02201", name: "Prince of Wales-Outer Ketchikan Census Area, AK", successors: ["02198", "02130"], change: "split", what: "Prince of Wales-Outer Ketchikan Census Area, AK, split in 2008 between the new Prince of Wales-Hyder Census Area and Ketchikan Gateway Borough", citation: CENSUS_CHANGES_2000 },
+  { oldFips: "02201", name: "Prince of Wales-Outer Ketchikan Census Area, AK", successors: ["02198", "02130", "02275"], change: "split", what: "Prince of Wales-Outer Ketchikan Census Area, AK, split in 2008: the Outer Ketchikan area to Ketchikan Gateway Borough, the Meyers Chuck area to the new Wrangell City and Borough, the remainder renamed Prince of Wales-Hyder Census Area", citation: CENSUS_CHANGES_2000 },
   { oldFips: "02280", name: "Wrangell-Petersburg Census Area, AK", successors: ["02275", "02195"], change: "split", what: "Wrangell-Petersburg Census Area, AK, split in 2008 into Wrangell City and Borough and Petersburg Census Area (Petersburg Borough since 2013)", citation: CENSUS_CHANGES_2000 },
   { oldFips: "51515", name: "Bedford city, VA", successors: ["51019"], change: "merged", what: "the independent city of Bedford, VA, became part of Bedford County (2013-07-01)", citation: CENSUS_CHANGES_2010 },
 ];
+
+/** How FEMA's designatedArea on a split legacy code's row places it: in these successors, or (empty) in none. */
+export interface FemaAreaRule {
+  area: string;
+  to: string[];
+  basis: string;
+}
+
+const TIGER_DISTRICT_SHARES =
+  "Census TIGERweb ACS 2025: the unified school district polygon (School MapServer layer 10) against the census area polygons (State_County MapServer layer 37), area share by grid point-in-polygon (writeups/jev-2026-10-18/p19-audit/wctx/fix2/sources/overlap.json, 2026-10-19); FEMA's REAA name matched to the TIGERweb district of the same name";
+
+/**
+ * Every designatedArea FEMA files under a split legacy code (all of them in the 2026-10-19 sweep,
+ * pinned by fixtures/fema-codes-sweep.json), and where it lies. A row for the whole former census
+ * area attaches to every successor (with the split caveat); a school district or REAA lying in one
+ * successor attaches to that one only; an area no cited source places in a successor attaches to
+ * none and is listed in the answer's missing. Never divided, never guessed.
+ */
+export const FEMA_SPLIT_AREAS: Readonly<Record<string, ReadonlyArray<FemaAreaRule>>> = {
+  "02261": [
+    { area: "Valdez-Cordova (Census Area)", to: ["02063", "02066"], basis: `the whole former census area (${CENSUS_CHANGES_2010})` },
+    { area: "Chugach Regional Educational Attendance Area", to: ["02063"], basis: `Chugach School District: 99.26% in Chugach Census Area, 0.74% in Copper River at the shared edge; ${TIGER_DISTRICT_SHARES}` },
+    { area: "Valdez City School District", to: ["02063"], basis: `Valdez City School District: 100% in Chugach Census Area; ${TIGER_DISTRICT_SHARES}` },
+  ],
+  "02201": [
+    { area: "Prince of Wales-Outer Ketchikan (Census Area)", to: ["02198", "02130", "02275"], basis: `the whole former census area (${CENSUS_CHANGES_2000})` },
+    { area: "Southeast Islands Regional Educational Attendance Ar", to: ["02198"], basis: `FEMA's name, cut at 50 characters; Southeast Island School District: 100% in Prince of Wales-Hyder Census Area; ${TIGER_DISTRICT_SHARES}` },
+    { area: "Annette Island Regional Educational Attendance Area", to: ["02198"], basis: `Annette Island School District: 100% in Prince of Wales-Hyder Census Area; ${TIGER_DISTRICT_SHARES}` },
+  ],
+  "02280": [
+    { area: "Wrangell-Petersburg (Census Area)", to: ["02275", "02195"], basis: `the whole former census area (${CENSUS_CHANGES_2000})` },
+    { area: "Wrangell City School District", to: ["02275"], basis: `Wrangell School District: 100% in Wrangell City and Borough; ${TIGER_DISTRICT_SHARES}` },
+    { area: "Chatham Regional Educational Attendance Area", to: [], basis: `Chatham School District lies 100% in Hoonah-Angoon Census Area (02105), which was never part of Wrangell-Petersburg, so FEMA's 02280 rows for it name no successor of that code; ${TIGER_DISTRICT_SHARES}` },
+  ],
+};
+
+/** A split legacy code's row that could not be placed in any successor, with why. */
+export interface UnplacedFemaRow {
+  oldFips: string;
+  area: string | null;
+  disasterNumber: number | null;
+  reason: string;
+}
 
 /**
  * The renames alone (same boundary): Oglala Lakota (46102) has 16 rows under Shannon's 113 and none
@@ -155,7 +198,7 @@ export function femaRenameNote(fips: string): string | null {
     if (l.change === "rename") return `FEMA files many of this county's declarations under its old code ${code} (${l.what}, a Census change of name and code with the same boundary), so both codes are read and each disaster is kept once.`;
     if (l.change === "merged") return `FEMA still files declarations under the former ${l.name} (${l.oldFips}), now part of this county (${l.what}); both codes are read, each disaster is kept once, and a row filed under the former code is marked filedUnder ${l.oldFips}.`;
     const others = l.successors.filter((s) => s !== fips).join(", ");
-    return `FEMA files this under the former ${l.name} (${l.oldFips}), which covered more than this county (${l.what}). Those declarations are attached whole here and to ${others}, never divided; each is marked filedUnder ${l.oldFips}, and its designated area is FEMA's, which may lie on one side of the split only.`;
+    return `FEMA files this under the former ${l.name} (${l.oldFips}), which covered more than this county (${l.what}). Each row is placed by its own designated area (FEMA_SPLIT_AREAS): a row for the whole former area is attached here and to ${others}, never divided; a row for a school district or REAA is attached only to the successor it lies in; a row whose area no cited source places is attached to none and listed in missing. Attached rows are marked filedUnder ${l.oldFips}.`;
   });
   return notes.length ? notes.join(" ") : null;
 }
@@ -167,7 +210,8 @@ export type MissingReason =
   | "source:not_in_release"
   | "source:not_published_for_puerto_rico"
   | "join:ncei_areas_not_counties"
-  | "source:failed";
+  | "source:failed"
+  | "join:area_not_placed";
 
 // ---------------------------------------------------------------- parsers
 
@@ -195,23 +239,35 @@ const fipsOf = (r: FemaRow) => {
  * code of 000 (tribal areas, statewide designations) names no county and is counted in notCounty; any
  * other code is unmatched (a legacy Connecticut county).
  */
-export function attachFema(rows: readonly FemaRow[], fips: string): { rows: FemaRow[]; notCounty: number; unmatched: string[] } {
+export function attachFema(rows: readonly FemaRow[], fips: string): { rows: FemaRow[]; notCounty: number; unmatched: string[]; unplaced: UnplacedFemaRow[] } {
   const mine: FemaRow[] = [];
   const old: FemaRow[] = [];
+  const unplaced: UnplacedFemaRow[] = [];
   const olds = new Set(femaCodes(fips).slice(1));
   let notCounty = 0;
   const unmatched = new Set<string>();
   for (const r of rows) {
     const f = fipsOf(r);
     if (f === fips) mine.push(r);
-    else if (f && olds.has(f)) old.push(r);
-    else if (!f || f.endsWith("000")) notCounty++;
+    else if (f && olds.has(f)) {
+      // A split's row goes only where its designated area lies (FEMA_SPLIT_AREAS); renames and merges attach whole.
+      const rules = FEMA_SPLIT_AREAS[f];
+      if (!rules) old.push(r);
+      else {
+        const area = str(r.designatedArea);
+        const rule = rules.find((x) => x.area === area);
+        const n = typeof r.disasterNumber === "number" ? r.disasterNumber : Number(r.disasterNumber);
+        if (rule?.to.includes(fips)) old.push(r);
+        else if (!rule || !rule.to.length)
+          unplaced.push({ oldFips: f, area, disasterNumber: Number.isFinite(n) ? n : null, reason: rule ? rule.basis : "this designated area is not in FEMA_SPLIT_AREAS, so no cited source places it in a successor" });
+      }
+    } else if (!f || f.endsWith("000")) notCounty++;
     else unmatched.add(f);
   }
   // A FEMA_RENAMES county: an old-code row joins unless its disaster is already filed under the current code.
   const seen = new Set(mine.map((r) => String(r.disasterNumber)));
   for (const r of old) if (!seen.has(String(r.disasterNumber))) mine.push(r);
-  return { rows: mine, notCounty, unmatched: [...unmatched].sort() };
+  return { rows: mine, notCounty, unmatched: [...unmatched].sort(), unplaced };
 }
 
 const yearOf = (iso: unknown): number | null => {
@@ -483,6 +539,10 @@ export function assembleHistory(i: HistoryInputs): HistoryAnswer {
     notCounty = a.notCounty;
     unmatched = a.unmatched;
     declarationRows = a.rows.length;
+    // Rows under a split legacy code whose designated area no cited source places here or anywhere: listed, never attached.
+    for (const u of a.unplaced) {
+      missing.push({ source: "FEMA legacy-code rows", reason: "join:area_not_placed", detail: `${u.area ?? "(no designated area)"}${u.disasterNumber != null ? ` (disaster ${u.disasterNumber})` : ""}, filed under ${u.oldFips}: ${u.reason}` });
+    }
     const prov = provenance(source("fema-openfema"), {
       kind: "published",
       seriesId: `DisasterDeclarationsSummaries v2, ${femaFilter(i.fips)}`,

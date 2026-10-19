@@ -1,5 +1,5 @@
 {
- "note": "Every county code OpenFEMA DisasterDeclarationsSummaries v2 files under (all 70,571 rows, paged keyless on 2026-10-19 by writeups/unify-2026-10-18/fema-fips-audit/sweep.py), compared with the 3,222 counties in apps/map/lib/places/data/counties.json. notInTable: FEMA codes no table county has (row count, distinct declarations, latest declaration date, first designated area). neverFiled: table counties FEMA files nothing under. Derived counts only; no FEMA row is copied.",
+ "note": "Every county code OpenFEMA DisasterDeclarationsSummaries v2 files under (all 70,571 rows, paged keyless on 2026-10-19 by writeups/unify-2026-10-18/fema-fips-audit/sweep.py), compared with the 3,222 counties in apps/map/lib/places/data/counties.json. notInTable: FEMA codes no table county has (row count, distinct declarations, latest declaration date, first designated area). neverFiled: table counties FEMA files nothing under. Derived counts only; no FEMA row is copied. splitCodeAreas: every designatedArea FEMA uses under the split legacy codes 02201, 02261 and 02280, with the disaster numbers filed under it.",
  "sweptAt": "2026-10-19",
  "source": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries",
  "femaRows": 70571,
@@ -411,5 +411,80 @@
   "09180",
   "09190",
   "46102"
- ]
+ ],
+ "splitCodeAreas": {
+  "02201": [
+   {
+    "area": "Annette Island Regional Educational Attendance Area",
+    "disasters": [
+     4533,
+     3446
+    ]
+   },
+   {
+    "area": "Prince of Wales-Outer Ketchikan (Census Area)",
+    "disasters": [
+     4533
+    ]
+   },
+   {
+    "area": "Southeast Islands Regional Educational Attendance Ar",
+    "disasters": [
+     4767,
+     4533,
+     3446
+    ]
+   }
+  ],
+  "02261": [
+   {
+    "area": "Chugach Regional Educational Attendance Area",
+    "disasters": [
+     4533,
+     4094,
+     3446,
+     1669,
+     1663
+    ]
+   },
+   {
+    "area": "Valdez City School District",
+    "disasters": [
+     4533
+    ]
+   },
+   {
+    "area": "Valdez-Cordova (Census Area)",
+    "disasters": [
+     4533,
+     1440,
+     1316,
+     826,
+     782
+    ]
+   }
+  ],
+  "02280": [
+   {
+    "area": "Chatham Regional Educational Attendance Area",
+    "disasters": [
+     4585,
+     4533,
+     3446
+    ]
+   },
+   {
+    "area": "Wrangell City School District",
+    "disasters": [
+     4533
+    ]
+   },
+   {
+    "area": "Wrangell-Petersburg (Census Area)",
+    "disasters": [
+     4533
+    ]
+   }
+  ]
+ }
 }

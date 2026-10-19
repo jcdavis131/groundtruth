@@ -201,6 +201,7 @@ const REASONS: Record<string, (who: string) => string> = {
   "source:not_in_release": (who) => `${who}'s current release has no row for this place`,
   "join:ncei_areas_not_counties": (who) => `${who} files Alaska by forecast zones and areas, not by county`,
   "source:failed": (who) => `${who} failed on this call`,
+  "join:area_not_placed": (who) => `${who}: FEMA filed a row under a former, split county code for a designated area that no cited source places in this county, so it is not attached here`,
 };
 
 export function explainReason(code: string, who: string, detail?: string | null): string {
