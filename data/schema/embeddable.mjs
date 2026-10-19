@@ -33,7 +33,8 @@ export const DETAILS_KEY = {
     YEAR_COMPLETED: "year completed",
   },
   // lib/civic/schools.ts. GSLO and GSHI are both in "grades". LCITY and LSTATE appear only inside "address",
-  // which also holds the street, so no details key carries them; the record text does.
+  // which also holds the street, and NMCNTY only inside "county" with NCES's CNTY code (an id, never embedded),
+  // so no details key carries them alone; the record text does.
   "nces-public-schools": {
     SCHOOL_LEVEL: "level",
     SCHOOL_TYPE_TEXT: "type",
@@ -44,7 +45,7 @@ export const DETAILS_KEY = {
     GSLO: "grades",
     GSHI: "grades",
     LCITY: null,
-    NMCNTY: "county",
+    NMCNTY: null,
     LSTATE: null,
   },
   // lib/land/features.ts (the NRHP builder)
