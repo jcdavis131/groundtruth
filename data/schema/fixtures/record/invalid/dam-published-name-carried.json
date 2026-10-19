@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "record/1",
+  "id": "nid:TX00028",
+  "collection": "nid-dams",
+  "layer": "dams",
+  "name": "Dam TX00028",
+  "nameRule": "label-by-id",
+  "kind": "low",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -94.87060691141177,
+      30.54884737536923
+    ]
+  },
+  "place": {
+    "stateFips": "48",
+    "stateUsps": "TX",
+    "method": "name-lookup"
+  },
+  "details": {
+    "NID id": "TX00028",
+    "hazard potential": "Low",
+    "what hazard potential means": "the damage a failure would cause downstream (High: loss of life likely), not the dam's condition or how likely it is to fail",
+    "condition assessment": "Fair",
+    "condition assessed": "2025-08-28",
+    "primary purpose": "Recreation",
+    "purposes": "Recreation",
+    "dam type": "Earth",
+    "NID height": "19 ft",
+    "NID storage": "280 acre-ft",
+    "surface area": "67 acres",
+    "drainage area": "6 sq mi",
+    "year completed": 1960,
+    "river or stream": "Sally Creek",
+    "county": "Polk, Texas",
+    "state": "Texas",
+    "owner type": "Private",
+    "operational status": "Normal Operations",
+    "NID record updated": "2025-12-15",
+    "published name": "Cj Gerlach Dam"
+  },
+  "text": "collection: Dams, National Inventory of Dams; agency: U.S. Army Corps of Engineers; county: Polk, Texas; state: Texas; dam purpose: Recreation; dam type: Earth; hazard potential: Low; condition assessment: Fair; year completed: 1960",
+  "provenance": {
+    "sourceId": "usace-nid",
+    "sourceName": "National Inventory of Dams (public service)",
+    "publisher": "U.S. Army Corps of Engineers",
+    "licence": "public domain",
+    "seriesId": "National_Inventory_of_Dams_Public_Service FeatureServer layer 0",
+    "upstreamUrl": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0",
+    "retrievedAt": "2026-10-18T23:07:39.198Z",
+    "kind": "published",
+    "revision": "NID is updated continuously by the states and federal agencies; each record carries its own update date",
+    "notes": [
+      "bbox -96.25,30.25,-94.75,31.75"
+    ]
+  },
+  "snapshotId": "nid-dams.texas.2026-10-19"
+}

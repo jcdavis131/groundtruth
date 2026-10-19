@@ -381,6 +381,8 @@ const NID_FIELDS = [
   "NIDID",
   "NAME",
   "PRIMARY_OWNER_TYPE",
+  // Every owner type NID lists, not only the primary: a dam can be Local Government first and Private too.
+  "OWNER_TYPES",
   "PRIMARY_PURPOSE",
   "PURPOSES",
   "PRIMARY_DAM_TYPE",

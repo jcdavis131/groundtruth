@@ -8,11 +8,13 @@
 
 import { describe, expect, it } from "vitest";
 import type { LayerFeature } from "@/lib/layers/types";
-import { searchableDetail } from "@/lib/search/allowlist";
+import { matchScore, searchableDetail } from "@/lib/search/allowlist";
+import { receivedRecordText } from "@/lib/catalog/recordText";
 import {
   buildAirports,
   buildDams,
   buildFaults,
+  damIsNamed,
   buildLandslides,
   buildPipelines,
   buildPlss,
@@ -180,6 +182,58 @@ describe("USACE National Inventory of Dams", () => {
     expect(blueWing.properties.details?.["published name"]).toBe("Blue Wing Lake Dam");
     expect(searchableDetail("published name")).toBe(false);
     expect(out.find((f) => f.properties.id === "nid:TX01432")!.properties.details?.["published name"]).toBeUndefined();
+  });
+  // Real NID records (FeatureServer/0, 2026-10-18): their NIDID, NAME and owner fields on the
+  // Braunig row's other fields. Each is labelled by id, its name shown on click only, never
+  // embedded and never matched by the palette.
+  const ownerCases: Array<[string, string, string, string | null, string]> = [
+    // [why, NIDID, NAME, PRIMARY_OWNER_TYPE, OWNER_TYPES]
+    ["Not Listed", "TX09788", "David Smith Pond Dam", "Not Listed", "Not Listed"],
+    ["mixed owners, Private second", "TX00783", "White Lake Dam", "Local Government", "Local Government, Private"],
+    ["list contradicts the primary", "AL00109", "Sulligent Dam", "Local Government", "Private"],
+  ];
+  const asDam = (nid: string, name: string, primary: string | null, list: string | null | undefined) => {
+    const row = JSON.parse(JSON.stringify(dams.features[0]));
+    Object.assign(row.properties, { NIDID: nid, NAME: name, PRIMARY_OWNER_TYPE: primary, OWNER_TYPES: list });
+    return buildDams([row])[0];
+  };
+  for (const [why, nid, name, primary, list] of ownerCases) {
+    it(`labels a dam by its NID id when its owner types are not all public (${why})`, () => {
+      expect(damIsNamed({ PRIMARY_OWNER_TYPE: primary, OWNER_TYPES: list })).toBe(false);
+      const f = asDam(nid, name, primary, list);
+      expect(f.properties.name).toBe(`Dam ${nid}`);
+      expect(f.properties.details?.["published name"]).toBe(name);
+      expect(f.properties.details?.["owner types"]).toBe(list);
+      const text = receivedRecordText(f.properties) ?? "";
+      expect(text).not.toContain(name);
+      expect(text).not.toMatch(/(^|; )name: /);
+      const surname = name.split(" ")[name.startsWith("David") ? 1 : 0].toLowerCase();
+      expect(matchScore(f.properties, surname)).toBe(0);
+      expect(matchScore(f.properties, name.toLowerCase())).toBe(0);
+      expect(matchScore(f.properties, nid.toLowerCase())).toBeGreaterThan(0);
+    });
+  }
+  it("fails closed on a missing, empty or unknown owner type, and names only an all-public dam", () => {
+    for (const [primary, list] of [
+      [null, null],
+      ["Local Government", null],
+      ["Local Government", ""],
+      ["", "Local Government"],
+      ["Unknown", "Unknown"],
+      ["Local Government", "Local Government, Not Listed"],
+    ] as const) {
+      expect(damIsNamed({ PRIMARY_OWNER_TYPE: primary, OWNER_TYPES: list }), `${primary} / ${list}`).toBe(false);
+      expect(asDam("TX01432", "Victor Braunig Dam", primary, list).properties.name).toBe("Dam TX01432");
+    }
+    for (const t of ["Federal", "State", "Local Government", "Public Utility", "Tribal Government"]) {
+      expect(damIsNamed({ PRIMARY_OWNER_TYPE: t, OWNER_TYPES: t }), t).toBe(true);
+    }
+    expect(damIsNamed({ PRIMARY_OWNER_TYPE: "State", OWNER_TYPES: "Local Government, State" })).toBe(true);
+    const named = asDam("TX01432", "Victor Braunig Dam", "Local Government", "Local Government");
+    expect(named.properties.name).toBe("Victor Braunig Dam");
+    expect(named.properties.details?.["published name"]).toBeUndefined();
+    expect(receivedRecordText(named.properties)).toContain("name: Victor Braunig Dam");
+    expect(searchableDetail("owner types")).toBe(false);
   });
   it("says 'not rated by source' when NID publishes no hazard class", () => {
     const row = JSON.parse(JSON.stringify(dams.features[0]));

@@ -631,7 +631,7 @@ export const COLLECTIONS: readonly Collection[] = [
     searchable: ["NIDID"],
     embedText: EMBED_TEXT["nid-dams"],
     ops: ["infra?op=dams"],
-    sensitivity: "Public infrastructure records; no owner or representative name is requested. NAME is embedded in the record text only for a dam whose published owner type is not Private (B0, 2026-10-18), the same name it is labelled by; a dam with no owner type published is not named. A privately owned dam can be named for its owner ('<Surname> Pond Dam'), so it is labelled by NID id and its published name is shown in the record but never searched; other dams keep their name as the label.",
+    sensitivity: "Public infrastructure records; no owner or representative name is requested. A privately owned dam can be named for its owner ('<Surname> Pond Dam'), so a dam keeps its published name as its label, and has NAME embedded as the record text's name segment (B0, 2026-10-18), only when its primary owner type is Federal, State, Local Government, Public Utility or Tribal Government and every entry of NID's OWNER_TYPES list is one of those too. Every other dam (Private anywhere in its owner types, a primary type contradicted by its list, or an owner type that is Not Listed, missing or any other value: a non-answer is unknown, not public) is labelled by NID id, and its published name is shown in the record but never searched or embedded.",
     round: 3,
   },
   // ------------------------------------------------------------ round 1: imagery
