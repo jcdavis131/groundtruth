@@ -278,6 +278,8 @@ Each is public and keyless, and each is read by an explicit field list, the way 
 | nflverse `players` | `gsis_id`, `display_name`, `latest_team`, `college_name` | `birth_date`, `height`, `weight`, `status` and every other column |
 | Wikidata (CC0) | on the player: place of birth (P19), and that place's label, region and country; on the team: home venue (P115), by label | date of birth (P569), spouse, children, relatives, residence and every other property; no query asks for them |
 
+The column and property names above are from each source's documentation as of 2026-10-18. None of these sources has been read here yet. The builder will read each header and refuse a missing column, as the SEC builder does.
+
 The arena is the team's home venue, read from the team and never from the player. Its location lives on the arena's own place record, never on the athlete. A birthplace is joined to a city record by name, then region, then country; one that does not resolve to a single city is left out, never guessed, and the record says nothing about it.
 
 ### Guardrails for athletes
