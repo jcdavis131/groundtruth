@@ -1,5 +1,5 @@
 {
-  "_comment": "Upstreams known to be down, so the weekly sweep reports them without failing. Remove an entry when the sweep says it is back. match is a substring of the probed URL.",
+  "_comment": "Upstreams known to be down, so the weekly sweep reports them without failing. Remove an entry when the sweep says it is back. match is a substring of the probed URL, and must hit at least one or the run fails. since (YYYY-MM-DD) ages the entry: info under 7 days, warn at 7, a louder warn at 30, and the run fails at 90, when the layer should be replaced or dropped.",
   "outages": [
     {
       "match": "geopub.epa.gov/arcgis/rest/services/EMEF/",

@@ -1,11 +1,18 @@
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
+  ageTier,
+  assessKnown,
   classify,
   countReasons,
+  discoverTargets,
   expandConstants,
   findConstants,
   findEndpoints,
   isFailing,
+  knownLines,
   knownOutage,
   probeTarget,
   resolveConstants,
@@ -185,5 +192,55 @@ describe("endpoint sweep", () => {
     const known = [{ match: "geopub.epa.gov/arcgis/rest/services/EMEF/", since: "2026-10-18", note: "" }];
     expect(knownOutage("https://geopub.epa.gov/arcgis/rest/services/EMEF/efpoints/MapServer?f=json", known)).toBe(known[0]);
     expect(knownOutage("https://other.gov/MapServer?f=json", known)).toBeNull();
+  });
+});
+
+describe("known-outage age tiers", () => {
+  // A fixed clock, so these never drift with the calendar.
+  const NOW = new Date("2026-10-18T15:00:00Z");
+  const EMEF = "https://geopub.epa.gov/arcgis/rest/services/EMEF/efpoints/MapServer?f=json";
+  const back = (days: number) => new Date(Date.UTC(2026, 9, 18) - days * 86_400_000).toISOString().slice(0, 10);
+  const entry = (since: string, match = "geopub.epa.gov/arcgis/rest/services/EMEF/") => ({ match, since, note: "fixture" });
+
+  it("tiers by whole days on the clock passed in: info, warn at 7, louder at 30, fail at 90", () => {
+    const tier = (days: number) => ageTier(back(days), NOW).tier;
+    expect([0, 6, 7, 29, 30, 89, 90, 400].map(tier)).toEqual(["info", "info", "warn", "warn", "stale", "stale", "fail", "fail"]);
+    expect(ageTier("2026-10-18", NOW)).toMatchObject({ days: 0, tier: "info", why: "down 0 days" });
+    expect(ageTier("2026-10-17", NOW)).toMatchObject({ days: 1, tier: "info", why: "down 1 day" });
+    expect(ageTier("2026-09-18", NOW)).toMatchObject({ days: 30, tier: "stale" });
+  });
+
+  it("warns on a backdated EMEF entry at 30 days and fails the run at 90", () => {
+    const [at30] = assessKnown([entry(back(30))], [EMEF], NOW);
+    expect(at30).toMatchObject({ matched: true, tier: "stale", failing: false, days: 30 });
+    const [at90] = assessKnown([entry(back(90))], [EMEF], NOW);
+    expect(at90).toMatchObject({ matched: true, tier: "fail", failing: true, days: 90 });
+    expect(knownLines([at30, at90])).toEqual([
+      "STALE geopub.epa.gov/arcgis/rest/services/EMEF/ (since 2026-09-18): down 30 days (30 or more): fails the run at 90",
+      "FAIL  geopub.epa.gov/arcgis/rest/services/EMEF/ (since 2026-07-20): down 90 days (90 or more): replace or drop the layer",
+    ]);
+  });
+
+  it("fails an entry whose match hits no probed URL, however new it is", () => {
+    const [row] = assessKnown([entry("2026-10-18", "gone.example.gov/arcgis/rest/services/Old/")], [EMEF], NOW);
+    expect(row).toMatchObject({ matched: false, tier: "info", failing: true });
+    expect(row.why).toMatch(/hits no probed URL/);
+    expect(assessKnown([entry("2026-10-18", "")], [EMEF], NOW)[0]).toMatchObject({ matched: false, failing: true });
+  });
+
+  it("fails an entry it can't age: a missing, malformed, impossible or future since", () => {
+    for (const since of [undefined, "", "10/18/2026", "2026-02-30", "2026-10-19"]) {
+      expect(assessKnown([{ match: "geopub.epa.gov", since, note: "" }], [EMEF], NOW)[0]).toMatchObject({ failing: true, tier: "fail" });
+    }
+  });
+
+  it("passes the real known.json against the real source tree on 2026-10-18", () => {
+    const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+    const known = JSON.parse(fs.readFileSync(path.join(root, "scripts", "endpoint-sweep.known.json"), "utf8")).outages;
+    const { targets } = discoverTargets(root);
+    const rows = assessKnown(known, [...targets.keys()], NOW);
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.filter((r) => r.failing)).toEqual([]);
+    expect(rows.find((r) => r.entry.match.includes("geopub.epa.gov"))).toMatchObject({ matched: true, tier: "info", days: 0 });
   });
 });

@@ -4,7 +4,9 @@
 // datasets); a dead one of those shows up in its own route's state, not here.
 //
 //   node scripts/endpoint-sweep.mjs            probe, print a table, exit 1 on a newly failing upstream
-//   node scripts/endpoint-sweep.mjs --list     list what would be probed and what is not, probe nothing
+//                                              or a known-outage entry that fails (see below)
+//   node scripts/endpoint-sweep.mjs --list     list what would be probed and what is not, probe nothing,
+//                                              and check the known-outage entries (exit 1 if one fails)
 //
 // Why it exists: USFWS retired Wetlands_Raster_v5 and the zoomed-out wetlands layer drew nothing
 // for days (fixed in #86). ArcGIS answers a dead service with HTTP 200 and {"error":{...}}, so a
@@ -21,6 +23,18 @@
 // portal is caught too. A failure that recovers on the retry is a warning: shared runners and
 // CloudFront's IPv6 path both reset connections now and then (lib/server/net.ts), so this
 // resolves IPv4 first too.
+//
+// A known outage ages, so the list can't hide a dead upstream for good. Each entry's `since` sets
+// its tier: info under 7 days, warn at 7-29, a louder warn at 30-89, and a failed run at 90 or
+// more, when it is time to replace or drop the layer. An entry whose `match` hits no probed URL
+// also fails the run (the layer was removed or moved and the entry went stale), and so does a
+// `since` that is not a past YYYY-MM-DD date. --list checks the entries too, without a request.
+//
+// Credit: the age tiers and the stale-entry failure are an idea from hecat's awesome_lint
+// (github.com/nodiscc/hecat, GPL-3.0, commit f26e82260ebb1232b27aa793d14a9c055a33db19), whose
+// day thresholds warn and then fail on unmaintained entries, as awesome-selfhosted-data
+// configures it in .hecat/awesome-lint.yml (CC-BY-SA-3.0, commit
+// 11d52dc8b0312cc081485e36190b2ff0529a0db7). Idea only: no code or text from either is in here.
 
 import dns from "node:dns";
 import fs from "node:fs";
@@ -202,23 +216,45 @@ export function knownOutage(url, known) {
   return known.find((k) => url.includes(k.match)) ?? null;
 }
 
-async function fetchOnce(target) {
-  const ac = new AbortController();
-  const timer = setTimeout(() => ac.abort(), 30_000);
-  try {
-    const r = await fetch(target.url, {
-      headers: { "user-agent": "gods-eye-view endpoint sweep (read-only health check)" },
-      signal: ac.signal,
-      redirect: "follow",
-    });
-    const body = Buffer.from(await r.arrayBuffer());
-    return classify(target.kind, r.status, r.headers.get("content-type") ?? "", body);
-  } catch (e) {
-    const why = e?.name === "AbortError" ? "timeout 30 s" : (e?.cause?.code ?? e?.message ?? String(e));
-    return { verdict: "ERR", detail: why };
-  } finally {
-    clearTimeout(timer);
+const DAY_MS = 86_400_000;
+
+/**
+ * How old a known outage is on the clock passed in, and its tier: info (under 7 days), warn
+ * (7-29), stale (30-89, the louder warn) or fail (90 or more). A since that is not a real
+ * YYYY-MM-DD date, or is after now, is fail too: an entry we can't age could hide forever.
+ */
+export function ageTier(since, now) {
+  const m = typeof since === "string" ? since.match(/^(\d{4})-(\d{2})-(\d{2})$/) : null;
+  const start = m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) : NaN;
+  if (!m || new Date(start).toISOString().slice(0, 10) !== since) {
+    return { days: null, tier: "fail", why: `since ${JSON.stringify(since ?? null)} is not a YYYY-MM-DD date` };
   }
+  const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  const days = Math.round((today - start) / DAY_MS);
+  if (days < 0) return { days, tier: "fail", why: `since ${since} is in the future` };
+  if (days >= 90) return { days, tier: "fail", why: `down ${days} days (90 or more): replace or drop the layer` };
+  if (days >= 30) return { days, tier: "stale", why: `down ${days} days (30 or more): fails the run at 90` };
+  if (days >= 7) return { days, tier: "warn", why: `down ${days} days (7 or more)` };
+  return { days, tier: "info", why: `down ${days} day${days === 1 ? "" : "s"}` };
+}
+
+/**
+ * Every known-outage entry checked against the probed URLs on the clock passed in. One row per
+ * entry, with matched (its match hits at least one probed URL) and failing (its tier is fail,
+ * or it matched nothing).
+ */
+export function assessKnown(known, probedUrls, now) {
+  return known.map((entry) => {
+    const age = ageTier(entry.since, now);
+    const matched = typeof entry.match === "string" && entry.match !== "" && probedUrls.some((u) => u.includes(entry.match));
+    const why = matched ? age.why : `match ${JSON.stringify(entry.match ?? null)} hits no probed URL: remove the entry or fix its match; ${age.why}`;
+    return { entry, ...age, why, matched, failing: !matched || age.tier === "fail" };
+  });
+}
+
+/** One line per known-outage entry, for the log and the run summary. */
+export function knownLines(rows) {
+  return rows.map((r) => `${(r.failing ? "FAIL" : r.tier.toUpperCase()).padEnd(5)} ${r.entry.match} (since ${r.entry.since}): ${r.why}`);
 }
 
 function walk(dir, out = []) {
@@ -231,11 +267,12 @@ function walk(dir, out = []) {
   return out;
 }
 
-async function main() {
-  dns.setDefaultResultOrder("ipv4first");
-  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-  const known = JSON.parse(fs.readFileSync(path.join(root, "scripts", "endpoint-sweep.known.json"), "utf8")).outages;
-
+/**
+ * What the sweep would probe under one app root (apps/map), read from its lib/ and app/ source:
+ * targets maps each probe URL to { kind, url, files }, and notProbed lists the rest with a reason.
+ * Reads files only; no request.
+ */
+export function discoverTargets(root) {
   const sources = new Map();
   for (const file of [...walk(path.join(root, "lib")), ...walk(path.join(root, "app"))]) {
     sources.set(path.relative(root, file).split(path.sep).join("/"), fs.readFileSync(file, "utf8"));
@@ -257,6 +294,48 @@ async function main() {
       targets.get(t.url).files.add(rel);
     }
   }
+  return { targets, notProbed };
+}
+
+/** GitHub annotations for the known-outage rows, so a warn shows on the run page. */
+function annotate(rows) {
+  if (!process.env.GITHUB_ACTIONS) return;
+  for (const r of rows) {
+    const level = r.failing ? "error" : r.tier === "info" ? "notice" : "warning";
+    console.log(`::${level} title=Known outage ${r.failing ? "fails the run" : r.tier}::${r.entry.match}: ${r.why}`);
+  }
+}
+
+async function fetchOnce(target) {
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), 30_000);
+  try {
+    const r = await fetch(target.url, {
+      headers: { "user-agent": "gods-eye-view endpoint sweep (read-only health check)" },
+      signal: ac.signal,
+      redirect: "follow",
+    });
+    const body = Buffer.from(await r.arrayBuffer());
+    return classify(target.kind, r.status, r.headers.get("content-type") ?? "", body);
+  } catch (e) {
+    const why = e?.name === "AbortError" ? "timeout 30 s" : (e?.cause?.code ?? e?.message ?? String(e));
+    return { verdict: "ERR", detail: why };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function main() {
+  dns.setDefaultResultOrder("ipv4first");
+  const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const known = JSON.parse(fs.readFileSync(path.join(root, "scripts", "endpoint-sweep.known.json"), "utf8")).outages;
+
+  const { targets, notProbed } = discoverTargets(root);
+  // The known-outage entries age by today's date (UTC) and must each still match a probed URL.
+  const knownRows = assessKnown(known, [...targets.keys()], new Date());
+  const knownFailing = knownRows.filter((r) => r.failing);
+  const knownText = knownLines(knownRows);
+  annotate(knownRows);
   const reasons = countReasons(notProbed);
   const notProbedLines = reasons.flatMap(([why]) => [
     `${why}:`,
@@ -268,6 +347,8 @@ async function main() {
     for (const t of list) console.log(`${t.kind.padEnd(6)} ${t.url}`);
     console.log(`\nNot probed:\n${notProbedLines.join("\n")}`);
     console.log(`\n${list.length} to probe, ${notProbed.length} not probed (${reasonText})`);
+    console.log(`\nKnown outages (endpoint-sweep.known.json):\n${knownText.join("\n") || "none"}`);
+    if (knownFailing.length) process.exitCode = 1;
     return;
   }
 
@@ -289,7 +370,9 @@ async function main() {
     else if (r.failing) newlyFailing.push(r);
     else if (k && r.verdict === "OK") tag = "BACK";
     else if (r.recovered) tag = `${r.verdict} (warn)`;
-    lines.push(`${tag.padEnd(5)} ${r.kind.padEnd(6)} ${r.url}\n      ${r.detail}${k ? ` | known outage since ${k.since}: ${k.note}` : ""}  [${[...r.files].join(", ")}]`);
+    const age = k ? knownRows.find((row) => row.entry === k) : null;
+    const knownNote = k ? ` | known outage since ${k.since} (${age.days ?? "?"} days, ${age.failing ? "fails the run" : age.tier}): ${k.note}` : "";
+    lines.push(`${tag.padEnd(5)} ${r.kind.padEnd(6)} ${r.url}\n      ${r.detail}${knownNote}  [${[...r.files].join(", ")}]`);
   }
   console.log(lines.join("\n"));
   const count = {};
@@ -305,6 +388,10 @@ async function main() {
       : "No upstream newly failing on both tries.",
     recovered.length ? `Warning, failed once then answered: ${recovered.map((r) => `${r.url} (${r.first.verdict})`).join(" ; ")}` : "",
     back.length ? `Back up (remove from endpoint-sweep.known.json): ${back.map((r) => r.url).join(" ; ")}` : "",
+    knownFailing.length
+      ? `KNOWN OUTAGE ENTRIES that fail the run (90 days or more, no match, or a bad since): ${knownFailing.map((r) => `${r.entry.match} (${r.why})`).join(" ; ")}`
+      : "",
+    ...knownText.map((l) => `Known outage: ${l}`),
   ].filter(Boolean);
   console.log(`\n${summary.join("\n")}`);
   if (process.env.GITHUB_STEP_SUMMARY) {
@@ -313,7 +400,7 @@ async function main() {
       `## Endpoint sweep\n\n${summary.map((s) => `- ${s}`).join("\n")}\n\n\`\`\`\n${lines.join("\n")}\n\`\`\`\n\n### Not probed\n\n\`\`\`\n${notProbedLines.join("\n")}\n\`\`\`\n`,
     );
   }
-  if (newlyFailing.length) process.exitCode = 1;
+  if (newlyFailing.length || knownFailing.length) process.exitCode = 1;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main();
