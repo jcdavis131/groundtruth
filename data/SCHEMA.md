@@ -37,7 +37,7 @@ One JSON object. In a snapshot file, it's one line of JSONL.
 | `collection` | yes | The catalogue card id from eye's `lib/catalog/collections.ts` (`nces-public-schools`, `nrhp-listed`). |
 | `layer` | yes | eye's layer id (`schools`, `historic`). |
 | `name` | yes | The label eye draws. What it may be is set by `nameRule`. |
-| `nameRule` | yes | `public-name` means the record's published name. It's allowed only on a collection with a public-name rule: today `hifld-hospitals`, `nces-public-schools`, `nid-dams` and `padus-units`, the same list as eye's `PUBLIC_NAME_RULE`. `label-by-id` means a label built from the record's id and category (`NRHP 82004525 · building`), never a name that could be a person's. |
+| `nameRule` | yes | `public-name` means the record's published name. It's allowed only on a collection with a public-name rule: today `hifld-hospitals`, `nces-public-schools`, `nid-dams` and `padus-units`, the same list as eye's `PUBLIC_NAME_RULE`. `label-by-id` means a label built from the record's id and category (`NRHP 82004525 · building`, `Dam TX00028`), never a name that could be a person's. The rule is set per record, the way eye's `PUBLIC_NAME_RULE` sets it: a dam keeps its published name only when NID publishes an owner type and it is not Private, so a private dam, or one with no owner type, is `label-by-id`; a PAD-US unit keeps it only on federal or state land (`Own_Type` FED or STAT) that is not an easement. |
 | `kind` | no | eye's sub-type (`high`, `building`). |
 | `geometry` | yes | GeoJSON geometry (RFC 7946): Point, MultiPoint, LineString, MultiLineString, Polygon or MultiPolygon. WGS84 degrees, longitude first. A height is kept only when the source measured one. |
 | `place` | yes | Place joins: `stateFips` and `stateUsps` (required, and they must agree), and `countyFips` when it can be derived (it must sit inside the state). `method` says how the join was made: `source-field` (the upstream's own code), `point-in-polygon` (the geometry tested against a named boundary file) or `name-lookup` (a place name matched to a code table). |
@@ -76,7 +76,7 @@ One JSON object. In a snapshot file, it's one line of JSONL.
 
 ### Names and privacy
 
-eye's privacy rules apply to every snapshot as they are written in eye: no private-person search or embedding, owner names only in the one clicked parcel's record, and the `GEV_PEOPLE_WITHHELD` list. A snapshot is a copy that leaves eye, so it adds one rule. A source field eye shows on click but that can hold a person's name is withheld from the snapshot, and the manifest lists it under `withheldFields` with the reason. The first case is NRHP's property name (`RESNAME`): eye's card says it can be a person's name and never searches or embeds it, so the historic snapshots leave it out and label each record by its NRIS number.
+eye's privacy rules apply to every snapshot as they are written in eye: no private-person search or embedding, owner names only in the one clicked parcel's record, and the `GEV_PEOPLE_WITHHELD` list. A snapshot is a copy that leaves eye, so it adds one rule. A source field eye shows on click but that can hold a person's name is withheld from the snapshot, and the manifest lists it under `withheldFields` with the reason. The first case is NRHP's property name (`RESNAME`): eye's card says it can be a person's name and never searches or embeds it, so the historic snapshots leave it out and label each record by its NRIS number. The second is NID's `published name` detail: eye shows a private dam's NAME on click under that key, since it can be its owner's (`<Surname> Pond Dam`), and labels the dam by its NID id. The dam snapshots leave the detail out on every dam; a dam whose name is allowed carries it in `name`.
 
 ## The snapshot
 
@@ -120,7 +120,8 @@ The `geoparquet` format, the `point-in-polygon` rule and the `region` request pu
 - `county`: `countyFips` isn't inside `stateFips`.
 - `snapshot`: the record's snapshot is of another collection, or the date isn't a real date. In a manifest, the id doesn't match its collection, region and day.
 - `time`: the record was retrieved after its snapshot's day.
-- `public-name`: `nameRule` is `public-name` on a collection with no public-name rule.
+- `public-name`: `nameRule` is `public-name` on a collection with no public-name rule, or on a record whose `name` is in its collection's label-by-id form (`Dam TX00028`, `<designation> · PAD-US 12345`).
+- `withheld`: a record carries a detail its collection always withholds (`published name` on `nid-dams` and `padus-units`).
 - `bbox`: the box isn't west < east and south < north.
 - `count`: `recordCount` doesn't match the files.
 - `gap`: the counts differ and `gap` doesn't say why.

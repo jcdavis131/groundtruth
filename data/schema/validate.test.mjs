@@ -76,6 +76,28 @@ check(validateRecord({ ...school, details: { ...school.details, x: -9999 } }).so
 check(validateRecord({ ...school, details: { ...school.details, status: "not reported" } }).length === 0, "a publisher's own coded state (\"not reported\") is a value, not a placeholder");
 check(validateRecord({ ...school, snapshotId: school.snapshotId.replace(/\d{4}-\d{2}-\d{2}$/, "2026-02-31") }).some((e) => e.code === "snapshot"), "a snapshot id on a day that doesn't exist fails");
 
+// Dams: a name is allowed only on a dam eye names; a label by id never says public-name; published name never rides along.
+const privateDam = json(path.join(FIX, "record", "valid", "nid-dams.texas-private.json"));
+const publicDam = json(path.join(FIX, "record", "valid", "nid-dams.texas-public.json"));
+check(privateDam.nameRule === "label-by-id" && privateDam.name === `Dam ${privateDam.details["NID id"]}` && privateDam.details["owner type"] === "Private", "the private dam fixture is labelled by its NID id");
+check(publicDam.nameRule === "public-name" && publicDam.details["owner type"] !== "Private", "the public dam fixture keeps its published name");
+check(validateRecord({ ...publicDam, nameRule: "label-by-id" }).length === 0, "a dam may always be labelled by id");
+check(
+  validateRecord({ ...publicDam, name: `Dam ${publicDam.details["NID id"]}` }).some((e) => e.code === "public-name"),
+  "a dam named \"Dam <NIDID>\" that says public-name fails with public-name, whatever its owner type",
+);
+check(validateRecord({ ...publicDam, name: "Dam Site 7" }).length === 0, "a published name that starts with \"Dam\" but is not an NID id is not a label by id");
+check(
+  validateRecord({ ...school, collection: "padus-units", snapshotId: school.snapshotId.replace(/^[^.]+/, "padus-units"), name: "Conservation Easement · PAD-US 41234" }).some(
+    (e) => e.code === "public-name" && e.path === "/nameRule",
+  ),
+  "a PAD-US unit labelled by id that says public-name fails with public-name",
+);
+check(
+  validateRecord({ ...school, details: { ...school.details, "published name": "x" } }).length === 0,
+  "\"published name\" is withheld only where a collection lists it (not schools)",
+);
+
 const sdir = path.join(FIX, "snapshots", snaps[0]);
 const m0 = json(path.join(sdir, "manifest.json"));
 const tampered = { ...m0, files: [{ ...m0.files[0], sha256: "0".repeat(64) }] };

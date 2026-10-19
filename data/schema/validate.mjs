@@ -10,8 +10,8 @@
 //      maxLength, minimum, maximum, items, prefixItems, minItems, maxItems, allOf, if/then and local $ref.
 //      Any other keyword in a schema is an error, so the schema can't quietly say more than this checks.
 //   2. Rules JSON Schema can't say (data/SCHEMA.md, "Checks beyond the schema"): no placeholder values, closed
-//      polygon rings, state and county codes that agree, the snapshot id's parts, the public-name list, the
-//      count gap, and the listed files' bytes, sha256 and record counts.
+//      polygon rings, state and county codes that agree, the snapshot id's parts, the public-name list, no
+//      public-name on a name in label-by-id form, no withheld detail (a dam's published name), the count gap, and the listed files' bytes, sha256 and record counts.
 // Each problem is {code, path, message}. Exit 0 when every input is valid, 1 otherwise.
 
 import { createHash } from "node:crypto";
@@ -116,6 +116,24 @@ const USPS_BY_FIPS = new Map(STATES.map(([f, u]) => [f, u]));
 export const PUBLIC_NAME_COLLECTIONS = new Set(["hifld-hospitals", "nces-public-schools", "nid-dams", "padus-units"]);
 
 /**
+ * The label-by-id form eye gives a record whose name it may not show (lib/infra/features.ts, lib/land/features.ts).
+ * A record whose name has this form is labelled by id, so it can't say public-name.
+ */
+export const LABEL_BY_ID_FORM = {
+  "nid-dams": /^Dam [A-Z]{2}\d+$/, // a private dam, or one with no name: "Dam TX00028"
+  "padus-units": / · PAD-US \d+$/, // a privately owned unit: "<designation> · PAD-US 12345"
+};
+
+/**
+ * Detail keys a snapshot never carries: eye shows them on click, but they hold the published name of a record
+ * labelled by id, which can be a person's. The snapshot's manifest lists them under withheldFields.
+ */
+export const WITHHELD_DETAILS = {
+  "nid-dams": ["published name"],
+  "padus-units": ["published name"],
+};
+
+/**
  * Strings that stand in for a missing value. Compared trimmed and case-folded. A publisher's own coded state in
  * its own words ("not reported", "not applicable", "Unknown" as a published category) is a value, not one of these.
  */
@@ -172,6 +190,13 @@ export function validateRecord(r) {
   }
   if (r.nameRule === "public-name" && !PUBLIC_NAME_COLLECTIONS.has(r.collection))
     out.push({ code: "public-name", path: "/nameRule", message: `${r.collection} has no public-name rule; label the record by id` });
+  const form = LABEL_BY_ID_FORM[r.collection];
+  if (r.nameRule === "public-name" && form && typeof r.name === "string" && form.test(r.name))
+    out.push({ code: "public-name", path: "/nameRule", message: `${JSON.stringify(r.name)} is a label by id, so the record's nameRule is label-by-id` });
+  if (r.details && typeof r.details === "object")
+    for (const k of WITHHELD_DETAILS[r.collection] ?? [])
+      if (Object.hasOwn(r.details, k))
+        out.push({ code: "withheld", path: `/details/${k}`, message: `${r.collection} never carries ${JSON.stringify(k)}: it can be a person's name; leave it out and list it in the manifest's withheldFields` });
   return out;
 }
 

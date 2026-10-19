@@ -146,13 +146,17 @@ def to_record(f: dict, env: dict, cfg: dict, collection: str, place: dict, snaps
         **({"notes": prov["notes"]} if prov.get("notes") else {}),
     }
     text = (p.get("extra") or {}).get("embedText")
+    # The name rule is per record (a dam's owner type decides it), read from the source's fields before any is withheld.
+    name_rule = cfg["nameRule"](p.get("details") or {})
+    if name_rule == "label-by-id" and cfg.get("label") and p["name"] != cfg["label"](p.get("details") or {}):
+        raise SystemExit(f"{p['id']}: label-by-id, but eye's name {p['name']!r} is not the label {cfg['label'](p.get('details') or {})!r}")
     return {
         "schemaVersion": "record/1",
         "id": p["id"],
         "collection": collection,
         "layer": p["layer"],
         "name": p["name"],
-        "nameRule": cfg["nameRule"],
+        "nameRule": name_rule,
         **({"kind": p["kind"]} if p.get("kind") else {}),
         "geometry": g,
         "place": place,

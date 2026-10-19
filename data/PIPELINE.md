@@ -66,6 +66,7 @@ For each collection:
    The tolerance is there because the 1:20M outline cuts corners on the coast and along the Red River, the Rio Grande and the Sabine. Between neighbouring states, the source field decides. The rule is written into the manifest's `region.definition`, with the outline response's sha256.
 4. **Records.** Each kept feature is mapped to `record/1` exactly as `build-fixtures.mjs` does it (SCHEMA.md, "From eye's LayerFeature").
    - NRHP property names are withheld, and each record is labelled by its NRIS number.
+   - A dam's `nameRule` is set per record from its owner type, as eye's `PUBLIC_NAME_RULE` does: `label-by-id` when NID's owner type is Private or missing (eye names the dam `Dam <NIDID>`, and the build stops if it doesn't), `public-name` otherwise. NID's `published name` detail is withheld on every dam.
    - `place` comes from the source field:
      - schools: `source-field`, with the county code
      - dams and historic places: `name-lookup`

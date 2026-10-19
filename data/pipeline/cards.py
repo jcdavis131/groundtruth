@@ -63,16 +63,36 @@ def named_state(details: dict, region: dict):
     return f"other:{s}", None
 
 
+def dam_name_rule(details: dict) -> str:
+    """eye's PUBLIC_NAME_RULE for nid-dams (lib/catalog/embedFields.ts, lib/infra/features.ts): a dam keeps its
+    published name only when NID publishes an owner type and it is not Private. A private dam is labelled by its
+    NID id ("Dam TX00028"), and a missing owner type is unknown, not public."""
+    owner = str(details.get("owner type") or "").strip()
+    return "label-by-id" if not owner or owner.lower() == "private" else "public-name"
+
+
+def dam_label(details: dict) -> str:
+    """The label-by-id form eye gives a dam: "Dam <NIDID>"."""
+    return f"Dam {details['NID id']}"
+
+
 COLLECTIONS = {
     "nid-dams": {
         "route": "infra",
         "op": "dams",
         "span": 1.5,
         "grid": 0.25,
-        "nameRule": "public-name",
+        # Per record: the owner type decides it (dam_name_rule), and a label-by-id dam must carry dam_label.
+        "nameRule": dam_name_rule,
+        "label": dam_label,
         "state": named_state,
         "stateSource": "NID's STATE field (eye's details.state)",
-        "withheld": [],
+        "withheld": [
+            {
+                "field": "published name",
+                "why": "NID's NAME on a privately owned dam can be its owner's name ('<Surname> Pond Dam'); eye shows it on click but never searches or embeds it, labels the dam by NID id, and a training snapshot leaves it out. A dam whose name is allowed carries it in name.",
+            }
+        ],
         "publisher": {
             "layer": NID,
             "stateWhere": lambda r: f"STATE='{r['stateName']}'",
@@ -86,7 +106,7 @@ COLLECTIONS = {
         "op": "schools",
         "span": 0.2,
         "grid": 0.05,
-        "nameRule": "public-name",
+        "nameRule": lambda details: "public-name",
         "state": schools_state,
         "stateSource": "the first two digits of NCES's county code CNTY (eye's details.county)",
         "withheld": [],
@@ -106,7 +126,7 @@ COLLECTIONS = {
         "op": "historic",
         "span": 0.12,
         "grid": 0.02,
-        "nameRule": "label-by-id",
+        "nameRule": lambda details: "label-by-id",
         "state": named_state,
         "stateSource": "NPS's State field (eye's details.state)",
         "withheld": [
