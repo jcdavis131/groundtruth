@@ -120,8 +120,8 @@ describe("every tool asks for the exact route URL", () => {
   }
 
   it("covers every registered tool", () => {
-    // social_vulnerability asks two routes; its own describe below checks both URLs.
-    const named = new Set([...cases.map((c) => c[0]), "social_vulnerability"]);
+    // social_vulnerability asks two routes; its own describe below checks both URLs. world_context composes many: world.test.ts.
+    const named = new Set([...cases.map((c) => c[0]), "social_vulnerability", "world_context"]);
     for (const t of TOOLS) expect(named.has(t.name), t.name).toBe(true);
   });
 });

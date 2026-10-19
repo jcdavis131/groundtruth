@@ -11,6 +11,7 @@
 import { z } from "zod";
 import { replyCoverage } from "./coverage";
 import { InvalidArguments } from "./errors";
+import { WORLD_DEFAULT_RECORDS, WORLD_MAX_BOX_DEG, WORLD_MAX_BYTES, WORLD_MAX_RECORDS, WORLD_TOPICS, worldContext } from "./world";
 
 /** What a route answered. `body` is the parsed JSON (or a string when the route did not send JSON). */
 export interface JsonReply {
@@ -655,6 +656,26 @@ export const TOOLS: ToolDef[] = [
     // The same ids as PLACE_EXPORTS in lib/catalog/placeExport.ts (kept literal: this directory compiles alone); tools.test.ts checks they agree.
     inputSchema: z.object({ collection: z.enum(["npl-status", "ust-releases-county", "ust-facilities-county", "fuds-properties"]).describe("Which aggregate.") }),
     handler: (i, ctx) => relay(ctx, "/api/catalog" + qs({ op: "place-export", collection: i.collection })),
+  }),
+  defineTool({
+    name: "world_context",
+    title: "Cited world context for a place, before you act",
+    description:
+      `One small bundle for an agent about to do anything place-related: pass exactly one of lon+lat, fips (5-digit county, or a state as 2 digits or SS000) or bbox (at most ${WORLD_MAX_BOX_DEG} degrees a side). Returns place (kind, name, countyFips, stateFips, point and its basis, searchBox) and topics: identity always (county, state, CBSA metro code, city, tract, ZCTA from Census TIGERweb), then fabric (time zone, NWS office, HUC-12 and where it drains, FEMA flood zone and NFIP community, school and congressional district, ecoregion, 3DEP elevation), hazards (FEMA NRI rating, expected annual loss and top hazards; newest FEMA declarations; this week's Drought Monitor; Severe/Extreme NWS alerts and quakes touching the place now), economy (BLS QCEW jobs and weekly wage, withheld as null not 0; Zillow home value and rent; population as FEMA's NRI row carries it), vulnerability (CDC/ATSDR SVI and FEMA's NRI social vulnerability, side by side), institutions (hospitals and dams in the search box, named only where the record's card allows; public companies by ticker and CIK), freshness (next scheduled releases of the sources cited) and, with about, collections (catalog_search). Each item: fact, value, unit, period, note, sourceId, publisher, upstreamUrl, retrievedAt and link (the eye route that returns it). topics[t].missing lists what is absent and why; coverageStatus is partial whenever anything is missing, cut by max_records (default ${WORLD_DEFAULT_RECORDS}, max ${WORLD_MAX_RECORDS}) or cut to the ${WORLD_MAX_BYTES}-byte cap (truncated says how many). A sub-route that fails costs only its own items; the call errors only when nothing answered. Composes this server's own routes; no new upstream.`,
+    inputSchema: z
+      .object({
+        lon: lon.optional(),
+        lat: lat.optional(),
+        fips: z.string().regex(/^(\d{2}|\d{5})$/, "5-digit county FIPS, or a state as 2 digits or SS000").optional().describe("5-digit county FIPS (01097, Mobile County, AL), or a state as 01 or 01000."),
+        bbox: bbox.optional().refine((b) => !b || (b[2] - b[0] <= WORLD_MAX_BOX_DEG && b[3] - b[1] <= WORLD_MAX_BOX_DEG), `bbox at most ${WORLD_MAX_BOX_DEG} degrees a side (use areas or risk_index for regions)`),
+        topics: z.array(z.enum(WORLD_TOPICS)).min(1).max(WORLD_TOPICS.length).optional().describe("Which topics besides identity; default all (collections only when about is given)."),
+        max_records: z.number().int().min(1).max(WORLD_MAX_RECORDS).optional().describe(`Records per list (hospitals, dams, declarations, alerts, releases); default ${WORLD_DEFAULT_RECORDS}.`),
+        about: z.string().min(2).max(200).optional().describe("What you are about to do or look for, in words; ranks eye's collections for the collections topic."),
+      })
+      .refine((v) => (v.lon == null) === (v.lat == null), "pass lon and lat together")
+      .refine((v) => [v.lon != null, v.fips != null, v.bbox != null].filter(Boolean).length === 1, "pass exactly one of lon+lat, fips or bbox")
+      .refine((v) => !v.topics?.includes("collections") || !!v.about, "the collections topic needs about"),
+    handler: (i, ctx) => worldContext(i, ctx),
   }),
   defineTool({
     name: "openapi",

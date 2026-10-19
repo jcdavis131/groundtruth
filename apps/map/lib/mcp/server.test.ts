@@ -63,6 +63,7 @@ const EXPECTED_TOOL_NAMES = [
   "live_events",
   "catalog_search",
   "place_export",
+  "world_context",
   "openapi",
 ];
 
@@ -108,6 +109,10 @@ describe("toolManifest", () => {
     expect(table.split("\n")).toHaveLength(2 + EXPECTED_TOOL_NAMES.length);
     expect(table).toContain("| `water_report` | lon: number, lat: number |");
     expect(table).toContain("| `pulse` | (none) |");
+    // An array of enum values reads as its choices, not as the bbox shape.
+    const world = toolManifest().find((t) => t.name === "world_context")!;
+    expect(argsSummary(world.inputSchema)).toContain("topics?: (fabric | hazards | economy | vulnerability | institutions | freshness | collections)[]");
+    expect(argsSummary(world.inputSchema)).toContain("bbox?: number[4]");
   });
 });
 
