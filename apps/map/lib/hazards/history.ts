@@ -104,28 +104,60 @@ export const CT_LEGACY = /^090(0[1-9]|1[0-5])$/;
 export const CT_REGION = /^091[1-9]0$/;
 /** Counties whose boundary changed after 2010 (Census county-change pages): no landslide row. Kept by the bake. */
 export { BOUNDARY_CHANGED_SINCE_2010 };
-/** FEMA files declarations before the 2019 split under Valdez-Cordova (02261), which names no current county. */
-export const FEMA_VALDEZ_CORDOVA_NOTE =
-  "FEMA files Alaska declarations made before the 2019 split of Valdez-Cordova Census Area under its old code 261 (11 rows on 2026-10-17, 1986-2020); that code names no current county, so those rows are not attached to Chugach or Copper River.";
-/**
- * Two current counties FEMA still files under their old codes (Census renames, same boundary;
- * probed 2026-10-17): Oglala Lakota (46102) has 16 rows under Shannon's 113 and none under 102;
- * Kusilvak (02158) has 12 under Wade Hampton's 270 and 2 under 158. The history asks for both
- * codes and keeps each disaster once across them. Dade to Miami-Dade is not here: FEMA migrated it.
- */
-export const FEMA_RENAMES: ReadonlyArray<{ fips: string; oldFips: string; what: string; citation: string }> = [
-  { fips: "46102", oldFips: "46113", what: "Shannon County, SD, renamed Oglala Lakota County (2015-05-01)", citation: CENSUS_CHANGES_2010 },
-  { fips: "02158", oldFips: "02270", what: "Wade Hampton Census Area, AK, renamed Kusilvak Census Area (2015-07-01)", citation: CENSUS_CHANGES_2010 },
-];
-/** The FIPS codes FEMA files a county under: its own, then any old code. */
-export function femaCodes(fips: string): string[] {
-  return [fips, ...FEMA_RENAMES.filter((r) => r.fips === fips).map((r) => r.oldFips)];
+export const CENSUS_CHANGES_2000 = "https://www.census.gov/programs-surveys/geography/technical-documentation/county-changes.2000.html";
+
+/** A county code FEMA still files declarations under that names no current county, and the current counties it covers. */
+export interface FemaLegacyCode {
+  oldFips: string;
+  /** The former county's name. */
+  name: string;
+  /** Current counties whose area it covered (all of them, or part, for a split). */
+  successors: string[];
+  /** rename: same boundary, new name and code. split: one former area, several current counties. merged: absorbed into the successor. */
+  change: "rename" | "split" | "merged";
+  what: string;
+  citation: string;
 }
+
+/**
+ * Every legacy county code FEMA still files under whose area is in eye's county table. Pinned by
+ * lib/hazards/fixtures/fema-codes-sweep.json (every OpenFEMA DisasterDeclarationsSummaries v2 row,
+ * swept 2026-10-19, against apps/map/lib/places/data/counties.json): every FEMA code outside the
+ * table is here, a Connecticut legacy county (never crosswalked: the 9 planning regions do not map
+ * 1:1 to the 8 counties, so a region's FEMA history is missing with join:legacy_ct_counties), or a
+ * territory the table does not cover. A split's declarations attach to each successor whole, with
+ * a caveat, never divided. Dade to Miami-Dade is not here: FEMA migrated it.
+ */
+export const FEMA_LEGACY: ReadonlyArray<FemaLegacyCode> = [
+  { oldFips: "46113", name: "Shannon County, SD", successors: ["46102"], change: "rename", what: "Shannon County, SD, renamed Oglala Lakota County (2015-05-01)", citation: CENSUS_CHANGES_2010 },
+  { oldFips: "02270", name: "Wade Hampton Census Area, AK", successors: ["02158"], change: "rename", what: "Wade Hampton Census Area, AK, renamed Kusilvak Census Area (2015-07-01)", citation: CENSUS_CHANGES_2010 },
+  { oldFips: "02261", name: "Valdez-Cordova Census Area, AK", successors: ["02063", "02066"], change: "split", what: "Valdez-Cordova Census Area, AK, split into Chugach and Copper River Census Areas (2019-01-02)", citation: CENSUS_CHANGES_2010 },
+  { oldFips: "02201", name: "Prince of Wales-Outer Ketchikan Census Area, AK", successors: ["02198", "02130"], change: "split", what: "Prince of Wales-Outer Ketchikan Census Area, AK, split in 2008 between the new Prince of Wales-Hyder Census Area and Ketchikan Gateway Borough", citation: CENSUS_CHANGES_2000 },
+  { oldFips: "02280", name: "Wrangell-Petersburg Census Area, AK", successors: ["02275", "02195"], change: "split", what: "Wrangell-Petersburg Census Area, AK, split in 2008 into Wrangell City and Borough and Petersburg Census Area (Petersburg Borough since 2013)", citation: CENSUS_CHANGES_2000 },
+  { oldFips: "51515", name: "Bedford city, VA", successors: ["51019"], change: "merged", what: "the independent city of Bedford, VA, became part of Bedford County (2013-07-01)", citation: CENSUS_CHANGES_2010 },
+];
+
+/**
+ * The renames alone (same boundary): Oglala Lakota (46102) has 16 rows under Shannon's 113 and none
+ * under 102; Kusilvak (02158) has 12 under Wade Hampton's 270 and 2 under 158 (probed 2026-10-17).
+ */
+export const FEMA_RENAMES: ReadonlyArray<{ fips: string; oldFips: string; what: string; citation: string }> = FEMA_LEGACY.filter((l) => l.change === "rename").map((l) => ({ fips: l.successors[0], oldFips: l.oldFips, what: l.what, citation: l.citation }));
+
+/** The FIPS codes FEMA files a county under: its own, then any legacy code that covered it. */
+export function femaCodes(fips: string): string[] {
+  return [fips, ...FEMA_LEGACY.filter((l) => l.successors.includes(fips)).map((l) => l.oldFips)];
+}
+
+/** The caveat for a county read with a legacy FEMA code, or null. */
 export function femaRenameNote(fips: string): string | null {
-  const r = FEMA_RENAMES.find((x) => x.fips === fips);
-  return r
-    ? `FEMA files many of this county's declarations under its old code ${r.oldFips.slice(2)} (${r.what}, a Census change of name and code with the same boundary), so both codes are read and each disaster is kept once.`
-    : null;
+  const notes = FEMA_LEGACY.filter((l) => l.successors.includes(fips)).map((l) => {
+    const code = l.oldFips.slice(2);
+    if (l.change === "rename") return `FEMA files many of this county's declarations under its old code ${code} (${l.what}, a Census change of name and code with the same boundary), so both codes are read and each disaster is kept once.`;
+    if (l.change === "merged") return `FEMA still files declarations under the former ${l.name} (${l.oldFips}), now part of this county (${l.what}); both codes are read, each disaster is kept once, and a row filed under the former code is marked filedUnder ${l.oldFips}.`;
+    const others = l.successors.filter((s) => s !== fips).join(", ");
+    return `FEMA files this under the former ${l.name} (${l.oldFips}), which covered more than this county (${l.what}). Those declarations are attached whole here and to ${others}, never divided; each is marked filedUnder ${l.oldFips}, and its designated area is FEMA's, which may lie on one side of the split only.`;
+  });
+  return notes.length ? notes.join(" ") : null;
 }
 export const ALASKA_FEMA_NOTE ="Alaska's declarations are as FEMA files them: Regional Educational Attendance Areas and school districts sit under the census area code FEMA chose, with the designated area shown as FEMA names it.";
 
@@ -159,9 +191,9 @@ const fipsOf = (r: FemaRow) => {
 
 /**
  * FEMA rows attached to one county: a row is the county's when its state + county code is the
- * county's FIPS, or one of its old codes in FEMA_RENAMES (each disaster kept once). A county code of
- * 000 (tribal areas, statewide designations) names no county and is counted in notCounty; any other
- * code is unmatched (a legacy Connecticut county, Valdez-Cordova 261).
+ * county's FIPS, or a legacy code in FEMA_LEGACY that covered it (each disaster kept once). A county
+ * code of 000 (tribal areas, statewide designations) names no county and is counted in notCounty; any
+ * other code is unmatched (a legacy Connecticut county).
  */
 export function attachFema(rows: readonly FemaRow[], fips: string): { rows: FemaRow[]; notCounty: number; unmatched: string[] } {
   const mine: FemaRow[] = [];
@@ -367,6 +399,8 @@ export interface HistoryDeclaration {
   designatedArea: string | null;
   placeCode: string | null;
   tribalRequest: boolean | null;
+  /** FEMA's county code for the row when it is a legacy code (FEMA_LEGACY), not this county's own. */
+  filedUnder?: string;
 }
 
 export interface HistoryData {
@@ -466,10 +500,15 @@ export function assembleHistory(i: HistoryInputs): HistoryAnswer {
     ] as const) {
       series.push({ id: `fema:${type.toLowerCase()}:${i.fips}`, title: `FEMA ${title} per year`, unit: "declarations", frequency: "annual", geo, provenance: prov, tags: ["hazards", "fema"], points: keep(femaPerYear(a.rows, type, zeroFill, nowYear)) });
     }
-    declarations = a.rows.map(declarationOf).sort((x, y) => String(y.declarationDate).localeCompare(String(x.declarationDate))).slice(0, Math.max(0, Math.min(FEMA_MAX, i.declarationsCap)));
+    declarations = a.rows
+      .map((r) => {
+        const d = declarationOf(r);
+        const f = fipsOf(r);
+        return f && f !== i.fips ? { ...d, filedUnder: f } : d;
+      })
+      .sort((x, y) => String(y.declarationDate).localeCompare(String(x.declarationDate))).slice(0, Math.max(0, Math.min(FEMA_MAX, i.declarationsCap)));
     if (i.fema.value.count != null && i.fema.value.count > FEMA_MAX) caveats.push(`FEMA has ${i.fema.value.count} rows for this county; only the newest ${FEMA_MAX} were read, so the earliest years are short.`);
     if (i.stusab === "AK") caveats.push(ALASKA_FEMA_NOTE);
-    if (i.fips === "02063" || i.fips === "02066") caveats.push(FEMA_VALDEZ_CORDOVA_NOTE);
     const renameNote = femaRenameNote(i.fips);
     if (renameNote) caveats.push(renameNote);
   } else fail("FEMA", i.fema);

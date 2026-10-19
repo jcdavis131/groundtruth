@@ -1,0 +1,415 @@
+{
+ "note": "Every county code OpenFEMA DisasterDeclarationsSummaries v2 files under (all 70,571 rows, paged keyless on 2026-10-19 by writeups/unify-2026-10-18/fema-fips-audit/sweep.py), compared with the 3,222 counties in apps/map/lib/places/data/counties.json. notInTable: FEMA codes no table county has (row count, distinct declarations, latest declaration date, first designated area). neverFiled: table counties FEMA files nothing under. Derived counts only; no FEMA row is copied.",
+ "sweptAt": "2026-10-19",
+ "source": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries",
+ "femaRows": 70571,
+ "tableCounties": 3222,
+ "notInTable": [
+  {
+   "fips": "02201",
+   "rows": 6,
+   "declarations": 3,
+   "latest": "2024-04-06",
+   "area": "Annette Island Regional Educational Attendance Area"
+  },
+  {
+   "fips": "02261",
+   "rows": 11,
+   "declarations": 9,
+   "latest": "2020-04-09",
+   "area": "Chugach Regional Educational Attendance Area"
+  },
+  {
+   "fips": "02270",
+   "rows": 12,
+   "declarations": 10,
+   "latest": "2025-10-22",
+   "area": "Kashunamiut Regional Educational Attendance Area"
+  },
+  {
+   "fips": "02280",
+   "rows": 5,
+   "declarations": 3,
+   "latest": "2021-02-17",
+   "area": "Chatham Regional Educational Attendance Area"
+  },
+  {
+   "fips": "09001",
+   "rows": 33,
+   "declarations": 33,
+   "latest": "2024-09-20",
+   "area": "Fairfield (County)(in PMSA 1160,1930,5760,8040)"
+  },
+  {
+   "fips": "09003",
+   "rows": 30,
+   "declarations": 30,
+   "latest": "2024-10-24",
+   "area": "Hartford (County)(in PMSA 1170,3280,5440)"
+  },
+  {
+   "fips": "09005",
+   "rows": 31,
+   "declarations": 31,
+   "latest": "2024-09-20",
+   "area": "Litchfield (County)(in (P)MSA 1170,1930,3280,8880)"
+  },
+  {
+   "fips": "09007",
+   "rows": 28,
+   "declarations": 28,
+   "latest": "2021-10-30",
+   "area": "Middlesex (County)(in (P)MSA 3280,5020,5480)"
+  },
+  {
+   "fips": "09009",
+   "rows": 36,
+   "declarations": 36,
+   "latest": "2024-10-24",
+   "area": "New Haven (County)(in (P)MSA 1160,5480,8880)"
+  },
+  {
+   "fips": "09011",
+   "rows": 30,
+   "declarations": 30,
+   "latest": "2024-01-13",
+   "area": "New London (County)(in (P)MSA 3280,5520)"
+  },
+  {
+   "fips": "09013",
+   "rows": 28,
+   "declarations": 28,
+   "latest": "2021-08-22",
+   "area": "Tolland (County)"
+  },
+  {
+   "fips": "09015",
+   "rows": 28,
+   "declarations": 28,
+   "latest": "2021-08-22",
+   "area": "Windham (County)"
+  },
+  {
+   "fips": "46113",
+   "rows": 16,
+   "declarations": 16,
+   "latest": "2023-02-27",
+   "area": "Oglala Lakota (County)"
+  },
+  {
+   "fips": "51515",
+   "rows": 19,
+   "declarations": 19,
+   "latest": "2026-01-23",
+   "area": "Bedford"
+  },
+  {
+   "fips": "60010",
+   "rows": 16,
+   "declarations": 16,
+   "latest": "2020-04-17",
+   "area": "Eastern (District)"
+  },
+  {
+   "fips": "60020",
+   "rows": 15,
+   "declarations": 15,
+   "latest": "2020-04-17",
+   "area": "Manu'a (District)"
+  },
+  {
+   "fips": "60030",
+   "rows": 14,
+   "declarations": 14,
+   "latest": "2020-04-17",
+   "area": "Rose Island (Island) (County-equivalent)"
+  },
+  {
+   "fips": "60040",
+   "rows": 14,
+   "declarations": 14,
+   "latest": "2020-04-17",
+   "area": "Swains Island (Island) (County-equivalent)"
+  },
+  {
+   "fips": "60050",
+   "rows": 16,
+   "declarations": 16,
+   "latest": "2020-04-17",
+   "area": "Western (District)"
+  },
+  {
+   "fips": "64002",
+   "rows": 9,
+   "declarations": 9,
+   "latest": "2007-07-31",
+   "area": "Chuuk (County-equivalent)"
+  },
+  {
+   "fips": "64005",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1992-02-07",
+   "area": "Kosrae (County-equivalent)"
+  },
+  {
+   "fips": "64040",
+   "rows": 9,
+   "declarations": 7,
+   "latest": "2002-07-11",
+   "area": "Pingelap (Municipality)"
+  },
+  {
+   "fips": "64060",
+   "rows": 7,
+   "declarations": 7,
+   "latest": "2004-04-10",
+   "area": "Yap (County-equivalent)"
+  },
+  {
+   "fips": "66010",
+   "rows": 24,
+   "declarations": 24,
+   "latest": "2026-10-17",
+   "area": "Guam (County-equivalent)"
+  },
+  {
+   "fips": "68010",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Ailinglaplap (County-equivalent)"
+  },
+  {
+   "fips": "68030",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Ailuk (County-equivalent)"
+  },
+  {
+   "fips": "68040",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Arno (County-equivalent)"
+  },
+  {
+   "fips": "68070",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Bikini (County-equivalent)"
+  },
+  {
+   "fips": "68080",
+   "rows": 1,
+   "declarations": 1,
+   "latest": "1998-03-20",
+   "area": "Ebon (County-equivalent)"
+  },
+  {
+   "fips": "68090",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Enewetak (County-equivalent)"
+  },
+  {
+   "fips": "68110",
+   "rows": 1,
+   "declarations": 1,
+   "latest": "1998-03-20",
+   "area": "Jabat (County-equivalent)"
+  },
+  {
+   "fips": "68120",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Jaluit (County-equivalent)"
+  },
+  {
+   "fips": "68140",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Kili (County-equivalent)"
+  },
+  {
+   "fips": "68150",
+   "rows": 6,
+   "declarations": 4,
+   "latest": "1998-03-20",
+   "area": "Ebeye"
+  },
+  {
+   "fips": "68160",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Lae (County-equivalent)"
+  },
+  {
+   "fips": "68170",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Lib (County-equivalent)"
+  },
+  {
+   "fips": "68180",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Likiep (County-equivalent)"
+  },
+  {
+   "fips": "68190",
+   "rows": 4,
+   "declarations": 4,
+   "latest": "1998-03-20",
+   "area": "Majuro (County-equivalent)"
+  },
+  {
+   "fips": "68300",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Maloelap (County-equivalent)"
+  },
+  {
+   "fips": "68310",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Mejit (County-equivalent)"
+  },
+  {
+   "fips": "68320",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Mili (County-equivalent)"
+  },
+  {
+   "fips": "68330",
+   "rows": 1,
+   "declarations": 1,
+   "latest": "1998-03-20",
+   "area": "Namorik (County-equivalent)"
+  },
+  {
+   "fips": "68340",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Namu (County-equivalent)"
+  },
+  {
+   "fips": "68390",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Ujae (County-equivalent)"
+  },
+  {
+   "fips": "68400",
+   "rows": 1,
+   "declarations": 1,
+   "latest": "1992-12-16",
+   "area": "Ujelang (County-equivalent)"
+  },
+  {
+   "fips": "68410",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Utrik (County-equivalent)"
+  },
+  {
+   "fips": "68420",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Wotho (County-equivalent)"
+  },
+  {
+   "fips": "68430",
+   "rows": 2,
+   "declarations": 2,
+   "latest": "1998-03-20",
+   "area": "Wotje (County-equivalent)"
+  },
+  {
+   "fips": "69010",
+   "rows": 6,
+   "declarations": 6,
+   "latest": "2026-07-03",
+   "area": "Northern Mariana Islands (County-equivalent)"
+  },
+  {
+   "fips": "69085",
+   "rows": 16,
+   "declarations": 16,
+   "latest": "2026-07-03",
+   "area": "Northern Islands (Municipality)"
+  },
+  {
+   "fips": "69100",
+   "rows": 27,
+   "declarations": 27,
+   "latest": "2026-10-17",
+   "area": "Rota (Municipality)"
+  },
+  {
+   "fips": "69110",
+   "rows": 24,
+   "declarations": 24,
+   "latest": "2026-10-17",
+   "area": "Saipan (Municipality)"
+  },
+  {
+   "fips": "69120",
+   "rows": 24,
+   "declarations": 24,
+   "latest": "2026-10-17",
+   "area": "Tinian (Municipality)"
+  },
+  {
+   "fips": "78010",
+   "rows": 29,
+   "declarations": 29,
+   "latest": "2024-10-25",
+   "area": "St. Croix (Island) (County-equivalent)"
+  },
+  {
+   "fips": "78020",
+   "rows": 27,
+   "declarations": 27,
+   "latest": "2024-10-25",
+   "area": "St. John (Island) (County-equivalent)"
+  },
+  {
+   "fips": "78030",
+   "rows": 28,
+   "declarations": 28,
+   "latest": "2024-10-25",
+   "area": "St. Thomas (Island) (County-equivalent)"
+  }
+ ],
+ "neverFiled": [
+  "02063",
+  "02066",
+  "09110",
+  "09120",
+  "09130",
+  "09140",
+  "09150",
+  "09160",
+  "09170",
+  "09180",
+  "09190",
+  "46102"
+ ]
+}
