@@ -28,7 +28,7 @@ export const OUTCOMES = {
   "dropped-ambiguous-record": "the item's external ids match more than one place record",
   "dropped-no-external-id-match": "a settlement whose external ids match no place record (US: Census Gazetteer places; elsewhere: GeoNames cities500)",
   "dropped-country-mismatch": "the matched place record is in a different country than the item's P17",
-  "dropped-no-label": "the settlement has no English label to show",
+  "dropped-no-label": "the settlement has no English or default (mul) label to show",
   "dropped-walk-too-deep": `no settlement within ${MAX_WALK} P131 levels`,
   "dropped-no-place-data": "Wikidata returned nothing for the place item",
 };

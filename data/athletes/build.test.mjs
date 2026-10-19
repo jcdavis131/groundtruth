@@ -7,9 +7,9 @@
 import { Readable } from "node:stream";
 import { project, readTable, splitCsvLine } from "./lib/csv.mjs";
 import { fipsToGeoid, gnisToAnsi, resolveBirthplace, traceProblems } from "./lib/birthplace.mjs";
-import { covers, teamItems, venueFor } from "./lib/arena.mjs";
+import { covers, nameFor, teamItems, venueFor, withOccupantMoves } from "./lib/arena.mjs";
 import { refuseNeverList } from "./lib/net.mjs";
-import { birthFields, homeArenas, present } from "./build.mjs";
+import { birthFields, eraAbbr, homeArenas, present } from "./build.mjs";
 import { validateAthlete } from "./validate.mjs";
 
 let failed = 0;
@@ -166,6 +166,16 @@ for (const p of ["QLA", "QHOLLY", "QHOSP", "QPARIS"]) {
   check(a.get("2020|BBB").tie === true, "a tie between two home stadiums gives no arena");
 }
 
+{
+  const ids = new Map([["LV", "2520"], ["OAK", "2520"], ["LA", "2510"], ["STL", "2510"], ["LAR", "2510"], ["SEA", "4600"]]);
+  const used = new Map([["2010", new Set(["OAK", "STL", "SEA"])], ["2020", new Set(["LV", "LA", "SEA"])]]);
+  check(eraAbbr("LV", "2010", ids, used).abbr === "OAK", "a 2010 stats row written LV is the Oakland Raiders that season");
+  check(eraAbbr("LA", "2010", ids, used).abbr === "STL" && eraAbbr("LA", "2020", ids, used).abbr === "LA", "LA is St. Louis in 2010 and Los Angeles in 2020");
+  check(eraAbbr("SEA", "2010", ids, used).abbr === "SEA" && !eraAbbr("SEA", "2010", ids, used).from, "an abbreviation used that season stays as it is");
+  check(!!eraAbbr("JAC", "2010", ids, used).absent, "an abbreviation the teams file does not know is left out, not mapped by its letters");
+  check(!!eraAbbr("LV", "1990", ids, used).absent, "a season with no games.csv rows is left out");
+}
+
 // ---------------------------------------------------------------- NBA arenas
 
 check(covers("2024-01-01T00:00:00Z", null, "2024-11-01T00:00:00Z") && !covers(null, null, "2024-11-01T00:00:00Z"), "an open-ended dated statement covers; an undated one never does");
@@ -176,6 +186,16 @@ check(covers("2024-01-01T00:00:00Z", null, "2024-11-01T00:00:00Z") && !covers(nu
   check(!!venueFor([crypto, { ...dome, start: null }], "2024-25").absent, "an undated venue statement leaves the arena out rather than guessing");
   check(!!venueFor([crypto, { ...dome, start: "1999-01-01T00:00:00Z" }], "2010-11").absent, "two venues overlapping a season leave the arena out");
   check(!!venueFor([], "2010-11").absent, "no home venue leaves the arena out");
+  // The Clippers' case: P115 ends open at the old arena; the new one lists them as occupant from 2024.
+  const p115 = [{ venue: "QOLDER", label: "Older", start: "1984-01-01T00:00:00Z", end: "1999-01-01T00:00:00Z" }, { ...crypto, end: null }];
+  const occ = [{ venue: "QNEW", label: "New Dome", start: "2024-08-15T00:00:00Z", end: null }, { venue: "QOLDER", label: "Older", start: "1984-01-01T00:00:00Z", end: null }, { venue: "QANCIENT", label: "Ancient", start: "1970-01-01T00:00:00Z", end: null }];
+  const merged = withOccupantMoves(p115, occ);
+  check(merged.length === 3 && merged.some((s) => s.venue === "QNEW"), "a venue naming the team as occupant after every P115 start is added; older occupants are not");
+  check(venueFor(merged, "2023-24").venue === "QOLD", "before the move the old arena stands");
+  check(!!venueFor(merged, "2024-25").absent && !!venueFor(merged, "2025-26").absent, "after a move the team item does not record, the arena is left out rather than named wrong");
+  const names = [{ name: "Staples Center", start: "1999-01-01T00:00:00Z", end: "2021-12-25T00:00:00Z" }, { name: "Crypto.com Arena", start: "2021-12-25T00:00:00Z", end: null }];
+  check(nameFor(names, "Crypto.com Arena", "2015-16").name === "Staples Center" && nameFor(names, "Crypto.com Arena", "2022-23").name === "Crypto.com Arena", "a season gets the venue's dated official name for that season");
+  check(nameFor([], "Current Label", "2015-16").from === "label", "with no dated official name, the current label is used and says so");
 }
 {
   const m = (team, start = "2010-01-01T00:00:00Z", end = null) => ({ team, start, end });

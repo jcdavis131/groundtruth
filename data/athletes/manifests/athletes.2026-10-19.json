@@ -1,0 +1,2718 @@
+{
+ "schemaVersion": "athletes-manifest/1",
+ "snapshotId": "athletes.2026-10-19",
+ "createdAt": "2026-10-19T02:00:25Z",
+ "builder": {
+  "name": "data/athletes/build.mjs",
+  "version": "0.1.0",
+  "gitSha": "a6534b5d20ae73d4f00da9a9d859de07aa9398ed",
+  "repo": "https://github.com/jcdavis131/groundtruth"
+ },
+ "recordSchemaVersion": "athlete/1",
+ "directory": "<data-root>/athletes/2026-10-19",
+ "policy": "apps/map/docs/PEOPLE.md, Athletes: C5, C6, A1-A10 and A5a; data/athletes/allowlist.json",
+ "userAgent": "groundtruth-athletes/0.1 (https://github.com/jcdavis131/groundtruth; research data build)",
+ "sources": [
+  {
+   "sourceId": "nflverse-players",
+   "licence": "CC-BY 4.0 (nflverse-data)",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/players/players.csv"
+  },
+  {
+   "sourceId": "nflverse-stats",
+   "licence": "CC-BY 4.0 (nflverse-data)",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/"
+  },
+  {
+   "sourceId": "nflverse-depth",
+   "licence": "CC-BY 4.0 (nflverse-data)",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/"
+  },
+  {
+   "sourceId": "nflverse-teams",
+   "licence": "CC-BY 4.0 (nflverse-data)",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/teams/teams_colors_logos.csv"
+  },
+  {
+   "sourceId": "nflverse-games",
+   "licence": "CC-BY 4.0 (nfldata, Lee Sharpe and nflverse)",
+   "url": "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv"
+  },
+  {
+   "sourceId": "nba-stats",
+   "licence": "NBA.com terms of use; public keyless responses, as cached by vector-hoops",
+   "url": "https://stats.nba.com/stats/"
+  },
+  {
+   "sourceId": "wikidata",
+   "licence": "CC0 1.0",
+   "url": "https://query.wikidata.org/sparql"
+  },
+  {
+   "sourceId": "census-gazetteer",
+   "licence": "US Census Bureau, public domain",
+   "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_place_national.zip"
+  },
+  {
+   "sourceId": "geonames",
+   "licence": "CC BY 4.0 (GeoNames)",
+   "url": "https://download.geonames.org/export/dump/"
+  }
+ ],
+ "counts": {
+  "NBA": {
+   "records": 6819,
+   "athletes": 1556
+  },
+  "NFL": {
+   "records": 57080,
+   "athletes": 12456
+  }
+ },
+ "coverage": {
+  "NBA": {
+   "records": 6819,
+   "athletes": 1556,
+   "team": {
+    "have": 6819,
+    "of": 6819
+   },
+   "season": {
+    "have": 6819,
+    "of": 6819
+   },
+   "teamCity": {
+    "have": 0,
+    "of": 6819,
+    "absentBecause": "no league-published team city in the keyless sources read here: stats.nba.com is not reachable from this box and nflverse's teams file has no city column; never derived from the team's name"
+   },
+   "arena": {
+    "have": 3728,
+    "of": 6819,
+    "absentBecause": {
+     "fewer than 3 roster players have one dated NBA P54 team at the season's midpoint": 2640,
+     "no team item has 60% of the roster players' dated P54 votes": 265,
+     "the venue has no English label": 186
+    }
+   },
+   "school": {
+    "have": 0,
+    "of": 6819,
+    "absentBecause": "the NBA's school field (commonplayerinfo SCHOOL) was not read: stats.nba.com timed out and cdn.nba.com answered 403 to a plain keyless request on 2026-10-19; it is not taken from any other source, and no browser is impersonated"
+   },
+   "birthCity": {
+    "have": 6094,
+    "of": 6819,
+    "absentBecause": "rule A5a leaves out every birthplace it cannot trace by ids; see birthplace.outcomesPerAthlete"
+   },
+   "birthRegion": {
+    "have": 6093,
+    "of": 6819,
+    "absentBecause": "GeoNames has no admin1 name for the place record's region code"
+   },
+   "birthCountry": {
+    "have": 6094,
+    "of": 6819
+   },
+   "perSeason": {
+    "2015-16": 530,
+    "2016-17": 542,
+    "2017-18": 606,
+    "2018-19": 622,
+    "2019-20": 592,
+    "2020-21": 626,
+    "2021-22": 716,
+    "2022-23": 612,
+    "2023-24": 657,
+    "2024-25": 655,
+    "2025-26": 661
+   }
+  },
+  "NFL": {
+   "records": 57080,
+   "athletes": 12456,
+   "team": {
+    "have": 57080,
+    "of": 57080
+   },
+   "season": {
+    "have": 57080,
+    "of": 57080
+   },
+   "teamCity": {
+    "have": 0,
+    "of": 57080,
+    "absentBecause": "no league-published team city in the keyless sources read here: stats.nba.com is not reachable from this box and nflverse's teams file has no city column; never derived from the team's name"
+   },
+   "arena": {
+    "have": 54458,
+    "of": 57080,
+    "absentBecause": {
+     "no regular-season home game for the team-season in games.csv": 2549,
+     "a tie between two home stadiums": 73
+    }
+   },
+   "school": {
+    "have": 56991,
+    "of": 57080,
+    "absentBecause": "college_name is empty in players.csv for the player"
+   },
+   "birthCity": {
+    "have": 47912,
+    "of": 57080,
+    "absentBecause": "rule A5a leaves out every birthplace it cannot trace by ids; see birthplace.outcomesPerAthlete"
+   },
+   "birthRegion": {
+    "have": 47912,
+    "of": 57080,
+    "absentBecause": "GeoNames has no admin1 name for the place record's region code"
+   },
+   "birthCountry": {
+    "have": 47912,
+    "of": 57080
+   },
+   "perSeason": {
+    "1999": 1650,
+    "2000": 1614,
+    "2001": 1839,
+    "2002": 1842,
+    "2003": 1708,
+    "2004": 1759,
+    "2005": 1750,
+    "2006": 1723,
+    "2007": 1765,
+    "2008": 1749,
+    "2009": 1774,
+    "2010": 1811,
+    "2011": 1788,
+    "2012": 1793,
+    "2013": 1785,
+    "2014": 1830,
+    "2015": 1838,
+    "2016": 2198,
+    "2017": 2150,
+    "2018": 2188,
+    "2019": 2222,
+    "2020": 2205,
+    "2021": 2295,
+    "2022": 2264,
+    "2023": 2190,
+    "2024": 2272,
+    "2025": 3756,
+    "2026": 3322
+   }
+  }
+ },
+ "birthplace": {
+  "rule": "A5a (Cam 2026-10-19, \"go ahead with A5a\")",
+  "outcomesPerAthlete": {
+   "NBA": {
+    "matched-direct": 1337,
+    "dropped-not-settlement-by-p31": 25,
+    "dropped-no-external-id-match": 87,
+    "dropped-coarser": 52,
+    "matched-after-walk": 43,
+    "dropped-no-label": 4,
+    "dropped-country-mismatch": 2,
+    "dropped-multiple-p19": 1,
+    "absent-no-p19": 5
+   },
+   "NFL": {
+    "absent-no-wikidata-item": 701,
+    "matched-direct": 9605,
+    "dropped-no-label": 152,
+    "dropped-coarser": 281,
+    "dropped-no-external-id-match": 361,
+    "dropped-not-settlement-by-p31": 115,
+    "absent-no-p19": 1268,
+    "matched-after-walk": 94,
+    "absent-item-shared-by-several-athletes": 4,
+    "dropped-multiple-p19": 13,
+    "absent-ids-resolve-to-several-items": 5,
+    "dropped-multiple-parents": 1,
+    "dropped-ambiguous-record": 1
+   }
+  },
+  "definitions": {
+   "matched-direct": "P19 itself is a settlement whose external id matches one place record",
+   "matched-after-walk": "P19 is finer than a city; P131 led to one settlement whose external id matches one place record",
+   "dropped-multiple-p19": "the player item has more than one place of birth",
+   "dropped-multiple-parents": "a finer-than-city level has more than one P131 parent",
+   "dropped-no-parent": "a finer-than-city level has no P131 parent",
+   "dropped-coarser": "the walk reached a state, country, county or other non-settlement before a matching settlement",
+   "dropped-not-settlement-by-p31": "an external id matches a place record but Wikidata does not class the item as a human settlement",
+   "dropped-ambiguous-record": "the item's external ids match more than one place record",
+   "dropped-no-external-id-match": "a settlement whose external ids match no place record (US: Census Gazetteer places; elsewhere: GeoNames cities500)",
+   "dropped-country-mismatch": "the matched place record is in a different country than the item's P17",
+   "dropped-no-label": "the settlement has no English label to show",
+   "dropped-walk-too-deep": "no settlement within 4 P131 levels",
+   "dropped-no-place-data": "Wikidata returned nothing for the place item",
+   "absent-no-wikidata-item": "no Wikidata item carries the athlete's league id",
+   "absent-ids-resolve-to-several-items": "the athlete's league ids point at more than one Wikidata item",
+   "absent-item-shared-by-several-athletes": "one Wikidata item carries the league ids of more than one athlete",
+   "absent-no-p19": "the Wikidata item has no place of birth"
+  },
+  "traceCheck": {
+   "recordsChecked": 54006,
+   "failures": 0
+  },
+  "settlementClass": "Q486972",
+  "finerClasses": [
+   "Q123705",
+   "Q2983893",
+   "Q16917",
+   "Q408804"
+  ],
+  "coarserClasses": [
+   "Q6256",
+   "Q10864048",
+   "Q13220204",
+   "Q28575"
+  ],
+  "placeItems": 3573,
+  "placeRecords": {
+   "censusGazetteerPlaces": 32333,
+   "geonamesCitiesMatched": 3037,
+   "geonamesExcludedCodes": [
+    "PPLX",
+    "PPLH",
+    "PPLQ",
+    "PPLW",
+    "PPLCH"
+   ]
+  }
+ },
+ "nbaArenas": {
+  "method": "team item = the NBA team item (P118 Q155223) that at least 3 roster players and 60% of the voting ones were on (dated P54) on Jan 1 of the season; arena = the one dated P115 statement covering Nov 1 of the season's first year; any undated P115 statement leaves it out",
+  "teamSeasons": 330,
+  "withArena": 187,
+  "byReason": [
+   {
+    "reason": "fewer than 3 roster players have one dated NBA P54 team at the season's midpoint",
+    "teamSeasons": 124
+   },
+   {
+    "reason": "the venue has no English label",
+    "teamSeasons": 8
+   },
+   {
+    "reason": "no team item has 60% of the roster players' dated P54 votes",
+    "teamSeasons": 11
+   }
+  ]
+ },
+ "wikidata": {
+  "properties": {
+   "nbaPlayerId": "P3647",
+   "pfrPlayerId": "P3561",
+   "espnNflPlayerId": "P3686",
+   "placeOfBirth": "P19",
+   "locatedIn": "P131",
+   "country": "P17/P297",
+   "fips": "P774",
+   "gnis": "P590",
+   "geonames": "P1566",
+   "memberOfTeam": "P54",
+   "homeVenue": "P115",
+   "start": "P580",
+   "end": "P582",
+   "coordinates": "P625 (venues only)"
+  },
+  "neverAsked": "P569 (date of birth) and the other personal properties lib/net.mjs refuses",
+  "matched": {
+   "nbaIds": {
+    "asked": 1556,
+    "onAnItem": 1556
+   },
+   "nflPfrIds": {
+    "asked": 12490,
+    "onAnItem": 11875
+   },
+   "nflEspnIds": {
+    "asked": 12515,
+    "onAnItem": 2739
+   }
+  }
+ },
+ "inputs": {
+  "nfl": {
+   "note": "Local copies cached by vector-gridiron from the nflverse URLs; retrievedAt is each file's modification time.",
+   "players": {
+    "path": "<home>/vector-gridiron/pipeline/cache/players.csv",
+    "url": "https://github.com/nflverse/nflverse-data/releases/download/players/players.csv",
+    "retrievedAt": "2026-10-13T15:00:24Z",
+    "sha256": "fed0e42670e7b33f7e3baa41db878b72427f0c92acc7f9884e85cbcf9440f7b4",
+    "rows": 24853,
+    "columnsRead": [
+     "gsis_id",
+     "display_name",
+     "college_name",
+     "pfr_id (Wikidata join key only)",
+     "espn_id (Wikidata join key only)"
+    ]
+   },
+   "playerSeasons": [
+    {
+     "file": "stats_player_week_1999.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_1999.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_1999.csv",
+     "retrievedAt": "2026-07-09T16:35:47Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 16839,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1724,
+     "sha256": "836001d038bb0521b39f347c3cd6797f9d6de9a44c662b1925cebbe6461ee7b4"
+    },
+    {
+     "file": "stats_player_week_2000.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2000.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2000.csv",
+     "retrievedAt": "2026-07-09T16:35:48Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 16623,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1683,
+     "sha256": "598de5766397bbbb50344afbcb1188c99c79a52d426d5ac9e0870134160cd006"
+    },
+    {
+     "file": "stats_player_week_2001.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2001.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2001.csv",
+     "retrievedAt": "2026-07-09T16:35:48Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 16789,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1946,
+     "sha256": "594f653e8d4a8ebe3cc325b6f4b7e54d18563c4692d15a0bfb487549ead32466"
+    },
+    {
+     "file": "stats_player_week_2002.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2002.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2002.csv",
+     "retrievedAt": "2026-07-09T16:35:49Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17481,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1985,
+     "sha256": "827c44c1e243512997f9008015d8a12eacc291d089e0e814acc68c5323641a28"
+    },
+    {
+     "file": "stats_player_week_2003.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2003.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2003.csv",
+     "retrievedAt": "2026-07-09T16:35:50Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17232,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1765,
+     "sha256": "bd40bf60a9dc0496110560467ce8fd63b9f75f9684c6ba98d8212feff5375186"
+    },
+    {
+     "file": "stats_player_week_2004.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2004.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2004.csv",
+     "retrievedAt": "2026-07-09T16:35:51Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17272,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1816,
+     "sha256": "6405c25ee0dcbf351762765483b4f873299093b5d1391e5fb5f321ddf8900d24"
+    },
+    {
+     "file": "stats_player_week_2005.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2005.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2005.csv",
+     "retrievedAt": "2026-07-09T16:35:52Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17355,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1808,
+     "sha256": "aae1cadd0883240dac2a7d0c5ceff814d365f180a32641ff9f3dddc52da3c056"
+    },
+    {
+     "file": "stats_player_week_2006.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2006.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2006.csv",
+     "retrievedAt": "2026-07-09T16:35:53Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17214,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1778,
+     "sha256": "24bb1f59999481a399050c8694fe4d7fe56cb22685b1acc9e82aa6bf90975300"
+    },
+    {
+     "file": "stats_player_week_2007.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2007.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2007.csv",
+     "retrievedAt": "2026-07-09T16:35:54Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17265,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1817,
+     "sha256": "72ff297c150cb8b26195a703e6030e8f8b374584eb0bffc682631ffedc56d592"
+    },
+    {
+     "file": "stats_player_week_2008.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2008.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2008.csv",
+     "retrievedAt": "2026-07-09T16:35:55Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17212,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1802,
+     "sha256": "f137d282ded843472078e52057fd10cfe8ae811c4fde3dd573ff77483510c179"
+    },
+    {
+     "file": "stats_player_week_2009.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2009.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2009.csv",
+     "retrievedAt": "2026-07-09T16:35:56Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17690,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1831,
+     "sha256": "b075db11214f876d29f45ddc013a853126c53e080536dc18384b5885328fb570"
+    },
+    {
+     "file": "stats_player_week_2010.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2010.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2010.csv",
+     "retrievedAt": "2026-07-09T16:35:57Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17590,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1873,
+     "sha256": "be335657f96b859e136e16e2301eeef9ca10fafe1c89053b1e34be4ba4397149"
+    },
+    {
+     "file": "stats_player_week_2011.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2011.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2011.csv",
+     "retrievedAt": "2026-07-09T16:35:58Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17440,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1845,
+     "sha256": "f8a53fbd34b501ef92e4fa9e1ded24db7241fe41e9bcfa09c9162f7173a1cac4"
+    },
+    {
+     "file": "stats_player_week_2012.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2012.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2012.csv",
+     "retrievedAt": "2026-07-09T16:35:59Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17419,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1851,
+     "sha256": "13b6254befc3d0f7ff344825f697998cb45ffd7d8f5a49586c454442af9c62b2"
+    },
+    {
+     "file": "stats_player_week_2013.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2013.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2013.csv",
+     "retrievedAt": "2026-07-09T16:36:00Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17248,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1843,
+     "sha256": "a95f2819fba2559c4c0d99ac55294128d2e9ee39806503c31b672ba96c06598d"
+    },
+    {
+     "file": "stats_player_week_2014.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2014.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2014.csv",
+     "retrievedAt": "2026-07-09T16:36:01Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17622,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1899,
+     "sha256": "a93d23860f959db5133c04f2a178f706b60354b419b5d4017e8f6e3b795ff7b2"
+    },
+    {
+     "file": "stats_player_week_2015.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2015.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2015.csv",
+     "retrievedAt": "2026-07-09T15:28:53Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17613,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1902,
+     "sha256": "b204ce62a1da97fdba23d4ba888ad45ea36249f86aad5b61f552da28341eb261"
+    },
+    {
+     "file": "stats_player_week_2016.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2016.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2016.csv",
+     "retrievedAt": "2026-07-09T02:24:05Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17552,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1905,
+     "sha256": "77f3b51e6a4009dfc17206fab93aa89a5cd1c6a31a610dcfa8903776faf8c579"
+    },
+    {
+     "file": "stats_player_week_2017.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2017.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2017.csv",
+     "retrievedAt": "2026-07-09T02:24:06Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17477,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1930,
+     "sha256": "1fb409513abd8f6848118ab507ff989cbb91b80d2b02f74f96c395511fddee5f"
+    },
+    {
+     "file": "stats_player_week_2018.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2018.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2018.csv",
+     "retrievedAt": "2026-07-09T02:24:07Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17414,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1962,
+     "sha256": "cdb17762740746226716dbb16c7cd0b0b7bff2c428b70d9705e0cc2968ba7362"
+    },
+    {
+     "file": "stats_player_week_2019.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2019.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2019.csv",
+     "retrievedAt": "2026-07-09T02:24:08Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17362,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1961,
+     "sha256": "1f6ec7e66113fc593d55375004e100b74057056b41c11480dfc4af5180d0d522"
+    },
+    {
+     "file": "stats_player_week_2020.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2020.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2020.csv",
+     "retrievedAt": "2026-07-09T02:24:09Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 17602,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 2045,
+     "sha256": "d9eec23023f13113307c9c02f7ef4718e5c86b4de5f6a69bf25c7649805d6d88"
+    },
+    {
+     "file": "stats_player_week_2021.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2021.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2021.csv",
+     "retrievedAt": "2026-07-09T02:24:10Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 18969,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 2169,
+     "sha256": "291bf9db14a66c935d94fbf36dbafa06e6823743ffa1412f82dedf36f7685f18"
+    },
+    {
+     "file": "stats_player_week_2022.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2022.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2022.csv",
+     "retrievedAt": "2026-07-09T02:24:11Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 18831,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 2081,
+     "sha256": "bb1e0d43214fe494c634d30bb7aa4b6d3ba307ce399c0fc922697f54e9d77cc1"
+    },
+    {
+     "file": "stats_player_week_2023.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2023.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2023.csv",
+     "retrievedAt": "2026-07-09T02:24:12Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 18643,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 2008,
+     "sha256": "7306504eba47a1c934f622effd733e4d854fd37b0d036b39018613ada426184b"
+    },
+    {
+     "file": "stats_player_week_2024.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2024.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2024.csv",
+     "retrievedAt": "2026-07-09T02:24:13Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 18981,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 2082,
+     "sha256": "5a525603edb02b97b83451c088bd03f9132aaa82a1a7cd8641f771408a6ea9ed"
+    },
+    {
+     "file": "stats_player_week_2025.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2025.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2025.csv",
+     "retrievedAt": "2026-10-13T15:00:21Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 19422,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 2115,
+     "sha256": "e5e0615b3d96a3eaebfaee91e55afb4a4e7fe0caf057454177bcd7d6ad4bcfc2"
+    },
+    {
+     "file": "stats_player_week_2026.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/stats_player_week_2026.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2026.csv",
+     "retrievedAt": "2026-10-13T15:00:22Z",
+     "columnsRead": [
+      "player_id",
+      "season",
+      "team"
+     ],
+     "rows": 5506,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1597,
+     "sha256": "1ae72b48fac0f84d75e352699fdcb1ea88f0c3c73bb520d6c8804585c412452b"
+    },
+    {
+     "file": "depth_charts_2016.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/depth_charts_2016.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2016.csv",
+     "retrievedAt": "2026-10-13T15:00:30Z",
+     "columnsRead": [
+      "gsis_id",
+      "season",
+      "club_code"
+     ],
+     "rows": 37150,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 361,
+     "sha256": "1a462b965a31f70a76568e0900485cec7f6ab202ade15df0a2d0d79f4ffc7537"
+    },
+    {
+     "file": "depth_charts_2017.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/depth_charts_2017.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2017.csv",
+     "retrievedAt": "2026-10-13T15:00:32Z",
+     "columnsRead": [
+      "gsis_id",
+      "season",
+      "club_code"
+     ],
+     "rows": 37184,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 295,
+     "sha256": "cc8a9e6991236510ada3fd1a71ed0ebd3df91f2130c8abbf11e69150adc0eb7d"
+    },
+    {
+     "file": "depth_charts_2018.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/depth_charts_2018.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2018.csv",
+     "retrievedAt": "2026-10-13T15:00:35Z",
+     "columnsRead": [
+      "gsis_id",
+      "season",
+      "club_code"
+     ],
+     "rows": 37058,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 306,
+     "sha256": "2c44efb1d96f8b8fef8a8ae42c44db340e97921745420d96b012778e184255bb"
+    },
+    {
+     "file": "depth_charts_2019.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/depth_charts_2019.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2019.csv",
+     "retrievedAt": "2026-10-13T15:00:37Z",
+     "columnsRead": [
+      "gsis_id",
+      "season",
+      "club_code"
+     ],
+     "rows": 37014,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 340,
+     "sha256": "328405d1feb09cc4b23922c26bf23adf7d6a6e894ba0e7305b88dda793710647"
+    },
+    {
+     "file": "depth_charts_2020.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/depth_charts_2020.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2020.csv",
+     "retrievedAt": "2026-10-13T15:00:38Z",
+     "columnsRead": [
+      "gsis_id",
+      "season",
+      "club_code"
+     ],
+     "rows": 36831,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 233,
+     "sha256": "45a315dd7f3e7837faf06a9c9cf995e1c131017a748482b2caaa111ffa0b9372"
+    },
+    {
+     "file": "depth_charts_2021.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/depth_charts_2021.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2021.csv",
+     "retrievedAt": "2026-10-13T15:00:40Z",
+     "columnsRead": [
+      "gsis_id",
+      "season",
+      "club_code"
+     ],
+     "rows": 37975,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 206,
+     "sha256": "91e3384ff13146c77f02fed2c3eca163d35868dd62da6b794c5b51df1d15b724"
+    },
+    {
+     "file": "depth_charts_2022.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/depth_charts_2022.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2022.csv",
+     "retrievedAt": "2026-10-13T15:00:42Z",
+     "columnsRead": [
+      "gsis_id",
+      "season",
+      "club_code"
+     ],
+     "rows": 38404,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 183,
+     "sha256": "4c64ee59666431c49cbc0a818cc3165886012cf72b545771a77c0805aa621b9c"
+    },
+    {
+     "file": "depth_charts_2023.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/depth_charts_2023.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2023.csv",
+     "retrievedAt": "2026-10-13T15:00:44Z",
+     "columnsRead": [
+      "gsis_id",
+      "season",
+      "club_code"
+     ],
+     "rows": 37845,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 182,
+     "sha256": "583f83842590e7e7d3417e0cd9c5c9e38f8696353bb754561d80e5583d2a98cf"
+    },
+    {
+     "file": "depth_charts_2024.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/depth_charts_2024.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2024.csv",
+     "retrievedAt": "2026-10-13T15:00:45Z",
+     "columnsRead": [
+      "gsis_id",
+      "season",
+      "club_code"
+     ],
+     "rows": 37779,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 190,
+     "sha256": "f210a33774611f7f78a89af789b61c6289a2631a21227a1a3c63c973c23588b7"
+    },
+    {
+     "file": "depth_charts_2025.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/depth_charts_2025.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2025.csv",
+     "retrievedAt": "2026-10-13T15:00:49Z",
+     "columnsRead": [
+      "gsis_id",
+      "team"
+     ],
+     "rows": 554215,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1641,
+     "sha256": "f5a4aa3fa70150e810b2255200c8735a6c1cc8ff77361308ce39149345b39b4a"
+    },
+    {
+     "file": "depth_charts_2026.csv",
+     "path": "<home>/vector-gridiron/pipeline/cache/depth_charts_2026.csv",
+     "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2026.csv",
+     "retrievedAt": "2026-10-13T15:00:56Z",
+     "columnsRead": [
+      "gsis_id",
+      "team"
+     ],
+     "rows": 645475,
+     "rowsOfAnotherSeason": 0,
+     "newPlayerSeasonTeams": 1725,
+     "sha256": "536a38b90a0f68f1934f20711c2fbf4ac9f7bab5433a6e77caf249f2e5837cbb"
+    }
+   ],
+   "games": {
+    "path": "<home>/vector-gridiron/pipeline/cache/games.csv",
+    "url": "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv",
+    "retrievedAt": "2026-10-13T15:00:25Z",
+    "sha256": "2461dc675396da2bc6ae0c8a9ee41d8a21dc3c078931de81b89cc3a92f7be12b",
+    "rows": 7548,
+    "columnsRead": [
+     "season",
+     "game_type",
+     "home_team",
+     "location",
+     "stadium_id",
+     "stadium"
+    ]
+   }
+  },
+  "nba": {
+   "note": "Local copies cached by vector-hoops (nba_api playergamelogs and leaguedashteamstats); retrievedAt is each file's modification time. The seasons are the ones those caches hold.",
+   "columnsRead": [
+    "PLAYER_ID",
+    "PLAYER_NAME",
+    "TEAM_ID",
+    "GAME_ID (only to skip preseason and All-Star games)",
+    "TEAM_NAME"
+   ],
+   "gamelogs": [
+    {
+     "file": "gamelogs_2015-16.jsonl",
+     "path": "<home>/vector-hoops/pipeline/data/gamelogs_2015-16.jsonl",
+     "url": "https://stats.nba.com/stats/playergamelogs?Season=2015-16",
+     "retrievedAt": "2026-07-05T08:28:32Z",
+     "rows": 30833,
+     "skippedPreseasonAllStar": 2855,
+     "sha256": "691c2918c50fb7ffaa1fae1e5343ad4bcdbec175cf05717bb12ed2f5bf372d46"
+    },
+    {
+     "file": "gamelogs_2016-17.jsonl",
+     "path": "<home>/vector-hoops/pipeline/data/gamelogs_2016-17.jsonl",
+     "url": "https://stats.nba.com/stats/playergamelogs?Season=2016-17",
+     "retrievedAt": "2026-07-05T08:28:59Z",
+     "rows": 30595,
+     "skippedPreseasonAllStar": 2719,
+     "sha256": "a1eaef26261dc907c0db6e51dbe01b33899339b97705c9705c9ec04640763b36"
+    },
+    {
+     "file": "gamelogs_2017-18.jsonl",
+     "path": "<home>/vector-hoops/pipeline/data/gamelogs_2017-18.jsonl",
+     "url": "https://stats.nba.com/stats/playergamelogs?Season=2017-18",
+     "retrievedAt": "2026-07-05T08:29:26Z",
+     "rows": 29999,
+     "skippedPreseasonAllStar": 2163,
+     "sha256": "0a517bcd9e8e8fad59ff1886f2a97d18069111727d39ab9c06ed850af56eb866"
+    },
+    {
+     "file": "gamelogs_2018-19.jsonl",
+     "path": "<home>/vector-hoops/pipeline/data/gamelogs_2018-19.jsonl",
+     "url": "https://stats.nba.com/stats/playergamelogs?Season=2018-19",
+     "retrievedAt": "2026-07-05T08:29:54Z",
+     "rows": 30082,
+     "skippedPreseasonAllStar": 2220,
+     "sha256": "44b5318fc4d928e8e4351c4e6a6c714a0944d9b877e90b326d32cf1854473b0c"
+    },
+    {
+     "file": "gamelogs_2019-20.jsonl",
+     "path": "<home>/vector-hoops/pipeline/data/gamelogs_2019-20.jsonl",
+     "url": "https://stats.nba.com/stats/playergamelogs?Season=2019-20",
+     "retrievedAt": "2026-07-05T08:30:19Z",
+     "rows": 27160,
+     "skippedPreseasonAllStar": 3055,
+     "sha256": "ee0def4c14eb40c58430524d64e4514541e864a58c77ddcf5ff1a413da9a95d9"
+    },
+    {
+     "file": "gamelogs_2020-21.jsonl",
+     "path": "<home>/vector-hoops/pipeline/data/gamelogs_2020-21.jsonl",
+     "url": "https://stats.nba.com/stats/playergamelogs?Season=2020-21",
+     "retrievedAt": "2026-07-05T08:30:42Z",
+     "rows": 26413,
+     "skippedPreseasonAllStar": 1359,
+     "sha256": "4c29c4d194e20dabbc7260fcda3e77844c86b11bc9ce707120d6259e0fcdea1e"
+    },
+    {
+     "file": "gamelogs_2021-22.jsonl",
+     "path": "<home>/vector-hoops/pipeline/data/gamelogs_2021-22.jsonl",
+     "url": "https://stats.nba.com/stats/playergamelogs?Season=2021-22",
+     "retrievedAt": "2026-07-05T08:31:09Z",
+     "rows": 29878,
+     "skippedPreseasonAllStar": 1829,
+     "sha256": "831e34ab771a3b1626410aa3d3def6d0ed1449ecb6ffd5a5291dfd136469de6a"
+    },
+    {
+     "file": "gamelogs_2022-23.jsonl",
+     "path": "<home>/vector-hoops/pipeline/data/gamelogs_2022-23.jsonl",
+     "url": "https://stats.nba.com/stats/playergamelogs?Season=2022-23",
+     "retrievedAt": "2026-07-05T08:31:30Z",
+     "rows": 29738,
+     "skippedPreseasonAllStar": 1999,
+     "sha256": "5459cfd8a7fa7a254a64539a3925530ddef9151b88f739727048fbeb3ce6b7f0"
+    },
+    {
+     "file": "gamelogs_2023-24.jsonl",
+     "path": "<home>/vector-hoops/pipeline/data/gamelogs_2023-24.jsonl",
+     "url": "https://stats.nba.com/stats/playergamelogs?Season=2023-24",
+     "retrievedAt": "2026-07-05T08:31:52Z",
+     "rows": 30334,
+     "skippedPreseasonAllStar": 2102,
+     "sha256": "7365ffa08439ea9ab447b1ade333c13b20bf8d2a892758ea33a5f64a34b9849c"
+    },
+    {
+     "file": "gamelogs_2024-25.jsonl",
+     "path": "<home>/vector-hoops/pipeline/data/gamelogs_2024-25.jsonl",
+     "url": "https://stats.nba.com/stats/playergamelogs?Season=2024-25",
+     "retrievedAt": "2026-07-05T08:32:13Z",
+     "rows": 30409,
+     "skippedPreseasonAllStar": 2144,
+     "sha256": "eac86a5f5914212a29f425c1582727671f74713194fe237bd801a486c745c6ad"
+    },
+    {
+     "file": "gamelogs_2025-26.jsonl",
+     "path": "<home>/vector-hoops/pipeline/data/gamelogs_2025-26.jsonl",
+     "url": "https://stats.nba.com/stats/playergamelogs?Season=2025-26",
+     "retrievedAt": "2026-07-05T08:32:39Z",
+     "rows": 30800,
+     "skippedPreseasonAllStar": 2084,
+     "sha256": "776c6d48d531db6f707afe0e060574ca45115cde19a63c6ca969567b591838e0"
+    }
+   ],
+   "teams": [
+    {
+     "file": "team_base_2015-16.json",
+     "path": "<home>/vector-hoops/pipeline/cache/team_base_2015-16.json",
+     "url": "https://stats.nba.com/stats/leaguedashteamstats?Season=2015-16&MeasureType=Base",
+     "retrievedAt": "2026-07-05T18:18:10Z",
+     "rows": 30,
+     "sha256": "44d8b9e8b28b3a6f0226aaf08456d2aa45fd5904bac019b58ec6b2edac9fcef1"
+    },
+    {
+     "file": "team_base_2016-17.json",
+     "path": "<home>/vector-hoops/pipeline/cache/team_base_2016-17.json",
+     "url": "https://stats.nba.com/stats/leaguedashteamstats?Season=2016-17&MeasureType=Base",
+     "retrievedAt": "2026-07-05T18:18:10Z",
+     "rows": 30,
+     "sha256": "fbd91ba186f19d286ac4ee4430995c742fbca405a57b223855240df6230d76dc"
+    },
+    {
+     "file": "team_base_2017-18.json",
+     "path": "<home>/vector-hoops/pipeline/cache/team_base_2017-18.json",
+     "url": "https://stats.nba.com/stats/leaguedashteamstats?Season=2017-18&MeasureType=Base",
+     "retrievedAt": "2026-07-05T18:18:10Z",
+     "rows": 30,
+     "sha256": "5060b277dcd6a9d3273870ae7631edc0dbf9c979e37e286ea757aec24a36bc3a"
+    },
+    {
+     "file": "team_base_2018-19.json",
+     "path": "<home>/vector-hoops/pipeline/cache/team_base_2018-19.json",
+     "url": "https://stats.nba.com/stats/leaguedashteamstats?Season=2018-19&MeasureType=Base",
+     "retrievedAt": "2026-07-05T18:18:10Z",
+     "rows": 30,
+     "sha256": "6949b8e2e3fdaaffb5d1dfb46b4feb84c78b76acad93a690cfe33aa858b64351"
+    },
+    {
+     "file": "team_base_2019-20.json",
+     "path": "<home>/vector-hoops/pipeline/cache/team_base_2019-20.json",
+     "url": "https://stats.nba.com/stats/leaguedashteamstats?Season=2019-20&MeasureType=Base",
+     "retrievedAt": "2026-07-05T18:18:10Z",
+     "rows": 30,
+     "sha256": "1a4593ff7036e17865eca13937fafd2cb883a62bb3ed55f2197f5e4782a5cf2c"
+    },
+    {
+     "file": "team_base_2020-21.json",
+     "path": "<home>/vector-hoops/pipeline/cache/team_base_2020-21.json",
+     "url": "https://stats.nba.com/stats/leaguedashteamstats?Season=2020-21&MeasureType=Base",
+     "retrievedAt": "2026-07-05T18:18:10Z",
+     "rows": 30,
+     "sha256": "fc0ac33b585493eda538ed1329af328c6d7a7bf0279e974dac55b17c51b3b79b"
+    },
+    {
+     "file": "team_base_2021-22.json",
+     "path": "<home>/vector-hoops/pipeline/cache/team_base_2021-22.json",
+     "url": "https://stats.nba.com/stats/leaguedashteamstats?Season=2021-22&MeasureType=Base",
+     "retrievedAt": "2026-07-05T18:18:10Z",
+     "rows": 30,
+     "sha256": "1c3672f0329a42dd0e82b4b2796648fb8b0a1a2a34cd3989e618b78226f132fe"
+    },
+    {
+     "file": "team_base_2022-23.json",
+     "path": "<home>/vector-hoops/pipeline/cache/team_base_2022-23.json",
+     "url": "https://stats.nba.com/stats/leaguedashteamstats?Season=2022-23&MeasureType=Base",
+     "retrievedAt": "2026-07-05T18:18:10Z",
+     "rows": 30,
+     "sha256": "acac91b5fa464439769255f39fc53526e4bb8cac85728370bc22addfb8168b78"
+    },
+    {
+     "file": "team_base_2023-24.json",
+     "path": "<home>/vector-hoops/pipeline/cache/team_base_2023-24.json",
+     "url": "https://stats.nba.com/stats/leaguedashteamstats?Season=2023-24&MeasureType=Base",
+     "retrievedAt": "2026-07-05T18:02:18Z",
+     "rows": 30,
+     "sha256": "827cf08d600e1a7e71c403a836508f92880e354a8141d3598bf05f486863f432"
+    },
+    {
+     "file": "team_base_2024-25.json",
+     "path": "<home>/vector-hoops/pipeline/cache/team_base_2024-25.json",
+     "url": "https://stats.nba.com/stats/leaguedashteamstats?Season=2024-25&MeasureType=Base",
+     "retrievedAt": "2026-07-05T18:25:44Z",
+     "rows": 30,
+     "sha256": "7f5c1a00c77a378f98bbba483a617044cc86a70a86de96fc70c13e2e8c373b4c"
+    },
+    {
+     "file": "team_base_2025-26.json",
+     "path": "<home>/vector-hoops/pipeline/cache/team_base_2025-26.json",
+     "url": "https://stats.nba.com/stats/leaguedashteamstats?Season=2025-26&MeasureType=Base",
+     "retrievedAt": "2026-07-05T18:25:44Z",
+     "rows": 30,
+     "sha256": "aad1239d00be0261d172750672b07fd70aca22ba7a05be25ffde4f7c7cb14d81"
+    }
+   ]
+  }
+ },
+ "leftOut": {
+  "NBA": {},
+  "NFL": {
+   "WAS before 2022: teams_colors_logos.csv carries only the current name (Washington Commanders), not the name that season": 1468,
+   "team abbreviation JAC is not in teams_colors_logos.csv": 105,
+   "gsis_id not in players.csv, or no display_name": 32
+  }
+ },
+ "invalid": {},
+ "files": [
+  {
+   "path": "nba.jsonl",
+   "format": "jsonl",
+   "records": 6819,
+   "bytes": 7921963,
+   "sha256": "3dd79d42c85e4331cc0c32cfee3f22af0f3e5099d23fd8dbd7d1de96aa95b9ed"
+  },
+  {
+   "path": "nfl.jsonl",
+   "format": "jsonl",
+   "records": 57080,
+   "bytes": 89215719,
+   "sha256": "67b50c67d119e9be9dbabb31a27c88d52da26226829ead8eb29d1e591142bf4f"
+  },
+  {
+   "path": "birth-trace.jsonl",
+   "format": "jsonl",
+   "records": 11079,
+   "bytes": 1794361,
+   "sha256": "6fb3fe85080d7082a4a83956d7b576d0ddeb737416886dd7f5f65b1cb1ef74c5"
+  },
+  {
+   "path": "schools.jsonl",
+   "format": "jsonl",
+   "records": 2389,
+   "bytes": 505576,
+   "sha256": "fd0f41a20728e8e9251c80ec0cbb359d70a737487fd2d13730966d905ea6c195"
+  },
+  {
+   "path": "birth-cities.jsonl",
+   "format": "jsonl",
+   "records": 2892,
+   "bytes": 860358,
+   "sha256": "42d9c3721b8df54d093c1b490fb8467ca0072c661a906a4d6551a7562e5d7f7e"
+  },
+  {
+   "path": "arenas.jsonl",
+   "format": "jsonl",
+   "records": 99,
+   "bytes": 45298,
+   "sha256": "82d8aa3eac46b4071726ee0ee8c8ed2acfe0eaa37ccac566fb3f5444a16ba6f6"
+  },
+  {
+   "path": "wikidata-places.json",
+   "format": "json",
+   "records": 3573,
+   "bytes": 694512,
+   "sha256": "da6d80ee89046a41eda8884fe155a7caccda84cf2925937ad58b704ee9d7f6f1"
+  },
+  {
+   "path": "place-records.json",
+   "format": "json",
+   "records": 2909,
+   "bytes": 694572,
+   "sha256": "2e85cef5679e5f34a05bb7e2cf7074b6a8e03dc421a61520eaa4bfba046c3715"
+  }
+ ],
+ "requests": [
+  {
+   "purpose": "nfl-teams",
+   "method": "GET",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/teams/teams_colors_logos.csv",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:08Z",
+   "bytes": 18919,
+   "sha256": "4eab559fcf89cb4eaf61cb63a88abc47b01b6c9049187c59f3efe95888c3d048",
+   "cached": true
+  },
+  {
+   "purpose": "players-nba",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "b464998559f0cd964b094d83990dd47c6a62a0870428e264a5ed792994523856",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:10Z",
+   "bytes": 89656,
+   "sha256": "d759ec8e352d5d77fa63fbe3999cc4bbca760f9ad172f6cf85a9878522ebea8c",
+   "cached": true
+  },
+  {
+   "purpose": "players-nba",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "44620a0127f95fb8aa1243bf726523c77d5c4a16c31f635aa08c51c695189c19",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:11Z",
+   "bytes": 89960,
+   "sha256": "dd26d6b8571533ffd3e12398019d3b8e2309e88b0ec039158b067b9a0bdafcaf",
+   "cached": true
+  },
+  {
+   "purpose": "players-nba",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "34013e663f88e029db77a0dca1bc1fd5876f25ec1c831b87cac44595ee55c6cd",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:13Z",
+   "bytes": 90369,
+   "sha256": "694acf911d1379c5004ab517ab0f7374fe9e6252c90f09f7d70291ec1cfff9c0",
+   "cached": true
+  },
+  {
+   "purpose": "players-nba",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "ae15651646baf888c8816c24330e06aec6baa7676722bebdd03ecd45f0a6484a",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:14Z",
+   "bytes": 90531,
+   "sha256": "b2414ca7ff73e0cce389462689cbd05a994e03fe7bf66333b57654304e0cf5c9",
+   "cached": true
+  },
+  {
+   "purpose": "players-nba",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "ce0e646dcad0a9b2f0b61cc60241bdbea01825c28122047a7cae366ef6fb7672",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:16Z",
+   "bytes": 90702,
+   "sha256": "67d1120edaae9ae4064d9d2f3e921844be2c7f32f04ccc31b62eb9ea22aed8b8",
+   "cached": true
+  },
+  {
+   "purpose": "players-nba",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "243f7996f878195d161aaaae1651c1840791f6b28ea665942b3d6f831fa448ee",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:17Z",
+   "bytes": 16808,
+   "sha256": "6f472a314e9682f0ddb3724844a50f113326173b1add9428a5c8ab0a49fc91eb",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "11b4d0b91ec4657f54114aefbea7084e2e9f66b37c021cb7ba269f7835609a2d",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:19Z",
+   "bytes": 86689,
+   "sha256": "cd15ab465938024c7e2837f489213a78893213487db9d6cebdfd9dac961ec0a4",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "2d0bb8e9f5697fa9fec1633df096336bff7af5d8bdc7e11be86bf180a5f6127d",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:20Z",
+   "bytes": 87577,
+   "sha256": "840b24f1b4eeade7f3406c7bab573f9fd4b18517ce5c319de46ce4204837e431",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "aee162338ad7df4ec27aa9fc88ef1f4c88e68b41a48687082f3c7af12aeff648",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:22Z",
+   "bytes": 88912,
+   "sha256": "cc01ab4887ca708d77a63bf50913983a6dab8b8986e6b911205284060265890e",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "fe7e2ecf2d355b6493bf5556640c82304285227edafa86181e4de90bd4be7dc2",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:25Z",
+   "bytes": 88673,
+   "sha256": "7480efbf37de5d931cde013fa5963c5d2e91032da38e639d781c16d4bd639c03",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "98c1dd9362441d932da9b57aaf39f6093562f31861693f341076ffca84f9f3d7",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:25Z",
+   "bytes": 89514,
+   "sha256": "29de0545e9bda1df6ad603c8f7a0ec2dd8a8b43fcc4bf4e6bdc777a05aa72751",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "1408c0eb8b8f5784f13b22b37cc3a89ae6010b7e8376d3c9cac6966d260aac6a",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:26Z",
+   "bytes": 87501,
+   "sha256": "386d4f8f0138d618510040382830498e0f76b77996cb369b9659dd21abb2ecf4",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "05395de6ecd12cea9db80cf51d528288449e1ddb0b0705d19f23ac7f58bf525c",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:28Z",
+   "bytes": 88576,
+   "sha256": "f3d4793b44045343fe7da1eae6b772d49eec316620c56d113ddb8d711a3dfb70",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "8a9c62ec3249674e70a56276f0913d0a53573aae2c5e3ffbaf6545645eeb6189",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:29Z",
+   "bytes": 88498,
+   "sha256": "0a6978f4c4b5d623e10e1e1add7357655180fdbe6ac856a8e1a2f69566f744dc",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "ee50b31d9380f7c2255d962e79de602495df45dda755eac796dc793eaed0aae7",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:31Z",
+   "bytes": 87976,
+   "sha256": "86dfb7d494567e1eaad7fb311f78898d42121b835dc9008b09e3ff7de7f62d14",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "2a3fd9afbc6e01004155f1fd9dbf74c6770766a8ade9306192d83124ade2a8fc",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:32Z",
+   "bytes": 89085,
+   "sha256": "599ef4ae46ffe4f1cc1f138c983604a690eb5a30831112e5b0a921f1e50d40d7",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "adfb35f223576276dd516557c4a9d1ff8424fee9546e3e3e208f0fd0bac204d6",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:34Z",
+   "bytes": 88377,
+   "sha256": "62df13e35af778aa13db29746fe41b149267463c772d1048b94175fa6bd1e878",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "1f4c4a6963b2afb686376af6f9b35cc6fa42ef40f0706c706f189de04d0631f6",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:35Z",
+   "bytes": 88478,
+   "sha256": "0525c7247a1c60e0ed8c4a27e0c396d693e9d33a92bce82410c73f750fa468f9",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "150095d6da84297b1b2a75ab3b618b91b8326d83a5c659b6f5da6695699e55bf",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:37Z",
+   "bytes": 89237,
+   "sha256": "d2a46e9b5d83f4e8ba3cbba2f939ed43d61cc082e238357db948971261a4b725",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "c2c4da3911491868b9e9e1cfe255d7f2c5b013e4434c37df04eb15b62ddfa370",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:38Z",
+   "bytes": 90374,
+   "sha256": "19d774aea4123d59d319f802a2363f48b5eb39da17ecd6dded8bfca434025114",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "c404b3730294c4bcc6cce03ebe374e5415e02256950f4b4017d239be986e13ef",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:40Z",
+   "bytes": 90573,
+   "sha256": "b5130c268e8e55b2db2ef09eb2b71a2b441afff30ca30ebaceccbbc85652102c",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "bc5dfd32e1717dd2e12cab43f9b9f979e74f2543ab4ab332c3e04dc3a15d995b",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:41Z",
+   "bytes": 90738,
+   "sha256": "4862a84f33690e7095d5375257cc2ebf805dd4f6af8052f5ccfffda22c62b2e6",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "cc0fdbb38746b4a5b55c9e216e09d0784d5636ea28154eadcc501f40d8b68a30",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:43Z",
+   "bytes": 91448,
+   "sha256": "ea1c97652c20aaecd023eca93bf042aad606d9a1710ac567079137fe9fd84e80",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "e3b84e6f1a5920bdc794f1f5bf346e5f2a352426643b38aec9b38ce0fdeca31d",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:44Z",
+   "bytes": 91258,
+   "sha256": "e06b8d3b166ce112c5edbf2bddde4ac091386475b624ea8dc0b9bff704317192",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "901d62c8701ca9b751dc2d1d82fd3b73d28eb10e32cb3a176137162c423a3d6d",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:46Z",
+   "bytes": 91016,
+   "sha256": "701b3ecf726241821d04128a1ca2208331928944c28f2e774d7e01efabd126cd",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "83aea35112412c59f54815666d888bf35e7aee184f04ae87c33658630693c671",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:47Z",
+   "bytes": 91465,
+   "sha256": "7b3a58fb9b7d9875650efbe89f0f3da1f603910427af9e783e059c2d114b8169",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "1f7b550a48934e3e323bf810832fd69fcf41a684fbf943022ebc4b45a177fe9c",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:49Z",
+   "bytes": 91085,
+   "sha256": "7a8f0516a5bc7bd5eec6f0d26f14eaffc84e2209aa0635e2bbab93eb81a14980",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "03ce8a44754d85990dadf4e476326acbf327dc9a1fd20d100bf53fde254af26d",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:51Z",
+   "bytes": 91096,
+   "sha256": "531cf4283ca907a278f2515f2398c98eb67b7681986034caba8b21ebf4560e0a",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "b61c50492df102ffcd5d189efc26d4214e83e9b097a8177bda7d7456a5408156",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:52Z",
+   "bytes": 91295,
+   "sha256": "006c02aba244e4b4d9af90abe1a9ff66bb0081d1cd426cc7f70cb14428077293",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "2fe5c8d5d8f87ac6e937c7ca253825d1551fa8a32a327dfec647f953b6ea5f99",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:53Z",
+   "bytes": 91188,
+   "sha256": "d69b1ace1058113e3a5e177a92dae494a70e41212e6f980b5f3cfd5b7c4212c8",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "84cb8accf3f76f5be2ec80b4ae77531a8cbf145c903663b6c236b8a9262a0579",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:55Z",
+   "bytes": 91545,
+   "sha256": "b73a7e681a4a2bf35db4c4b3fcd6127137aa157e32215968fc6f674543fd9fb2",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "753850ffae6b4aba5742c11490f47b7dc46a6232bbe0fb5487512a0609aae157",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:56Z",
+   "bytes": 91776,
+   "sha256": "c27c639b7e3a552b7931249332a754356349a8785bdafc70cb68655a61a88103",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "43e901f22d964e6ec8525dcc756103368794a895549473018c28390a012f67cf",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:58Z",
+   "bytes": 91360,
+   "sha256": "03ada107c054dff9c4627975745dd6fc1fa352233ea1657f58bc7d7712948a4d",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "3ccf20e43551218c2357d0601a12eebc298ac02b91ea17fee4ad4682cc3f9c22",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:45:59Z",
+   "bytes": 91496,
+   "sha256": "e8fc05fbd1ecc6268c90b09bc67093114dda59616f75a4ac2fe589500ed153c6",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "a54dfc4980074ce469a1e3bdf65795f4c9e939bcb161790fda91499794ec406d",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:01Z",
+   "bytes": 91559,
+   "sha256": "f725249e52e4dbe220758b3e31dde5f2df137004699df3e61bd07c193d5d1f4e",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "3e9d12e2762c0df6934a84e243b48315e7f668b1aa63093ea7576be5712262d3",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:02Z",
+   "bytes": 91392,
+   "sha256": "25498e28e6ce6b903b611fc032c609519ea9e7f496195f0d1eae8a93337ef8df",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "dfa58c33dc6f3bbdc2bb790882a304575adc7b82e007865a86a5930d632f9412",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:04Z",
+   "bytes": 90618,
+   "sha256": "4f76600b038d08b0c121e8eb6a49f49753eeaa9d0b2ca0c91ee6a06cb2096bcc",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "5dcb6bc4b83d702bc28c22d5cf3e414491b2d381d0cfec2d7ed084612ffe2330",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:05Z",
+   "bytes": 88510,
+   "sha256": "937cdb029c155ed93cfe183aa24085756c74cd19bdda22ac642d9a4f360ef209",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "12751d16453865988e454c762ab7a5228a66676da1a47b5f1b89921534631164",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:07Z",
+   "bytes": 85087,
+   "sha256": "5141ff1683f0bdd7705a8d8f4cebf4cc1b6cec3f785683385be12f3ad158a780",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "41cf303908e0c67bc7bdbd5e5bdcaffb0976f67ed5af56e6a8bb267bd6a9ab0c",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:08Z",
+   "bytes": 84117,
+   "sha256": "cafb61540a84e65d32d30c4b56f6b98699ec7f59151c6c01ee7193390d07adb0",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "ad094980515c98410f6facb19eb6434a7807e31e5b92d0496cf3db7fecd6c9df",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:10Z",
+   "bytes": 82888,
+   "sha256": "37b937c46c8671beaa8fb6ce197ddabae826ef592ee4492951a5be6f34c485a9",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "5d7ac730d235c6754663c5bd3cff4d1556df0276f5de999ad407eb15646d74d4",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:11Z",
+   "bytes": 74089,
+   "sha256": "cfe517c7e021a25db1f92354139c0c5947dcc2abac53b3159d97020b8afb5a8e",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "8944ed5f72a88185360e95427084172256506a018e43ecd6cf185133b39f212d",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:13Z",
+   "bytes": 67932,
+   "sha256": "86b47ceb109bb43d3c16ba6572ea5f5b5133dd7a53cc5a13a4e13ecc6a5ba441",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "c0a909ef3f494349d5b9d1e8eb8fcd6742502d38447e6424a132ac1153ae9c97",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:14Z",
+   "bytes": 54438,
+   "sha256": "666c28a1d699b286d43cf6131e285b78b856cb784205bc496600e8428050658f",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "01fe5d3e6c2efe098f6d812cb9449423ef66ff716c5936164aac028bb9527616",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:16Z",
+   "bytes": 63462,
+   "sha256": "a5e76af554ff564982a0b4c675f98031523e536ab6b3019a9dfd22ab89a51c80",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "b8469d01d93b7aff0f42422c0242a99f40f0f2cd973a9ab16af4467b1da53deb",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:17Z",
+   "bytes": 57358,
+   "sha256": "76d57f8285c7226a9c805c48984ef421f059f3a646e0cd29085b0851dd16d59f",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "0dc515680be0c05583f7365d3e282bcc8ef151e123bc71594d968be6e0662376",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:19Z",
+   "bytes": 32371,
+   "sha256": "646c319be33e5d2cac12546f1fdccbb7641cb3808fd681b87c93f8518f7582dd",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-pfr",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "3b576df2e16b529d5d0da6280a695c3ca2a07641a25e60abde731b6ee0788271",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:20Z",
+   "bytes": 5295,
+   "sha256": "c70823e041992addc002129d96ffd82cbce39160e9295438e653fca20a2e8ce9",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "0f3bc30a539faef972d0d87f0d82e86e91ca322926de3c40b592540187e573c5",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:22Z",
+   "bytes": 8964,
+   "sha256": "0f24fba4153e921866eee8b4c4796f35ff78afa87155a82e8386d451cb2792c2",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "8deb4def2fc9a2f4397eec7615233422a38c08f0366284205ad9a85ea7c80f2f",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:23Z",
+   "bytes": 6605,
+   "sha256": "e9e297fa3f73026812fb85c3b2298059197dc87add7446175bfd5952e0820e91",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "63b09299556fa3d56b6631787356642c2e8eb6550a248e06253e6ebf2f6f7e78",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:26Z",
+   "bytes": 7496,
+   "sha256": "691eab742ca5e84dcf71389870b41f76889bb3290cdb9575fcfca858f9530420",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "a2ec54158d78913caa5c72320ecdd8a016d2a42e5583a62ecff5829959b19eb5",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:27Z",
+   "bytes": 4831,
+   "sha256": "0dd79562c9aaab51c3dcbcc3aa9a89c112ae02458dc8f95e5e78e76340cab624",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "e347001fbdd45c74d229e6c8db83b3813f8d13b61003c391ea3137dd0b6c4756",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:28Z",
+   "bytes": 2768,
+   "sha256": "835b42222d1a91749788268b7826debde5889ff9d4ba2fd35a09e1182efa6ba6",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "a67896019c7c239f251c5c005366c873e7a1cc3deca9f054ec97064239076d2f",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:30Z",
+   "bytes": 11385,
+   "sha256": "79ae3842584a0da3859aa0e3b3d4e2b8d64224bb84de8250a229a9cd174c7d0f",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "fd68d2ca2d8cf15d05986e1c06de7d1dc708f15138d4709e5d2395ffa526b3c6",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:31Z",
+   "bytes": 8619,
+   "sha256": "3041fab362c7c33d86955c5e0c8370187a44f7c65f32e1124141d69014fef1ff",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "59505c514930aa28243cddf4a61d64b610a7af416d258e89a2c6202ba97e2e7f",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:32Z",
+   "bytes": 17044,
+   "sha256": "838bd73046d59cd9a26ca043c4e8a7049b3cb907e989e89c46aaae15fe6c27e5",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "efb53761231c157b1d907d41d77c3e166d75311634f941316492c5db7e2d6884",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:34Z",
+   "bytes": 16748,
+   "sha256": "7673172df27d55f10c520d3120ed051ed81f4d5c55899dd464cb4423a35f4cc4",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "a7fa205239ca6a3f3894dacbe811c7aecc2209c1e0ce22778a0a1b0f5001c8f7",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:36Z",
+   "bytes": 7226,
+   "sha256": "e850d1452a9c1e0f368afb19f8312d0805127089a089508745cdf70ed71395ac",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "d853c902013dbc0c4cd99f6bcf665a46bf4b16d7228ec7b4f01029d5191296dc",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:37Z",
+   "bytes": 17328,
+   "sha256": "d0c8f5784b3dd023fadb731dcfe78f48b3d69c4de147e0d92bd8ddfdf7965f23",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "8611b9c9c4f13ad098e85e2412ab8dd37ae6f4cfb6bef7eb3795dc92c95c5a48",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:39Z",
+   "bytes": 5234,
+   "sha256": "bbcfbba149fccf55e21e4a8e5aa94e2a4e291040b3bdf9a8429f4c1496497244",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "d82ad38046fccc946b113423e1e418b4807224c9005f395dfb5f5a8c88d6c758",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:40Z",
+   "bytes": 6327,
+   "sha256": "01150563f96a4aae437ae114f0ae694e13b328679295372cb4a2b4b8aabec767",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "af841ea5154c212bdc2ee9c5790a229c6962e661a7e46555075edc0f04293664",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:42Z",
+   "bytes": 9029,
+   "sha256": "0d20855d0a843c14c167d9987af6114aecc02c85e31e2e7e78d630ad7eb880dc",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "54326a6f3fd148896471d50ba67ba1d01321ebb725ed1814df440e1235bce355",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:43Z",
+   "bytes": 6365,
+   "sha256": "043eb2210d8d649faf4229fffb8cac917a5347e2e871eb3ccdde03a7eb445eda",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "02ca9f93b81c8f5ddfcf34cc2823e904cf01351215915ebd793ed74f1b16cb4e",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:45Z",
+   "bytes": 3377,
+   "sha256": "1071747881e168465b6cf5378874b96c9bdd31c570ace23d6497450775a63c79",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "9c919fef5db84d58420d3c571f35a9a49eb6b0ec0bb78e42e243ffe412c98c6d",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:46Z",
+   "bytes": 4866,
+   "sha256": "d70dcb697e47ab0726a8ec897c14e79e00a6cec5cb171346a74e71f925f73816",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "040a9428bddc75d06671a85db09cd3e281524568217bf7d487890aa449b3c378",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:48Z",
+   "bytes": 8154,
+   "sha256": "4bf4cf87fe66274452597d8a20ffbdff8a46565b21d76665e8a54221b3494817",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "e3cb0acd6c1044eb7b967743266bc4af561f3fd0ec6ce676bd08aa139ec13b26",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:49Z",
+   "bytes": 20371,
+   "sha256": "dfbfc973714128d6b4cb93943f1e1fe8af35288f0db8213e666f12d369e1d488",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "6ce19664a7011b937bdfad3eb1fced4e4d7712285ff82d07b42c75cbdd86abcb",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:51Z",
+   "bytes": 24260,
+   "sha256": "c9670f6cbc936fe3ab4b40b288f9d8faf22fdd6dc6d510a912af99f53b54d10d",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "37c1220ae63017ffa2eaa53263f8efb163cd94cd4a8aa5a2d58102bc6a9c0bde",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:52Z",
+   "bytes": 19503,
+   "sha256": "2f6de2f1ac161a443587dbffcb7fab132aade6ddbbe0aa09f315f7f874bc3049",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "af0a2ef833b4b012260ed319ddb2011063e475c4631467625abebcb88e143306",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:54Z",
+   "bytes": 12037,
+   "sha256": "e884ae79dee958a0cd4d6c08d2a16baf89b9d6e23fef6a4c4fb416072fe3464b",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "9fb208a4045e093db3e964e5b636a6b5a2a5b6ba7191f2786950e844d47e861e",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:55Z",
+   "bytes": 12068,
+   "sha256": "6e7f7802bc2ee6931dc4922ca9d898d3036942b9cff53ed52c0ec5f62fa6c6ef",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "f3d77ed0ad710671e737b5c230ef2ebb14c8800444d746598d6c2c6ab359a8f2",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:57Z",
+   "bytes": 13633,
+   "sha256": "aa2192bd39d0641b868db3cc6ee5d52fd2e3d56b6b6376fc738740a2dda33c3d",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "178116264f9a0ea46c80077777df84b0524fbcd4b3e8d20f26a4a1681f942c7b",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:46:58Z",
+   "bytes": 19073,
+   "sha256": "2fa60c20b9a35fa986c917b207a3b5f1251760328e9a86d4917b2197d8634a7b",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "c468f264fc942b5ec60a32e9cea5c8ee6f1cc45780051d151146ceaf3b0ba182",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:00Z",
+   "bytes": 15780,
+   "sha256": "a6582522229bf02a5b83d27b48a0d6b37ee926d68c49bfe82d39c34a3361318e",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "5e25e9bb1843ff7f503f842f2278b37ba2c80fff2e32712baace62f2495c2b9d",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:02Z",
+   "bytes": 25427,
+   "sha256": "bb70e747b90cfcfefa338976e567905519fef24821a4ffc252b3d30a924ac505",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "ad8e30e0613b7b971b27c862c8f41ea24fdae1e24c0409d11b671e2c8c3975fd",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:03Z",
+   "bytes": 33569,
+   "sha256": "3e08252a38a28634f10c63bcd77f3a549cd6bf280b10fff38d4dc1072f4b3c57",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "bf10955425fdaee42450b6e814b60c9901f853fee1ab925b529ba53387702301",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:04Z",
+   "bytes": 32963,
+   "sha256": "4b6bf5e75242656dafddadf2d1512be7db18f7efca71deb014eeed7b845721ab",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "3f654dca12984f0b3e120fb2b118274ed507b4f2d289d6ea1385eacdf1dc1428",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:06Z",
+   "bytes": 27239,
+   "sha256": "30a7f1e9373645d30cc217d33baf3d1f2f58f4bc272c6efbed1c8c621e5ceb86",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "4f04d72766337cca66a3ea7efc05598d59b1e5fb5c9bd7c7c177a1ebcfbc6f8c",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:07Z",
+   "bytes": 32896,
+   "sha256": "9beddc77d2ab31c34106c18ccf52125babea69b487f926e22372da4d37b6f589",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "0d2ec30f4ec2fe736062a3fc1a4c5c668dccc70ed241399a8b8e204ee1ff7f01",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:09Z",
+   "bytes": 41871,
+   "sha256": "845cd6685340d62fad6480e61d7f0fef991ede6e5e36725dbf3ca3779e43243b",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "393750d9034e4d62cc20dc936066870f0d499ef2a471d1c59ee67c82b3f0f366",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:10Z",
+   "bytes": 34990,
+   "sha256": "b3bae8e59fbc739cc6577dc31e844cf94b9e3eb70c65d8bf1c2ae0e008553d1a",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "69963bcf03730a0b9c2b6279eb68116c10a849afaff73b7637dcdcde1a0bdbb7",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:12Z",
+   "bytes": 49205,
+   "sha256": "3f7871c4cff15665942650e0879cc059cb61ebb481b5dda2b95b5cc068ef9685",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "4f78e4b74edebfc9f1756a0166f3007ed629ab258f3934ae7c60161e4bfafe5b",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:13Z",
+   "bytes": 52374,
+   "sha256": "b74f7bcddc313ee7c38d1297f84b850569542696183d3d3788fba1f9ab0bfc8d",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "211a7d328c1d941c80d29b34935265675472c44df74ce0ff9e87aaf81f11633a",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:15Z",
+   "bytes": 54694,
+   "sha256": "64e13f2e0e00af010ca52094cdb5b61aae12ca4c1c2a812629bd2068c4bbf891",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "fa49582bf13056c82023b2569de0fb0c51c2f82baf2efa578e7ffd677ee950ce",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:16Z",
+   "bytes": 53700,
+   "sha256": "0e3d1bd9eb64aaf896699f32d74d007374761a346c004927bac97945db4ad47a",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "97d0e80dc3e73544559ef55f9d35762b7dfbde31deb51caf6e38129619f3d32f",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:18Z",
+   "bytes": 35789,
+   "sha256": "cf9f54c19be156603cfa4eae5281716fb21edc424083b6f9062ed5e35003f28f",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "ef24e1d605aad248beac768783a4bf82f8215ca797c2840e8d13fddb4363b843",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:47:19Z",
+   "bytes": 3277,
+   "sha256": "80ed757afd23abad61bb8792d96fcff39d36e4982d10287ee88e09612e4ecfec",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "054144dfd81ace117ec7d3ab176f4c186cef36a37d7b52ae5940d487d28cbc0a",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:19Z",
+   "bytes": 5760,
+   "sha256": "0ffd7058b93e3e9a6fb57801df00b37254bd6e4f57f0d4d7af4303b8ce1c7cb4",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "7f24ba011c89878a51f31cc78e1183afad5edf5edee0e0c52ae702c3c22bf159",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:20Z",
+   "bytes": 3084,
+   "sha256": "112853098fb350c25e7173355088a6cd03370c5ae2ef83ea272239ba03f4bf19",
+   "cached": true
+  },
+  {
+   "purpose": "players-nfl-espn",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "6b33dd533056f2b5470903f7b72b4ea439e55e590476a27d5fa260077088ca73",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:22Z",
+   "bytes": 592,
+   "sha256": "b3f5863a035e63f75e370ecf2ad715dea61c4728d73c9d082a7f712533559736",
+   "cached": true
+  },
+  {
+   "purpose": "nba-team-membership",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "df4502f531f31e00dc4b006f4a7dac34268cba2210db60a103a071309a2592b8",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:24Z",
+   "bytes": 221801,
+   "sha256": "bb3a2980f93ec0127bd1850adf661d6fa316f79e1596b15a7df719137a5d07c7",
+   "cached": true
+  },
+  {
+   "purpose": "nba-team-membership",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "dc805e162d2c5ad34e7f1d6c5c094bf0b33ce6d1bb347c8444f6c5496d33b1f1",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:25Z",
+   "bytes": 230023,
+   "sha256": "26050a7476f5ed03b8d18459ea691c650c5c6bcab4d0b6cb03aecfbc67f49565",
+   "cached": true
+  },
+  {
+   "purpose": "nba-team-membership",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "9775f809f09d7328f6f68ed956a043a346af53656ad512e8490dfca149ed14aa",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:27Z",
+   "bytes": 147068,
+   "sha256": "fe933c9c8bc41f2a6a9190afda2c3b693a9ee78fea5f9d8b74227e606af04506",
+   "cached": true
+  },
+  {
+   "purpose": "nba-team-membership",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "fdd579713f8db9a15905dfab7138bfeeb862817c14ae0ff8b554a3af6137f310",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:28Z",
+   "bytes": 59937,
+   "sha256": "370133fcef46154657c71e188fe864097a80d717047f4d116df7f7e7caee0ce9",
+   "cached": true
+  },
+  {
+   "purpose": "nba-team-membership",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "ea71336f460b08c67993b9c06e065bc09a6d396dbd2984cbe5e91599cb0d9da5",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:29Z",
+   "bytes": 43428,
+   "sha256": "da09b9b8e73f270f026444f9fcbfee85b3f0d72ae88d49bcbf386dcf2e0c15bc",
+   "cached": true
+  },
+  {
+   "purpose": "nba-team-membership",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "cde923c2f57380e3ab5c4282645907eccb4c2db83b6b7ea22dc32b96cef4f77f",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:31Z",
+   "bytes": 12228,
+   "sha256": "3948c88dbaf396414cc5afebe930cbe19b7b813f6847744afc0c7bb3ea47e171",
+   "cached": true
+  },
+  {
+   "purpose": "nba-team-membership",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "549bbdd6d9f907e29f7e22f38be8c4b3f95976e0aa4b768c640be730404f1937",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:33Z",
+   "bytes": 10165,
+   "sha256": "8a713f910006df5c959a60569cc91a713d7f649ef2ef8991e6316c18f72a8526",
+   "cached": true
+  },
+  {
+   "purpose": "nba-team-membership",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "56cd566c64c56d54f334abb57592de3469f376a076dacf5176f385b6bbfc1959",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:34Z",
+   "bytes": 6469,
+   "sha256": "b811f93f28a7abbdf83d3889ea5064847c5b418da9015588475caf5976e7af12",
+   "cached": true
+  },
+  {
+   "purpose": "nba-home-venues",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "6d7c0e4f0d5ed1c88008e1f02f0db7f2e993fca1313d5cc73e3864bd5d1b8b1c",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:36Z",
+   "bytes": 106106,
+   "sha256": "43b113f0fdf0db8c93d82fe147541b3720c5814d78d38f9187ab991954490bf9",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "a1fd0027b6d26f024268245e1e53a3c3e9c7b69488ae86894639201da06feb07",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:39Z",
+   "bytes": 133243,
+   "sha256": "9d9ec0475dcc43d77ec56fb82132f71321f7c767ed92255cc4db43cd99b6e337",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "6efe3dff815c17c741d7cbbed5d81d74b816ecf487564ebd700b3e7991f29466",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:44Z",
+   "bytes": 133212,
+   "sha256": "cb6b85695111fecfcc63615d5b7aa6c16262eb4245d20ca516f1515b13c42b45",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "abee2bf9ac802b476a045cc34aea958b14f34360e29347bdedbb45519db7a35c",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:47Z",
+   "bytes": 133547,
+   "sha256": "cf53db3bab97715e64c4cefaef887df12a98f3789d4a0951ceb35b29f64f2661",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "2a103436f707c6400e313e8d731a0b3c676553d793955f645ae445925cc0529f",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:52Z",
+   "bytes": 133399,
+   "sha256": "6bed6974fbc1b110332ac8fac89d6676715b8eb2c46e66f979d59c79e38fb87c",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "7638c5fe8c9423d48d12b265694113b33bd7655af47d62f5e54d6a09cbf64d27",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:49:58Z",
+   "bytes": 132897,
+   "sha256": "f9c3dc96f0cc69b44616e0488f20744bf3ac7cd94f1618177fd666afe9614c64",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "a62f8619cf59f74aaeff5252cfc161da2c239145cc753c4b154f4ac8afdff5dd",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:02Z",
+   "bytes": 134093,
+   "sha256": "9602c8342ee211ce3c3966dca7dc4056cb981558af7df8d9f4d9701c150caa86",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "6c119dc65c01979f8bf894ebb8d6f9030daca7f7ffdf8932a60d5fd2e0e805b5",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:05Z",
+   "bytes": 133357,
+   "sha256": "0ff5e52bf10b4f06cba2de0f35b6b0c0ba7cfafdd5b9808b56b0f69482a9721b",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "ca0fe43e6d97410745388f417d089a3dee9309f61323da3a697af51e1ea538d8",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:07Z",
+   "bytes": 133702,
+   "sha256": "da7a29cf5a8f61062e1e33c8132288379303e762ef39c96697bad4e5c3f4c79d",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "6c866975860eef77ce8db145d9e1f854e9d4869341b5904c653870456d901aa2",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:09Z",
+   "bytes": 133769,
+   "sha256": "2354a9350c121bbd7532ba77a6aa641865e1f4dfc8746471be872384096333e6",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "427a5cead20e7cddface71bb4c7a3103ab7adfa66fac5e348ed463b254532fe9",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:13Z",
+   "bytes": 133679,
+   "sha256": "191f2843a8e70a978aa2279ccefc31708195869396609b1326758af8651d07e3",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "a52278172e89cabf902099ddc8a2d3b94d488c429bb5e969b3be725e39c0b467",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:16Z",
+   "bytes": 133506,
+   "sha256": "b4ff709e3cbe19188e2f2b0aaf45b73aea6bfdbeebb5a1ae59624c668a87e44e",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "bfaa2a8eb82a2651baa534fd2e2707d788add47444dd4da77f7cf0ae76f442ff",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:18Z",
+   "bytes": 133629,
+   "sha256": "f0316f4a1fc1ca13d69b591011c85a6b0b65e0e426d13050f532778ba9b2c86c",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "cce51c094f6a1657cca4e60493a728880f71194b5ad48328224463636ada6eee",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:21Z",
+   "bytes": 133331,
+   "sha256": "7793746ec8e7274f0fe43adb46971290751acf792a8fb226d3e72a76a52eff5f",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "9a36523e57b5443aac2fc50c6dfedb17d8e7bfee85eb81b6b9e8acf8c986e5ee",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:22Z",
+   "bytes": 133289,
+   "sha256": "958889c727d066be20ac80a9ea8be485e9ec569f85092cd779f667ea9afb4820",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "2328ce453a9292ba064612a20b07fc493cd7e2d9b5d9fb6d3c8ebdb4c996c139",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:24Z",
+   "bytes": 133687,
+   "sha256": "c36bba6acb83e0a40b531b9706640f2ae87198d7e000cc6a954aa7a4bf8d2453",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "7c30b068e0db8ca9dc808a6a0bf41299389dd8d0fa5eb4c4ef84977e5b8bb1af",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:27Z",
+   "bytes": 133458,
+   "sha256": "03927a0e7cbff72962ac91a9b622ad4a934920338d6a178be77c3197b0cb5e10",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "949a3a69348332de8c2cc660b2339c5a203151f4a195edf18d566bb584e4e632",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:29Z",
+   "bytes": 133509,
+   "sha256": "3498c646fb9afdd6176d0e0f1553c357a2ca1ba89d7a562f3ca829a2321e7e4d",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "dce79ab70c486ee3abf256603070d685ee122d02aacf63084cb4cbcdb26b8e9d",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:33Z",
+   "bytes": 133516,
+   "sha256": "d932b82029ba4e1357578effe18b91900448c530732e77465b2222bf84e5d2e6",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "e0ccb6a954641245d0f48dc16fefdcd8cf2214e70dde497e719e4332c76b98b1",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:35Z",
+   "bytes": 133118,
+   "sha256": "0e90aed461cfdbf303e934c2d6d8eca22088090929fbf2cfdaf4363e4e46bfda",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "35a3eba13597cd4ac4e22d9909d4a0d1b292819c720ba983f4b3421eb06bfe5d",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:36Z",
+   "bytes": 132997,
+   "sha256": "79a74d9a93bb553737ed53b1c03fa1d2321dd5ae319ef621c45eb698cd9518bb",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "c7ddb03d8bae5abcfc5fb48f5c40e4d65d556f78335fe26223fefab7732e216e",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:40Z",
+   "bytes": 133704,
+   "sha256": "d5a179a6ee8ced38c0785140f4901fe40ce05e375c05aea04ef13540b4420e34",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "17a1c9d652c006ec81480301630410ab854e09f9c5b2388f7c702f56799f6e19",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:42Z",
+   "bytes": 133808,
+   "sha256": "2382c35e48857f6665a9de1734ec2d87d0011e22b60c3cff4557b97cc95a26c5",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "b845be603a53cce62d8b1129628567a521cdad74e9b2d20237d4adc1474da637",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:45Z",
+   "bytes": 133710,
+   "sha256": "7ba62ead024e2f498f3b3468a2008d7cc30c41f2004fb72b2dc3e1da4e616935",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "71e9a9b76f6bb9fc3eea5021a0a368e17a85dae5206f8cd393d079e7acb24198",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:47Z",
+   "bytes": 133583,
+   "sha256": "7cf40b2e60a3b124df305f2e87a16ef360a5e39c19e29d0cedac1d4e6301b5cf",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "c33a412d981a691a2e6530d68331c3e9ba7864f200f8d1eb2c58cb4ba16accb1",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:49Z",
+   "bytes": 133361,
+   "sha256": "d3b0175af24ff9e515e3a975a8f07b612bfefad610289a6bce2a36180dc10945",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "f614c84f2c814b892b7988550727cd65588e7cd6cf8f1169e9264d91080d0878",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:52Z",
+   "bytes": 133532,
+   "sha256": "5e87dc7a3778e78f37b1e227cee07ed3f77f5edee056a2cc8ff5ff5eeacc83fa",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "918ce043ac6f1d15c20c08f2971132735f831eb06109a2757d17ad9a4d723130",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:56Z",
+   "bytes": 133631,
+   "sha256": "3bfac14e57ee46e9c601017f4d88ea550202c2197a2e9440623cea01624ad252",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "6b46a525288b5f973bbdec70de64cdb7572b75b0f83a1afe0318ad548fe0f10b",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:50:58Z",
+   "bytes": 133848,
+   "sha256": "8f3f51d079f06f6d8345444d729ba575f6d8042f73fe8fbe25974b1b3c966af8",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "a53cc290fa7f118d84a037690ce9fe32e74c0b3440f9c6b0b5cfda207095b1da",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:51:03Z",
+   "bytes": 133014,
+   "sha256": "ccf31638b96e6e0b3386f50d6792606a7b5231361893e7342a54ba891d46a7f2",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "58d42853cb381709c997e5d09066237a4a0e62f4360282f1d9d8dfe374f94256",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:51:05Z",
+   "bytes": 55686,
+   "sha256": "ac4c8fe2e70481f458e094d5b9b2963e0aed0d629f5df1d2fe5695a6fdc2af13",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "3ed72f1684a573b3e78a2fe115acd50f208c3b5524a75fe4eebcbf780a6786d7",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:51:09Z",
+   "bytes": 46237,
+   "sha256": "7df1ade4c20ddfa6a520f89dd4b06ded8ad3d9050359a8ab025574be66999af9",
+   "cached": true
+  },
+  {
+   "purpose": "places",
+   "method": "POST",
+   "url": "https://query.wikidata.org/sparql",
+   "bodySha256": "bf1d6dec0aee52acd814c05cbc9de328ae46883e6a3460d0abd5106fee7bcb63",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:51:11Z",
+   "bytes": 1240,
+   "sha256": "4900872ae825214e70490008988fc1ec15ec652e37160cf63f248b0b80786824",
+   "cached": true
+  },
+  {
+   "purpose": "place-records",
+   "method": "GET",
+   "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_place_national.zip",
+   "status": 200,
+   "retrievedAt": "2026-10-19T01:51:11Z",
+   "bytes": 1221402,
+   "sha256": "cf262fc92b2326f7a8c62a89d156a60eb17d64d6d35f7a62310c43bb08972c06",
+   "cached": true
+  },
+  {
+   "purpose": "place-records",
+   "method": "GET",
+   "url": "https://download.geonames.org/export/dump/cities500.zip",
+   "status": 200,
+   "retrievedAt": "2026-10-19T02:00:17Z",
+   "bytes": 13886879,
+   "sha256": "56c9e2dc0344e2bbeb82c97ed43e0d65120e92d957283fe61d7eec79279245ce",
+   "cached": false
+  },
+  {
+   "purpose": "place-records",
+   "method": "GET",
+   "url": "https://download.geonames.org/export/dump/admin1CodesASCII.txt",
+   "status": 200,
+   "retrievedAt": "2026-10-19T02:00:19Z",
+   "bytes": 151583,
+   "sha256": "1da92a6323a5fec3176f3f743bf4cf4040fd56a876da55e46fbca23c863aa60a",
+   "cached": false
+  },
+  {
+   "purpose": "place-records",
+   "method": "GET",
+   "url": "https://download.geonames.org/export/dump/countryInfo.txt",
+   "status": 200,
+   "retrievedAt": "2026-10-19T02:00:20Z",
+   "bytes": 31690,
+   "sha256": "c55f638cfaafb4fe45a9aa15120a0f1f78e8a34a8e1847d7b9320cf740fbc9ab",
+   "cached": false
+  }
+ ],
+ "runSeconds": 236
+}

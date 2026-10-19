@@ -31,7 +31,7 @@ import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
 import { readTable, splitCsvLine } from "./lib/csv.mjs";
 import { MAX_WALK, OUTCOMES, resolveBirthplace, traceProblems } from "./lib/birthplace.mjs";
-import { teamItems, venueFor, MIN_SHARE, MIN_VOTES } from "./lib/arena.mjs";
+import { nameFor, teamItems, venueFor, withOccupantMoves, MIN_SHARE, MIN_VOTES } from "./lib/arena.mjs";
 import { makeClient, UA } from "./lib/net.mjs";
 import { recordKey, validateAthlete } from "./validate.mjs";
 
@@ -105,6 +105,10 @@ const qid = (uri) => uri.replace("http://www.wikidata.org/entity/", "");
 const splitL = (v) => (v ? v.split("|").filter(Boolean) : []);
 const bump = (o, k, by = 1) => (o[k] = (o[k] ?? 0) + by);
 const NOT_DEPRECATED = "FILTER NOT EXISTS { ?st wikibase:rank wikibase:DeprecatedRank }";
+// An item's English label, else its "mul" (default for all languages) label: since 2024 Wikidata moves many
+// big cities' English labels to mul, so Houston or Long Beach can have no "en" label at all.
+const labelOf = (v) =>
+  `OPTIONAL { ${v} rdfs:label ?labEn FILTER(lang(?labEn) = "en") } OPTIONAL { ${v} rdfs:label ?labMul FILTER(lang(?labMul) = "mul") } BIND(COALESCE(?labEn, ?labMul) AS ?lab)`;
 
 /** A local path with the home directory shown as <home>, so no machine path reaches a committed file. */
 export const shown = (p) => p.split(homedir()).join("<home>").replace(/\\/g, "/");
@@ -162,6 +166,22 @@ export function homeArenas(games) {
     }
   }
   return out;
+}
+
+/**
+ * The abbreviation games.csv used for a franchise in a season. `teamIdOf` maps abbreviation -> nflverse
+ * team_id (LV, OAK -> 2520); `homeBySeason` maps season -> the home_team values in games.csv that season.
+ * Returns {abbr, from?} or {absent}.
+ */
+export function eraAbbr(abbr, season, teamIdOf, homeBySeason) {
+  const used = homeBySeason.get(season);
+  if (!used) return { absent: `no games.csv season ${season} to read the abbreviation from` };
+  if (used.has(abbr)) return { abbr };
+  const id = teamIdOf.get(abbr);
+  if (!id) return { absent: `team abbreviation ${abbr} is not in teams_colors_logos.csv` };
+  const alts = [...used].filter((a) => teamIdOf.get(a) === id);
+  if (alts.length !== 1) return { absent: `${abbr} matches ${alts.length} abbreviations games.csv used in ${season}` };
+  return { abbr: alts[0], from: abbr };
 }
 
 async function readNfl(dir, log) {
@@ -280,7 +300,7 @@ const placeQuery = (qids) => `SELECT ?pl (SAMPLE(?lab) AS ?label) ?settle ?finer
  (GROUP_CONCAT(DISTINCT ?gn; separator="|") AS ?gnL) (GROUP_CONCAT(DISTINCT ?iso; separator="|") AS ?isoL)
  (GROUP_CONCAT(DISTINCT ?up; separator="|") AS ?upL)
 WHERE { VALUES ?pl { ${qids.map((q) => `wd:${q}`).join(" ")} }
- OPTIONAL { ?pl rdfs:label ?lab FILTER(lang(?lab) = "en") }
+ ${labelOf("?pl")}
  BIND(EXISTS { ?pl wdt:P31/wdt:P279* wd:Q486972 } AS ?settle)
  BIND(EXISTS { ?pl wdt:P31/wdt:P279* ?f . VALUES ?f { ${FINER.map((q) => `wd:${q}`).join(" ")} } } AS ?finer)
  BIND(EXISTS { ?pl wdt:P31/wdt:P279* ?c . VALUES ?c { ${COARSER.map((q) => `wd:${q}`).join(" ")} } } AS ?coarse)
@@ -338,7 +358,7 @@ async function nbaArenas(client, rosters, playerQids, log) {
     const q = `SELECT ?team ?venue ?lab ?s ?e ?coord WHERE { VALUES ?team { ${batch.map((x) => `wd:${x}`).join(" ")} }
  ?team p:P115 ?st . ?st ps:P115 ?venue . ${NOT_DEPRECATED}
  OPTIONAL { ?st pq:P580 ?s } OPTIONAL { ?st pq:P582 ?e }
- OPTIONAL { ?venue rdfs:label ?lab FILTER(lang(?lab) = "en") } OPTIONAL { ?venue wdt:P625 ?coord } }`;
+ ${labelOf("?venue")} OPTIONAL { ?venue wdt:P625 ?coord } }`;
     const { rows } = await client.sparql(q, "nba-home-venues");
     const seenSt = new Set();
     for (const b of rows) {
@@ -353,14 +373,61 @@ async function nbaArenas(client, rosters, playerQids, log) {
       if (!venueInfo.has(v)) venueInfo.set(v, { label: st.label, coord: b.coord?.value ?? null });
     }
   }
-  const out = new Map(); // `${season}|${teamId}` -> {venue, label, teamQid} | {absent}
-  for (const [key, it] of items) {
-    if (!it.teamQid) out.set(key, { absent: it.absent });
-    else {
-      const v = venueFor(venues.get(it.teamQid) ?? [], key.split("|")[0]);
-      out.set(key, v.venue ? { ...v, teamQid: it.teamQid, votes: it.votes, of: it.of } : { absent: v.absent, teamQid: it.teamQid });
+  // Venues that list a team as occupant (P466) but are missing from its P115: a move the team item lacks.
+  const occupants = new Map();
+  for (const batch of chunks(teamQids, 100)) {
+    const q = `SELECT ?team ?venue ?lab ?s ?e ?open ?coord WHERE { VALUES ?team { ${batch.map((x) => `wd:${x}`).join(" ")} }
+ ?venue p:P466 ?st . ?st ps:P466 ?team . ${NOT_DEPRECATED}
+ OPTIONAL { ?st pq:P580 ?s } OPTIONAL { ?st pq:P582 ?e } OPTIONAL { ?venue wdt:P1619 ?open }
+ ${labelOf("?venue")} OPTIONAL { ?venue wdt:P625 ?coord } }`;
+    const { rows } = await client.sparql(q, "nba-venue-occupants");
+    for (const b of rows) {
+      const t = qid(b.team.value);
+      const v = qid(b.venue.value);
+      const o = { venue: v, label: b.lab?.value ?? null, start: b.s?.value ?? b.open?.value ?? null, end: b.e?.value ?? null };
+      const list = occupants.get(t) ?? occupants.set(t, []).get(t);
+      if (!list.some((x) => x.venue === o.venue && x.start === o.start && x.end === o.end)) list.push(o);
+      if (!venueInfo.has(v)) venueInfo.set(v, { label: o.label, coord: b.coord?.value ?? null });
     }
   }
+  let moves = 0;
+  for (const t of teamQids) {
+    const merged = withOccupantMoves(venues.get(t) ?? [], occupants.get(t) ?? []);
+    moves += merged.length - (venues.get(t) ?? []).length;
+    venues.set(t, merged);
+  }
+
+  // Dated English official names (P1448), so a season gets the name the venue had then.
+  const allVenues = [...new Set([...venues.values()].flat().map((s) => s.venue))];
+  const names = new Map();
+  for (const batch of chunks(allVenues, 100)) {
+    const q = `SELECT ?venue ?name ?s ?e WHERE { VALUES ?venue { ${batch.map((x) => `wd:${x}`).join(" ")} }
+ ?venue p:P1448 ?st . ?st ps:P1448 ?name . ${NOT_DEPRECATED} FILTER(lang(?name) = "en")
+ OPTIONAL { ?st pq:P580 ?s } OPTIONAL { ?st pq:P582 ?e } }`;
+    const { rows } = await client.sparql(q, "nba-venue-names");
+    for (const b of rows) {
+      const v = qid(b.venue.value);
+      (names.get(v) ?? names.set(v, []).get(v)).push({ name: b.name.value, start: b.s?.value ?? null, end: b.e?.value ?? null });
+    }
+  }
+
+  const out = new Map(); // `${season}|${teamId}` -> {venue, name, from, teamQid} | {absent}
+  for (const [key, it] of items) {
+    const season = key.split("|")[0];
+    if (!it.teamQid) {
+      out.set(key, { absent: it.absent });
+      continue;
+    }
+    const v = venueFor(venues.get(it.teamQid) ?? [], season);
+    if (!v.venue) {
+      out.set(key, { absent: v.absent, teamQid: it.teamQid });
+      continue;
+    }
+    const n = nameFor(names.get(v.venue) ?? [], v.label ?? venueInfo.get(v.venue)?.label ?? null, season);
+    if (!n.name) out.set(key, { absent: "the venue has no English label or dated official name", teamQid: it.teamQid });
+    else out.set(key, { venue: v.venue, label: n.name, nameFrom: n.from, teamQid: it.teamQid, votes: it.votes, of: it.of });
+  }
+  log(`nba arenas: ${moves} occupant moves added from P466`);
   log(`nba arenas: ${[...out.values()].filter((v) => v.venue).length} of ${out.size} team-seasons`);
   return { arenas: out, venues, venueInfo };
 }
@@ -488,15 +555,18 @@ async function main() {
   const nba = await readNba(nbaCache, nbaLogs, log);
   const teamsResp = await client.request(URLS.nflTeams, { purpose: "nfl-teams" });
   const nflTeam = new Map();
+  const nflTeamId = new Map();
   {
     const lines = teamsResp.buf.toString("utf8").split("\n").map((l) => l.replace(/\r$/, "")).filter(Boolean);
     const h = splitCsvLine(lines[0]);
     const ia = h.indexOf("team_abbr");
     const inm = h.indexOf("team_name");
-    if (ia < 0 || inm < 0) throw new Error("teams_colors_logos.csv lacks team_abbr or team_name; refusing to guess");
+    const iid = h.indexOf("team_id");
+    if (ia < 0 || inm < 0 || iid < 0) throw new Error("teams_colors_logos.csv lacks team_abbr, team_name or team_id; refusing to guess");
     for (const l of lines.slice(1)) {
       const f = splitCsvLine(l);
       if (present(f[ia]) && present(f[inm])) nflTeam.set(f[ia], f[inm]);
+      if (present(f[ia]) && present(f[iid])) nflTeamId.set(f[ia], f[iid]);
     }
   }
   const nflArenas = homeArenas(nfl.games);
@@ -610,13 +680,29 @@ async function main() {
     emit("NBA", rec);
   }
 
+  const homeBySeason = new Map();
+  for (const g of nfl.games) if (present(g.home_team)) (homeBySeason.get(g.season) ?? homeBySeason.set(g.season, new Set()).get(g.season)).add(g.home_team);
+  const nflKeys = new Set();
+  let remapped = 0;
   for (const [k, cite] of [...nfl.seasons.entries()].sort()) {
-    const [gsis, season, abbr] = k.split("|");
+    const [gsis, season, rawAbbr] = k.split("|");
     const p = nfl.players.get(gsis);
     if (!p || !present(p.display_name)) {
       bump(left.NFL, "gsis_id not in players.csv, or no display_name");
       continue;
     }
+    // nflverse's stats files write today's abbreviation for every season (LV for the 2010 Raiders); games.csv
+    // and the older depth charts write the one used that season (OAK). Map by nflverse team_id to the
+    // abbreviation games.csv used that season, so the name is the team's name then.
+    const era = eraAbbr(rawAbbr, season, nflTeamId, homeBySeason);
+    if (!era.abbr) {
+      bump(left.NFL, era.absent);
+      continue;
+    }
+    const abbr = era.abbr;
+    if (era.from) remapped++;
+    if (nflKeys.has(`${gsis}|${season}|${abbr}`)) continue; // the same player-season-team from another file
+    nflKeys.add(`${gsis}|${season}|${abbr}`);
     const teamName = nflTeam.get(abbr);
     if (!teamName) {
       bump(left.NFL, `team abbreviation ${abbr} is not in teams_colors_logos.csv`);
@@ -794,9 +880,11 @@ async function main() {
       placeRecords: { censusGazetteerPlaces: places.gazByGeoid.size, geonamesCitiesMatched: places.geonames.size, geonamesExcludedCodes: [...GEONAMES_NOT_CITY] },
     },
     nbaArenas: {
-      method: `team item = the NBA team item (P118 ${NBA_LEAGUE}) that at least ${MIN_VOTES} roster players and ${MIN_SHARE * 100}% of the voting ones were on (dated P54) on Jan 1 of the season; arena = the one dated P115 statement covering Nov 1 of the season's first year; any undated P115 statement leaves it out`,
+      method: `team item = the NBA team item (P118 ${NBA_LEAGUE}) that at least ${MIN_VOTES} roster players and ${MIN_SHARE * 100}% of the voting ones were on (dated P54) on Jan 1 of the season; arena = the one dated P115 statement covering Nov 1 of the season's first year; any undated P115 statement leaves it out. A venue that lists the team as occupant (P466) from after every P115 start counts as a move the team item lacks, so the overlap leaves those seasons out (the Clippers' P115 ends open at Crypto.com Arena; Intuit Dome lists them from 2024). The name is the venue's dated English official name (P1448) for the season when there is one, else its current English label`,
       teamSeasons: nbaAr.arenas.size,
       withArena: [...nbaAr.arenas.values()].filter((v) => v.venue).length,
+      nameFrom: [...nbaAr.arenas.values()].filter((v) => v.venue).reduce((o, v) => (bump(o, v.nameFrom), o), {}),
+      clippers: Object.fromEntries([...nbaAr.arenas.entries()].filter(([k]) => k.endsWith("|1610612746")).sort().map(([k, v]) => [k.split("|")[0], v.venue ? v.label : `absent: ${v.absent}`])),
       byReason: Object.entries([...nbaAr.arenas.values()].filter((v) => !v.venue).reduce((o, v) => (bump(o, v.absent), o), {})).map(([reason, n]) => ({ reason, teamSeasons: n })),
     },
     wikidata: {
@@ -823,6 +911,7 @@ async function main() {
       },
     },
     leftOut: left,
+    nflAbbreviationsMappedToTheirSeason: { playerSeasonTeams: remapped, how: "nflverse team_id, to the abbreviation games.csv used that season (LV in a 2010 stats file -> OAK, Oakland Raiders)" },
     invalid,
     files,
     requests: client.requests,

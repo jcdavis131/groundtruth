@@ -56,6 +56,30 @@ export function teamItems(rosters, p54) {
 }
 
 /**
+ * Venues that name the team as an occupant (P466) and start after every P115 statement on the team item:
+ * evidence of a move the team item does not record yet (the Clippers' P115 ends at Crypto.com Arena,
+ * open-ended, while Intuit Dome lists them from 2024). Added as statements so the overlap leaves the arena
+ * out for those seasons instead of naming the old one. `occupants` is [{venue, label, start, end}], start
+ * being the P466 statement's P580 or else the venue's opening date (P1619).
+ */
+export function withOccupantMoves(p115, occupants) {
+  const known = new Set(p115.map((s) => s.venue));
+  const newest = p115.reduce((m, s) => (s.start && s.start > m ? s.start : m), "");
+  const moves = occupants.filter((o) => !known.has(o.venue) && o.start && o.start > newest);
+  return [...p115, ...moves];
+}
+
+/**
+ * The venue's name in a season: its one English official name (P1448) whose dates cover the season, else
+ * its current label. Returns {name, from: "official-name" | "label"}.
+ */
+export function nameFor(names, label, season) {
+  const { venueAt } = seasonDates(season);
+  const hit = [...new Set(names.filter((n) => covers(n.start, n.end, venueAt)).map((n) => n.name))];
+  return hit.length === 1 ? { name: hit[0], from: "official-name" } : { name: label, from: "label" };
+}
+
+/**
  * The venue for one season from a team item's P115 statements [{venue, label, start, end}] (deprecated
  * ones already removed). Returns {venue, label} | {absent}.
  */
@@ -66,6 +90,5 @@ export function venueFor(statements, season) {
   const hit = [...new Map(statements.filter((s) => covers(s.start, s.end, venueAt)).map((s) => [s.venue, s])).values()];
   if (hit.length === 0) return { absent: "no dated home venue covers the season" };
   if (hit.length > 1) return { absent: "two dated home venues overlap the season" };
-  if (!hit[0].label) return { absent: "the venue has no English label" };
   return { venue: hit[0].venue, label: hit[0].label };
 }
