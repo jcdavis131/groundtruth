@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "lock/1",
+  "snapshots": {
+    "nces-public-schools.alabama.2026-10-19": "2de707fae30c6054f6857cc47cdfe830ffee7bb5fcf20f9c1932b26729366210",
+    "nces-public-schools.alabama.2026-10-20": "dcc0f3fd0d8339f3b9d38a3b1b443a059158d8da24ed9065ecbbb626208573c2",
+    "nces-public-schools.texas.2026-10-19": "3bd7367f3e8c6998ab9d2e3d00887e6d15863bb32b576d5c9e9ad14c085dba99",
+    "nces-public-schools.texas.2026-10-20": "6094f7a61478134cb0a75d0eb38f1172c9a037cd857d66c51f1e97b3aaf75241",
+    "nid-dams.alabama.2026-10-19": "5dbdc422f429fdd58d0269b414f792e55a43454c991ce01f858b1f28b1becc0f",
+    "nid-dams.alabama.2026-10-20": "d6de042d8db84e16f92a70a283af72b6e80fe4d59db4419589f3a0c3ae9cde4f",
+    "nid-dams.texas.2026-10-19": "5ad2da374b069fa2ad1bcec9f4029e227488211ac0a931e2d8a165ed1801b988",
+    "nid-dams.texas.2026-10-20": "088e4a09cd8af2f7395d6fabf5b7c30592c0a49b7bc435fdbf8e84a496d5e6a0",
+    "nrhp-listed.alabama.2026-10-19": "3ac9c54b9779248bed40f1f7086ec8d0f1eb32f09d4e3bab7ca625e26a7857f5",
+    "nrhp-listed.alabama.2026-10-20": "487fb79a7b8e3db831faf3caffea815d9acaa4409152839631f82f844523cc59",
+    "nrhp-listed.texas.2026-10-19": "b53916d021067162dfa6fa55a952097787b40b35979575fedf3e30f39edbe79e",
+    "nrhp-listed.texas.2026-10-20": "9b4f268551890725f137a08f0a214bbc3a161006278ec942178f68531afe740c"
+  }
+}

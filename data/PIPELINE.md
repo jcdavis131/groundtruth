@@ -130,3 +130,14 @@ node data/schema/validate.test.mjs
 ```
 
 Both run in `.github/workflows/data.yml`. CI also validates every committed manifest with `--no-files`, because the files they list aren't in git.
+
+## The 2026-10-19 drift, and its remedy
+
+PR #51 backfilled `embeddableFields` and `embeddableName` into the three Texas manifests of 2026-10-19 in place, but only the committed copies under `data/manifests/`. The `manifest.json` beside each snapshot's files in the data root stayed as the build wrote it, so `nces-public-schools.texas.2026-10-19`, `nid-dams.texas.2026-10-19` and `nrhp-listed.texas.2026-10-19` each existed as two different byte strings, and nothing compared them. Found on 2026-10-20 by comparing every committed manifest with its data-root copy (12 manifests; exactly those 3 differed).
+
+Remedy, all in the W2D change:
+
+- `node data/schema/embeddable.mjs --backfill` was run on those three data-root copies, so they now equal the committed ones byte for byte.
+- `data/hf/publish.py`'s dry run refuses any data-root manifest that differs byte for byte from its committed copy. Before the backfill the real dry run exited 1 naming the three; after it, 0 (`data/hf/test_publish.py` has the case for both).
+- `data/manifests/LOCK.json` and `node data/schema/lock.mjs --check` (in `data.yml`) hold each committed manifest's sha256, so a committed manifest cannot change again without a CI failure. A change is a new snapshot id on a new UTC day (SCHEMA.md, "Changing a manifest").
+- `data/hf/verify.py` compares the Hub's stored hashes with the committed manifests once the dataset is uploaded; `data.yml` runs it weekly.

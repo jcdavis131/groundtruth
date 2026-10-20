@@ -80,7 +80,7 @@ eye's privacy rules apply to every snapshot as they are written in eye: no priva
 
 ## The snapshot
 
-A snapshot is one collection, one region and one UTC day, and it never changes once it's written. Its id is
+A snapshot is one collection, one region and one UTC day, and it is never edited in place once it's written (the rules for change are under "Changing a manifest" below). Its id is
 
 ```
 <collection>.<region id>.<YYYY-MM-DD>      nces-public-schools.austin-east.2026-10-18
@@ -90,7 +90,13 @@ The day is the UTC date of `createdAt`. The commit that built it is in `builder.
 
 A snapshot is a folder holding `manifest.json` and the record files it lists. The fixtures use `records.jsonl`: records sorted by `id`, one JSON object per line, LF line endings, UTF-8. The pipeline's snapshots use `records.parquet` (GeoParquet; its columns are in [PIPELINE.md](PIPELINE.md)), and their folders live in the data root, outside git, with a copy of each manifest committed under `data/manifests/`.
 
-The `geoparquet` format, the `point-in-polygon` rule and the `region` request purpose were added to `manifest/1` on 2026-10-18 without a version bump, because each one only widens an enum (`files[].format`, `region.rule`, `requests[].purpose`) and every manifest that was valid before is still valid. The optional `embeddableFields` and `embeddableName` were added on 2026-10-19 under the same rule: a manifest without them is still valid. `joins`, `publisherCount.gapItems` and `publisherCount.duplicateRows` were added on 2026-10-20 the same way. Every snapshot this repo holds carries the embeddable fields, and `validate.test.mjs` fails if one doesn't.
+### Changing a manifest
+
+Two rules, kept apart.
+
+**Widening the format needs no version bump.** Within `manifest/1`, a change that only adds an optional field or widens an enum, so that every manifest valid before is still valid, keeps the version. The `geoparquet` format, the `point-in-polygon` rule and the `region` request purpose were added on 2026-10-18 this way (each widens an enum: `files[].format`, `region.rule`, `requests[].purpose`). The optional `embeddableFields` and `embeddableName` were added on 2026-10-19, and `joins`, `publisherCount.gapItems` and `publisherCount.duplicateRows` on 2026-10-20: a manifest without them is still valid. This rule is about the schema. It never lets an existing manifest be rewritten.
+
+**A written snapshot and its manifest are never edited in place.** A changed manifest is a new snapshot id on a new UTC day. `data/manifests/LOCK.json` holds the sha256 of every committed manifest; `node data/schema/lock.mjs --check` fails on a changed, missing or untracked one, and `--write` adds new ids but refuses to change an existing id's sha. `.github/workflows/data.yml` runs the check on every PR. Run `--write` after a build adds a snapshot.
 
 ### The manifest
 
@@ -122,7 +128,7 @@ Both fields come from eye's own rules in `apps/map/lib/catalog/embedFields.ts`, 
 - `EMBED_TEXT` names the upstream fields a card embeds (`PRIMARY_PURPOSE`); a snapshot's `details` uses eye's display keys (`primary purpose`). `DETAILS_KEY` in `embeddable.mjs` says which key carries each field, read from the builder (`lib/infra/features.ts`, `lib/civic/schools.ts`, `lib/land/features.ts`). A field no key carries alone maps to nothing: a school's `LCITY` and `LSTATE` are only inside `address`, which also holds the street, so `address` stays out and the city and state reach a model through `text`. Its `county` adds NCES's county code (`Travis County (48453)`), an id eye never embeds, so it stays out the same way. NCES's `GSLO` and `GSHI` share `grades`. Every key must also pass eye's `embeddableField` (the deny list, `published name`, unreviewed `*name` fields).
 - `PUBLIC_NAME_RULE` is per record, so it isn't a `details` key. A record's allowed name is in `name`, never in `details` (a dam's `published name` is withheld on every dam), and `nameRule` says per record whether it is a published name. `embeddableName` is `when-nameRule-public-name` for a collection in `PUBLIC_NAME_RULE` (dams and schools here) and `never` otherwise (NRHP). So a private dam, labelled `Dam TX00028` with `nameRule` `label-by-id`, gives no name to embed.
 
-The builders call it: `data/pipeline/build.py` and `schema/fixtures/build-fixtures.mjs` add both fields to each manifest. `node data/schema/embeddable.mjs --backfill <manifest.json> ...` writes them into an existing manifest and changes nothing else; it filled in the three Texas snapshots of 2026-10-19 and the fixtures. Only the committed copies were filled in: the `manifest.json` next to each snapshot's files in the data root is the one the build wrote, and nothing compares the two. Run the same command on it to bring it level.
+The builders call it: `data/pipeline/build.py` and `schema/fixtures/build-fixtures.mjs` add both fields to each manifest they write. `node data/schema/embeddable.mjs --backfill <manifest.json> ...` writes them into an existing manifest and changes nothing else. It was run on the three Texas snapshots of 2026-10-19 and on the fixtures, and that was the last time a written manifest was changed (see PIPELINE.md, "The 2026-10-19 drift"): the lock now forbids it for the committed copies. The `manifest.json` next to each snapshot's files in the data root must equal the committed copy byte for byte, and `data/hf/publish.py`'s dry run refuses one that doesn't. If it has drifted from the committed copy, run the same `--backfill` on the data-root file to bring it level.
 
 When eye changes `EMBED_TEXT` for a snapshot collection, `embeddable.mjs` refuses until `DETAILS_KEY` is reviewed, and `validate.mjs` fails every manifest whose lists no longer match (code `embeddable`). Rebuilding or backfilling the manifests fixes it. A collection without a `DETAILS_KEY` table can't be built yet.
 

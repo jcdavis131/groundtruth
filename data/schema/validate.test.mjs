@@ -173,7 +173,7 @@ check(validateManifest({ ...m0, region: { ...m0.region, rule: "inside-texas" } }
 const committed = path.join(HERE, "..", "manifests");
 const holders = [
   ...snaps.map((s) => path.join(FIX, "snapshots", s, "manifest.json")),
-  ...readdirSync(committed).flatMap((c) => list(path.join(committed, c)).map((f) => path.join(committed, c, f))),
+  ...readdirSync(committed, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name).flatMap((c) => list(path.join(committed, c)).map((f) => path.join(committed, c, f))),
 ];
 check(holders.length >= 6, `at least 6 manifests carry the embeddable fields (${holders.length})`);
 for (const p of holders) {
@@ -286,13 +286,11 @@ for (const p of holders) {
   check(lockErrors(tmpM, realLock).some((e) => e.code === "lock" && /missing/.test(e.message) && e.message.includes(second)), "a locked manifest that is missing fails with code lock");
   copyFileSync(src(second), dst(second));
   const extra = path.join(tmpM, "nid-dams", "nid-dams.ohio.2026-10-21.json");
-  writeFileSync(extra, '{"snapshotId":"nid-dams.ohio.2026-10-21"}
-');
+  writeFileSync(extra, '{"snapshotId":"nid-dams.ohio.2026-10-21"}\n');
   check(lockErrors(tmpM, realLock).some((e) => e.code === "lock" && /untracked/.test(e.message) && e.message.includes("nid-dams.ohio.2026-10-21")), "a manifest the lock doesn't list fails with code lock (untracked)");
   // --write adds the new id, keeps the old ones, and refuses to change an existing id's sha.
   const lockFile = path.join(tmpM, "LOCK.json");
-  writeFileSync(lockFile, JSON.stringify(realLock, null, 2) + "
-");
+  writeFileSync(lockFile, JSON.stringify(realLock, null, 2) + "\n");
   const wrote = writeLock(tmpM, lockFile);
   check(wrote.added.length === 1 && wrote.added[0] === "nid-dams.ohio.2026-10-21" && lockErrors(tmpM, json(lockFile)).length === 0, "--write adds a new id and the lock then passes");
   const before = readFileSync(lockFile, "utf8");

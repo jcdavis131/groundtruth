@@ -151,6 +151,11 @@ class VerifyTest(unittest.TestCase):
 
         self.assertIsNone(verify.fetch_tree("jcdavis210/groundtruth-snapshots", urlopen=gone))
 
+        def private(req, timeout=None):
+            raise urllib.error.HTTPError(req.full_url, 401, "Unauthorized", {}, None)
+
+        self.assertIsNone(verify.fetch_tree("jcdavis210/groundtruth-snapshots", urlopen=private))
+
         def boom(req, timeout=None):
             raise urllib.error.HTTPError(req.full_url, 503, "Unavailable", {}, None)
 
