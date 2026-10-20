@@ -21,7 +21,7 @@ let ITEMS: CiteItem[] = [];
  * which proves the code path and nothing about the publisher's real shape.
  */
 const UNRECORDED: Record<string, string> = {
-  "usace-nid": "geospatial.sec.usace.army.mil answered every record query with HTTP 200 and {\"error\":{\"code\":503,\"message\":\"Wait timeout for the request exceeded\"}} or a 60 to 280 s timeout on 2026-10-20 (the layer metadata page answered)",
+  "usace-nid": "geospatial.sec.usace.army.mil answered every record query with HTTP 200 and {\"error\":{\"code\":503,\"message\":\"Wait timeout for the request exceeded\"}} or a 60 to 280 s timeout on 2026-10-20 (the layer metadata page answered); tried again after review on 2026-10-20, same (HTTP 200 with a 500 or 503 error object, three different NIDIDs, 90 to 120 s timeout)",
 };
 
 beforeAll(async () => {
