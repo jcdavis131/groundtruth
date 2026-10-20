@@ -1,0 +1,104 @@
+# The rules' mutation proof (apps/map/scripts/rule-mutations.sh): one deliberate break per rule that
+# AGENTS.md says a test enforces (apps/map/scripts/rule-mutate.mjs), applied in turn against only the
+# test files it names, with the kill table recorded in the job summary and the log. The job fails if the
+# unbroken baseline fails, if a break can't be applied (its anchor moved) or if any break survives.
+# Pattern: jev-mutations.yml (the Ask Jev panel's proof).
+#
+# Two jobs. "plain" is plain Node with no install: the apply/restore self-test (a sha256 equal before and
+# after a cycle), every anchor found exactly once, and scripts/rules-table.test.mjs (every AGENTS.md row
+# marked Checked here names a mutant). "mutations" installs apps/map like map-ci's check job, runs the kill
+# table, then runs the rules-table test again against the recorded table, so a named mutant has to be killed.
+#
+# It runs on map pull requests, on the data, athlete and eval code and the guard whose rules it breaks, on
+# AGENTS.md (the table the test reads), and on a dependency or test-runner change (vitest 3 -> 5 in #46 never
+# ran here, so a bump can change what kills a mutant). Read-only: no secrets, nothing pushed.
+name: rule-mutations
+
+on:
+  pull_request:
+    paths:
+      - "apps/map/**"
+      - "data/schema/**"
+      - "data/athletes/**"
+      - "eval/**"
+      - "scripts/guard.mjs"
+      - "scripts/guard.test.mjs"
+      - "scripts/rules-table.test.mjs"
+      - "AGENTS.md"
+      - ".github/workflows/rule-mutations.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rule-mutations-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: apply and restore self-test (sha256 equal before and after, every break)
+        run: node apps/map/scripts/rule-mutate.test.mjs
+
+      - name: every anchor found exactly once
+        run: node apps/map/scripts/rule-mutate.mjs --check
+
+      - name: AGENTS.md rows name a mutant (names only; the kill table below shows they are killed)
+        run: node scripts/rules-table.test.mjs
+
+  mutations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      # The runner context is not available in a job-level env, so the paths are set here for the later steps.
+      - name: where the kill table goes
+        run: |
+          {
+            echo "RULE_MUT_DIR=$RUNNER_TEMP/rule-mutations"
+            echo "RULE_MUT_OUT=$RUNNER_TEMP/rule-mutations/rule-mutations.md"
+            echo "RULE_MUT_JSON=$RUNNER_TEMP/rule-mutations/rule-mutations.json"
+          } >> "$GITHUB_ENV"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/map/package-lock.json
+
+      - run: npm ci --ignore-scripts
+        working-directory: apps/map
+
+      - run: node scripts/patch-knockout-csp.mjs
+        working-directory: apps/map
+
+      - name: kill table
+        env:
+          # A pull request run checks out the merge of its head into the base; the table names the head.
+          RULE_MUT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: bash scripts/rule-mutations.sh
+        working-directory: apps/map
+
+      - name: AGENTS.md rows name a mutant the recorded kill table shows killed
+        run: node scripts/rules-table.test.mjs --table "$RULE_MUT_JSON"
+
+      - name: job summary
+        if: always()
+        run: |
+          if [ -f "$RULE_MUT_OUT" ]; then cat "$RULE_MUT_OUT" >> "$GITHUB_STEP_SUMMARY"; else echo "No kill table was written." >> "$GITHUB_STEP_SUMMARY"; fi
