@@ -44,7 +44,7 @@ const rules = [
 ];
 for (const [rule, its] of rules) check(lineageFlags(its, list)[0]?.rule === rule, `rule ${rule} fires on its own sources`);
 check(lineageFlags([{ question: "q5", sources: ["groundtruth PR #180 body"] }], list).length === 0, "PR #180 is not PR #18");
-check(lineageFlags([{ question: "q6", sources: ["writeups\p19-audit\FINDING.md:1"] }], list).length === 1, "Windows separators are normalised");
+check(lineageFlags([{ question: "q6", sources: ["writeups\\p19-audit\\FINDING.md:1"] }], list).length === 1, "Windows separators are normalised");
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nall checks pass");
 process.exitCode = failed ? 1 : 0;

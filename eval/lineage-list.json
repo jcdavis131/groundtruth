@@ -1,0 +1,10 @@
+{
+  "about": "Material that built world_context's FEMA tables and the Wikidata birthplace build. A pool item whose sources cite it is contaminated for the arm that was built from it. Paths are matched anywhere in a source string; PRs by repo and number.",
+  "rules": [
+    { "id": "p19-audit", "kind": "path", "match": "p19-audit/", "why": "the Wikidata P19 audit that the A5a birthplace build was made from" },
+    { "id": "fema-fips-audit", "kind": "path", "match": "fema-fips-audit/", "why": "the OpenFEMA FIPS sweep behind FEMA_LEGACY and FEMA_SPLIT_AREAS" },
+    { "id": "fema-history-ts", "kind": "path", "match": "lib/hazards/history.ts", "why": "FEMA_LEGACY and FEMA_SPLIT_AREAS live here" },
+    { "id": "pr-18", "kind": "pr", "repo": "groundtruth", "number": 18, "why": "Hazards history follow-ups (02105 Chatham gap, 02198 under 02280): the FEMA legacy tables" },
+    { "id": "pr-52", "kind": "pr", "repo": "groundtruth", "number": 52, "why": "last review nits on lib/hazards/history.ts" }
+  ]
+}
