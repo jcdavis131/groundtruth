@@ -1,0 +1,11 @@
+{
+ "sourceId": "fema-nfhl",
+ "recordId": "421900.bf789c4d",
+ "url": "https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/22/query?where=CID%3D'421900'&outFields=CID,POL_NAME1&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:37:27.400Z",
+ "status": 200,
+ "bytes": 331,
+ "sha256": "bfbcbe80dce1013a4df238b91dfd2025c1981a8287384e8007eee93f2b1cd4f1",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"POL_NAME1\",\"features\":[{\"attributes\":{\"CID\":\"421900\",\"POL_NAME1\":\"Collegeville, Borough of\"}}]}"
+}

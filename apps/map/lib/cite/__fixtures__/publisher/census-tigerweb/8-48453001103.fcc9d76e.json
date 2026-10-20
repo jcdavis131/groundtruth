@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "8-48453001103.fcc9d76e",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/8/query?where=GEOID%3D'48453001103'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:30:49.795Z",
+ "status": 200,
+ "bytes": 316,
+ "sha256": "ac9f5de2cfc59bf4bf02f49836cee0a125a55a6bb31a7cc0c39f9b2a778d9634",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"48453001103\",\"NAME\":\"Census Tract 11.03\"}}]}"
+}

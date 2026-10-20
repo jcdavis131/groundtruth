@@ -1,0 +1,11 @@
+{
+ "sourceId": "sec-edgar",
+ "recordId": "CIK0001318605.f2c65e07",
+ "url": "https://data.sec.gov/submissions/CIK0001318605.json",
+ "retrievedAt": "2026-10-20T05:37:05.970Z",
+ "status": 200,
+ "bytes": 162044,
+ "sha256": "9005bae55ae3da60eb6cf68ade179ab9dbb92ee8ad36a31c0b0a8d50b6a9cf8b",
+ "trimmed": "identity fields only (cik, entityType, sic, sicDescription, name, tickers, exchanges, category, stateOfIncorporation)",
+ "body": "{\"cik\":\"0001318605\",\"entityType\":\"operating\",\"sic\":\"3711\",\"sicDescription\":\"Motor Vehicles & Passenger Car Bodies\",\"name\":\"Tesla, Inc.\",\"tickers\":[\"TSLA\"],\"exchanges\":[\"Nasdaq\"],\"category\":\"Large accelerated filer\",\"stateOfIncorporation\":\"TX\"}"
+}

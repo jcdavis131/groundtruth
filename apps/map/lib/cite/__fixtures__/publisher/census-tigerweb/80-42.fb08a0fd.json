@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "80-42.fb08a0fd",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/80/query?where=GEOID%3D'42'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:37:25.029Z",
+ "status": 200,
+ "bytes": 300,
+ "sha256": "d2d88ca9ca7349f73926f2423bbfc9979500979ad1e6394debfef2675d525df9",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"42\",\"NAME\":\"Pennsylvania\"}}]}"
+}

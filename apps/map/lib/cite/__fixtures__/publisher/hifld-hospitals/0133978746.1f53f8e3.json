@@ -1,0 +1,11 @@
+{
+ "sourceId": "hifld-hospitals",
+ "recordId": "0133978746.1f53f8e3",
+ "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6/query?where=ID%3D'0133978746'&outFields=*&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:31:03.380Z",
+ "status": 200,
+ "bytes": 5288,
+ "sha256": "d929f55b1d78db3ddc6040682cc123e5486bcb9769b1f3dfbba03a12d53311d4",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"objectIdFieldName\":\"FID\",\"uniqueIdField\":{\"name\":\"FID\",\"isSystemMaintained\":true},\"globalIdFieldName\":\"\",\"geometryType\":\"esriGeometryPoint\",\"spatialReference\":{\"wkid\":102100,\"latestWkid\":3857},\"features\":[{\"attributes\":{\"FID\":5612,\"ID\":\"0133978746\",\"NAME\":\"ARISE AUSTIN MEDICAL CENTER\",\"ADDRESS\":\"3003 BEE CAVE ROAD\",\"CITY\":\"AUSTIN\",\"STATE\":\"TX\",\"ZIP\":\"78746\",\"ZIP4\":\"5542\",\"TELEPHONE\":\"(512) 314-3800\",\"TYPE\":\"GENERAL ACUTE CARE\",\"STATUS\":\"OPEN\",\"POPULATION\":19,\"COUNTY\":\"TRAVIS\",\"COUNTYFIPS\":\"48453\",\"COUNTRY\":\"USA\",\"LATITUDE\":30.27075965,\"LONGITUDE\":-97.79596702,\"NAICS_CODE\":\"622110\",\"NAICS_DESC\":\"GENERAL MEDICAL AND SURGICAL HOSPITALS\",\"SOURCE\":\"https://www.hhs.texas.gov/providers/health-care-facilities-regulation\",\"SOURCEDATE\":1709856000000,\"VAL_METHOD\":\"IMAGERY/OTHER\",\"VAL_DATE\":1418083200000,\"WEBSITE\":\"NOT AVAILABLE\",\"STATE_ID\":\"100216\",\"ALT_NAME\":\"NOT AVAILABLE\",\"ST_FIPS\":\"48\",\"OWNER\":\"PROPRIETARY\",\"TTL_STAFF\":-999,\"BEDS\":19,\"TRAUMA\":\"NOT AVAILABLE\",\"HELIPAD\":\"N\"}}]}"
+}

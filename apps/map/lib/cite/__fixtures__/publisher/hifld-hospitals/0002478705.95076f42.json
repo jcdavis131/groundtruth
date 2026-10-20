@@ -1,0 +1,11 @@
+{
+ "sourceId": "hifld-hospitals",
+ "recordId": "0002478705.95076f42",
+ "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6/query?where=ID%3D'0002478705'&outFields=*&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:31:04.377Z",
+ "status": 200,
+ "bytes": 5304,
+ "sha256": "2f54929016ae853d8a46722b0a1ef4ac19466fdf63d0cad66bcca8a2c8c07381",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"objectIdFieldName\":\"FID\",\"uniqueIdField\":{\"name\":\"FID\",\"isSystemMaintained\":true},\"globalIdFieldName\":\"\",\"geometryType\":\"esriGeometryPoint\",\"spatialReference\":{\"wkid\":102100,\"latestWkid\":3857},\"features\":[{\"attributes\":{\"FID\":5619,\"ID\":\"0002478705\",\"NAME\":\"ASCENSION SETON MEDICAL CENTER AUSTIN\",\"ADDRESS\":\"1201 WEST 38TH STREET\",\"CITY\":\"AUSTIN\",\"STATE\":\"TX\",\"ZIP\":\"78705\",\"ZIP4\":\"NOT AVAILABLE\",\"TELEPHONE\":\"(512) 324-1000\",\"TYPE\":\"GENERAL ACUTE CARE\",\"STATUS\":\"OPEN\",\"POPULATION\":524,\"COUNTY\":\"TRAVIS\",\"COUNTYFIPS\":\"48453\",\"COUNTRY\":\"USA\",\"LATITUDE\":30.30500185,\"LONGITUDE\":-97.74560832,\"NAICS_CODE\":\"622110\",\"NAICS_DESC\":\"GENERAL MEDICAL AND SURGICAL HOSPITALS\",\"SOURCE\":\"https://www.hhs.texas.gov/providers/health-care-facilities-regulation\",\"SOURCEDATE\":1709856000000,\"VAL_METHOD\":\"IMAGERY\",\"VAL_DATE\":1391990400000,\"WEBSITE\":\"http://www.seton.net\",\"STATE_ID\":\"497\",\"ALT_NAME\":\"NOT AVAILABLE\",\"ST_FIPS\":\"48\",\"OWNER\":\"NON-PROFIT\",\"TTL_STAFF\":-999,\"BEDS\":524,\"TRAUMA\":\"LEVEL IV\",\"HELIPAD\":\"Y\"}}]}"
+}

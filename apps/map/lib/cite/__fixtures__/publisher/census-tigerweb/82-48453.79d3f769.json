@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "82-48453.79d3f769",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/82/query?where=GEOID%3D'48453'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:30:52.632Z",
+ "status": 200,
+ "bytes": 304,
+ "sha256": "5449514f0fab3d01f34c0bb2b98d717a89467ada1d6478df2d89873f041b22f6",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"48453\",\"NAME\":\"Travis County\"}}]}"
+}

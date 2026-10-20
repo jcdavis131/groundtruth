@@ -1,0 +1,57 @@
+# Weekly replay of world_context's recorded bundles against the publishers' own records
+# (apps/map/scripts/cite-check.mjs --live over lib/mcp/__fixtures__/world/). It reports and
+# never gates: the run succeeds whatever the verdicts say, and the CONTRADICTED and
+# CHANGED_SINCE_RETRIEVAL lists go to the job summary. A publisher that refuses the runner
+# (403, 429, 5xx, timeout) is UNREACHABLE, which is unscored. Read-only and keyless; at most
+# 400 requests, one a second per host. Not a required check.
+name: cite-check
+
+on:
+  schedule:
+    # Wednesdays 09:23 UTC, off the top of the hour and away from the Monday endpoint sweep.
+    - cron: "23 9 * * 3"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cite-check-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: apps/map
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/map/package-lock.json
+
+      # world_context is loaded to turn a fixture into items, and it needs zod
+      - run: npm ci --ignore-scripts
+
+      - name: cite-check --live
+        run: |
+          node scripts/cite-check.mjs --live --json > "$RUNNER_TEMP/out.txt"
+          node -e '
+            const fs = require("fs");
+            const t = fs.readFileSync(process.env.RUNNER_TEMP + "/out.txt", "utf8");
+            const at = t.indexOf("\n[\n");
+            const report = at < 0 ? t : t.slice(0, at);
+            const v = at < 0 ? [] : JSON.parse(t.slice(at + 1));
+            const pick = (s) => v.filter((x) => x.status === s).map((x) => `- ${x.sourceId} | ${x.fact} | item ${JSON.stringify(x.itemValue)} | publisher ${JSON.stringify(x.publisherValue)} (${x.period ?? "no period"})\n  ${x.reason}\n  ${x.recordUrl}\n  sha256 ${x.sha256}`);
+            const out = ["## cite-check --live", "", "### CONTRADICTED", ...(pick("CONTRADICTED").length ? pick("CONTRADICTED") : ["none"]), "", "### CHANGED_SINCE_RETRIEVAL", ...(pick("CHANGED_SINCE_RETRIEVAL").length ? pick("CHANGED_SINCE_RETRIEVAL") : ["none"]), "", "### Report", "```", report, "```"].join("\n");
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, out + "\n");
+          '

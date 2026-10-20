@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "93-37980.272ee05e",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/93/query?where=GEOID%3D'37980'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:37:24.041Z",
+ "status": 200,
+ "bytes": 345,
+ "sha256": "dd8409f79c153c3cb5b666091b2d4d446892d0e71c8f34ff0711c3ee8984e56e",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"37980\",\"NAME\":\"Philadelphia-Camden-Wilmington, PA-NJ-DE-MD Metro Area\"}}]}"
+}

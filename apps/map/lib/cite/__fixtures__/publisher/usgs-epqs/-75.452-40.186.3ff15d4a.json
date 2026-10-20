@@ -1,0 +1,11 @@
+{
+ "sourceId": "usgs-epqs",
+ "recordId": "-75.452-40.186.3ff15d4a",
+ "url": "https://epqs.nationalmap.gov/v1/json?x=-75.452&y=40.186&units=Meters&wkid=4326",
+ "retrievedAt": "2026-10-20T05:37:30.770Z",
+ "status": 200,
+ "bytes": 159,
+ "sha256": "c250c8020ce83876ab4d1df1db004d29467a002afaeb14e7e7f701bc4cbac431",
+ "trimmed": null,
+ "body": "{\"location\":{\"x\":-75.452,\"y\":40.186,\"spatialReference\":{\"wkid\":4326,\"latestWkid\":4326}},\"locationId\":0,\"value\":\"45.937282562\",\"rasterId\":107206,\"resolution\":1}"
+}

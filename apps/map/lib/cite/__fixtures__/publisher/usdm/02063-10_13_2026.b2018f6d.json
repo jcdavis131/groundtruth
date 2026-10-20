@@ -1,0 +1,11 @@
+{
+ "sourceId": "usdm",
+ "recordId": "02063-10_13_2026.b2018f6d",
+ "url": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=02063&startdate=10/13/2026&enddate=10/13/2026&statisticsType=2",
+ "retrievedAt": "2026-10-20T05:37:19.537Z",
+ "status": 200,
+ "bytes": 180,
+ "sha256": "60c97ad4c2ff398777b46255a6cb76114d1c9890779122830a32b60888fba50a",
+ "trimmed": null,
+ "body": "MapDate,FIPS,County,State,None,D0,D1,D2,D3,D4,ValidStart,ValidEnd,StatisticFormatID\r\n20261013,02063,Chugach Census Area,AK,100.00,0.00,0.00,0.00,0.00,0.00,2026-10-13,2026-10-19,2\r\n"
+}

@@ -1,0 +1,11 @@
+{
+ "sourceId": "hifld-hospitals",
+ "recordId": "0196784259.3731bb08",
+ "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6/query?where=ID%3D'0196784259'&outFields=*&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:31:05.778Z",
+ "status": 200,
+ "bytes": 5315,
+ "sha256": "255d9da8c2fbac5aad2b4e82d3f4d84ffaace2a9bb77545cf9596344f81c3c85",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"objectIdFieldName\":\"FID\",\"uniqueIdField\":{\"name\":\"FID\",\"isSystemMaintained\":true},\"globalIdFieldName\":\"\",\"geometryType\":\"esriGeometryPoint\",\"spatialReference\":{\"wkid\":102100,\"latestWkid\":3857},\"features\":[{\"attributes\":{\"FID\":5655,\"ID\":\"0196784259\",\"NAME\":\"BAYLOR SCOTT AND WHITE MEDICAL CENTER - AUSTIN\",\"ADDRESS\":\"5245 W HIGHWAY 290\",\"CITY\":\"AUSTIN\",\"STATE\":\"TX\",\"ZIP\":\"78735\",\"ZIP4\":\"NOT AVAILABLE\",\"TELEPHONE\":\"(512) 654-2100\",\"TYPE\":\"GENERAL ACUTE CARE\",\"STATUS\":\"OPEN\",\"POPULATION\":25,\"COUNTY\":\"TRAVIS\",\"COUNTYFIPS\":\"48453\",\"COUNTRY\":\"USA\",\"LATITUDE\":30.23541154,\"LONGITUDE\":-97.83573401,\"NAICS_CODE\":\"622110\",\"NAICS_DESC\":\"GENERAL MEDICAL AND SURGICAL HOSPITALS\",\"SOURCE\":\"https://www.hhs.texas.gov/providers/health-care-facilities-regulation\",\"SOURCEDATE\":1709856000000,\"VAL_METHOD\":\"IMAGERY/OTHER\",\"VAL_DATE\":1648771200000,\"WEBSITE\":\"NOT AVAILABLE\",\"STATE_ID\":\"100506\",\"ALT_NAME\":\"NOT AVAILABLE\",\"ST_FIPS\":\"48\",\"OWNER\":\"NON-PROFIT\",\"TTL_STAFF\":-999,\"BEDS\":25,\"TRAUMA\":\"NOT AVAILABLE\",\"HELIPAD\":\"N\"}}]}"
+}

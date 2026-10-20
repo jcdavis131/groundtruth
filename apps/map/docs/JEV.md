@@ -50,3 +50,30 @@ Then, before acting on a place, call `world_context` and paste the bundle into t
 - No memory. It does not know Cam's preferences or earlier answers; every call starts fresh.
 - No daily weather, IPEDS colleges, rail or airports, or which CBSA delineation a past year used.
 - A county FIPS is read at the point `/api/screen` publishes for it; the fabric topic asks for a point.
+
+## How to verify a bundle
+
+`world_context` cites; `cite-check` checks. It takes an item as the tool emits it and asks the publisher's own record whether the item is right. No model grades anything.
+
+```
+node scripts/cite-check.mjs --fixtures                  # the twelve recorded world fixtures against recorded publisher replies; no network
+node scripts/cite-check.mjs --live reply.json           # fetch each record URL from the publisher
+```
+
+Input is a recorded world fixture, a `world_context` reply, or a facts file (`{"facts": [{fact, value, unit, period, sourceId, upstreamRecordUrl, retrievedAt, code}]}`). It needs Node 22.18 or later, and `npm ci` in `apps/map` for the first form.
+
+Each item gets one verdict:
+
+- `CONFIRMED`: the publisher's record states what the item states, within a tolerance declared per field (0 for codes, ids, dates and counts; whole USD for wages and expected annual loss; 1 m for elevation; 0.1 point for drought shares).
+- `CONTRADICTED`: the record states something else for the same period, or there is no such record.
+- `CHANGED_SINCE_RETRIEVAL`: the record now carries a later period or release than the item states (a new QCEW quarter, a new NRI release).
+- `NOT_PUBLISHED`: the publisher's own suppression flag (QCEW `disclosure_code` N, NRI "Insufficient Data", CMS "Not Available").
+- `UNREACHABLE`: HTTP 403, 429, 5xx, 404, a timeout, or a reply the matcher cannot read. Unscored. It is never counted wrong.
+- `NO_RECORD_URL`: the item has no record URL, or its record expires (an NWS alert). Not machine-verifiable.
+- `REFUSED`: the host is not in the table in `lib/cite/hosts.ts`, or an id the item names is absent from its record URL. Nothing is fetched.
+
+Every verdict carries the publisher's value, period, record URL, fetch time and the sha256 of the body. There is no `CONFIRMED` without the hash. The summary's confirmed and wrong totals leave out `UNREACHABLE`, `NO_RECORD_URL` and `REFUSED`, so a publisher that blocks the client moves nothing into "wrong". Only items with a record URL can be checked, so report that subset on its own.
+
+`--live` sends the User-Agent each host accepts (SEC and BLS answer 403 to a string carrying a GitHub URL), one request a second per host, 25 s timeout, 400 requests at most. `.github/workflows/cite-check.yml` runs it weekly over the twelve fixtures and writes the `CONTRADICTED` and `CHANGED_SINCE_RETRIEVAL` lists to the job summary; it reports and never gates.
+
+Recorded publisher replies are in `lib/cite/__fixtures__/publisher/`, written by `node scripts/publisher-record.mjs --from-fixtures`. Each header holds the URL, `retrievedAt` and the sha256 of the full body as received; a trimmed body says what was cut.
