@@ -373,7 +373,7 @@ describe("surfacing: what a fresh Claude Code session sees before any tool searc
   it("place_brief names world_context first and ends with the citation rule", async () => {
     const { client } = await connect(async () => ({ status: 200, body: {}, url: "" }));
     const names = TOOLS.map((t) => t.name).filter((n) => n !== "world_context");
-    for (const args of [{ fips: "48453" }, { lon: "-97.74", lat: "30.27" }]) {
+    for (const args of [{ fips: "48453" }, { lon: "-97.74", lat: "30.27" }] as Array<Record<string, string>>) {
       const r = await client.getPrompt({ name: "place_brief", arguments: args });
       const text = (r.messages[0].content as { text: string }).text;
       const first = text.indexOf("world_context");
