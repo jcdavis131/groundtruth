@@ -23,8 +23,8 @@ export const ZCTA_COUNTY_URL = "https://www2.census.gov/geo/docs/maps-data/data/
  * scripts/companies-data.mjs which fails loudly when a query returns no
  * features.
  */
-export const TIGER_ZCTA_SERVICE = "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2023/Tracts_Blocks/MapServer";
-export const ZCTA_LAYER_ID = 2; // unverified in sandbox; see comment above
+export const TIGER_ZCTA_SERVICE = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer";
+export const ZCTA_LAYER_ID = 1; // "2020 Census ZIP Code Tabulation Areas", checked 2026-10-19: answers ZCTA5, CENTLAT, CENTLON
 
 /** First five digits of a US ZIP / ZIP+4; null for anything else (foreign postcodes, blanks). */
 export function normalizeZip(zip: string | null | undefined): string | null {

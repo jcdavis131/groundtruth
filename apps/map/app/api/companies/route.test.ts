@@ -25,6 +25,12 @@ vi.mock("@/lib/server/cache", async (importOriginal) => {
   };
 });
 
+// The bundle as the hand-checked 25-company fixture, which still files XOM
+// under its old CIK 34088: the predecessor caveat and "a bundled CIK stays
+// reachable" need a bundled ticker the live list has moved. The committed
+// snapshot (the 2026-10-20 pull) already has XOM under 2115436.
+vi.mock("@/lib/companies/data/companies.json", async () => ({ default: (await import("@/lib/companies/fixtures/companies.fixture.json")).default }));
+
 vi.mock("@/lib/server/upstream", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/server/upstream")>()),
   // No politeness waits between test requests.

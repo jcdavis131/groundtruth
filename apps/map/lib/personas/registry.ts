@@ -192,8 +192,7 @@ export const PERSONAS: Persona[] = [
     tagline: "Every jurisdiction, district, watershed and ecoregion over a place, lit by what the physical layers put inside it.",
     icon: "Layers",
     color: "#c4b5fd",
-    // companies off until the full EDGAR pull runs (scripts/companies-data.mjs); the bundle is a 25-company fixture
-    layers: ["constructs", "field", "alerts", "water", "banks", "earthquakes"],
+    layers: ["constructs", "field", "alerts", "water", "companies", "banks", "earthquakes"],
     start: { lon: -97.74, lat: 30.27, height: 90_000, label: "downtown Austin" },
     open: "layers",
     nav: ["layers", "explore", "teleport", "water", "market", "signals", "screen", "releases", "watch", "share"],
