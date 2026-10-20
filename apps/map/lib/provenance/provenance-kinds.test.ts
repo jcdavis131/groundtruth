@@ -3,13 +3,25 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { COMPUTED_METHOD } from "./estimates";
-import { judgeSite, literalText, scanSource, type PublishedSite } from "./estimatesSites";
+import { judgeSite, literalText, scanSource, type PublishedSite, type SourceScan } from "./estimatesSites";
 
 // "published = relayed as-is; estimate = computed here" (types.ts), held where the entry is written. estimates.test.ts
 // judges entries in replies it can fetch; this walks the source of apps/map/lib and apps/map/app and judges every
 // provenance entry labelled `kind: "published"` by its method text, so a seventh computed-and-published entry cannot
 // be added without a test going red, whether or not any fixture or route test reaches it. W5A (#87) found six by
 // reading; W6A (this file) makes the reading a test.
+//
+// Round 2 (review of 7fdac06). The scanner decides entry or type by what follows the closing quote of "published":
+// `,` or `}` is an entry, anything else a type member. It read only that first character, so an entry written as
+// `kind: "published" as const,`, `kind: "published" satisfies Kind,` or as a last property with a trailing comment
+// (`kind: "published" // note` then `}`) was filed as a type member, was never judged, and the loses-none check
+// balanced (raw == entries + type members), so nothing saw it. The idiom is house style for other kinds
+// (lib/globe/indexStyles.ts, lib/hazards/history.ts, lib/places/links.ts), none "published" today: latent, not live.
+// Fixed in lex() (it reads past comments, `as` and `satisfies`), and the loses-none check no longer trusts the lexer's
+// own classification: every type member it reports must also read as a type in the raw text. Planted cases for each
+// form are below. Still not seen, and said so in docs/MCP.md: a spread, a kind held in a variable, a quoted key
+// ("kind": "published"), a parenthesised or backticked value, a ternary, and a method written `"..." as const` (read as
+// not a literal, so refused).
 
 const MAP = fileURLToPath(new URL("../../", import.meta.url));
 
@@ -109,6 +121,128 @@ describe("the scanner, on planted source", () => {
   });
 });
 
+describe("the scanner, on a published value followed by something other than a comma", () => {
+  const COMPUTED = 'method: "sum of the rows by region"';
+  /** One object literal, the property list given, in the shape the house style uses. */
+  const wrap = (lines: string[]) => `export const a = provenance(source("zillow-zhvi"), {\n${lines.map((l) => `  ${l}`).join("\n")}\n});\n`;
+  /** Exactly one entry, not filed as a type, and judged: the sum-of-rows method is a finding. */
+  const judgedOnce = (src: string) => {
+    const scan = scanSource(src, "planted.ts");
+    expect(scan.typeMembers).toBe(0);
+    expect(scan.sites).toHaveLength(1);
+    expect(judgeSite(scan.sites[0])).toMatch(/its method says it was computed here: "sum of the rows/);
+    return scan.sites[0];
+  };
+
+  it("kind: \"published\" as const, is an entry and is judged", () => {
+    expect(judgedOnce(wrap(['kind: "published" as const,', `${COMPUTED},`]))).toMatchObject({ line: 2, sourceId: "zillow-zhvi", method: "sum of the rows by region" });
+  });
+
+  it("a last property with no comma and a trailing line comment is an entry and is judged", () => {
+    expect(judgedOnce(wrap([`${COMPUTED},`, 'kind: "published" // note']))).toMatchObject({ line: 3, method: "sum of the rows by region" });
+    // the comment's own comma, brace and quote do not move the object's edges
+    expect(judgedOnce(wrap([`${COMPUTED},`, "kind: \"published\" // relayed, as-is } it's fine"]))).toMatchObject({ line: 3, method: "sum of the rows by region" });
+  });
+
+  it("kind: \"published\" satisfies Kind, is an entry and is judged", () => {
+    judgedOnce(wrap(['kind: "published" satisfies Kind,', `${COMPUTED},`]));
+    judgedOnce(wrap(['kind: "published" satisfies Pick<Provenance, "kind">,', `${COMPUTED},`]));
+  });
+
+  it("a block comment, or as const and satisfies together, between the value and the comma or brace", () => {
+    judgedOnce(wrap(['kind: "published" /* relayed, not computed */,', `${COMPUTED},`]));
+    judgedOnce(wrap([`${COMPUTED},`, 'kind: "published" /* last property } */']));
+    judgedOnce(wrap(['kind: "published" as const satisfies Kind,', `${COMPUTED},`]));
+    judgedOnce(wrap(['kind: "published" /* a */ // b\n  as const,', `${COMPUTED},`]));
+  });
+
+  it("the same forms in a type position are still types: a comment after a union or an interface member, a member named as", () => {
+    for (const src of [
+      'export interface P {\n  kind: "published" // relayed\n  method: string\n}',
+      'export type K = { kind: "published" /* a */ | "estimate" };',
+      'export interface P {\n  kind: "published"\n  as: string\n}',
+      'export interface P {\n  kind: "published"; // relayed\n  method: string;\n}',
+    ]) {
+      const scan = scanSource(src, "planted.ts");
+      expect(scan.sites, src).toEqual([]);
+      expect(scan.typeMembers, src).toBe(1);
+    }
+  });
+});
+
+/**
+ * `kind: "published"` written as code in one source text, and how many of those read as a type there: followed, past
+ * whitespace and comments, by `|`, `&` or `;`, or by the next member of an interface on a later line. This does not use
+ * the lexer, so it can check the lexer's classification instead of repeating it.
+ */
+function writtenPublished(src: string): { all: number; typeLike: number } {
+  // a match on a comment line is not code
+  const code = src.split("\n").filter((l) => !/^\s*(\/\/|\/\*|\*)/.test(l)).join("\n");
+  const re = /\bkind\s*:\s*["']published["']/g;
+  let all = 0;
+  let typeLike = 0;
+  for (let m = re.exec(code); m; m = re.exec(code)) {
+    all++;
+    let k = m.index + m[0].length;
+    let newline = false;
+    while (k < code.length) {
+      if (/\s/.test(code[k])) {
+        if (code[k] === "\n") newline = true;
+        k++;
+      } else if (code.startsWith("//", k)) {
+        const e = code.indexOf("\n", k);
+        k = e < 0 ? code.length : e;
+      } else if (code.startsWith("/*", k)) {
+        const e = code.indexOf("*/", k + 2);
+        k = e < 0 ? code.length : e + 2;
+      } else break;
+    }
+    const ch = k < code.length ? code[k] : "";
+    if (ch !== "" && ("|&;".includes(ch) || (newline && /[A-Za-z_$]/.test(ch)))) typeLike++;
+  }
+  return { all, typeLike };
+}
+
+/** Why a scan of one file cannot be trusted, or null: a written `kind: "published"` it lost, or one it filed as a type that does not read as one. */
+function misread(src: string, scan: SourceScan): string | null {
+  const w = writtenPublished(src);
+  if (w.all !== scan.sites.length + scan.typeMembers) return `${w.all} written, ${scan.sites.length} entries and ${scan.typeMembers} type members read`;
+  if (scan.typeMembers !== w.typeLike) return `${scan.typeMembers} read as type members, but ${w.typeLike} sit where a type is written (after | & ; or as the next member)`;
+  return null;
+}
+
+describe("the loses-none check does not trust the lexer's own classification", () => {
+  it("a form filed as a type member that is not written like a type is refused, whatever the lexer made of it", () => {
+    // what 7fdac06's lexer did with each of these: no entry, one type member, and raw == entries + type members balanced
+    for (const line of ['kind: "published" as const,', 'kind: "published" satisfies Kind,', 'kind: "published" // note']) {
+      const src = `export const a = provenance(source("x"), {\n  method: "sum of rows",\n  ${line}\n});`;
+      expect(misread(src, { sites: [], typeMembers: 1 }), line).toMatch(/1 read as type members, but 0 sit where a type is written/);
+    }
+  });
+
+  it("a form the lexer cannot place is filed as a type member and refused by the check, not passed", () => {
+    for (const line of ['kind: "published".toString(),', 'kind: "published" + "",', 'kind: "published" ?? "x",', 'kind: "published"!,']) {
+      const src = `export const a = provenance(source("x"), {\n  method: "sum of rows",\n  ${line}\n});`;
+      const scan = scanSource(src, "planted.ts");
+      expect(scan.sites, line).toEqual([]);
+      expect(misread(src, scan), line).toMatch(/1 read as type members, but 0 sit where a type is written/);
+    }
+  });
+
+  it("an entry and a type, read correctly, balance both ways", () => {
+    for (const src of [
+      'export interface P {\n  kind: "published" | "estimate";\n}\nexport const a = provenance(source("x"), { kind: "published" as const, method: "as published" });',
+      'export interface P {\n  kind: "published" // relayed\n  method: string\n}\nexport const a = provenance(source("x"), {\n  method: "as published",\n  kind: "published" // note\n});',
+    ]) {
+      expect(misread(src, scanSource(src, "planted.ts"))).toBeNull();
+    }
+  });
+
+  it("a written kind the lexer never saw is still counted as lost", () => {
+    expect(misread('const a = { kind: "published", method: "x" };', { sites: [], typeMembers: 0 })).toMatch(/1 written, 0 entries and 0 type members read/);
+  });
+});
+
 /**
  * Published entries that the words flag and that are right. Each is read, not guessed: the entry relays a figure the
  * publisher computed. An entry here must still match one site and still be flagged by the words; otherwise it is
@@ -147,13 +281,11 @@ describe("every provenance entry labelled published under apps/map/lib and apps/
     expect(sites.filter((s) => s.method !== null).length).toBeGreaterThanOrEqual(3);
   });
 
-  it("loses none to the lexer: every `kind: \"published\"` written as code is an entry or a type member", () => {
+  it("loses none to the lexer: every `kind: \"published\"` written as code is an entry or a type member, and every type member reads as a type", () => {
     const lost: string[] = [];
     for (const s of scans) {
-      // a match on a comment line is not code
-      const code = s.src.split("\n").filter((l) => !/^\s*(\/\/|\/\*|\*)/.test(l)).join("\n");
-      const raw = (code.match(/\bkind\s*:\s*["']published["']/g) ?? []).length;
-      if (raw !== s.sites.length + s.typeMembers) lost.push(`${s.file}: ${raw} written, ${s.sites.length} entries and ${s.typeMembers} type members read`);
+      const why = misread(s.src, s);
+      if (why) lost.push(`${s.file}: ${why}`);
     }
     expect(lost).toEqual([]);
   });
