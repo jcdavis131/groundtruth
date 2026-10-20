@@ -74,7 +74,7 @@ describe("view-loaded layers report the box they loaded", () => {
   });
 
   it("a companies answer from the bundled fixture never reads complete", async () => {
-    // lib/companies/data/companies.json ships as a hand-checked fixture with pulled: null until the full universe is built.
+    // A bundle with no pull date (the hand-checked 25-company fixture in lib/companies/fixtures) is never a total.
     vi.stubGlobal(
       "fetch",
       vi.fn(async (url: string) => new Response(JSON.stringify(url.startsWith("/api/companies") ? { data: fc, count: 25, capped: false, pulled: null } : answer(url)), { status: 200 })),

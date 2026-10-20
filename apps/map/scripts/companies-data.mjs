@@ -18,6 +18,12 @@
 //   node scripts/companies-data.mjs --fresh          ignore the partial file
 //   CONTACT=you@example.com node scripts/companies-data.mjs   contact for the User-Agent
 //
+// The file is written in the compact format of scripts/companies-compact.mjs
+// ("companies/2-compact"; lib/companies/bundle.ts reads it) so the full
+// universe stays under the repo's 5 MB tracked-file limit, and it is checked
+// to decode back to exactly what was built before it is written. To pack a
+// full-format file pulled earlier: node scripts/companies-compact.mjs <full.json> <out.json>
+//
 // Nothing is typed in by hand. A company is placed only when its ZIP is in
 // the Census ZCTA-to-county file and TIGERweb answers a centroid for it;
 // otherwise countyFips/lon/lat stay null and the record says so. Facts come
@@ -28,6 +34,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { decodeBundle, encodeBundle, firstDifference } from "./companies-compact.mjs";
 
 const CONTACT = process.env.CONTACT || "jcdavis131@gmail.com";
 // No URL token: SEC answers 403 to a UA carrying "(+https://...)" (measured 2026-09-30); see SEC_USER_AGENT in lib/companies/edgar.ts.
@@ -281,6 +288,9 @@ const bundle = {
   frameYears: YEARS,
   companies,
 };
-fs.writeFileSync(OUT, JSON.stringify(bundle) + "\n");
+const text = JSON.stringify(encodeBundle(bundle)) + "\n";
+const diff = firstDifference(decodeBundle(JSON.parse(text)), JSON.parse(JSON.stringify(bundle)));
+if (diff) throw new Error(`compact bundle does not decode to what was built (first difference at ${diff}); nothing written`);
+fs.writeFileSync(OUT, text);
 fs.rmSync(PARTIAL, { force: true });
 console.log(`wrote ${OUT}: ${bundle.counts.companies} companies, ${bundle.counts.geocoded} placed, ${bundle.counts.withFacts} with facts`);

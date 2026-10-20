@@ -14,9 +14,11 @@ import { fmtMoney } from "./facts";
 import { sicToSector } from "./sectors";
 import type { Bbox } from "./params";
 import type { CompanyBundle, CompanyExtra, CompanyRecord } from "./types";
+import { decodeBundle } from "./bundle";
 import bundleJson from "./data/companies.json";
 
-export const BUNDLE: CompanyBundle = bundleJson as unknown as CompanyBundle;
+/** The committed snapshot, expanded from its compact on-disk format (lib/companies/bundle.ts). */
+export const BUNDLE: CompanyBundle = decodeBundle(bundleJson);
 
 /** The snapshot's companies that can be drawn: a point and a ticker. */
 export function placedCompanies(bundle: CompanyBundle = BUNDLE): CompanyRecord[] {

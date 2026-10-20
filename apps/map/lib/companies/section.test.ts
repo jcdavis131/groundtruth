@@ -4,13 +4,13 @@
 import { describe, expect, it } from "vitest";
 import type { SectorRow } from "@/lib/economy/features";
 import { BUNDLE } from "./features";
-import { BUNDLE_CAVEATS, bundleProvenance, companiesSection } from "./section";
+import { BUNDLE_CAVEATS, bundleProvenance, companiesSection, MAX_COMPANY_ITEMS } from "./section";
 
 const AT = "2026-09-11T00:00:00Z";
-/** Travis County, TX: two rows in the fixture. */
+/** Travis County, TX: 63 placed rows in the 2026-10-20 pull. */
 const COVERED = "48453";
-/** Autauga County, AL: no row in the fixture. */
-const UNCOVERED = "01001";
+/** Aleutians East Borough, AK: no placed row in the 2026-10-20 pull. */
+const UNCOVERED = "02013";
 
 const sectors: SectorRow[] = [
   { code: "54", title: "Professional and technical services", estabs: 9000, emp: 120_000, avgWeeklyWage: 2200, lq: 1.8, yoyEmp: 2.1, suppressed: false },
@@ -23,18 +23,19 @@ const ITEM_KEYS = ["id", "layer", "name", "value", "flag", "distanceKm"];
 const FORBIDDEN = /officer|insider|owner|shareholder|holder|executive|director|ceo|cfo|person|people|resident|household|form ?[345]\b/i;
 
 describe("companiesSection", () => {
-  it("summarises the county's filers and says the rows are a fixture, not a pull", () => {
+  it("summarises the county's filers and says when the snapshot was pulled", () => {
     const s = companiesSection(COVERED, { sectors, retrievedAt: AT })!;
     expect(s).not.toBeNull();
     expect(s.title).toBe("Public companies");
     expect(s.loaded).toBe(true);
     expect(s.data.n).toBeGreaterThan(0);
-    expect(s.data.n).toBe(s.items.length);
-    expect(BUNDLE.pulled).toBeNull();
-    expect(s.data.bundlePulled).toBeNull();
-    expect(s.summary).toContain("fixture");
-    expect(s.summary).toContain("not a pull");
-    expect(s.data.withFacts).toBe(0);
+    expect(s.items.length).toBe(Math.min(s.data.n, MAX_COMPANY_ITEMS));
+    expect(BUNDLE.pulled).not.toBeNull();
+    expect(s.data.bundlePulled).toBe(BUNDLE.pulled);
+    expect(s.summary).toContain(`pulled ${BUNDLE.pulled}`);
+    expect(s.summary).not.toContain("fixture");
+    expect(s.data.withFacts).toBeGreaterThan(0);
+    expect(s.summary).toContain(`${s.data.withFacts} of ${s.data.n} carry financial facts`);
   });
 
   it("returns null for a county the snapshot does not cover, so the caller omits the section", () => {
@@ -59,7 +60,7 @@ describe("companiesSection", () => {
     expect(ids).toContain("census-zcta-county");
     expect(ids).toContain("census-tigerweb");
     expect(bundleProvenance(AT).map((p) => p.source.id)).toEqual(["sec-edgar", "census-zcta-county", "census-tigerweb"]);
-    expect(bundleProvenance(AT)[0].notes?.join(" ")).toContain("committed fixture");
+    expect(bundleProvenance(AT)[0].notes?.join(" ")).toContain(`snapshot pulled ${BUNDLE.pulled}`);
   });
 
   it("states in the basis and the caveats that a position is a centroid, not a building", () => {

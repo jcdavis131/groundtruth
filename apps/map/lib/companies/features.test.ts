@@ -30,28 +30,31 @@ const ELSEWHERE = rec({ cik: 12, name: "Elsewhere Bank", ticker: "ELS", sic: "60
 const UNPLACED = rec({ cik: 13, name: "No Address Ltd", ticker: "NOA", state: null, city: null, zip: null, countyFips: null, lon: null, lat: null, geo: null });
 const TEST_BUNDLE: CompanyBundle = { source: "test", pulled: "2026-09-01", counts: { companies: 4, geocoded: 3, withFacts: 2 }, companies: [SMALL, BIG, ELSEWHERE, UNPLACED] };
 
-describe("committed fixture", () => {
-  it("has 25 real filers with county FIPS, positions and null facts", () => {
-    expect(BUNDLE.companies).toHaveLength(25);
-    expect(BUNDLE.pulled).toBeNull();
+describe("committed snapshot", () => {
+  it("has real filers, each placed one with a ZIP, county FIPS and ZCTA centroid", () => {
+    expect(BUNDLE.companies.length).toBe(BUNDLE.counts.companies);
+    expect(BUNDLE.pulled).not.toBeNull();
     for (const c of BUNDLE.companies) {
       expect(c.cik).toBeGreaterThan(0);
-      expect(c.ticker).toMatch(/^[A-Z.]+$/);
+      expect(c.ticker).toMatch(/^\S+$/);
+      expect(c.pulled).toBe(BUNDLE.pulled);
+      if (c.lon == null) {
+        expect(c.lat).toBeNull();
+        expect(c.geo).toBeNull();
+        continue;
+      }
       expect(c.countyFips).toMatch(/^\d{5}$/);
       expect(c.zip).toMatch(/^\d{5}$/);
-      expect(c.geo).toBe("city-centroid");
-      expect(c.lon).toBeLessThan(-60);
-      expect(c.lat).toBeGreaterThan(20);
-      expect(c.pulled).toBeNull();
-      for (const v of Object.values(c.facts)) expect(v).toBeNull();
+      expect(c.geo).toBe("zcta-centroid");
+      expect(Number.isFinite(c.lat)).toBe(true);
     }
     expect(findCompany({ ticker: "aapl" })?.cik).toBe(320193);
     expect(findCompany({ cik: 1045810 })?.ticker).toBe("NVDA");
     expect(findCompany({ ticker: "ZZZZ" })).toBeNull();
     expect(findCompany({})).toBeNull();
   });
-  it("places every fixture company", () => {
-    expect(placedCompanies()).toHaveLength(25);
+  it("places exactly the companies it counts as geocoded", () => {
+    expect(placedCompanies()).toHaveLength(BUNDLE.counts.geocoded);
   });
 });
 
@@ -102,9 +105,9 @@ describe("companiesInCounty", () => {
     expect(companiesInCounty("48000", TEST_BUNDLE)).toHaveLength(2);
     expect(companiesInCounty("06085", TEST_BUNDLE)).toEqual([]);
   });
-  it("finds the fixture's Santa Clara County companies", () => {
-    const t = companiesInCounty("06085").map((f) => (f.properties.extra as CompanyExtra).ticker).sort();
-    expect(t).toEqual(["AAPL", "HPQ", "NVDA"]);
+  it("finds Santa Clara County companies in the snapshot", () => {
+    const t = companiesInCounty("06085").map((f) => (f.properties.extra as CompanyExtra).ticker);
+    expect(t).toEqual(expect.arrayContaining(["AAPL", "HPQ", "NVDA"]));
   });
 });
 

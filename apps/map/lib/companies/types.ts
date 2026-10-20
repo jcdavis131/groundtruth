@@ -3,7 +3,8 @@
 //
 // Two shapes flow through the layer:
 //   CompanyRecord   one row of the bundled snapshot (lib/companies/data/
-//                   companies.json) built offline by scripts/companies-data.mjs;
+//                   companies.json, compact on disk; lib/companies/bundle.ts
+//                   expands it) built offline by scripts/companies-data.mjs;
 //                   what the globe draws and the county lookups read.
 //   CompanyProfile  the live dossier assembled from the submissions and
 //                   companyfacts APIs when a company is selected.
