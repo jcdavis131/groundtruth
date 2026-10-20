@@ -12,6 +12,10 @@ The gold values are real recorded replies, copied from apps/map/lib/mcp/__fixtur
   g5  states of the four fixture counties  AK, AL, CT, PR       the state field of the four screen rows
   g6  NRI EAL_VALT for county 09110        302299864.61157477   ct_09110.json, with a declared tolerance of 1 USD
 
+Substitution, stated plainly: the brief asks for fixtures from the publisher records themselves (B1's
+__fixtures__/publisher). B1 is not on master, so these are our own route's rendering of the publisher row, one hop
+removed. Once B1 lands, add or re-point at least one fixture drawn from a publisher record itself.
+
 The expected numbers below are worked by hand (see the comment above each test), not read back from score.py.
 """
 import json

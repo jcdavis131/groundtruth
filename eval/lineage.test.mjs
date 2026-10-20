@@ -10,12 +10,11 @@ import { lineageFlags } from "./lineage.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const list = JSON.parse(readFileSync(path.join(here, "lineage-list.json"), "utf8"));
-const home = "C:" + "/Users/" + "jcdav/writeups/";
 const items = [
   {
     name: "p19 birthplaces (audit-sourced)",
     question: "Which Wikidata places of birth for NBA players stop at a state, country, county or island instead of a city?",
-    sources: [home + "jev-2026-10-18/p19-audit/FINDING.md:13 (instances at p19-audit/raw.csv:1018-1019, :2956, :4014; also groundtruth PR #15 body line 22, dropped-coarser 52 NBA / 281 NFL)"],
+    sources: ["writeups/jev-2026-10-18/p19-audit/FINDING.md:13 (instances at p19-audit/raw.csv:1018-1019, :2956, :4014; also groundtruth PR #15 body line 22, dropped-coarser 52 NBA / 281 NFL)"],
   },
   { name: "NRHP restricted", question: "q-nrhp", sources: ["writeups/eye-layers-2026-10-12/BUILD.md:165"] },
   { name: "Alaska storm events", question: "q-ak", sources: ["writeups/eye-layers-2026-10-12/round8/BUILD.md:45"] },
