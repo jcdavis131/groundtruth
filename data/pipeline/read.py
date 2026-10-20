@@ -105,7 +105,36 @@ def load(snapshot_id: str, data_root: Path | None = None, manifests: Path = DEFA
             raise SnapshotRefused(f"id {r['id']} appears twice")
         seen.add(r["id"])
     rows.sort(key=lambda r: r["id"])
+    _check_joins(m, rows)
     return rows
+
+
+def _check_joins(m: dict, rows: list[dict]) -> None:
+    """The manifest's joins block against the rows (validate.mjs can't read Parquet, so this is that check for GeoParquet):
+    every row without a countyFips has an unplaced entry, every unplaced id is a row without one, and placed is the rest."""
+    for j in m.get("joins") or []:
+        has = {r["id"]: bool(r["place"].get("countyFips")) for r in rows}
+        listed = set()
+        for u in j["unplaced"]:
+            if u["id"] not in has:
+                raise SnapshotRefused(f"joins: unplaced id {u['id']} is not a row of the snapshot")
+            if has[u["id"]]:
+                raise SnapshotRefused(f"joins: {u['id']} is listed unplaced but carries a countyFips")
+            if not str(u.get("reason", "")).strip():
+                raise SnapshotRefused(f"joins: unplaced {u['id']} has no reason")
+            listed.add(u["id"])
+        bare = {i for i, h in has.items() if not h}
+        if bare != listed:
+            raise SnapshotRefused(f"joins: {len(bare - listed)} rows have no countyFips and no unplaced entry (first: {sorted(bare - listed)[:3]})")
+        if j["placed"] != len(rows) - len(bare):
+            raise SnapshotRefused(f"joins: placed is {j['placed']}, the rows bear out {len(rows) - len(bare)}")
+        counts = {}
+        for r in rows:
+            if r["place"].get("countyFips"):
+                counts[r["place"]["method"]] = counts.get(r["place"]["method"], 0) + 1
+        for k, v in j["methods"].items():
+            if counts.get(k, 0) != v:
+                raise SnapshotRefused(f"joins: methods say {v} by {k}, the rows bear out {counts.get(k, 0)}")
 
 
 def main(argv=None) -> int:

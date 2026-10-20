@@ -2,7 +2,7 @@
 
 `data/pipeline/` builds whole-state snapshots of eye's collections from eye's public API, writes them as GeoParquet in the data root, and commits each manifest here under `data/manifests/`. The record and manifest formats are in [SCHEMA.md](SCHEMA.md).
 
-Built so far, for `nid-dams`, `nces-public-schools` and `nrhp-listed`: Texas (state FIPS 48) and Alabama (01), both 2026-10-19. Those three collections are the ones the conformance count found canonical on the wire with stable ids. A region is one entry in `cards.REGIONS` (its FIPS, USPS code, name and eye outline id), chosen with `--region`.
+Built so far, for `nid-dams`, `nces-public-schools` and `nrhp-listed`: Texas (state FIPS 48) and Alabama (01), on 2026-10-19 (no county for dams and NRHP listings) and again on 2026-10-20 (with the county join, and `joins` in each manifest). Those three collections are the ones the conformance count found canonical on the wire with stable ids. A region is one entry in `cards.REGIONS` (its FIPS, USPS code, name and eye outline id), chosen with `--region`.
 
 ## Setup
 
@@ -75,9 +75,15 @@ For each collection:
      - NID's `published name` detail is withheld on every dam.
    - `place` comes from the source field:
      - schools: `source-field`, with the county code
-     - dams and historic places: `name-lookup`
-5. **Validation.** Every record goes through `node data/schema/validate.mjs record`. Any failure stops the build, and nothing is written past this point.
-6. **Files.** The builder writes `records.parquet`, then asks the publisher for its own count:
+     - dams and historic places: `name-lookup` for the state. Their county is written in step 5.
+5. **County join.** `join.py` writes `place.countyFips` for every record whose config gives none (dams, NRHP listings), as in "Joins" in [SCHEMA.md](SCHEMA.md):
+   - **Boundary:** `boundaries.py` downloads TIGER/Line 2025 COUNTY (`tl_2025_us_county.zip`, about 84 MB) once into `<data-root>/raw/boundaries/` with a sidecar `{url, retrievedAt, bytes, sha256}`, and refuses the file when its hash differs from the sidecar. It is the only download the join makes, and DuckDB's `ST_Read` reads the shapefile out of the zip. Run the build under `admit.sh` on a RAM-poor box: loading the polygons takes about 1 GB.
+   - **Point in polygon:** DuckDB `ST_Contains` against the counties of the record's state, with a bounding-box pass first. Exactly one hit places the record (`point-in-polygon`); the publisher's county string, joined by name, is the cross-check.
+   - **Abstain, with a reason:** no polygon contains the point, and the name rule can't place it either: the record has no `countyFips`, and `joins[].unplaced` says why.
+   - **Written to the manifest:** `joins` (boundary product, vintage, URL and sha256; methods; cross-check counts; placed and unplaced; disagreements) and `publisherCount.gapItems` / `duplicateRows`, so `validate.mjs` can check the arithmetic: `placed + unplaced = recordCount` and `publisherCount.value = recordCount + gapItems + duplicate rows`.
+   - **Second run:** `join.py` over the same raw cache writes the same `records.parquet` bytes (`test_join.py` checks it on real county polygons).
+6. **Validation.** Every record goes through `node data/schema/validate.mjs record`. Any failure stops the build, and nothing is written past this point.
+7. **Files.** The builder writes `records.parquet`, then asks the publisher for its own count:
    - **Count:** an ArcGIS `returnCountOnly=true` query on the publisher's layer, keyless: `LSTATE='<USPS>'` for NCES, `STATE='<state name>'` for NID and `State='<STATE NAME>'` for NPS (for Texas: `LSTATE='TX'`, `STATE='Texas'`, `State='TEXAS'`).
    - **Ids:** it pages the publisher's ids, so the manifest's `publisherCount.gap` can name every row that isn't a record, and why.
    - **Manifest:** written, validated with its files, copied to `data/manifests/`, and read back through `read.py`.
