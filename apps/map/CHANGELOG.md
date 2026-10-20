@@ -2,6 +2,16 @@
 
 The public MCP server and its published schema, newest first. `SERVER_VERSION` (`lib/mcp/server.ts`) is the server string a client reads from `initialize` and `GET /api/mcp`; it is not the `world/N` schema version, which is `schemaVersion` on a `world_context` reply. `lib/mcp/server.lock.json` holds a hash of what `tools/list` says for each version here, and `lib/mcp/server.test.ts` fails when `tools/list` or `world_context`'s `outputSchema` changes without a new version and a dated heading below. The rules are in `docs/MCP.md`, "Versioning promise": additive within `world/N`, and a removed or renamed tool is announced under "Deprecated" here at least 30 days before it goes.
 
+## 0.5.0 - 2026-10-20
+
+Counts that `world_context` computes are labelled estimates, and say what they were computed from. Additive within `world/2`.
+
+- Published surface (the only part the lock sees): in `world_context`'s `outputSchema`, an item's `kind` gains the value `"estimate"` (it was `"about-eye"` only), and a new optional property `inputs` is added: a non-empty list of `{ sourceId, route, upstreamRecordUrl?, retrievedAt }`, the source a count was computed from, the eye route whose reply held the rows, the publisher's own URL for what the route read, and that source's own retrieval time. Three rules are added: a `kind` of `"estimate"` requires `inputs`, `inputs` appear only on an `"estimate"`, and an item cited to eye's own catalogue stays `"about-eye"` (so widening `kind` loosens nothing). No property was removed or retyped, no `required` was relaxed, no `const` or enum value was dropped: `server.schema-compat.test.ts` passes against the unchanged `world/2` baseline. Only `world_context`'s hash and the whole-list hash moved in the lock; no other tool's description, input schema or annotations changed.
+- On a reply: every count `world_context` builds from a route's list is `kind: "estimate"` with one input: Severe or Extreme NWS alerts touching the box, M4.5+ earthquakes touching the box, `hospitals found` and `dams found` (0) and the SEC bundle's 0. 33 of the 313 valued lines in the twelve recorded replies. The items keep their note ("no record-level URL: a count ...") and still have no `upstreamRecordUrl`. The reply's `note` says what an estimate is. A reader that ignores `kind` and `inputs` reads every older reply as before.
+- Outside the lock (these tools publish no schema): six provenance entries that were labelled `published` and describe values computed here are `estimate` with `inputs`. `county_history`: FEMA declarations per year, SPC tornadoes per county per year, NCEI storm reports per year per type. `movers` for Zillow, BTS border and BTS ports: `changeAbs` and `changePct`, with `rowIdsAt` `data.up, data.down`. `citation()` now ends such a record with "estimate computed by Embedding Atlas: <method>". BLS QCEW movers stay `published`.
+- Version number: 0.4.0 to 0.5.0, a minor bump for an additive change. `public/openapi.json` carries the same number (`server.test.ts` holds the two together).
+- Recorded in `lib/mcp/server.lock.json` as the second entry; the 0.4.0 entry is untouched.
+
 ## 0.4.0 - 2026-10-20
 
 World/2 and the surfacing contract, recorded as one server version. The first entry the version lock holds.
