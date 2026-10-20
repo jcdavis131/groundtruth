@@ -130,3 +130,25 @@ node data/schema/validate.test.mjs
 ```
 
 Both run in `.github/workflows/data.yml`. CI also validates every committed manifest with `--no-files`, because the files they list aren't in git.
+
+## Diff
+
+```
+data/.venv/Scripts/python data/pipeline/diff.py <from-snapshot-id> <to-snapshot-id> [--out diff.json]
+node data/schema/validate.mjs diff diff.json
+```
+
+`diff.py` compares two days of one collection and region (both read through `read.py`, so each file is checked against its manifest first) and writes `diff/1` ([`diff.schema.json`](schema/diff.schema.json)). Every removed id gets one reason:
+
+- `publisher-status`: the later manifest's `gapItems` names it and says the publisher's own status or address flag keeps it out (NPS STATUS, NCES status).
+- `our-rule`: the same gap item says our region rule or outline test left it out.
+- `id-churn`: no gap item names it, but exactly one added record has the same secondary key (`NRIS_Refnum` for NRHP, `NIDID` for dams, `NCESSCH` for schools) within 1 m, and no other removed id claims that record.
+- `unknown`: anything else, with a `why`. A gap reason the module doesn't recognise is `unknown`, not `our-rule`.
+
+Records present on both days are compared field by field (`snapshotId` aside); a change lists its dotted paths, not values.
+
+```
+data/.venv/Scripts/python data/pipeline/diff.py --probe [--offline] [--manifest FILE]
+```
+
+`--probe` re-fetches the id list of a manifest's first `gap` request (default: NRHP Alabama, 2026-10-19) with the same URL, at most two requests and one page, and reports OBJECTID churn against the sha-pinned body in `<data-root>/raw/`: `churn_rate = (ids only in one body) / (ids in either)`. `--offline` reads the cached body for both sides and reports 0.0. A cached body that no longer hashes to the manifest's sha256 is refused, and a fresh answer is cached in a temporary folder, never in the data root.
