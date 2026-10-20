@@ -321,7 +321,7 @@ export function httpFetchJson(baseUrl = DEFAULT_BASE_URL, fetchImpl: typeof fetc
 
 // ---- shared field schemas -------------------------------------------------
 
-const lon = z.number().min(-180).max(180).describe("Longitude in decimal degrees (WGS84, east positive), as a number.");
+const lon = z.number().min(-180).max(180).describe("Longitude in decimal degrees (WGS84, east positive).");
 const lat = z.number().min(-90).max(90).describe("Latitude in decimal degrees (WGS84, north positive).");
 const bbox = z
   .array(z.number())
