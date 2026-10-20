@@ -42,6 +42,7 @@ import TimeMachineTicker from "@/components/globe/TimeMachineTicker";
 import SettingsDialog from "./SettingsDialog";
 import SearchCommand from "./SearchCommand";
 import TitleCard from "./TitleCard";
+import { FieldLegendHud } from "./FieldLegendLive";
 import { useGlobe } from "@/lib/store/globe";
 import { LAYERS } from "@/lib/layers";
 import { expandPerfLink } from "@/lib/perf/link";
@@ -259,6 +260,7 @@ export default function Cockpit({ initialMobile = false }: { initialMobile?: boo
             <TimeScrubber />
           </div>
           <Timeline />
+          <FieldLegendHud />
           <TourCaption />
           <TeleportCaption />
           <AscendCaption />

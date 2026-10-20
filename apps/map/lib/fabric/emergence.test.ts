@@ -162,10 +162,10 @@ describe("emergence", () => {
   it("fingerprints only what is drawn and ramps colour with heat", () => {
     const v = computeVitals([a, b, c], features, "all", "count");
     expect(vitalsKey(v)).toBe("county:a=3.00|county:b=3.00");
-    expect(heatColor(0)).toBe("#475569");
-    expect(heatColor(1)).toBe("#f97316");
-    expect(heatColor(0.6)).toBe("#facc15");
-    expect(heatColor(5)).toBe("#f97316");
+    expect(heatColor(0)).toBe("#334155");
+    expect(heatColor(1)).toBe("#ffb27a");
+    expect(heatColor(0.6)).toBe("#c28a0a");
+    expect(heatColor(5)).toBe("#ffb27a");
   });
 });
 
