@@ -1,0 +1,71 @@
+{
+  "recordedFrom": "https://www.arxiviq.com",
+  "recordedAt": "2026-10-20T12:34:14.096Z",
+  "fips": "01097",
+  "shape": {
+    "keys": [
+      "coverageStatus",
+      "limits",
+      "note",
+      "place",
+      "schemaVersion",
+      "topics"
+    ],
+    "topics": {
+      "identity": {
+        "keys": [
+          "items"
+        ],
+        "items": 3
+      },
+      "fabric": {
+        "keys": [
+          "coverageStatus",
+          "items",
+          "missing"
+        ],
+        "items": 0
+      },
+      "hazards": {
+        "keys": [
+          "coverageStatus",
+          "items"
+        ],
+        "items": 9
+      },
+      "economy": {
+        "keys": [
+          "items"
+        ],
+        "items": 5
+      },
+      "vulnerability": {
+        "keys": [
+          "items"
+        ],
+        "items": 2
+      },
+      "institutions": {
+        "keys": [
+          "coverageStatus",
+          "items",
+          "missing"
+        ],
+        "items": 5
+      },
+      "water": {
+        "keys": [
+          "items"
+        ],
+        "items": 2
+      },
+      "freshness": {
+        "keys": [
+          "items"
+        ],
+        "items": 3
+      }
+    },
+    "coverageStatus": "partial"
+  }
+}
