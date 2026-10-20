@@ -258,8 +258,7 @@ class PublishTest(unittest.TestCase):
 
     def test_data_root_manifest_one_byte_off_fails_and_an_identical_copy_passes(self):
         copy = self.root / "snapshots" / SID / "manifest.json"
-        copy.write_bytes(self.mp.read_bytes() + b"
-")
+        copy.write_bytes(self.mp.read_bytes() + b"\n")
         code, _, err = self.run_main()
         self.assertEqual(code, 1, "a trailing newline is a different byte string")
         self.assertIn("differs byte for byte", err)
