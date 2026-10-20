@@ -32,14 +32,22 @@ const nonEmpty = { type: "string", minLength: 1 } as const;
 const NO_RECORD_NOTE = "no record-level URL: \\S";
 
 /**
- * `^https://<host>/` from a RECORD_HOSTS regex. The test checks each record URL against the full
- * pattern (host and service path); the published schema keeps to the host, so a publisher moving a
- * layer on its own host does not turn every reply into an internal_error.
+ * `^https://<host>/` from a RECORD_HOSTS regex, plus the organisation id segment on a shared ArcGIS
+ * Online host (services.arcgis.com serves FEMA, HIFLD and EPA from one host, told apart only by that
+ * segment: without it a fema-nri item could cite EPA's layer and pass). The test checks each record URL
+ * against the full pattern (host, org and service); the published schema stops at host and org, so a
+ * publisher renaming a service on its own org does not turn every reply into an internal_error.
  */
 function hostPattern(id: string, host: RegExp): string {
-  const m = /^\^https:\\\/\\\/(.+?)\\\//.exec(host.source);
-  if (!m) throw new Error(`RECORD_HOSTS[${id}] does not start with ^https://<host>/`);
-  return `^https://${m[1]}/`;
+  const parts = host.source.replace(/^\^https:\\\/\\\//, "").split("\\/");
+  const name = parts[0];
+  if (host.source.startsWith("^https:") === false || !name) throw new Error(`RECORD_HOSTS[${id}] does not start with ^https://<host>/`);
+  if (/arcgis\\\.com$/.test(name)) {
+    const org = parts[1];
+    if (!org || !/^[A-Za-z0-9]+$/.test(org)) throw new Error(`RECORD_HOSTS[${id}] is on a shared ArcGIS host without an org id`);
+    return `^https://${name}/${org}/`;
+  }
+  return `^https://${name}/`;
 }
 
 const ITEM_SCHEMA = {

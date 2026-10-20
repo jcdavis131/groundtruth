@@ -684,8 +684,10 @@ const NRI_CLASSES = new Set(["Very Low", "Relatively Low", "Relatively Moderate"
 function nriRating(v: unknown): { rating: string | null; reason?: string; code?: AbsenceCode } {
   const w = str(v);
   if (w && NRI_CLASSES.has(w)) return { rating: w };
-  // FEMA's own word ("Insufficient Data", "Not Applicable") is the publisher saying it gives no rating here: its flag, so not_published.
-  return { rating: null, reason: w ? `FEMA publishes "${w}" here, which is not a rating (and never means low)` : "FEMA's row has no rating here", code: w ? "not_published" : "not_in_release" };
+  // Not not_published: the word arrives as a row value, not in a route missing entry or a suppression flag, and
+  // FEMA's definitions of its words could not be retrieved to quote ("Not Applicable", "Insufficient Data",
+  // "Data Unavailable", "No Rating"). The row has no rating to show: not_in_release, which abstains all the same.
+  return { rating: null, reason: w ? `FEMA publishes "${w}" here, which is not a rating (and never means low)` : "FEMA's row has no rating here", code: "not_in_release" };
 }
 
 function capList<T>(s: Section, label: string, list: T[], max: number): T[] {

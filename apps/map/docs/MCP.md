@@ -52,7 +52,7 @@ Every place eye says something is missing, it says with a **code** and the **act
 
 | Code | Action | Retryable | FHIR data-absent-reason | What it asserts |
 | --- | --- | --- | --- | --- |
-| `not_published` | abstain | no | `unsupported` | The publisher does not publish this here, said by the route's own entry (today: Puerto Rico) or the publisher's own word (FEMA's "Insufficient Data", "Not Applicable"). Never eye's guess. |
+| `not_published` | abstain | no | `unsupported` | The publisher does not publish this here, said by a route's own missing entry (today only Puerto Rico) or a publisher's suppression flag. Never eye's guess, and never a row value: FEMA's rating words ("Insufficient Data", "Data Unavailable") are `not_in_release`. |
 | `not_in_release` | abstain | no | `unknown` | The source answered and its current release has no row or value for this place. |
 | `withheld` | abstain | no | `masked` | The publisher suppressed the value with its own flag (BLS QCEW `jobs.suppressed`). The item is null, with `absence: "withheld"`, never 0. |
 | `join_gap` | narrow | no | none | eye could not attach the source's rows to this place (a boundary or vintage mismatch such as Connecticut's legacy counties); the source may hold the value. |

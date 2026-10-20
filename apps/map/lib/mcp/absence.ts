@@ -40,7 +40,7 @@ export interface AbsenceSpec {
 }
 
 export const ABSENCE_CODES = {
-  not_published: { action: "abstain", retryable: false, fhir: "unsupported", means: "The publisher does not publish this for this place, said by the route's own entry. Never set from eye's own guess." },
+  not_published: { action: "abstain", retryable: false, fhir: "unsupported", means: "The publisher does not publish this for this place, said by a route's own missing entry (today only source:not_published_for_puerto_rico) or a publisher's suppression flag. Never from eye's guess and never from a row value such as a FEMA rating word." },
   not_in_release: { action: "abstain", retryable: false, fhir: "unknown", means: "The source answered and its current release has no row or value for this place." },
   withheld: { action: "abstain", retryable: false, fhir: "masked", means: "The publisher suppressed the value (its own suppression flag), so it is null, not 0." },
   join_gap: { action: "narrow", retryable: false, fhir: null, means: "eye could not attach the source's rows to this place (a boundary or vintage mismatch); the source may hold the value." },

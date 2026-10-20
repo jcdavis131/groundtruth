@@ -298,6 +298,9 @@ export function createServer(opts: ServerOptions): McpServer {
         try {
           const result = toCallResult(await t.run(args, ctx));
           if (check && !result.isError) {
+            // The schema also admits the error envelope (for isError replies), so a payload shaped as one must not pass as a result.
+            const sc = result.structuredContent as Record<string, unknown> | undefined;
+            if (sc && Object.prototype.hasOwnProperty.call(sc, "error")) return errorResult(new Error(`${t.name} returned an error-shaped payload as a result (an error key with isError false)`));
             const v = check(result.structuredContent);
             if (!v.valid) return errorResult(new Error(`${t.name} built a reply that fails its published outputSchema: ${(v.errorMessage ?? "").slice(0, 600)}`));
           }
