@@ -191,6 +191,54 @@ check(rr4.status === 0, "a row that is not marked Checked is not judged");
 const rr5 = run(repo({ "README.md": "x\n" }));
 check(rr5.status === 0, "a repo with no AGENTS.md is not judged");
 
+// rules, Tested rows: a row whose Status starts "Tested" (and says here) gets the path and workflow check and
+// nothing else. Every path-looking token it names must resolve to a tracked file, and it must name at least one;
+// it is not asked to name a mutant. A Checked row keeps its looser "at least one tracked path" reading.
+const tested = (rule, by, status = "Tested here, no rule mutant yet") => [rule, by, status];
+const rt0 = run(repo({ ...base, "AGENTS.md": table(tested("Tested ok", "`scripts/a.mjs`, run by `.github/workflows/w.yml`")) }));
+check(rt0.status === 0, `a Tested row naming tracked paths and an existing workflow, and no mutant, passes${rt0.status ? ": " + rt0.stdout.trim() : ""}`);
+const rt1 = run(repo({ ...base, "AGENTS.md": table(tested("Gone", "`scripts/missing.mjs`")) }));
+check(rt1.status === 1 && flags(rt1.stdout, "rules", "AGENTS.md:9") && /missing\.mjs/.test(rt1.stdout), "a Tested row naming only an untracked path fails");
+const rt2 = run(repo({ ...base, "AGENTS.md": table(tested("Half stale", "`scripts/a.mjs`, `scripts/stale.mjs`")) }));
+check(rt2.status === 1 && flags(rt2.stdout, "rules", "AGENTS.md:9") && /stale\.mjs/.test(rt2.stdout) && !/scripts\/a\.mjs/.test(rt2.stdout),
+  "a Tested row naming one stale path beside a tracked one fails, and names only the stale one");
+const rt3 = run(repo({ ...base, "AGENTS.md": table(tested("No wf", "`scripts/a.mjs`, run by `.github/workflows/ghost.yml`")) }));
+check(rt3.status === 1 && flags(rt3.stdout, "rules", "AGENTS.md:9") && /workflow .*ghost\.yml/.test(rt3.stdout) && (rt3.stdout.match(/ghost\.yml/g) ?? []).length === 1,
+  "a Tested row naming a missing workflow fails, once");
+const rt4 = run(repo({ ...base, "AGENTS.md": table(tested("Nothing", "Nothing yet")) }));
+check(rt4.status === 1 && flags(rt4.stdout, "rules", "AGENTS.md:9"), "a Tested row naming no path at all fails");
+const rt5 = run(repo({ ...base, "AGENTS.md": table(tested("Mutant too", "`scripts/a.mjs`. Mutants: `some-break`.")) }));
+check(rt5.status === 0, "a Tested row is neither required nor refused a Mutants: list");
+
+// Bare basenames: a token with no directory that matches exactly one tracked file's name resolves to it.
+const rb0 = run(repo({ ...base, "AGENTS.md": table(tested("Bare", "`a.mjs`, run by `w.yml`")) }));
+check(rb0.status === 0, `a bare basename that matches exactly one tracked file passes, workflows included${rb0.status ? ": " + rb0.stdout.trim() : ""}`);
+const rb1 = run(repo({ ...base, "apps/dup.mjs": "// 1\n", "scripts/dup.mjs": "// 2\n", "AGENTS.md": table(tested("Dup", "`scripts/a.mjs`, `dup.mjs`")) }));
+check(rb1.status === 1 && flags(rb1.stdout, "rules", "AGENTS.md:9") && /apps\/dup\.mjs/.test(rb1.stdout) && /scripts\/dup\.mjs/.test(rb1.stdout),
+  "a bare basename that matches two tracked files fails and names both");
+const rb2 = run(repo({ ...base, "AGENTS.md": table(tested("Gone bare", "`scripts/a.mjs`, `gone.mjs`")) }));
+check(rb2.status === 1 && flags(rb2.stdout, "rules", "AGENTS.md:9") && /gone\.mjs/.test(rb2.stdout), "a bare basename that matches no tracked file fails");
+const rb3 = run(repo({ ...base, "apps/m/lib/x.mjs": "// x\n", "AGENTS.md": table(tested("Tail", "`scripts/a.mjs`, `lib/x.mjs`")) }));
+check(rb3.status === 1 && flags(rb3.stdout, "rules", "AGENTS.md:9") && /lib\/x\.mjs/.test(rb3.stdout), "a token with a directory is not resolved by its tail");
+
+// What is not a path is not judged: dotted identifiers, globs, directories, flags, a Mutants: label.
+const rn0 = run(repo({ ...base, "AGENTS.md": table(tested("Not paths", "`scripts/a.mjs` (`fieldStyle.colorFor`, `Date.now`, `outFields=*`, `*Style`, `raw/`, `apps/map/lib`, `Mutants:`)")) }));
+check(rn0.status === 0, `dotted identifiers, globs, directories and labels in a Tested row are not paths${rn0.status ? ": " + rn0.stdout.trim() : ""}`);
+// A command with its argument: the path is the judged word, wherever it sits in the span.
+const rn1 = run(repo({ ...base, "AGENTS.md": table(tested("Command", "`node scripts/a.mjs --flag`")) }));
+check(rn1.status === 0, "a path after a command word in one backticked span is read and passes when tracked");
+const rn2 = run(repo({ ...base, "AGENTS.md": table(tested("Command gone", "`scripts/a.mjs`, `node scripts/gone.mjs`")) }));
+check(rn2.status === 1 && /scripts\/gone\.mjs/.test(rn2.stdout), "a stale path after a command word in one backticked span fails");
+
+// Which rows are Tested rows: the Status starts Tested and says here, like a Checked row. Others are not judged.
+const ro0 = run(repo({ ...base, "AGENTS.md": table(tested("In eye", "eye: `lib/search/x.ts`", "Tested in eye")) }));
+check(ro0.status === 0, "a row Tested elsewhere (in eye) is not judged against this repo");
+const ro1 = run(repo({ ...base, "AGENTS.md": table(tested("Not tested", "`scripts/missing.mjs`", "Review only")) }));
+check(ro1.status === 0, "a row that is neither Checked nor Tested is not judged");
+// The Checked reading is unchanged: some tracked path is enough, so a Checked row can still cite eye paths beside its own.
+const ro2 = run(repo({ ...base, "AGENTS.md": table(["Checked with eye", "eye: `lib/search/x.ts`. Here, `scripts/a.mjs`", "Checked here"]) }));
+check(ro2.status === 0, "a Checked row keeps its at-least-one-tracked-path reading");
+
 // prereg-check has its own self-test; guard.yml runs this file, so run it from here too.
 const pre = spawnSync(process.execPath, [path.join(path.dirname(guard), "prereg-check.test.mjs")], { encoding: "utf8" });
 process.stdout.write(pre.stdout);
