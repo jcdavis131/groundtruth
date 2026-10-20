@@ -155,3 +155,18 @@ describe("the number in docs/MCP.md", () => {
     expect(section).toMatch(/reporting only/);
   });
 });
+
+describe("the number in apps/map/README.md", () => {
+  it("is the same dated number as docs/MCP.md and the script, in a paragraph that points at the Receipt coverage section", async () => {
+    const md = readFileSync(path.join(APP, "docs", "MCP.md"), "utf8");
+    const heading = md.split(/^## /m).find((s) => s.startsWith("Receipt coverage"))?.match(/^### (\d{4}-\d{2}-\d{2}): /m);
+    expect(heading, "docs/MCP.md has a dated heading under Receipt coverage").toBeTruthy();
+    const readme = readFileSync(path.join(APP, "README.md"), "utf8");
+    const para = readme.split("\n").find((l) => l.startsWith("**Receipt coverage.**"));
+    expect(para, "apps/map/README.md has a paragraph that starts '**Receipt coverage.**'").toBeTruthy();
+    const r = await runReceiptCoverage([]);
+    expect(para).toContain(`${r.total.covered} of ${r.total.valued} valued lines (${share(r.total)}, ${heading![1]})`);
+    expect(para).toContain("docs/MCP.md");
+    expect(para).toMatch(/gates nothing/);
+  });
+});

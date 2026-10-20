@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { NextRequest } from "next/server";
 import { describe, expect, it } from "vitest";
 import { GET } from "@/app/api/catalog/route";
@@ -10,8 +11,10 @@ import type { Provenance, ProvenanceInput } from "./types";
 
 // "published = relayed as-is; estimate = computed here" (types.ts) as a rule a test can fail: an entry labelled
 // published must not say it was computed here, and an estimate names the inputs it was computed from. The cases
-// below plant a violation and show it is found; the walks then show that none is served today, over the recorded
-// world_context fixtures and over every place-export reply.
+// below plant a violation and show it is found. Two walks then use the rule, and they are not equal evidence: the
+// place-export walk is live (each of the four replies has one labelled aggregate, judged through the real route);
+// the world_context fixture walk is a forward guard, because the recorded routes' provenance entries are trimmed to
+// {source, upstreamUrl?, retrievedAt} and none carries a kind, so it judges 0 labelled entries today (the test pins that).
 
 const entry = (over: Partial<Provenance>): Provenance => ({
   source: { id: "epa-npl-status", name: "NPL", publisher: "U.S. EPA", url: "https://www.epa.gov/superfund", license: "public domain" },
@@ -68,11 +71,14 @@ describe("the recorded world_context fixtures", () => {
   });
 
   for (const f of files) {
-    it(`${f}: no provenance entry in its recorded routes is labelled published and computed`, () => {
+    it(`${f}: forward guard, no entry in its recorded routes is labelled published and computed`, () => {
       const fx: unknown = JSON.parse(readFileSync(path.join(WORLD_FIXTURES, f), "utf8"));
       const scan = scanProvenance(fx);
-      expect(scan.entries, "the walk found provenance entries to judge").toBeGreaterThan(0);
       expect(scan.findings).toEqual([]);
+      expect(scan.entries, "the walk saw provenance-shaped entries").toBeGreaterThan(0);
+      // Pinned to 0 on purpose: the recorded fixtures carry no `kind` today, so this walk judges nothing and cannot fail.
+      // A fixture re-recorded with labelled entries fails this line, which is the prompt to look at what it now labels.
+      expect(scan.labelled, `${f} now has labelled entries (of ${scan.entries}): the walk judges them, so look at them and update this pin`).toBe(0);
     });
   }
 
@@ -112,4 +118,25 @@ describe("the place-export replies", () => {
       expect(estimatesWithoutInputs(stripped.provenance)).toHaveLength(1);
     });
   }
+});
+
+describe("docs/MCP.md says what the fixture walk judges", () => {
+  const md = readFileSync(fileURLToPath(new URL("../../docs/MCP.md", import.meta.url)), "utf8");
+  const enforced = md.split(/^## /m).find((x) => x.startsWith("Estimates and their inputs"))?.split("\n\n").find((p) => p.startsWith("Enforced by"));
+
+  it("the 'Enforced by' paragraph gives the fixtures' own counts and calls the fixture half a forward guard, not a finding of none", () => {
+    expect(enforced, "docs/MCP.md has an 'Enforced by' paragraph under 'Estimates and their inputs'").toBeTruthy();
+    let entries = 0;
+    let labelled = 0;
+    for (const f of readdirSync(WORLD_FIXTURES).filter((x) => x.endsWith(".json"))) {
+      const scan = scanProvenance(JSON.parse(readFileSync(path.join(WORLD_FIXTURES, f), "utf8")));
+      entries += scan.entries;
+      labelled += scan.labelled;
+    }
+    expect(enforced).toContain(`hold ${entries} provenance-shaped entries and ${labelled} of them carry a \`kind\``);
+    expect(enforced).toContain(`judges ${labelled} labelled entries today`);
+    expect(enforced).toContain("forward guard");
+    // the old wording read as a measurement: "walks every provenance entry in the twelve recorded fixtures ... finds none"
+    expect(enforced).not.toMatch(/walks every provenance entry in the twelve/);
+  });
 });
