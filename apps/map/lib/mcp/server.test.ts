@@ -493,6 +493,18 @@ describe("outputSchema on the wire", () => {
     expect(e.error).toMatch(/note/);
   });
 
+  it("an HTTP-200 payload shaped as the error envelope is not a result either: isError, internal_error, never isError false", async () => {
+    const envelope = { error: "no source answered", code: "upstream_failure", category: "unavailable", retryable: true, remediation: "Retry the same call later." };
+    const r = await callBad(envelope);
+    expect(r.isError).toBe(true);
+    const e = expectErrorEnvelope(r);
+    expect(e.code).toBe("internal_error");
+    expect(e.error).toMatch(/error-shaped|error envelope/);
+    // an error key next to a full valid bundle is no better
+    const withBundle = await callBad({ ...reply({ ...item, value: 1 }), error: "x" });
+    expect(withBundle.isError).toBe(true);
+  });
+
   it("the same reply with a note goes through as a normal result", async () => {
     const r = await callBad(reply({ ...item, note: "withheld by BLS for confidentiality: null, not 0" }));
     expect(r.isError).toBe(false);

@@ -74,6 +74,27 @@ describe("coverageStatus codes from the routes' own flags", () => {
     expect(noAsk.payload).not.toHaveProperty("coverageStatus");
   });
 
+  it("built from a recorded reply: the recorded construct-field reply says nothing; with its truncated flag set, or one failed upstream, it says so", async () => {
+    const rec = JSON.parse(readFileSync(path.join(__dirname, "__fixtures__", "world", "nola_smallbox.json"), "utf8")) as { routes: Record<string, { body: Record<string, unknown> }> };
+    const key = Object.keys(rec.routes).find((k) => k.startsWith("/api/fabric?op=field"))!;
+    expect(key).toBeDefined();
+    const body = rec.routes[key].body as { data: Record<string, unknown> };
+    expect(body.data.truncated).toBe(false);
+    const plain = await relay({ fetchJson: fake(200, structuredClone(body)).fetchJson }, key);
+    expect(plain.payload).not.toHaveProperty("coverageStatus");
+    // two stated edits to the recorded body
+    const cut = structuredClone(body);
+    cut.data.truncated = true;
+    const r1 = await relay({ fetchJson: fake(200, cut).fetchJson }, key);
+    expect((r1.payload.coverageStatus as { basis: { code: string }[] }).basis.map((b) => b.code)).toEqual(["cut_by_route_limit"]);
+    const stack = JSON.parse(readFileSync(path.join(__dirname, "__fixtures__", "world", "austin_pt.json"), "utf8")) as { routes: Record<string, { body: { data: Record<string, unknown> } }> };
+    const sk = Object.keys(stack.routes).find((k) => k.startsWith("/api/fabric?op=stack"))!;
+    const failed = structuredClone(stack.routes[sk].body);
+    failed.data.failed = ["usgs-wbd"];
+    const r2 = await relay({ fetchJson: fake(200, failed).fetchJson }, sk);
+    expect((r2.payload.coverageStatus as { basis: { code: string }[] }).basis.map((b) => b.code)).toEqual(["failed"]);
+  });
+
   it("every code in a basis is on the closed list and every basis line has text", async () => {
     const r = await ask({ data: { truncated: true, failed: ["x"], nullPlaces: { "09110": "join:no_source_row" } }, meta: { bbox: [-97.9, 29, -97, 30] } });
     const basis = (r.payload.coverageStatus as { basis: { code: string; text: string }[] }).basis;

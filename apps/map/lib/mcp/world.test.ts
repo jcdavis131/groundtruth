@@ -99,7 +99,7 @@ const NRI = {
     fips: "48453",
     row: { STCOFIPS: "48453", COUNTY: "Travis", STATEABBRV: "TX", POPULATION: 1290188, RISK_SCORE: 99.1, RISK_RATNG: "Very High", EAL_VALT: 123456789.4, EAL_RATNG: "Very High", SOVI_SCORE: 14.7, SOVI_RATNG: "Very Low", NRI_VER: "December 2025", HAIL_RISKR: "Very High", TRND_RISKR: "Relatively High", HRCN_RISKR: "Not Applicable" },
   },
-  provenance: [prov("fema-nri", "Federal Emergency Management Agency", "https://services.arcgis.com/x/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0")],
+  provenance: [prov("fema-nri", "Federal Emergency Management Agency", "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0")],
 };
 
 // /api/fabric?op=field&kind=county: TIGERweb outlines for a padded box. Shapes are squares here.
@@ -162,7 +162,7 @@ const HOSPITALS = {
     ],
   },
   truncated: false,
-  provenance: [prov("hifld-hospitals", "Homeland Infrastructure Foundation-Level Data", "https://services.arcgis.com/x/Hospitals_RAPT/FeatureServer/6"), prov("cms-provider-data", "Centers for Medicare & Medicaid Services", "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0")],
+  provenance: [prov("hifld-hospitals", "Homeland Infrastructure Foundation-Level Data", "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6"), prov("cms-provider-data", "Centers for Medicare & Medicaid Services", "https://data.cms.gov/provider-data/api/1/datastore/query/xubh-q36u/0")],
 };
 
 const DAMS = {
@@ -983,6 +983,11 @@ describe("world_context: invariant over recorded live replies", () => {
     expect(JSON.stringify(allItems(r))).not.toMatch(/Insufficient Data|Data Unavailable/);
     expect(topicsOf(r).hazards.missing).toContainEqual(expect.objectContaining({ what: "FEMA NRI overall risk rating", reason: expect.stringMatching(/"Insufficient Data" here, which is not a rating/) }));
     expect(topicsOf(r).vulnerability.missing).toContainEqual(expect.objectContaining({ what: "FEMA NRI social vulnerability", reason: expect.stringMatching(/"Data Unavailable"/) }));
+    // FEMA's non-rating words arrive in the row's value ("Insufficient Data", "Data Unavailable"), not in a route
+    // missing entry, so they are not_in_release (the row has no rating) and never not_published or withheld.
+    for (const m of [...(topicsOf(r).hazards.missing ?? []), ...(topicsOf(r).vulnerability.missing ?? [])].filter((x) => /"(Insufficient Data|Data Unavailable)"/.test(x.reason))) {
+      expect(m.code, m.what).toBe("not_in_release");
+    }
     expect(topicsOf(r).hazards.missing).toContainEqual(expect.objectContaining({ what: "NOAA Climate at a Glance (tavg)", reason: "NOAA Climate at a Glance (tavg) does not publish Puerto Rico (source:not_published_for_puerto_rico)" }));
   });
 
@@ -1473,6 +1478,32 @@ describe("world_context: outputSchema", () => {
     const d = await austin();
     d.topics.identity.items[0].kind = "about-world";
     expect(validateWorld(d).valid).toBe(false);
+  });
+
+  it("tamper: shared ArcGIS hosts are told apart by org id, so a fema-nri item cannot cite EPA's or HIFLD's layer", async () => {
+    const EPA = "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0/query?where=x&f=json";
+    const NRI = "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0/query?where=x&f=json";
+    const HIFLD = "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6/query?where=x&f=json";
+    const ORG_XG = "XG15cJAlne2vxtgt";
+    const ORG_CJ = "cJ9YHowT8TU7DUyn";
+    // [source id, a URL on the right org, a URL on the wrong org]
+    const cases: Array<[string, string, string]> = [
+      ["fema-nri", NRI, EPA],
+      ["hifld-hospitals", HIFLD, EPA],
+      ["epa-cws-boundaries", EPA, NRI],
+      ["epa-ucmr5-pat", EPA.replace("Water_System_Boundaries", "PFAS_Analytic_Tools_Layers"), NRI],
+    ];
+    for (const [id, good, bad] of cases) {
+      const base = await austin();
+      const item = { fact: "x", value: 1, sourceId: id, publisher: "p", upstreamUrl: "https://services.arcgis.com/", retrievedAt: "2026-10-18T12:00:00.000Z", link: "http://t/x", upstreamRecordUrl: good };
+      base.topics.identity.items = [item];
+      expect(validateWorld(base).errorMessage, `${id} on its own org`).toBeUndefined();
+      item.upstreamRecordUrl = bad;
+      const v = validateWorld(base);
+      expect(v.valid, `${id} citing the other org's layer`).toBe(false);
+      expect(v.errorMessage).toContain("upstreamRecordUrl");
+    }
+    expect(ORG_XG).not.toBe(ORG_CJ);
   });
 
   it("tamper: a record URL on another publisher's host, a retrievedAt without Z, an item with no link, and a missing record URL not said in the note all fail", async () => {
