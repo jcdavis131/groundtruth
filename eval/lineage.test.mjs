@@ -1,6 +1,7 @@
 // Self-test for eval/lineage.mjs. Plain Node, no install, no network.
 //   node eval/lineage.test.mjs
-// The `sources` strings are copied from task-pool/pool.json (frozen, sha 6c970b30..., on groundtruth#15):
+// The `sources` strings are copied verbatim from task-pool/pool.json (frozen, sha 6c970b30..., on groundtruth#15), except the item named "p19 birthplaces (audit-sourced)",
+// whose leading home-directory prefix is removed because guard.mjs forbids home paths in tracked files:
 // the one audit-sourced item and five clean ones, including a gods-eye-view PR with the same number as a
 // groundtruth PR in the lineage list (a different repo, so not lineage).
 import { readFileSync } from "node:fs";
