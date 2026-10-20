@@ -52,6 +52,7 @@ const tasks = {
     { question: q("route-release"), placeKind: "county", type: "exact", routeMissing: { reason: "source:not_in_release", url: PUB } },
     { question: q("route-join"), placeKind: "county", type: "exact", routeMissing: { reason: "join:multi_county", url: PUB } },
     { question: q("route-failed"), placeKind: "county", type: "exact", routeMissing: { reason: "source:failed", url: PUB } },
+    { question: q("none"), placeKind: "county", type: "exact", unrecorded: "no recorded publisher reply answers this question" },
     { question: q("route-nourl"), placeKind: "county", type: "exact", routeMissing: { reason: "source:not_in_release" } },
   ],
 };
@@ -96,10 +97,10 @@ check(row("svi")?.url === svi.url && row("cms-flag")?.url === cmsNA.url && row("
 check(row("svi")?.sha256 === svi.sha256, "a matcher-derived row carries the sha256 of the recorded body it rests on");
 
 // 5. not gold: no recorded reply (NID), a route code that is not an abstain code, a route entry with no URL
-for (const n of ["nid", "route-join", "route-failed", "route-nourl"]) check(row(n) === undefined, `${n} is not a gold row`);
+for (const n of ["nid", "none", "route-join", "route-failed", "route-nourl"]) check(row(n) === undefined, `${n} is not a gold row`);
 const side = JSON.parse(readFileSync(out + ".unrecorded.json", "utf8"));
 const why = (n) => side.unrecorded.find((u) => u.id === itemId(q(n)))?.reason ?? "";
-check(side.unrecorded.length === 4 && /no recorded reply/.test(why("nid")), "NID is listed UNRECORDED (no recorded reply), not gold");
+check(side.unrecorded.length === 5 && /no recorded publisher reply answers/.test(why("none")) && /no recorded reply/.test(why("nid")), "NID is listed UNRECORDED (no recorded reply), not gold");
 check(/join_gap/.test(why("route-join")) && /failed/.test(why("route-failed")), "join_gap and failed route entries are listed, never turned into NOT_PUBLISHED");
 check(/no publisher URL/.test(why("route-nourl")), "a route entry with no publisher URL is listed, not gold");
 check(Object.keys(items).length + side.unrecorded.length === tasks.tasks.length, "every task is a gold row or listed: none dropped silently");

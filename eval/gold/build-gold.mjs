@@ -11,6 +11,7 @@
 //   Q = {sourceId, fact, code, period?, upstreamRecordUrl, retrievedAt, field, decimals?}: the publisher's record the answer
 //       is read from. It is run through cite-check's plan/classify against the RECORDED publisher reply
 //       (apps/map/lib/cite/__fixtures__/publisher), with no value of its own, and the publisher's value is read from the verdict.
+//   or {unrecorded: "why"} for a question no recorded publisher row answers (listed, not gold)
 //   R = {reason, url?}: the reason code of a route's own missing entry and the publisher page behind it.
 // How a row becomes gold:
 //   a matcher reads a value (CONFIRMED, CONTRADICTED or CHANGED_SINCE_RETRIEVAL with a publisher value)  -> PUBLISHED, gold = that value
@@ -102,6 +103,10 @@ for (const t of spec.tasks) {
   if (items[id] || unrecorded.some((u) => u.id === id)) die(`task ${id} appears twice`);
   const skip = (reason) => unrecorded.push({ id, question: t.question, reason });
 
+  if (typeof t.unrecorded === "string") {
+    skip(t.unrecorded);
+    continue;
+  }
   if (t.routeMissing) {
     const code = codeForRouteEntry({ reason: t.routeMissing.reason });
     if (!ABSTAIN.has(code)) skip(`route entry ${t.routeMissing.reason} is code ${code}, not an abstain code (not_published, not_in_release, withheld)`);
