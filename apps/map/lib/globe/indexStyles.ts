@@ -8,8 +8,8 @@ import type { LayerStyle } from "./renderer";
 import type { LayerFeature } from "@/lib/layers/types";
 import { polyFills, polyOutlines } from "./hazardStyles";
 import { NRI_CLASSES, NRI_COLORS, NRI_NO_RATING_EDGE, type NriExtra } from "@/lib/hazards/nri";
-import type { LegendEntry } from "@/lib/fabric/legend";
-import { PLACES_BIN_COLORS } from "@/lib/civic/places";
+import type { Legend, LegendEntry } from "@/lib/fabric/legend";
+import { PLACES_BIN_COLORS, type PlacesMeasure } from "@/lib/civic/places";
 import type { HealthExtra } from "@/lib/layers/health";
 import { SVI_BIN_COLORS, SVI_BIN_LABELS, SVI_NO_RANK_EDGE, type SviExtra } from "@/lib/civic/svi";
 import { BROADBAND_BIN_COLORS, BROADBAND_NO_DATA_EDGE, binLabelsFor, parseBroadbandMeasure, type BroadbandExtra } from "@/lib/civic/broadband";
@@ -181,8 +181,22 @@ function placesLabels(breaks?: readonly number[]): string[] {
   return ["lowest fifth of counties", "second fifth", "middle fifth", "fourth fifth", "highest fifth of counties"];
 }
 
+export interface IndexLegendOpts {
+  /** Broadband's and housing's measure. */
+  measure?: number;
+  /** CDC PLACES' four quintile breaks, when the caller has them. */
+  placesBreaks?: readonly number[];
+  /** The PLACES measure: its committed national breaks label the bins. */
+  placesMeasure?: PlacesMeasure;
+}
+
+/** The key for one index layer as a Legend (RED STUB: entries only, no scale yet). */
+export function legendOfIndex(layer: IndexLayer, opts: IndexLegendOpts = {}): Legend {
+  return { entries: indexLegend(layer, opts), max: null, notLoaded: { count: 0, reasons: {} }, units: "classes" };
+}
+
 /** The key for one index layer. `measure` picks broadband's and housing's measure; `placesBreaks` are CDC PLACES' four quintile breaks in view. */
-export function indexLegend(layer: IndexLayer, opts: { measure?: number; placesBreaks?: readonly number[] } = {}): LegendEntry[] {
+export function indexLegend(layer: IndexLayer, opts: IndexLegendOpts = {}): LegendEntry[] {
   switch (layer) {
     case "riskindex":
       return [...NRI_CLASSES.map((c) => ({ color: NRI_COLORS[c], label: c, kind: "class" as const })), edge(NRI_NO_RATING_EDGE, "not rated (dashed edge)")];

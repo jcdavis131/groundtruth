@@ -4,6 +4,7 @@
 // that fails reading unknown, and bad parameters never reaching CDC. No network.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
+import { placesBreaks } from "@/lib/breaks";
 import northeast from "@/lib/civic/fixtures/places-county-diabetes-northeast-trimmed.json";
 import tracts from "@/lib/civic/fixtures/places-tract-09110-diabetes.json";
 import travis from "@/lib/civic/fixtures/places-county-48453-all.json";
@@ -37,7 +38,7 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
-type Body = { data: { rows?: Array<Record<string, unknown>>; values?: unknown[] }; count: number; breaks?: number[]; coverage?: Array<{ county: string; state: string; count: number | null }>; caveats: string[] };
+type Body = { data: { rows?: Array<Record<string, unknown>>; values?: unknown[] }; count: number; breaks?: number[]; breaksN?: number; coverage?: Array<{ county: string; state: string; count: number | null }>; caveats: string[] };
 async function get(qs: string) {
   const res = await GET(new NextRequest(`http://localhost/api/civic?${qs}`));
   return { status: res.status, body: (await res.json()) as Body };
@@ -54,7 +55,10 @@ describe("op=health", () => {
     expect(q.get("datavaluetypeid")).toBe("AgeAdjPrv");
     expect(body.count).toBe(135);
     expect(body.data.rows!.find((r) => r.fips === "09110")).toEqual({ fips: "09110", name: "Capitol", state: "CT", value: 9.2, low: 8.4, high: 10, year: 2023, population: 975328 });
-    expect(body.breaks).toHaveLength(4);
+    // The breaks the route serves are the committed national ones, not quintiles of the rows it just read:
+    // the fixture is seven states, so quintiles of it would differ.
+    expect(body.breaks).toEqual(placesBreaks("DIABETES").breaks);
+    expect(body.breaksN).toBe(placesBreaks("DIABETES").n);
     expect(body.caveats.join(" ")).toMatch(/not counts of diagnosed people/);
   });
 
@@ -69,6 +73,9 @@ describe("op=health", () => {
     expect(calls).toHaveLength(2);
     for (const u of calls) expect(u).not.toContain("within_box");
     expect(body.count).toBe(246);
+    // Tracts are binned on the same committed national county breaks, and the reply says so.
+    expect(body.breaks).toEqual(placesBreaks("DIABETES").breaks);
+    expect(body.caveats.join(" ")).toMatch(/national county breaks/);
     expect(body.coverage).toEqual([
       { county: "09110", state: "covered", count: 246 },
       { county: "09120", state: "error", count: null },
