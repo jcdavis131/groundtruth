@@ -130,7 +130,7 @@ describe("/api/catalog?op=place-export", () => {
       }
       const pub = prov.find((p) => p.source.id === want[id]);
       expect(pub, id).toBeTruthy();
-      expect(pub).toMatchObject({ upstreamUrl: meta.source.layer, retrievedAt: meta.source.fetchedAt, releasedAt: meta.source.serviceDataLastEdit, kind: "published" });
+      expect(pub).toMatchObject({ upstreamUrl: meta.source.layer, retrievedAt: meta.source.fetchedAt, releasedAt: meta.source.serviceDataLastEdit, kind: "estimate" });
       // The county table the export joins to is cited too, with its own pull date.
       expect(prov.some((p) => p.source.id === "census-tigerweb"), id).toBe(true);
     }
