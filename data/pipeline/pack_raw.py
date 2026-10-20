@@ -22,7 +22,8 @@ refusal too: coverage of nothing is not coverage.
 
 --out hashes first (the dry run's whole job), checks coverage, and only then writes, re-hashing each file as it goes into the
 tar and stopping if one changed since the first pass. The tar and the index are written under .part names and renamed once
-both are complete. Nothing here uploads anything or writes in the data root: where the tar goes is Cam's call.
+both are complete. Nothing here uploads anything. The pack never writes in the data root: --out writes only into the folder you
+name, and refuses the data root itself and any folder inside it (raw/ included). Where the tar goes is Cam's call.
 
 Standard library only and no sibling imports, because `python -I` leaves this folder off sys.path. The data root is
 --data-root, else GROUNDTRUTH_DATA_ROOT, else <home>/datastore/groundtruth-snapshots, as in data/pipeline/read.py.
@@ -254,10 +255,13 @@ def render_index(head: dict, entries: list[Entry]) -> str:
 
 # ---------------------------------------------------------------- the run
 
-def check_out(out: Path, raw: Path) -> None:
-    out_r, raw_r = out.resolve(), raw.resolve()
-    if out_r == raw_r or raw_r in out_r.parents:
-        raise PackError(f"--out {out} is inside {raw}; the pack would pack itself")
+def check_out(out: Path, root: Path) -> None:
+    """--out may be anywhere except the data root and what is under it: the data root is read-only here, and raw/ sits in it."""
+    out_r, root_r = out.resolve(), root.resolve()
+    if out_r == root_r:
+        raise PackError(f"--out {out} is the data root; the pack never writes in the data root")
+    if root_r in out_r.parents:
+        raise PackError(f"--out {out} is inside the data root {root}; the pack never writes in the data root")
     for name in ("raw.tar", "index.json", "raw.tar.part", "index.json.part"):
         if (out / name).exists():
             raise PackError(f"{out / name} already exists; this never overwrites a pack")
@@ -285,7 +289,7 @@ def run(a: argparse.Namespace) -> int:
     root = Path(a.data_root or default_data_root())
     raw = root / "raw"
     if a.out is not None:
-        check_out(a.out, raw)
+        check_out(a.out, root)
     print(f"data root: {root}")
     pins, n_manifests = load_pins(a.manifests)  # before the walk: a bad manifest fails cheaply
     entries = scan(raw)
