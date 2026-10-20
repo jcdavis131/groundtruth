@@ -17,7 +17,7 @@ describe("GET /api/mcp", () => {
     expect(j.endpoint).toBe(URL_);
     expect(j.tools.map((t) => t.name)).toContain("water_report");
     expect(j.tools[0].inputSchema.type).toBe("object");
-    expect(j.prompts).toHaveLength(3);
+    expect(j.prompts).toHaveLength(4);
   });
 
   it("OPTIONS answers the preflight", () => {
@@ -59,7 +59,8 @@ describe("POST /api/mcp", () => {
     expect(init.headers.get("content-type")).toContain("application/json");
     expect(init.headers.get("mcp-session-id")).toBeNull();
     expect(init.headers.get("access-control-allow-origin")).toBe("*");
-    const ij = (await init.json()) as { result: { serverInfo: { name: string }; capabilities: Record<string, unknown> } };
+    const ij = (await init.json()) as { result: { serverInfo: { name: string }; capabilities: Record<string, unknown>; instructions?: string } };
+    expect(ij.result.instructions ?? "").toContain("world_context");
     expect(ij.result.serverInfo.name).toBe("embedding-atlas-mcp-server");
     expect(ij.result.capabilities).toHaveProperty("tools");
     expect(ij.result.capabilities).toHaveProperty("prompts");
