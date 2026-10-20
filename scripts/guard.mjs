@@ -28,6 +28,7 @@
 //              the header marker the eval kit puts in its gold, key and split files. The sealed files live outside
 //              the repo until scoring is done (writeups PREREG-TEMPLATE rule 6); code such as eval/split.mjs is
 //              not flagged.
+//   rules      a "Checked here" row of AGENTS.md's rules table names no tracked path or a missing workflow file.
 // Exit 0 when clean, 1 with one line per finding. No file is exempt, the guard's own included: its
 // patterns and test fixtures are written so they never match themselves.
 //
@@ -89,6 +90,41 @@ function textOf(buf) {
   return buf.toString("utf8");
 }
 
+// rules: AGENTS.md's "Record rules and what enforces them" table. Every row whose Status starts with
+// "Checked" and says "here" (this repo enforces it) must name at least one tracked path in its "Enforced by"
+// cell, and each workflow file it names must be tracked under .github/workflows. Reads the table, not the
+// prose around it. A repo with no AGENTS.md has no table and is not judged.
+function rulesFindings(root, tracked) {
+  const f = path.join(root, "AGENTS.md");
+  if (!existsSync(f)) return [];
+  const lines = readFileSync(f, "utf8").split("\n");
+  const at = lines.findIndex((l) => /^#+\s*Record rules and what enforces them\s*$/.test(l));
+  if (at < 0) return ["rules    AGENTS.md  no \"Record rules and what enforces them\" heading"];
+  const out = [];
+  let rows = 0;
+  for (let i = at + 1; i < lines.length; i++) {
+    const l = lines[i];
+    if (/^#+\s/.test(l)) break;
+    if (!l.startsWith("|")) continue;
+    const cells = l.replace(/^\||\|\s*$/g, "").split("|").map((c) => c.trim());
+    if (cells[0] === "Rule" || /^:?-+:?$/.test(cells[0])) continue;
+    rows++;
+    if (cells.length !== 3) {
+      out.push(`rules    AGENTS.md:${i + 1}  row has ${cells.length} cells, not 3`);
+      continue;
+    }
+    const [rule, by, status] = cells;
+    if (!/^Checked/.test(status) || !/\bhere\b/i.test(status)) continue;
+    const label = rule.slice(0, 50);
+    const named = [...by.matchAll(/`([^`]+)`/g)].map((m) => m[1].trim().split(/\s+/)[0]).filter((s) => /^[\w@.\-/]+\.\w+$/.test(s));
+    if (!named.some((p) => tracked.has(p))) out.push(`rules    AGENTS.md:${i + 1}  "${label}" is marked Checked but names no tracked path`);
+    for (const p of named.filter((s) => /\.ya?ml$/.test(s) && s.includes(".github/workflows/")))
+      if (!tracked.has(p) || !existsSync(path.join(root, p))) out.push(`rules    AGENTS.md:${i + 1}  "${label}" names workflow ${p}, which does not exist`);
+  }
+  if (!rows) out.push("rules    AGENTS.md  the table has no rows");
+  return out;
+}
+
 const files = execFileSync("git", ["-C", root, "ls-files", "-z"], { encoding: "utf8" }).split("\0").filter(Boolean);
 const findings = [];
 for (const f of files) {
@@ -129,6 +165,7 @@ for (const f of files) {
 }
 const tracked = new Set(files);
 for (const p of ALLOW.keys()) if (!tracked.has(p)) findings.push(`allow    ${p}  listed in guard.allow.json but not tracked`);
+findings.push(...rulesFindings(root, tracked));
 for (const line of findings) console.log(line);
 console.log(findings.length ? `\n${findings.length} finding(s) in ${files.length} tracked files` : `clean: ${files.length} tracked files`);
 process.exitCode = findings.length ? 1 : 0;
