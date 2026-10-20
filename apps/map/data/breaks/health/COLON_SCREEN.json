@@ -1,0 +1,28 @@
+{
+  "schema": "breaks/1",
+  "layer": "health",
+  "measure": "COLON_SCREEN",
+  "period": "data year 2022",
+  "valueType": "age-adjusted prevalence (percent)",
+  "method": "quintile-nearest-rank",
+  "rule": "Sort the published values ascending (n of them); breaks[i] = sorted[min(n-1, floor(q*n))] for q = 0.2, 0.4, 0.6, 0.8. A value's bin is the number of breaks it is at or above, 0 to 4.",
+  "breaks": [
+    53.9,
+    56.5,
+    58.7,
+    61.2
+  ],
+  "n": 3143,
+  "nNull": 1,
+  "universe": "US counties and county equivalents (Connecticut as planning regions) with a published age-adjusted prevalence for Colorectal Cancer Screening, CDC PLACES 2025 release",
+  "source": {
+    "url": "https://data.cdc.gov/resource/swc5-untb.json?%24select=year%2Cstateabbr%2Cstatedesc%2Clocationid%2Clocationname%2Cmeasureid%2Cdatavaluetypeid%2Cdata_value%2Clow_confidence_limit%2Chigh_confidence_limit%2Ctotalpopulation&measureid=COLON_SCREEN&datavaluetypeid=AgeAdjPrv&%24order=locationid&%24limit=5000",
+    "retrievedAt": "2026-10-20T15:10:41.263Z",
+    "lastModified": "Thu, 04 Dec 2025 10:35:59 GMT",
+    "sha256": "24ebe8da1257575857edad21be019f659cbea804c8d92c8a9303d530da97e7a9"
+  },
+  "input": {
+    "path": "data/breaks/inputs/health/COLON_SCREEN.json",
+    "sha256": "bb5697fa782dc7832afed58a819e1ce459a6e3fa7c64c3f533ad83bda3bc8f12"
+  }
+}

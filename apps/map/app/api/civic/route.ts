@@ -144,10 +144,10 @@ import {
   PLACES_MAX_COUNTIES,
   PLACES_MEASURES,
   placeUrl,
-  quintiles,
   tractUrl,
   type PlacesMeasure,
 } from "@/lib/civic/places";
+import { placesBreaks, tractCaveat } from "@/lib/breaks";
 
 export const maxDuration = 60;
 export const OPTIONS = options;
@@ -165,6 +165,7 @@ async function healthCounty(m: PlacesMeasure) {
   const url = countyMeasureUrl(m);
   const r = await cached(`places:county:${m}`, WEEK_MS, async () => parsePlaces(await civicJson<unknown>("cdc-places", url, 25_000), "county"));
   const meta = PLACES_MEASURES[m];
+  const committed = placesBreaks(m);
   return ok(
     { level: "county", measure: m, rows: r.value.map(({ fips, name, state, value, low, high, year, population }) => ({ fips, name, state, value, low, high, year, population })) },
     {
@@ -173,12 +174,16 @@ async function healthCounty(m: PlacesMeasure) {
         measure: { id: m, name: meta.name, short: meta.short, category: meta.category, year: meta.year },
         valueType: "age-adjusted prevalence, %",
         count: r.value.length,
-        breaks: quintiles(r.value.map((v) => v.value)),
+        breaks: committed.breaks,
+        breaksN: committed.n,
         cacheAge: r.age,
       },
       ttlS: 86_400,
       provenance: [provenance(source("cdc-places"), { kind: "published", seriesId: `swc5-untb (PLACES county, 2025 release), measureid=${m}, AgeAdjPrv`, upstreamUrl: url, retrievedAt: at(r.age) })],
-      caveats: [PLACES_CAVEAT, "`breaks` are national quintiles of the published county values for this measure. A county with no row is not published, not 0."],
+      caveats: [
+        PLACES_CAVEAT,
+        `\`breaks\` are the committed national quintiles of the published county values for this measure (data/breaks/health/${m}.json, breaks/1: n=${committed.n} counties, fetched ${committed.source.retrievedAt}), the same cut points the map bins counties and tracts on. A county with no row is not published, not 0.`,
+      ],
     },
   );
 }
@@ -190,12 +195,17 @@ async function healthTract(m: PlacesMeasure, counties: string[]) {
   if (parts.every((p) => p == null)) throw new Error("CDC PLACES did not answer for any county asked");
   const coverage = counties.map((c, i) => ({ county: c, state: parts[i] ? "covered" : "error", count: parts[i] ? parts[i]!.value.length : null }));
   const rows = parts.flatMap((p) => p?.value ?? []);
-  const caveats = [PLACES_CAVEAT, "Crude prevalence, as CDC publishes tracts. A tract with no row is not published (small populations are withheld), not 0."];
+  const committed = placesBreaks(m);
+  const caveats = [
+    PLACES_CAVEAT,
+    "Crude prevalence, as CDC publishes tracts. A tract with no row is not published (small populations are withheld), not 0.",
+    `${tractCaveat(committed)}. \`breaks\` are those county cut points.`,
+  ];
   for (const c of coverage) if (c.state === "error") caveats.push(`CDC PLACES did not answer for county ${c.county} this time: its tracts are unknown, not missing.`);
   return ok(
     { level: "tract", measure: m, rows: rows.map(({ fips, state, value, low, high, year, population }) => ({ fips, state, value, low, high, year, population })) },
     {
-      meta: { source: PLACES_ATTRIBUTION, measure: { id: m, ...PLACES_MEASURES[m] }, valueType: "crude prevalence, %", coverage, count: rows.length, cacheAge: Math.max(...parts.map((p) => p?.age ?? 0)) },
+      meta: { source: PLACES_ATTRIBUTION, measure: { id: m, ...PLACES_MEASURES[m] }, valueType: "crude prevalence, %", breaks: committed.breaks, breaksN: committed.n, coverage, count: rows.length, cacheAge: Math.max(...parts.map((p) => p?.age ?? 0)) },
       ttlS: coverage.some((c) => c.state === "error") ? 600 : 86_400,
       provenance: [provenance(source("cdc-places"), { kind: "published", seriesId: `cwsq-ngmh (PLACES tract, 2025 release), measureid=${m}, CrdPrv, countyfips in (${counties.join(", ")})`, upstreamUrl: tractUrl(counties[0], m), retrievedAt: at(Math.max(...parts.map((p) => p?.age ?? 0))) })],
       caveats,

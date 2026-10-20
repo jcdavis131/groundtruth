@@ -1,0 +1,46 @@
+{
+  "schema": "breaks/1",
+  "layer": "fuds-properties",
+  "measure": "fuds_properties",
+  "period": "FUDS inventory, fiscal year 2024 (USACE calls it preliminary)",
+  "valueType": "count of FUDS properties USACE locates in the county",
+  "method": "zero-bin-quartile-nearest-rank",
+  "rule": "Bin 0 is the value 0. Sort the nonzero values ascending (m of them); breaks = the smallest nonzero value, then sorted[min(m-1, floor(q*m))] for q = 0.25, 0.5, 0.75, with a repeated cut point dropped so the breaks rise strictly. A value's bin is the number of breaks it is at or above.",
+  "breaks": [
+    1,
+    2,
+    5
+  ],
+  "n": 3208,
+  "nNull": 14,
+  "universe": "US counties and county equivalents in the committed county table (50 states, DC and Puerto Rico; TIGERweb ACS2023) with a value for FUDS properties: 0 where USACE locates no property there (the inventory is complete, a rule approved on 2026-10-16), null where an unplaced property could be in the county",
+  "source": {
+    "url": "https://services7.arcgis.com/n1YM8pTrFmm7L4hs/arcgis/rest/services/fuds/FeatureServer/1",
+    "retrievedAt": "2026-10-17T02:29:01.807Z",
+    "lastModified": "2026-10-07T17:01:01.997Z",
+    "pages": [
+      {
+        "url": "https://services7.arcgis.com/n1YM8pTrFmm7L4hs/arcgis/rest/services/fuds/FeatureServer/1/query?f=json&where=1%3D1&resultOffset=0&resultRecordCount=5000&outFields=OBJECTID%2CFUDSUNIQUEPROPERTYNUMBER%2CSTATUS%2CCOUNTY%2CSTATE%2CFISCALYEAR&returnGeometry=true&outSR=4326&orderByFields=OBJECTID",
+        "sha256": "337eaa61225fe0beecfdcc4c71d6074723f51df2852d64fc2f09670fdc41b11e",
+        "lastModified": "Wed, 07 Oct 2026 17:01:01 GMT",
+        "rows": 5000
+      },
+      {
+        "url": "https://services7.arcgis.com/n1YM8pTrFmm7L4hs/arcgis/rest/services/fuds/FeatureServer/1/query?f=json&where=1%3D1&resultOffset=5000&resultRecordCount=5000&outFields=OBJECTID%2CFUDSUNIQUEPROPERTYNUMBER%2CSTATUS%2CCOUNTY%2CSTATE%2CFISCALYEAR&returnGeometry=true&outSR=4326&orderByFields=OBJECTID",
+        "sha256": "0a57f1ff385c9b45baca2380d5b69350ba69866821d6d502c5155efe6d83b7cb",
+        "lastModified": "Wed, 07 Oct 2026 17:01:01 GMT",
+        "rows": 5000
+      },
+      {
+        "url": "https://services7.arcgis.com/n1YM8pTrFmm7L4hs/arcgis/rest/services/fuds/FeatureServer/1/query?f=json&where=1%3D1&resultOffset=10000&resultRecordCount=5000&outFields=OBJECTID%2CFUDSUNIQUEPROPERTYNUMBER%2CSTATUS%2CCOUNTY%2CSTATE%2CFISCALYEAR&returnGeometry=true&outSR=4326&orderByFields=OBJECTID",
+        "sha256": "cba5ad3c469cbd0e99180187cf8adabd0a09afec166ff3888e972dcd3231c14e",
+        "lastModified": "Wed, 07 Oct 2026 17:01:01 GMT",
+        "rows": 123
+      }
+    ]
+  },
+  "input": {
+    "path": "lib/catalog/data/fuds-county.json",
+    "sha256": "7dea4a99821b04c53faff348b99dd78e398ea9ec337bcdcf37eb86baead288ee"
+  }
+}

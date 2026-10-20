@@ -961,7 +961,7 @@ export const COLLECTIONS: readonly Collection[] = [
     freshness: { statement: "The 2025 release; CDC last updated the tract dataset 2025-12-12.", readFrom: "data.cdc.gov cwsq-ngmh (civic lane read; the release date per the county dataset)", recordedOn: R4 },
     excluded: [
       { what: "within_box tract queries", why: "19.6 s cold; tracts are asked by county" },
-      { what: "national tract quintiles", why: "3 million rows; the bins are quintiles of the tracts loaded, and the legend says so" },
+      { what: "national tract quintiles", why: "3 million rows; tracts are binned on the committed national county breaks instead (data/breaks/health, breaks/1), a crude tract value against age-adjusted county cut points, and the legend says so with the breaks' n" },
     ],
     caveats: [PLACES_CAVEAT],
     searchable: ["locationname"],

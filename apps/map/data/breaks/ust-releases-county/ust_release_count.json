@@ -1,0 +1,41 @@
+{
+  "schema": "breaks/1",
+  "layer": "ust-releases-county",
+  "measure": "ust_release_count",
+  "period": "state records as of 2018-2021, tribal records to October 2025",
+  "valueType": "count of reported leaking underground storage tank releases",
+  "method": "zero-bin-quartile-nearest-rank",
+  "rule": "Bin 0 is the value 0. Sort the nonzero values ascending (m of them); breaks = the smallest nonzero value, then sorted[min(m-1, floor(q*m))] for q = 0.25, 0.5, 0.75, with a repeated cut point dropped so the breaks rise strictly. A value's bin is the number of breaks it is at or above.",
+  "breaks": [
+    1,
+    26,
+    60,
+    139
+  ],
+  "n": 3211,
+  "nNull": 11,
+  "universe": "US counties and county equivalents in the committed county table (50 states, DC and Puerto Rico; TIGERweb ACS2023) that EPA UST Finder has a county row for; a county with no row is null",
+  "source": {
+    "url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/UST_Finder_Feature_Layer_2eb/FeatureServer/3",
+    "retrievedAt": "2026-10-17T02:22:24.170Z",
+    "lastModified": "2026-02-13T15:22:36.042Z",
+    "pages": [
+      {
+        "url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/UST_Finder_Feature_Layer_2eb/FeatureServer/3/query?f=json&where=1%3D1&orderByFields=OBJECTID&resultOffset=0&resultRecordCount=2000&outFields=OBJECTID%2CCounty%2CState%2CRelease_Count%2COpen_Count%2CNo_Further_Action_Count&returnGeometry=false",
+        "sha256": "d4e17052baf46b51694f6f5f60c6ab32f2e947836b5006bbdf00efc38e8006eb",
+        "lastModified": "Fri, 13 Feb 2026 15:22:36 GMT",
+        "rows": 2000
+      },
+      {
+        "url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/UST_Finder_Feature_Layer_2eb/FeatureServer/3/query?f=json&where=1%3D1&orderByFields=OBJECTID&resultOffset=2000&resultRecordCount=2000&outFields=OBJECTID%2CCounty%2CState%2CRelease_Count%2COpen_Count%2CNo_Further_Action_Count&returnGeometry=false",
+        "sha256": "481969e2e1de81c052c423314b93fabeb8ec1eb31d4f8889712a16ed7824e052",
+        "lastModified": "Fri, 13 Feb 2026 15:22:36 GMT",
+        "rows": 1220
+      }
+    ]
+  },
+  "input": {
+    "path": "lib/catalog/data/ust-releases-county.json",
+    "sha256": "2ce41abc0f1a932c0ab83a77facef29ef163d5a1f16797679651cce752d6d9b7"
+  }
+}

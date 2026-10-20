@@ -10,7 +10,9 @@
 import type { LayerId } from "@/lib/layers/types";
 import { useSettings } from "@/lib/store/settings";
 import { NRI_CLASSES, NRI_COLORS, NRI_HAZARDS, NRI_HAZARD_CODES, NRI_NO_RATING_EDGE, parseNriPick } from "@/lib/hazards/nri";
-import { isPlacesMeasure, PLACES_BIN_COLORS, PLACES_DEFAULT_MEASURE, PLACES_MEASURES, SOCIAL_NEEDS, UNRANKED_BIN, type PlacesMeasure } from "@/lib/civic/places";
+import { isPlacesMeasure, PLACES_DEFAULT_MEASURE, PLACES_MEASURES, SOCIAL_NEEDS, type PlacesMeasure } from "@/lib/civic/places";
+import { legendOfIndex } from "@/lib/globe/indexStyles";
+import FieldLegend from "./FieldLegend";
 import { parseSviTheme, SVI_BIN_COLORS, SVI_BIN_LABELS, SVI_NO_RANK_EDGE, SVI_THEMES } from "@/lib/civic/svi";
 import { BROADBAND_BIN_COLORS, BROADBAND_MEASURES, BROADBAND_NO_DATA_EDGE, binLabelsFor, parseBroadbandMeasure } from "@/lib/civic/broadband";
 import { parseWrcMeasure, parseWrcScope, WRC_BIN_COLORS, WRC_BIN_LABELS, WRC_NO_RANK_EDGE, WRC_RANKS } from "@/lib/hazards/wrc";
@@ -108,23 +110,10 @@ function MeasurePicker() {
           ))}
         </select>
       </label>
-      <ul className="mt-1 flex flex-wrap gap-x-2 gap-y-0.5">
-        {PLACES_BIN_COLORS.map((c, i) => (
-          <li key={c} className="flex items-center gap-1 text-[9px] text-muted-foreground">
-            <span className="inline-block size-2 shrink-0 border border-black/40" style={{ background: c }} aria-hidden />
-            quintile {i + 1}
-          </li>
-        ))}
-        <li className="flex items-center gap-1 text-[9px] text-muted-foreground">
-          <span className="inline-block size-2 shrink-0 border border-black/40" style={{ background: PLACES_BIN_COLORS[UNRANKED_BIN] }} aria-hidden />
-          published, not ranked: fewer than five values (drawn as quintile 3)
-        </li>
-        <li className="flex items-center gap-1 text-[9px] text-muted-foreground">
-          <span className="inline-block size-2 shrink-0 border border-dashed" style={{ borderColor: NRI_NO_RATING_EDGE }} aria-hidden />
-          not published
-        </li>
-      </ul>
-      <div>{PLACES_MEASURES[pick].name}. Counties: age-adjusted, national quintiles; tracts below 100 km: crude, quintiles of the tracts in view. Model-based estimates, not counts.</div>
+      <div className="mt-1">
+        <FieldLegend legend={legendOfIndex("health", { placesMeasure: pick })} />
+      </div>
+      <div>{PLACES_MEASURES[pick].name}. Counties show the age-adjusted prevalence CDC publishes, tracts below 100 km its crude prevalence, both binned on the national county breaks above. Model-based estimates, not counts.</div>
     </>
   );
 }
