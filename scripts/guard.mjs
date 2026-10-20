@@ -29,6 +29,10 @@
 //              the repo until scoring is done (writeups PREREG-TEMPLATE rule 6); code such as eval/split.mjs is
 //              not flagged.
 //   rules      a "Checked here" row of AGENTS.md's rules table names no tracked path or a missing workflow file.
+//              A "Tested here" row is held to a stricter reading of the same thing: it names at least one path,
+//              every path it names is tracked, and every workflow it names exists. A bare basename (no directory)
+//              counts when it matches exactly one tracked file; two matches or none is a finding. No mutant is
+//              asked of a Tested row (scripts/rules-table.test.mjs reads Checked rows only).
 // Exit 0 when clean, 1 with one line per finding. No file is exempt, the guard's own included: its
 // patterns and test fixtures are written so they never match themselves.
 //
@@ -90,10 +94,53 @@ function textOf(buf) {
   return buf.toString("utf8");
 }
 
+// A word in an "Enforced by" cell that reads as a file path: path characters ending in an extension, and either
+// with a directory in it or with an extension files here use. `fieldStyle.colorFor` and `Date.now` are
+// identifiers, not paths; `*Style`, `outFields=*` and `apps/map/lib` (no extension) do not match either.
+const PATH_WORD = /^[\w@.\-/]+\.\w+$/;
+const FILE_EXT = /\.(?:mjs|cjs|js|jsx|ts|tsx|mts|py|sh|json|jsonl|md|ya?ml|toml|csv|tsv|txt|html|css|svg|sql|ipynb|sha256)$/i;
+const WORKFLOW_PATH = /^\.github\/workflows\/[^/]+\.ya?ml$/;
+
+// Every path-looking word inside the backticks of an "Enforced by" cell, once each. A span may carry a command
+// (`node scripts/x.mjs`), so each word of it is read, not only the first.
+function pathWords(by) {
+  const words = [...by.matchAll(/`([^`]+)`/g)].flatMap((m) => m[1].split(/\s+/)).map((w) => w.replace(/^[("']+|[)"',;:.]+$/g, ""));
+  return [...new Set(words.filter((w) => PATH_WORD.test(w) && (w.includes("/") || FILE_EXT.test(w))))];
+}
+
+// The findings for one "Tested here" row (without the "rules    AGENTS.md:N  " prefix): it must name at least
+// one path, and every path it names must resolve. A word with a directory resolves only to that exact tracked
+// path; a bare basename also resolves to the one tracked file of that name, and is a finding when two or none
+// carry it. A workflow, found by either route, must exist in the working tree.
+function testedFindings(label, by, root, tracked, byName) {
+  const words = pathWords(by);
+  if (!words.length) return [`"${label}" is marked Tested but names no path`];
+  const out = [];
+  for (const w of words) {
+    let at = w;
+    if (!tracked.has(w)) {
+      const same = w.includes("/") ? [] : byName.get(w) ?? [];
+      if (same.length === 1) at = same[0];
+      else if (same.length > 1) {
+        out.push(`"${label}" names ${w}, which matches ${same.length} tracked files (${same.slice(0, 5).join(", ")}${same.length > 5 ? `, and ${same.length - 5} more` : ""}); write the full path`);
+        continue;
+      } else {
+        out.push(WORKFLOW_PATH.test(w) ? `"${label}" names workflow ${w}, which does not exist` : `"${label}" names ${w}, which is not tracked`);
+        continue;
+      }
+    }
+    if (WORKFLOW_PATH.test(at) && !existsSync(path.join(root, at))) out.push(`"${label}" names workflow ${at}, which does not exist`);
+  }
+  return out;
+}
+
 // rules: AGENTS.md's "Record rules and what enforces them" table. Every row whose Status starts with
 // "Checked" and says "here" (this repo enforces it) must name at least one tracked path in its "Enforced by"
-// cell, and each workflow file it names must be tracked under .github/workflows. Reads the table, not the
-// prose around it. A repo with no AGENTS.md has no table and is not judged.
+// cell, and each workflow file it names must be tracked under .github/workflows. A row whose Status starts with
+// "Tested" and says "here" (a test enforces it, no mutant yet) is held to the path and workflow check alone,
+// and to a stricter reading of it: see testedFindings. The two differ on purpose. A Checked row may cite eye's
+// paths beside its own (it needs one tracked path), where a Tested row must not name a path that is not here.
+// Reads the table, not the prose around it. A repo with no AGENTS.md has no table and is not judged.
 function rulesFindings(root, tracked) {
   const f = path.join(root, "AGENTS.md");
   if (!existsSync(f)) return [];
@@ -101,6 +148,8 @@ function rulesFindings(root, tracked) {
   const at = lines.findIndex((l) => /^#+\s*Record rules and what enforces them\s*$/.test(l));
   if (at < 0) return ["rules    AGENTS.md  no \"Record rules and what enforces them\" heading"];
   const out = [];
+  const byName = new Map(); // basename to every tracked path that carries it
+  for (const p of tracked) byName.set(path.posix.basename(p), [...(byName.get(path.posix.basename(p)) ?? []), p]);
   let rows = 0;
   for (let i = at + 1; i < lines.length; i++) {
     const l = lines[i];
@@ -114,8 +163,12 @@ function rulesFindings(root, tracked) {
       continue;
     }
     const [rule, by, status] = cells;
-    if (!/^Checked/.test(status) || !/\bhere\b/i.test(status)) continue;
     const label = rule.slice(0, 50);
+    if (/^Tested/.test(status) && /\bhere\b/i.test(status)) {
+      for (const msg of testedFindings(label, by, root, tracked, byName)) out.push(`rules    AGENTS.md:${i + 1}  ${msg}`);
+      continue;
+    }
+    if (!/^Checked/.test(status) || !/\bhere\b/i.test(status)) continue;
     const named = [...by.matchAll(/`([^`]+)`/g)].map((m) => m[1].trim().split(/\s+/)[0]).filter((s) => /^[\w@.\-/]+\.\w+$/.test(s));
     if (!named.some((p) => tracked.has(p))) out.push(`rules    AGENTS.md:${i + 1}  "${label}" is marked Checked but names no tracked path`);
     for (const p of named.filter((s) => /\.ya?ml$/.test(s) && s.includes(".github/workflows/")))
