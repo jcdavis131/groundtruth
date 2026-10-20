@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { byUrl, compare, inTableFacts, recordReturned } from "./grades";
 import type { PublisherReply } from "./types";
 
-// A reconciled-plan file (writeups/jev-2026-10-18/eval-v3/regrade/grades.json) is {result: [{id, g1: {facts: [...]}}]}.
+// A reconciled-plan file (writeups/jev-2026-10-18/eval-v3/regrade/grades.json) is {result: [{id, g1, g2, final: {facts}}]}; only `final` (the reconciled set) is measured, not the two graders.
 // inTableFacts keeps the upstream_publisher facts whose link is on a host in lib/cite/hosts.ts; nothing else is measured.
 const OPENFEMA = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?$filter=disasterNumber eq 4332";
 const NID = "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0/query?where=NIDID%3D'TX01087'&f=json";
@@ -10,7 +10,8 @@ const grades = {
   result: [
     {
       id: "P01",
-      g1: {
+      g1: { facts: [{ fact: "z-first-grader", link: OPENFEMA, citeType: "upstream_publisher", upstreamConfirmed: true, wrong: false }] },
+      final: {
         facts: [
           { fact: "a", link: OPENFEMA, citeType: "upstream_publisher", upstreamConfirmed: true, wrong: false },
           { fact: "b", link: OPENFEMA, citeType: "upstream_publisher", upstreamConfirmed: false, wrong: true },
@@ -20,7 +21,7 @@ const grades = {
         ],
       },
     },
-    { id: "P02", g1: { facts: [{ fact: "f", link: NID, citeType: "upstream_publisher", upstreamConfirmed: false, wrong: false }] } },
+    { id: "P02", final: { facts: [{ fact: "f", link: NID, citeType: "upstream_publisher", upstreamConfirmed: false, wrong: false }] } },
   ],
 };
 const reply = (status: number, body = "{}", error?: string): PublisherReply => ({ status, body, fetchedAt: "2026-10-20T00:00:00Z", sha256: "x", error });
