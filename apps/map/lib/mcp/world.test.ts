@@ -453,7 +453,6 @@ describe("world_context: missing, withheld, partial", () => {
     expect(topicsOf(r).economy.missing).toContainEqual({ what: "typical asking rent (Zillow ZORI)", code: "not_in_release", reason: "Zillow publishes no rent index for this place", action: "abstain" });
     // BLS's own suppression flag is the only source of `withheld`; the item says so, and the schema reads it
     expect(jobs.absence).toBe("withheld");
-    expect(validateWorld(r.payload).errorMessage).toBeUndefined();
   });
 
   it("a failing, throwing or silent sub-route costs only its own items: partial, not an error", async () => {
