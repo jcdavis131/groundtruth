@@ -105,6 +105,7 @@ def main(argv=None) -> int:
     ap.add_argument("--date", required=True)
     ap.add_argument("--data-root", type=Path, default=None)
     ap.add_argument("--offline", action="store_true", help="TIGERweb answers from the raw cache only")
+    ap.add_argument("--dry-run", action="store_true", help="no TIGERweb request and no miss class: print the polygon and publisher counts only")
     a = ap.parse_args(argv)
     root = a.data_root or read.default_data_root()
     zp, bmeta = boundaries.ensure(root, offline=True)
@@ -141,6 +142,11 @@ def main(argv=None) -> int:
             c2_miss = [i for i in ids if pip[i] and theirs[i] and pip[i] != theirs[i]]
             near_unplaced = [i for i in ids if not hits[i] and d_any.get(i, 1e9) <= TOLERANCE_DEG]
             ask = sorted(set(smp) | set(c2_miss) | set(near_unplaced))
+            if a.dry_run:
+                # No TIGERweb request and no class: only what the polygons and the publisher's county already say.
+                agree = sum(1 for i in ids if pip[i] and theirs[i] and pip[i] == theirs[i])
+                print(json.dumps({"stratum": name, "records": len(ids), "pipPlaced": sum(1 for i in ids if pip[i]), "pipUnplaced": sum(1 for i in ids if not hits[i]), "c2Agree": agree, "c2Disagree": len(c2_miss), "tigerwebWouldAsk": len(ask), "sample": len(smp)}))
+                continue
             tw: dict[str, tuple[bool, str | None]] = {}
             for n, i in enumerate(ask):
                 tw[i] = tigerweb_county(fx, *geoms[i])
@@ -211,6 +217,8 @@ def main(argv=None) -> int:
                 "c1": c1,
                 "c2": c2,
             }
+    if a.dry_run:
+        return 0
     sample_text = json.dumps({k: v for k, v in sorted(sample_all.items())}, separators=(",", ":"))
     report["sampleIdsSha256"] = hashlib.sha256(sample_text.encode("utf8")).hexdigest()
     out = root / "work" / f"agreement.{a.date}.json"
