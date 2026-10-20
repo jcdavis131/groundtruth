@@ -2,8 +2,8 @@
 //   node scripts/prereg-check.mjs --hash <sha256> --run <folder> [--pr 15] [--first-plan <ISO time>]
 // Reads the PR's comments with `gh api repos/jcdavis131/groundtruth/issues/<pr>/comments --paginate`, finds the
 // comment containing the hash (the earliest one, if several), and exits 1 unless its created_at is before the
-// earliest file mtime under the run folder, or before --first-plan when given (use it when the folder also holds
-// setup files older than the first plan). Prints both timestamps either way. Exit 2: usage or gh failure.
+// first plan: the earliest timestamp line across the run folder's run-*.log files (file mtimes if there are none).
+// --first-plan overrides it and is printed as operator-supplied. Prints both timestamps either way. Exit 2: usage or gh failure.
 // --comments <file> reads recorded gh JSON instead of calling gh (the self-test uses it).
 import { spawnSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
@@ -37,6 +37,22 @@ function earliest(dir) {
   return min;
 }
 
+// The run's own record of when it began: the earliest leading ISO timestamp across run-*.log lines. Setup files
+// (freeze.py, armC.json, ...) can predate the plan and are not read here.
+function firstLogged(dir) {
+  let min = null;
+  for (const e of readdirSync(dir)) {
+    if (!/^run-.*\.log$/.test(e)) continue;
+    for (const line of readFileSync(path.join(dir, e), "utf8").split(/\r?\n/)) {
+      const m = /^(\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z)\s/.exec(line);
+      if (!m) continue;
+      const t = Date.parse(m[1]);
+      if (min === null || t < min) min = t;
+    }
+  }
+  return min;
+}
+
 let raw;
 if (recorded) raw = readFileSync(recorded, "utf8");
 else {
@@ -61,11 +77,15 @@ let planMs, planLabel;
 if (firstPlan) {
   planMs = Date.parse(firstPlan);
   if (Number.isNaN(planMs)) die(`bad --first-plan: ${firstPlan}`);
-  planLabel = "first plan (--first-plan)";
+  planLabel = "first plan (--first-plan, operator-supplied)";
 } else {
-  planMs = earliest(run);
-  if (planMs === null) die(`run folder has no files: ${run}`);
-  planLabel = "earliest file mtime in the run folder";
+  planMs = firstLogged(run);
+  planLabel = "first plan (earliest run-*.log timestamp in the run folder)";
+  if (planMs === null) {
+    planMs = earliest(run);
+    if (planMs === null) die(`run folder has no files: ${run}`);
+    planLabel = "earliest file mtime in the run folder (no run-*.log timestamps found)";
+  }
 }
 console.log(`hash comment created_at: ${hit.created_at}  (#${pr}, comment ${hit.id})`);
 console.log(`${planLabel}: ${new Date(planMs).toISOString()}`);

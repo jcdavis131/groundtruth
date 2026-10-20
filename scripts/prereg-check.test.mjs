@@ -57,7 +57,7 @@ const logged = runFolder({ "freeze.py": "2026-10-19T19:16:54Z", "run-t1-C.log": 
 writeFileSync(path.join(logged, "run-t1-C.log"), "2026-10-19T19:19:18Z C county_history {}\n2026-10-19T19:19:20Z C x {}\n");
 writeFileSync(path.join(logged, "run-t3-C.log"), "2026-10-19T19:19:22Z C world_context {}\n");
 const h = run("--hash", HASH, "--run", logged, "--comments", fixture);
-check(h.status === 0 && h.stdout.includes("2026-10-19T19:19:18Z"), `setup file older than the hash beside later plan logs: default passes from run-*.log${h.status ? ": " + h.stdout : ""}`);
+check(h.status === 0 && h.stdout.includes("2026-10-19T19:19:18.000Z"), `setup file older than the hash beside later plan logs: default passes from run-*.log${h.status ? ": " + h.stdout : ""}`);
 const lateLogged = runFolder({ "freeze.py": "2026-10-19T19:00:00Z", "run-t1-C.log": "2026-10-19T20:00:00Z" });
 writeFileSync(path.join(lateLogged, "run-t1-C.log"), "2026-10-19T19:10:00Z C a {}\n");
 check(run("--hash", HASH, "--run", lateLogged, "--comments", fixture).status === 1, "a log line earlier than the hash comment fails");
