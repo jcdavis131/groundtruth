@@ -2,8 +2,11 @@
 
     python -I eval/test_score.py
 
-The gold values are real recorded replies, copied from apps/map/lib/mcp/__fixtures__/world/ (recorded
-2026-10-19 from www.arxiviq.com, each from the publisher named in the reply's provenance):
+The gold values are real recorded replies, copied from apps/map/lib/mcp/__fixtures__/world/, each from the publisher named in the reply's
+provenance. Recording provenance, as each fixture's own header says: ct_09110.json "recorded"
+2026-10-19T02:31:52.721Z, "from" "https://www.arxiviq.com"; mobile_01097.json 2026-10-19T02:32:03.493Z,
+"https://www.arxiviq.com"; pr_72127.json 2026-10-19T02:32:29.848Z, "https://www.arxiviq.com"; chugach_02063.json
+2026-10-19T02:41:22.335Z, "the PR preview deployment of this branch" (not www.arxiviq.com):
 
   g1  NRI RISK_RATNG for county 09110      "Relatively High"    ct_09110.json, /api/hazards?op=nri&fips=09110
   g2  QCEW jobs.emp for county 01097       177202               mobile_01097.json, /api/screen?kind=county
