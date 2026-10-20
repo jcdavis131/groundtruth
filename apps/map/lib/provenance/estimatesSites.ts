@@ -46,7 +46,10 @@ interface Hit {
   at: number;
   /** Index of the `{` of the innermost brace around it, or -1. */
   object: number;
-  /** The first non-space character after the string. */
+  /**
+   * The first character after the string that is neither whitespace nor part of a comment, or "as" when a type
+   * assertion (`as const`, `as T`, `satisfies T`) follows: only an expression can carry one, so the string is a value.
+   */
   after: string;
 }
 
@@ -60,6 +63,31 @@ interface Lexed {
 const REGEX_AFTER_WORD = new Set(["return", "typeof", "case", "in", "of", "delete", "void", "throw", "new", "else", "do", "yield", "await"]);
 const REGEX_AFTER_CHAR = "(,=:[!&|?{};+-*%<>~^";
 const isWordChar = (c: string) => /[A-Za-z0-9_$]/.test(c);
+/** `as const`, `as T`, `satisfies T` after a value; not a type member that happens to be named `as` or `satisfies` (`as: string`, `as?: string`). */
+const ASSERTION = /^(?:as|satisfies)\b(?!\s*[:?])/;
+
+/**
+ * What follows the value that ends at index k: the first character past whitespace and line and block comments, or
+ * "as" when a type assertion follows. `kind: "published" as const,`, `kind: "published" satisfies Kind,` and a last
+ * property with a trailing comment (`kind: "published" // note` then `}`) are entries; reading only the next
+ * character filed all three as type members, where nothing judges them.
+ */
+function afterValue(src: string, from: number): string {
+  const n = src.length;
+  let k = from;
+  while (k < n) {
+    if (/\s/.test(src[k])) k++;
+    else if (src.startsWith("//", k)) {
+      const e = src.indexOf("\n", k);
+      k = e < 0 ? n : e;
+    } else if (src.startsWith("/*", k)) {
+      const e = src.indexOf("*/", k + 2);
+      k = e < 0 ? n : e + 2;
+    } else break;
+  }
+  if (k >= n) return "";
+  return ASSERTION.test(src.slice(k, k + 12)) ? "as" : src[k];
+}
 
 function lex(src: string): Lexed {
   const n = src.length;
@@ -138,10 +166,8 @@ function lex(src: string): Lexed {
         skipQuoted(c);
         const body = src.slice(start + 1, i - 1);
         if (body === "published" && /\bkind\s*:\s*$/.test(src.slice(Math.max(0, start - 40), start))) {
-          let k = i;
-          while (k < n && /\s/.test(src[k])) k++;
           const top = stack[stack.length - 1];
-          hits.push({ at: start, object: top && top.open === "{" ? top.start : -1, after: src[k] ?? "" });
+          hits.push({ at: start, object: top && top.open === "{" ? top.start : -1, after: afterValue(src, i) });
         }
         prev = c;
         prevWord = "";
@@ -275,7 +301,7 @@ export function scanSource(src: string, file = ""): SourceScan {
   const { objects, hits } = lex(src);
   const out: SourceScan = { sites: [], typeMembers: 0 };
   for (const h of hits) {
-    if (h.after !== "," && h.after !== "}") {
+    if (h.after !== "," && h.after !== "}" && h.after !== "as") {
       out.typeMembers++;
       continue;
     }
