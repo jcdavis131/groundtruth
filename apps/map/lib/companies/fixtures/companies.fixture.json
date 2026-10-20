@@ -24,6 +24,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "0928",
       "stateOfIncorporation": "CA",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -52,6 +53,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "0630",
       "stateOfIncorporation": "WA",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -80,6 +82,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "NJ",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -108,6 +111,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -136,6 +140,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "0131",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -164,6 +169,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "TX",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -192,6 +198,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -220,6 +227,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "UT",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -248,6 +256,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "0531",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -276,6 +285,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -304,6 +314,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -332,6 +343,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "0930",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -360,6 +372,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1130",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -388,6 +401,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "MD",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -416,6 +430,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -444,6 +459,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1031",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -472,6 +488,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -500,6 +517,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -528,6 +546,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "TX",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -556,6 +575,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "0131",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -584,6 +604,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -612,6 +633,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "0531",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -640,6 +662,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1231",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -668,6 +691,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "1031",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,
@@ -696,6 +720,7 @@
       "geo": "city-centroid",
       "fiscalYearEnd": "0126",
       "stateOfIncorporation": "DE",
+      "geoReason": null,
       "facts": {
         "Revenues": null,
         "NetIncomeLoss": null,

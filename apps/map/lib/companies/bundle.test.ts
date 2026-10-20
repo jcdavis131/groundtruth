@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { COMPACT_FORMAT, decodeBundle } from "./bundle";
 import { BUNDLE } from "./features";
 import type { CompanyBundle, CompanyRecord, ConceptKey } from "./types";
-import { encodeBundle } from "@/scripts/companies-compact.mjs";
+import { encodeBundle, placeReason, withPlaceReasons } from "@/scripts/companies-compact.mjs";
 import fixtureJson from "./fixtures/companies.fixture.json";
 
 const KEYS: ConceptKey[] = ["Revenues", "NetIncomeLoss", "OperatingIncomeLoss", "Assets", "StockholdersEquity", "CashAndCashEquivalentsAtCarryingValue", "LongTermDebt", "EntityNumberOfEmployees"];
@@ -29,6 +29,7 @@ const APPLE: CompanyRecord = {
   geo: "zcta-centroid",
   fiscalYearEnd: "0926",
   stateOfIncorporation: "CA",
+  geoReason: null,
   facts: {
     ...nullFacts(),
     Revenues: { value: 416161000000, period: "CY2025", end: "2025-09-27", accn: "0000320193-25-000079", concept: "RevenueFromContractWithCustomerExcludingAssessedTax" },
@@ -36,7 +37,7 @@ const APPLE: CompanyRecord = {
   },
   pulled: "2026-10-20",
 };
-const NO_FACTS: CompanyRecord = { ...APPLE, cik: 13, name: "No Facts Corp", ticker: "NOF", lon: null, lat: null, geo: null, countyFips: null, facts: nullFacts() };
+const NO_FACTS: CompanyRecord = { ...APPLE, cik: 13, name: "No Facts Corp", ticker: "NOF", lon: null, lat: null, geo: null, countyFips: null, geoReason: "ZIP 95014 is not a 2020 Census ZCTA", facts: nullFacts() };
 const FULL: CompanyBundle = { source: "test", pulled: "2026-10-20", counts: { companies: 2, geocoded: 1, withFacts: 1 }, frameYears: [2025, 2024], companies: [APPLE, NO_FACTS] };
 
 describe("compact companies format", () => {
@@ -81,7 +82,43 @@ describe("compact companies format", () => {
   });
 });
 
+describe("place reasons", () => {
+  it("names why a record is unplaced from what it carries, and nothing for a placed one", () => {
+    expect(placeReason(APPLE)).toBeNull();
+    expect(placeReason({ ...NO_FACTS, zip: null })).toBe("no US five-digit business-address ZIP in SEC submissions");
+    expect(placeReason({ ...NO_FACTS, zip: "10285" })).toBe("ZIP 10285 is not a 2020 Census ZCTA");
+    expect(placeReason({ ...NO_FACTS, zip: "78701", countyFips: "48453" })).toBe("TIGERweb returned no centroid for ZCTA 78701");
+  });
+
+  it("fills a missing geoReason in column order and leaves a present one alone", () => {
+    const { geoReason: _drop, ...bare } = NO_FACTS;
+    void _drop;
+    const out = withPlaceReasons({ ...FULL, companies: [bare, APPLE] }).companies;
+    expect(Object.keys(out[0]).indexOf("geoReason")).toBe(Object.keys(out[0]).indexOf("stateOfIncorporation") + 1);
+    expect(out[0].geoReason).toBe("ZIP 95014 is not a 2020 Census ZCTA");
+    expect(out[1]).toBe(APPLE);
+  });
+});
+
 describe("committed snapshot", () => {
+  it("gives every unplaced company a reason and every placed one none", () => {
+    const byReason = new Map<string, number>();
+    for (const c of BUNDLE.companies) {
+      const placed = c.lon != null && c.lat != null;
+      if (placed) {
+        expect(c.geoReason).toBeNull();
+        continue;
+      }
+      expect(c.geoReason).toBeTruthy();
+      const k = c.geoReason!.replace(/\d{5}/, "<zip>");
+      byReason.set(k, (byReason.get(k) ?? 0) + 1);
+    }
+    expect(Object.fromEntries(byReason)).toEqual({ "no US five-digit business-address ZIP in SEC submissions": 1999, "ZIP <zip> is not a 2020 Census ZCTA": 464 });
+    expect([...byReason.values()].reduce((a, b) => a + b, 0)).toBe(2463);
+    expect(BUNDLE.counts.companies - BUNDLE.counts.geocoded).toBe(2463);
+    expect(BUNDLE.companies.find((c) => c.ticker === "AXP")?.geoReason).toBe("ZIP 10285 is not a 2020 Census ZCTA");
+  });
+
   it("is the dated EDGAR pull, not the fixture, so the layer never marks it missing", () => {
     expect(BUNDLE.pulled).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(BUNDLE.companies.length).toBe(BUNDLE.counts.companies);

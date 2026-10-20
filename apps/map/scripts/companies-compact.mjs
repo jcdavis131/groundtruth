@@ -18,19 +18,53 @@
 // keep the two in step.
 //
 //   node scripts/companies-compact.mjs <full.json> [out.json]   pack a full-format bundle and check it round-trips
+//
+// A full file written before `geoReason` existed (the 2026-10-20 pull) gets
+// it from placeReason below: derived from the zip, countyFips and lon/lat the
+// record already carries, never guessed. companies-data.mjs writes the exact
+// cause at build time instead.
 
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
 export const COMPACT_FORMAT = "companies/2-compact";
 
-export const COLUMNS = ["cik", "name", "ticker", "exchange", "sic", "sicDescription", "state", "city", "zip", "countyFips", "lon", "lat", "geo", "fiscalYearEnd", "stateOfIncorporation"];
+export const COLUMNS = ["cik", "name", "ticker", "exchange", "sic", "sicDescription", "state", "city", "zip", "countyFips", "lon", "lat", "geo", "fiscalYearEnd", "stateOfIncorporation", "geoReason"];
 
 // Same order as lib/companies/facts.ts CONCEPTS.
 export const FACT_KEYS = ["Revenues", "NetIncomeLoss", "OperatingIncomeLoss", "Assets", "StockholdersEquity", "CashAndCashEquivalentsAtCarryingValue", "LongTermDebt", "EntityNumberOfEmployees"];
 
 const FACT_FIELDS = ["value", "period", "end", "accn", "concept"];
 const RECORD_KEYS = new Set([...COLUMNS, "facts", "pulled"]);
+
+/**
+ * Why a record has no map position, from what it already carries: null when
+ * placed. A record without a five-digit ZIP may have had none in SEC
+ * submissions or a non-US postcode the build could not use; the record does
+ * not say which, so the reason names only what is known.
+ */
+export function placeReason(c) {
+  if (c.lon != null && c.lat != null) return null;
+  if (c.zip == null) return "no US five-digit business-address ZIP in SEC submissions";
+  if (c.countyFips == null) return `ZIP ${c.zip} is not a 2020 Census ZCTA`;
+  return `TIGERweb returned no centroid for ZCTA ${c.zip}`;
+}
+
+/** Adds `geoReason` from placeReason to records that lack it, in column order (after stateOfIncorporation). */
+export function withPlaceReasons(full) {
+  return {
+    ...full,
+    companies: full.companies.map((c) => {
+      if ("geoReason" in c) return c;
+      const out = {};
+      for (const [k, v] of Object.entries(c)) {
+        out[k] = v;
+        if (k === "stateOfIncorporation") out.geoReason = placeReason(c);
+      }
+      return out;
+    }),
+  };
+}
 
 /** Full-format bundle -> compact bundle. Throws rather than lose a value. */
 export function encodeBundle(full) {
@@ -119,7 +153,7 @@ export function firstDifference(a, b, at = "$") {
 if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(process.argv[1])) {
   const [inPath, outPath] = process.argv.slice(2);
   if (!inPath) throw new Error("usage: node scripts/companies-compact.mjs <full.json> [out.json]");
-  const full = JSON.parse(fs.readFileSync(inPath, "utf8"));
+  const full = withPlaceReasons(JSON.parse(fs.readFileSync(inPath, "utf8")));
   const compact = encodeBundle(full);
   const text = JSON.stringify(compact) + "\n";
   const diff = firstDifference(decodeBundle(JSON.parse(text)), full);
@@ -127,6 +161,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(proces
   console.log(`${full.companies.length} companies, ${facts} facts, ${concepts(compact)} concepts; compact ${Buffer.byteLength(text)} bytes (full ${fs.statSync(inPath).size})`);
   if (diff) throw new Error(`round trip differs at ${diff}; nothing written`);
   console.log("round trip: decode(compact) deep-equals the full file, every company and fact");
+  const reasons = {};
+  for (const c of full.companies) if (c.geoReason) reasons[c.geoReason.replace(/\d{5}/, "<zip>")] = (reasons[c.geoReason.replace(/\d{5}/, "<zip>")] ?? 0) + 1;
+  console.log(`unplaced by reason: ${JSON.stringify(reasons)}`);
   if (outPath) {
     fs.writeFileSync(outPath, text);
     console.log(`wrote ${outPath}`);

@@ -18,6 +18,7 @@ function rec(over: Partial<CompanyRecord>): CompanyRecord {
     lat: 30.22,
     geo: "zcta-centroid",
     fiscalYearEnd: "1231",
+    geoReason: null,
     facts: {},
     pulled: "2026-09-01",
     ...over,
@@ -27,7 +28,7 @@ function rec(over: Partial<CompanyRecord>): CompanyRecord {
 const BIG = rec({ cik: 10, name: "Big Semis Inc", ticker: "BIG", facts: { Revenues: { value: 5e10, period: "CY2024", end: "2024-12-31" }, NetIncomeLoss: { value: 1e10, period: "CY2024", end: "2024-12-31" } } });
 const SMALL = rec({ cik: 11, name: "Small Steel Corp", ticker: "SML", sic: "3312", countyFips: "48453", facts: { Revenues: { value: 1e8, period: "CY2024", end: "2024-12-31" } } });
 const ELSEWHERE = rec({ cik: 12, name: "Elsewhere Bank", ticker: "ELS", sic: "6021", state: "NC", city: "Charlotte", zip: "28211", countyFips: "37119", lon: -80.83, lat: 35.17 });
-const UNPLACED = rec({ cik: 13, name: "No Address Ltd", ticker: "NOA", state: null, city: null, zip: null, countyFips: null, lon: null, lat: null, geo: null });
+const UNPLACED = rec({ cik: 13, name: "No Address Ltd", ticker: "NOA", state: null, city: null, zip: null, countyFips: null, lon: null, lat: null, geo: null, geoReason: "no US five-digit business-address ZIP in SEC submissions" });
 const TEST_BUNDLE: CompanyBundle = { source: "test", pulled: "2026-09-01", counts: { companies: 4, geocoded: 3, withFacts: 2 }, companies: [SMALL, BIG, ELSEWHERE, UNPLACED] };
 
 describe("committed snapshot", () => {

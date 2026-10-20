@@ -83,6 +83,8 @@ export interface CompanyRecord {
   /** MMDD as EDGAR reports it. */
   fiscalYearEnd: string | null;
   stateOfIncorporation?: string | null;
+  /** Why the company has no map position, from the step that stopped it (no ZIP, ZIP not a Census ZCTA, no centroid); null when placed. */
+  geoReason: string | null;
   /** Latest value per concept for the years the script pulled, keyed by concept then frame year. */
   facts: Partial<Record<ConceptKey, FactValue | null>>;
   /** ISO date the facts were pulled; null in the hand-checked fixture. */

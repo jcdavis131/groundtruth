@@ -20,7 +20,7 @@ import SeriesChart from "./SeriesChart";
 export interface CompanyDossier {
   profile: CompanyProfile;
   sector: SectorMapping;
-  hq: { countyFips: string | null; lon: number | null; lat: number | null; geo: string | null } | null;
+  hq: { countyFips: string | null; lon: number | null; lat: number | null; geo: string | null; geoReason?: string | null } | null;
   filings: Filing[];
   facts: Partial<Record<ConceptKey, FactValue | null>>;
   ratios: DerivedRatio[];
@@ -102,6 +102,7 @@ export default function CompanyAside({ feature }: { feature: LayerFeature }) {
             incorporated {d.profile.stateOfIncorporation ?? "n/a"} · FYE {d.profile.fiscalYearEnd ? `${d.profile.fiscalYearEnd.slice(0, 2)}/${d.profile.fiscalYearEnd.slice(2)}` : "n/a"}
             {d.profile.tickers.length > 1 ? ` · also ${d.profile.tickers.filter((t) => t !== x.ticker).join(", ")}` : ""}
           </div>
+          {d.hq?.geoReason && <div className="text-[9px] text-muted-foreground">not on the map: {d.hq.geoReason}</div>}
         </div>
       )}
 

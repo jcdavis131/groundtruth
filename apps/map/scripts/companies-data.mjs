@@ -239,13 +239,23 @@ for (const l of listings) {
   let lon = null;
   let lat = null;
   let geo = null;
+  // Why a company is not placed, named from the step that stopped it; null when placed.
+  let geoReason = null;
+  const rawZip = str(b.zipCode);
+  if (!sub) geoReason = "SEC returned no submissions file";
+  else if (!rawZip) geoReason = "no business-address ZIP in SEC submissions";
+  else if (!zip) geoReason = `business-address ZIP ${JSON.stringify(rawZip)} in SEC submissions is not a US five-digit ZIP`;
+  else if (!county) geoReason = `ZIP ${zip} is not a 2020 Census ZCTA`;
   if (zip && county) {
     const pt = await centroid(zip);
     if (pt) {
       [lon, lat] = pt;
       geo = "zcta-centroid";
       placed++;
-    } else noFeature++;
+    } else {
+      noFeature++;
+      geoReason = `TIGERweb returned no centroid for ZCTA ${zip}`;
+    }
   }
   const rec = {
     cik: l.cik,
@@ -263,6 +273,7 @@ for (const l of listings) {
     geo,
     fiscalYearEnd: str(sub?.fiscalYearEnd),
     stateOfIncorporation: str(sub?.stateOfIncorporation),
+    geoReason,
     facts: factsFor(l.cik),
     pulled: new Date().toISOString().slice(0, 10),
   };
