@@ -12,7 +12,7 @@ placement rule, written by apps/map/scripts/companies-compact.mjs --write-full),
 sidecar and its records are checked too: no placed company with a non-US business-address state, a geoReason on
 every unplaced one. The sidecar goes along. data/hf/README.md is the dataset card.
 
-A missing file or a mismatch is printed, the exit code is 1, and nothing is uploaded. huggingface_hub is imported
+A data-root manifest.json that differs byte for byte from its committed copy is refused too (data/PIPELINE.md, the 2026-10-19 drift). A missing file or a mismatch is printed, the exit code is 1, and nothing is uploaded. huggingface_hub is imported
 only under --upload, so the dry run needs nothing beyond the standard library. The token is whatever
 huggingface_hub finds on its own (HF_TOKEN, or `hf auth login`); this script never takes one on the command line.
 
@@ -63,6 +63,7 @@ class Item:
     expected_sha: str | None = None
     expected_bytes: int | None = None
     against: str = "nothing"
+    data_root_copy: Path | None = None  # the manifest.json the build left beside the files; must equal the committed copy
     content: str | None = None  # "companies-bundle": the file's records are checked too (check_companies)
     sha256: str | None = None
     bytes: int | None = None
@@ -165,7 +166,7 @@ def plan(
             items.append(
                 Item(f"snapshots/{sid}/{rel}", folder / rel, sha, f.get("bytes"), f"manifest files[] ({sid})")
             )
-        items.append(Item(f"snapshots/{sid}/manifest.json", mp, against="committed copy"))
+        items.append(Item(f"snapshots/{sid}/manifest.json", mp, against="committed copy", data_root_copy=folder / "manifest.json"))
     for rel in extra:
         if not _inside(rel):
             raise PublishRefused(f"extra file path {rel!r} leaves the data root")
@@ -190,6 +191,12 @@ def check(items: list[Item]) -> list[Item]:
             it.problems.append(f"{it.bytes} bytes, the {it.against} says {it.expected_bytes}")
         if it.expected_sha is not None and it.sha256 != it.expected_sha:
             it.problems.append(f"sha256 {it.sha256[:12]}, the {it.against} says {it.expected_sha[:12]}")
+        if it.data_root_copy is not None and it.data_root_copy.is_file() and it.data_root_copy.read_bytes() != it.local.read_bytes():
+            it.problems.append(
+                f"the data root copy {it.data_root_copy} differs byte for byte from the committed manifest; "
+                "bring it level with node data/schema/embeddable.mjs --backfill <that file> (data/SCHEMA.md), "
+                "or rebuild the snapshot under a new id on a new UTC day if the manifest really changed"
+            )
         if it.content == "companies-bundle":
             it.problems.extend(check_companies(it.local))
     return items

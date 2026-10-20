@@ -11,12 +11,16 @@ on:
   pull_request:
   push:
     branches: [master]
+  schedule:
+    - cron: "17 6 * * 1" # weekly, Monday: only the hub-verify job runs then (it reports, never gates a PR)
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   data:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -37,8 +41,11 @@ jobs:
           files=(data/manifests/*/*.json)
           if [ ${#files[@]} -eq 0 ]; then echo "no committed manifests"; exit 0; fi
           node data/schema/validate.mjs manifest --no-files "${files[@]}"
+      - name: lock check (a committed manifest is never edited in place; data/manifests/LOCK.json holds each one's sha256)
+        run: node data/schema/lock.mjs --check
 
   pipeline:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -54,7 +61,24 @@ jobs:
           python-version: "3.11"
       - name: Hugging Face publisher test (stdlib only; a mismatched sha is refused, a dry run never imports huggingface_hub)
         run: python -I data/hf/test_publish.py
+      - name: Hub verifier test (stdlib only; "not published yet" exits 0, a planted mismatch exits 1)
+        run: python -I data/hf/test_verify.py
       - name: install the one pinned dependency (data/pyproject.toml)
         run: python -m pip install $(python -c 'import tomllib; print(" ".join(tomllib.load(open("data/pyproject.toml", "rb"))["project"]["dependencies"]))')
       - name: reader and tiling tests (a tampered snapshot file is refused)
         run: python -m unittest discover -s data/pipeline -p "test_*.py" -v
+
+  hub-verify:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+      - name: compare the Hub's stored hashes with the committed manifests (keyless; "not published yet" exits 0)
+        run: python -I data/hf/verify.py

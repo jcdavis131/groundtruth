@@ -3,11 +3,12 @@
 // Every valid fixture must pass; every invalid one must fail with the reason make-invalid.mjs gives it; the
 // invalid files must match their source; each snapshot's files must hash to what its manifest says.
 import { createHash } from "node:crypto";
-import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CASES, build, fileOf, goodJoins } from "./fixtures/make-invalid.mjs";
+import { LOCK_PATH, MANIFESTS_DIR, lockErrors, writeLock } from "./lock.mjs";
 import { DETAILS_KEY, embeddableFor, withEmbeddable } from "./embeddable.mjs";
 import { MANIFEST_SCHEMA, PUBLIC_NAME_COLLECTIONS, RECORD_SCHEMA, damOwnerProblem, schemaErrors, validateManifest, validateRecord, verifyFiles } from "./validate.mjs";
 
@@ -172,7 +173,7 @@ check(validateManifest({ ...m0, region: { ...m0.region, rule: "inside-texas" } }
 const committed = path.join(HERE, "..", "manifests");
 const holders = [
   ...snaps.map((s) => path.join(FIX, "snapshots", s, "manifest.json")),
-  ...readdirSync(committed).flatMap((c) => list(path.join(committed, c)).map((f) => path.join(committed, c, f))),
+  ...readdirSync(committed, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name).flatMap((c) => list(path.join(committed, c)).map((f) => path.join(committed, c, f))),
 ];
 check(holders.length >= 6, `at least 6 manifests carry the embeddable fields (${holders.length})`);
 for (const p of holders) {
@@ -255,6 +256,52 @@ for (const p of holders) {
     const j = m.joins?.[0];
     if (j) check(j.placed + j.unplaced.length === m.recordCount && j.unplaced.every((u) => u.reason.length > 0), `${rel}: placed + unplaced = recordCount, and every unplaced record has a reason`);
   }
+}
+
+// The snapshot lock (data/manifests/LOCK.json): snapshotId -> sha256 of the committed manifest. Flip one byte of a
+// copied manifest and lock --check fails by code lock; a missing or untracked manifest fails too; --write adds new
+// ids and refuses to change an existing one.
+{
+  const realLock = json(LOCK_PATH);
+  const ids = Object.keys(realLock.snapshots);
+  const realErrs = lockErrors(MANIFESTS_DIR, realLock);
+  check(realErrs.length === 0 && ids.length >= 12, "the committed LOCK.json holds every committed manifest and they all match", show(realErrs));
+  const tmpM = mkdtempSync(path.join(tmpdir(), "gt-lock-"));
+  const src = (id) => path.join(MANIFESTS_DIR, id.split(".")[0], `${id}.json`);
+  const dst = (id) => path.join(tmpM, id.split(".")[0], `${id}.json`);
+  for (const id of ids) {
+    mkdirSync(path.dirname(dst(id)), { recursive: true });
+    copyFileSync(src(id), dst(id));
+  }
+  check(lockErrors(tmpM, realLock).length === 0, "a faithful copy of the manifests passes lock --check");
+  const [first, second] = ids;
+  const good = readFileSync(dst(first));
+  const flippedBytes = Buffer.from(good);
+  flippedBytes[flippedBytes.length - 2] ^= 1; // one bit of one byte
+  writeFileSync(dst(first), flippedBytes);
+  const flipped = lockErrors(tmpM, realLock);
+  check(flipped.length === 1 && flipped[0].code === "lock" && flipped[0].message.includes(first), "one flipped byte in a manifest fails with code lock, naming the snapshot", show(flipped));
+  writeFileSync(dst(first), good);
+  unlinkSync(dst(second));
+  check(lockErrors(tmpM, realLock).some((e) => e.code === "lock" && /missing/.test(e.message) && e.message.includes(second)), "a locked manifest that is missing fails with code lock");
+  copyFileSync(src(second), dst(second));
+  const extra = path.join(tmpM, "nid-dams", "nid-dams.ohio.2026-10-21.json");
+  writeFileSync(extra, '{"snapshotId":"nid-dams.ohio.2026-10-21"}\n');
+  check(lockErrors(tmpM, realLock).some((e) => e.code === "lock" && /untracked/.test(e.message) && e.message.includes("nid-dams.ohio.2026-10-21")), "a manifest the lock doesn't list fails with code lock (untracked)");
+  // --write adds the new id, keeps the old ones, and refuses to change an existing id's sha.
+  const lockFile = path.join(tmpM, "LOCK.json");
+  writeFileSync(lockFile, JSON.stringify(realLock, null, 2) + "\n");
+  const wrote = writeLock(tmpM, lockFile);
+  check(wrote.added.length === 1 && wrote.added[0] === "nid-dams.ohio.2026-10-21" && lockErrors(tmpM, json(lockFile)).length === 0, "--write adds a new id and the lock then passes");
+  const before = readFileSync(lockFile, "utf8");
+  writeFileSync(dst(first), flippedBytes);
+  let refused = "";
+  try {
+    writeLock(tmpM, lockFile);
+  } catch (e) {
+    refused = String(e.message);
+  }
+  check(/refus/.test(refused) && refused.includes(first) && readFileSync(lockFile, "utf8") === before, "--write refuses to change an existing id's sha, and leaves the lock untouched", refused);
 }
 
 // The evaluator refuses keywords it does not implement, so a schema can't claim more than is checked.
