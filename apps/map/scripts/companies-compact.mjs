@@ -19,6 +19,9 @@
 //
 //   node scripts/companies-compact.mjs <full.json> [out.json]   pack a full-format bundle and check it round-trips
 //
+// Before packing, the CLI applies usOnlyPlacement (below) and records that in
+// the bundle's source line; the round trip is checked against the result.
+//
 // A full file written before `geoReason` existed (the 2026-10-20 pull) gets
 // it from placeReason below: derived from the zip, countyFips and lon/lat the
 // record already carries, never guessed. companies-data.mjs writes the exact
@@ -59,6 +62,31 @@ export function placeReason(c) {
   if (c.state == null || !US_STATE_CODES.has(c.state)) return `business address outside the US (postcode ${c.zip})`;
   if (c.countyFips == null) return `ZIP ${c.zip} is not a 2020 Census ZCTA`;
   return `TIGERweb returned no centroid for ZCTA ${c.zip}`;
+}
+
+export const US_ONLY_NOTE =
+  "Placement is US-only: a filer whose business-address state is not a US state or territory code has no position (geoReason says so); for the 2026-10-20 pull this was applied after the pull by scripts/companies-compact.mjs.";
+
+/**
+ * Missing means missing: a foreign postcode that happens to match a US ZCTA
+ * (Banco Santander, Madrid 28660) is a false point. The 2026-10-20 pull placed
+ * 50 such filers before companies-data.mjs learned the rule; this unplaces
+ * them the same way the build now does (lon, lat, countyFips, geo null) and
+ * says so in the source line. Records already built under the rule pass through.
+ */
+export function usOnlyPlacement(full) {
+  let changed = 0;
+  const companies = full.companies.map((c) => {
+    if (c.lon == null || (c.state != null && US_STATE_CODES.has(c.state))) return c;
+    changed++;
+    const out = { ...c, countyFips: null, lon: null, lat: null, geo: null };
+    if ("geoReason" in c) out.geoReason = `business address outside the US (postcode ${c.zip})`;
+    return out;
+  });
+  if (!changed) return { bundle: full, changed };
+  const geocoded = companies.filter((c) => c.lon != null).length;
+  const source = full.source.includes(US_ONLY_NOTE) ? full.source : `${full.source}. ${US_ONLY_NOTE}`;
+  return { bundle: { ...full, source, counts: { ...full.counts, geocoded }, companies }, changed };
 }
 
 /** Adds `geoReason` from placeReason to records that lack it, in column order (after stateOfIncorporation). */
@@ -164,18 +192,19 @@ export function firstDifference(a, b, at = "$") {
 if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(process.argv[1])) {
   const [inPath, outPath] = process.argv.slice(2);
   if (!inPath) throw new Error("usage: node scripts/companies-compact.mjs <full.json> [out.json]");
-  const full = withPlaceReasons(JSON.parse(fs.readFileSync(inPath, "utf8")));
+  const pulled = JSON.parse(fs.readFileSync(inPath, "utf8"));
+  const us = usOnlyPlacement(pulled);
+  console.log(`US-only placement: ${us.changed} placed filers with a non-US business address unplaced (geocoded ${pulled.counts.geocoded} -> ${us.bundle.counts.geocoded})`);
+  const full = withPlaceReasons(us.bundle);
   const compact = encodeBundle(full);
   const text = JSON.stringify(compact) + "\n";
   const diff = firstDifference(decodeBundle(JSON.parse(text)), full);
   const facts = full.companies.reduce((n, c) => n + Object.values(c.facts).filter((v) => v != null).length, 0);
   console.log(`${full.companies.length} companies, ${facts} facts, ${concepts(compact)} concepts; compact ${Buffer.byteLength(text)} bytes (full ${fs.statSync(inPath).size})`);
   if (diff) throw new Error(`round trip differs at ${diff}; nothing written`);
-  console.log("round trip: decode(compact) deep-equals the full file, every company and fact");
+  console.log("round trip: decode(compact) deep-equals the full file after US-only placement and place reasons, every company and fact");
   const reasons = {};
   for (const c of full.companies) if (c.geoReason) reasons[c.geoReason.replace(/\d{5}/, "<zip>")] = (reasons[c.geoReason.replace(/\d{5}/, "<zip>")] ?? 0) + 1;
-  const abroad = full.companies.filter((c) => c.lon != null && (c.state == null || !US_STATE_CODES.has(c.state))).length;
-  if (abroad) console.log(`warning: ${abroad} placed companies have a business address outside the US (left as pulled)`);
   console.log(`unplaced by reason: ${JSON.stringify(reasons)}`);
   if (outPath) {
     fs.writeFileSync(outPath, text);

@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { COMPACT_FORMAT, decodeBundle } from "./bundle";
 import { BUNDLE } from "./features";
 import type { CompanyBundle, CompanyRecord, ConceptKey } from "./types";
-import { encodeBundle, placeReason, US_STATE_CODES, withPlaceReasons } from "@/scripts/companies-compact.mjs";
+import { encodeBundle, placeReason, US_ONLY_NOTE, US_STATE_CODES, usOnlyPlacement, withPlaceReasons } from "@/scripts/companies-compact.mjs";
 import { US_POSTAL_CODES } from "@/lib/fabric/regions";
 import fixtureJson from "./fixtures/companies.fixture.json";
 
@@ -99,6 +99,18 @@ describe("place reasons", () => {
     expect(placeReason({ ...munich, state: "GU", zip: "96910" })).toBe("ZIP 96910 is not a 2020 Census ZCTA");
   });
 
+  it("unplaces a foreign filer a US ZCTA matched, and says so in the source line", () => {
+    // Banco Santander as the 2026-10-20 pull placed it: Madrid 28660, matched to a North Carolina ZCTA.
+    const madrid = { ...APPLE, cik: 891478, name: "Banco Santander, S.A.", state: "U3", city: "MADRID", zip: "28660", countyFips: "37097", lon: -80.9, lat: 35.8 };
+    const { bundle, changed } = usOnlyPlacement({ ...FULL, counts: { ...FULL.counts, geocoded: 2 }, companies: [APPLE, madrid] });
+    expect(changed).toBe(1);
+    expect(bundle.companies[0]).toBe(APPLE);
+    expect(bundle.companies[1]).toMatchObject({ lon: null, lat: null, countyFips: null, geo: null, zip: "28660", state: "U3", geoReason: "business address outside the US (postcode 28660)" });
+    expect(bundle.counts.geocoded).toBe(1);
+    expect(bundle.source).toContain(US_ONLY_NOTE);
+    expect(usOnlyPlacement({ ...FULL, companies: [APPLE] }).changed).toBe(0);
+  });
+
   it("knows the same US states and territories as the federal region table", () => {
     expect([...US_STATE_CODES].sort()).toEqual([...US_POSTAL_CODES].sort());
     expect(US_STATE_CODES.size).toBe(56);
@@ -115,6 +127,11 @@ describe("place reasons", () => {
 });
 
 describe("committed snapshot", () => {
+  it("places no company whose business-address state is not a US state or territory", () => {
+    const abroad = BUNDLE.companies.filter((c) => c.lon != null && (c.state == null || !US_STATE_CODES.has(c.state)));
+    expect(abroad.map((c) => `${c.name} ${c.state}`)).toEqual([]);
+  });
+
   it("gives every unplaced company a reason and every placed one none", () => {
     const byReason = new Map<string, number>();
     for (const c of BUNDLE.companies) {
@@ -130,10 +147,12 @@ describe("committed snapshot", () => {
     expect(Object.fromEntries(byReason)).toEqual({
       "no US five-digit business-address ZIP in SEC submissions": 1999,
       "ZIP <zip> is not a 2020 Census ZCTA": 193,
-      "business address outside the US (postcode <zip>)": 271,
+      "business address outside the US (postcode <zip>)": 321,
     });
-    expect([...byReason.values()].reduce((a, b) => a + b, 0)).toBe(2463);
-    expect(BUNDLE.counts.companies - BUNDLE.counts.geocoded).toBe(2463);
+    expect([...byReason.values()].reduce((a, b) => a + b, 0)).toBe(2513);
+    expect(BUNDLE.counts.companies - BUNDLE.counts.geocoded).toBe(2513);
+    expect(BUNDLE.counts.geocoded).toBe(5516);
+    expect(BUNDLE.source).toContain(US_ONLY_NOTE);
     expect(BUNDLE.companies.find((c) => c.ticker === "AXP")?.geoReason).toBe("ZIP 10285 is not a 2020 Census ZCTA");
     expect(BUNDLE.companies.find((c) => c.name === "Siemens Energy AG/ADR")?.geoReason).toBe("business address outside the US (postcode 80333)");
   });

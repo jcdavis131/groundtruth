@@ -292,7 +292,7 @@ if (placed === 0 && noFeature > 0) throw new Error(`TIGERweb returned no feature
 
 const companies = [...done.values()].sort((a, b) => a.cik - b.cik);
 const bundle = {
-  source: "SEC EDGAR company_tickers_exchange.json + submissions API (business address, SIC) + XBRL frames API; US Census Bureau 2020 ZCTA-to-county relationship file and TIGERweb ZCTA centroids",
+  source: "SEC EDGAR company_tickers_exchange.json + submissions API (business address, SIC) + XBRL frames API; US Census Bureau 2020 ZCTA-to-county relationship file and TIGERweb ZCTA centroids; placement is US-only (business-address state a US state or territory code)",
   pulled: new Date().toISOString().slice(0, 10),
   counts: {
     companies: companies.length,
