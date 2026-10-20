@@ -8,7 +8,8 @@
 //   ADS-B Exchange (RapidAPI key) alternative point query, same JSON shape.
 
 import type { Feature, Point } from "geojson";
-import { FT_M, KNOT_MS, NM_M } from "@/lib/globe/geo";
+import { bboxAround, FT_M, KNOT_MS, NM_M } from "@/lib/globe/geo";
+import { civicLoadedBox } from "./civicBox";
 import { keyHeaders } from "@/lib/store/settings";
 import { markLayer } from "@/lib/perf/trace";
 import type { BaseProps, FetchContext, FetchResult, LayerDefinition, LayerFeature } from "./types";
@@ -182,6 +183,9 @@ async function fetchAircraft(ctx: FetchContext): Promise<FetchResult> {
   const sources: string[] = [];
   let note: string | undefined;
   let meta: Record<string, unknown> = {};
+  // What the main query covered. A radius query reports the square inside its circle, never the circle's bounding box.
+  let loaded: [number, number, number, number] | null = null;
+  const inscribed = (nm: number) => bboxAround(ctx.view.lat, ctx.view.lon, (nm * NM_M) / Math.SQRT2);
 
   const useOpenSky = pref === "opensky" || (pref === "auto" && global);
   const useAdsbx = pref === "adsbx" && !!ctx.keys.ADSBX_RAPIDAPI_KEY;
@@ -214,6 +218,8 @@ async function fetchAircraft(ctx: FetchContext): Promise<FetchResult> {
         if (f && !features.has(f.properties.id)) features.set(f.properties.id, f);
       }
       sources.push(env.source);
+      // A 200 with no state vectors (states: null) loaded nothing, so it draws no box rather than "loaded, none".
+      if (Array.isArray(env.data.states)) loaded = ctx.view.bbox && !global ? ctx.view.bbox : [-180, -90, 180, 90];
       if (env.data.rateRemaining != null) {
         meta = { openskyCreditsRemaining: env.data.rateRemaining };
         note = `OpenSky credits left today: ${env.data.rateRemaining}`;
@@ -236,6 +242,7 @@ async function fetchAircraft(ctx: FetchContext): Promise<FetchResult> {
         if (f && !features.has(f.properties.id)) features.set(f.properties.id, f);
       }
       sources.push(env.source);
+      loaded = inscribed(250);
     } catch {
       /* fall through to the military overlay alone */
     }
@@ -254,16 +261,20 @@ async function fetchAircraft(ctx: FetchContext): Promise<FetchResult> {
       if (f && !features.has(f.properties.id)) features.set(f.properties.id, f);
     }
     sources.push(env.source);
+    loaded = inscribed(distNm);
     note = `${Math.round(distNm)} nm around view centre`;
   }
   await mergeMil();
 
+  const drawn: LayerFeature[] = [...features.values()];
+  if (loaded) drawn.push(civicLoadedBox("aircraft", loaded, "aircraft", {}));
   return {
-    collection: { type: "FeatureCollection", features: [...features.values()] },
+    collection: { type: "FeatureCollection", features: drawn },
     source: sources.join(" + "),
     fetchedAt: Date.now(),
     note,
-    meta,
+    // The loaded box is not an aircraft.
+    meta: { ...meta, count: features.size },
   };
 }
 

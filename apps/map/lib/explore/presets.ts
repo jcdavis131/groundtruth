@@ -318,11 +318,12 @@ const ALL_PRESETS: Preset[] = [
     title: "Where Texas's watersheds are busiest",
     region: "Texas",
     group: "constructs",
-    blurb: "Subbasins (HUC-8) float over Texas and rise with what the physical layers put inside them: stream gauges, aircraft, company headquarters, earthquakes. Zoom in and subwatersheds emerge; switch the point of view in Layers to see counties or districts instead.",
+    blurb: "Subbasins (HUC-8) float over Texas and rise with what the physical layers put inside them: stream gauges, aircraft, earthquakes. Zoom in and subwatersheds emerge; switch the point of view in Layers to see counties or districts instead.",
     lon: -97.7,
     lat: 29.6,
     height: 420_000,
-    layers: ["field", "water", "aircraft", "companies", "earthquakes"],
+    // companies off until the full EDGAR pull runs (scripts/companies-data.mjs); the bundle is a 25-company fixture
+    layers: ["field", "water", "aircraft", "earthquakes"],
     dwellS: 35,
   },
   {

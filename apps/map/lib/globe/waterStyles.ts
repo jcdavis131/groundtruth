@@ -4,12 +4,14 @@
 
 import type { MultiLineString, Polygon } from "geojson";
 import type { LayerStyle, StyledLine } from "./renderer";
+import { polyOutlines } from "./hazardStyles";
 import type { GaugeExtra, HydroExtra, ReservoirExtra } from "@/lib/layers/water";
 import { DROUGHT_COLOR, type DroughtExtra, type WellExtra } from "@/lib/layers/groundwater";
 import type { ChipExtra } from "@/lib/layers/turbidity";
 import { buildTurbidityOverlay, turbidityHex } from "@/lib/water/overlay";
 
 const WATER = "#3B9DFF";
+const LOADED_BOX = "#E5E7EB";
 const RIVER = "#4FB3FF";
 const STALE = "#6E7F8C";
 const FLOOD: Record<string, string> = {
@@ -51,11 +53,13 @@ export const waterStyle: LayerStyle = {
   iconSize: 18,
   colorFor: (f) => {
     const k = f.properties.kind;
+    if (k === "loaded-box") return LOADED_BOX;
     if (k === "river" || k === "lake") return RIVER;
     return gaugeColor(f);
   },
   label: (f) => f.properties.name,
   labelMax: 40,
+  labelWhen: (f) => f.properties.kind !== "loaded-box",
   // Standing labels only for the planet-scale names (≈ 55 rivers and lakes);
   // everything else labels on hover or selection.
   labelAlways: (f) => {
@@ -69,6 +73,7 @@ export const waterStyle: LayerStyle = {
   scaleByDistance: [2e4, 1.0, 2.5e6, 0.3],
   lines: (f) => {
     const p = f.properties;
+    if (p.kind === "loaded-box") return polyOutlines(f, LOADED_BOX, 0.7, 1.5, true);
     if (p.kind === "river" && f.geometry.type === "MultiLineString") {
       const rank = (p.extra as HydroExtra | undefined)?.scalerank ?? 6;
       const alpha = Math.max(0.18, 0.75 - rank * 0.07);

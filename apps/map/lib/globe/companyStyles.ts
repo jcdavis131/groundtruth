@@ -4,11 +4,13 @@
 // `icon` to upgrade), labelled by ticker, larger for bigger filers.
 
 import type { LayerStyle } from "./renderer";
+import { polyOutlines } from "./hazardStyles";
 import type { CompanyExtra } from "@/lib/companies/types";
 import { SECTOR_COLOR } from "@/lib/companies/sectors";
 import type { GicsSector } from "@/lib/companies/types";
 
 const COMPANIES = "#7CC4FF";
+const LOADED_BOX = "#E5E7EB";
 
 function extra(f: Parameters<NonNullable<LayerStyle["label"]>>[0]): CompanyExtra | null {
   const x = f.properties.extra as CompanyExtra | undefined;
@@ -25,11 +27,13 @@ export function companyPointSize(revenue: number | null | undefined): number {
 export const companiesStyle: LayerStyle = {
   color: COMPANIES,
   icon: () => null,
-  colorFor: (f) => SECTOR_COLOR[(f.properties.kind as GicsSector | undefined) ?? "unclassified"] ?? COMPANIES,
+  colorFor: (f) => (f.properties.kind === "loaded-box" ? LOADED_BOX : (SECTOR_COLOR[(f.properties.kind as GicsSector | undefined) ?? "unclassified"] ?? COMPANIES)),
   pointSize: (f) => companyPointSize(extra(f)?.facts.Revenues?.value),
   label: (f) => extra(f)?.ticker ?? f.properties.name,
   labelMax: 80,
   labelOffset: [10, -10],
+  labelWhen: (f) => f.properties.kind !== "loaded-box",
+  lines: (f) => (f.properties.kind === "loaded-box" ? polyOutlines(f, LOADED_BOX, 0.7, 1.5, true) : null),
   scaleByDistance: [5e4, 1.0, 3e6, 0.5],
   translucencyByDistance: [5e4, 1.0, 3e6, 0.7],
 };

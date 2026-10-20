@@ -533,6 +533,15 @@ function FieldVitals({ id }: { id: string }) {
   if (!v) return null;
   if (v.condition) return <ConditionVitals v={v} c={v.condition} />;
   const what = measure === "all" || measure === "streamflow" ? "every physical signal" : (LAYER_BY_ID[measure]?.label.toLowerCase() ?? measure);
+  if (v.value == null)
+    return (
+      <div className="border-t border-border px-3 py-2">
+        <div className="hud-label mb-1">Emergent state</div>
+        <div className="text-[10px]">Not loaded: no value for {what} here, which is not the same as none.</div>
+        {v.reason && <div className="mt-0.5 text-[10px] text-muted-foreground">{v.reason}.</div>}
+        <div className="mt-0.5 text-[10px] text-muted-foreground">{v.total.toLocaleString("en-US")} physical signals loaded inside, a floor and not a total. Move the camera over it to load the rest.</div>
+      </div>
+    );
   return (
     <div className="border-t border-border px-3 py-2">
       <div className="hud-label mb-1">Emergent state</div>
@@ -594,6 +603,7 @@ function ConditionVitals({ v, c }: { v: Vitals; c: UnitCondition }) {
         Latest instantaneous flow at each USGS gauge inside, placed among the published daily-mean percentiles for today&apos;s date (an estimate: instantaneous against daily means). A gauge without a
         table is left out, not assumed normal.
       </div>
+      {v.coverage !== "complete" && v.reason && <div className="mt-0.5 text-[10px] text-muted-foreground">Gauges may be missing here: {v.reason}.</div>}
     </div>
   );
 }
