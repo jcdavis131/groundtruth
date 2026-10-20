@@ -153,6 +153,25 @@ data/.venv/Scripts/python data/pipeline/diff.py --probe [--offline] [--manifest 
 
 `--probe` re-fetches the id list of a manifest's first `gap` request (default: NRHP Alabama, 2026-10-19) with the same URL, at most two requests and one page, and reports OBJECTID churn against the sha-pinned body in `<data-root>/raw/`: `churn_rate = (ids only in one body) / (ids in either)`. `--offline` reads the cached body for both sides and reports 0.0. A cached body that no longer hashes to the manifest's sha256 is refused, and a fresh answer is cached in a temporary folder, never in the data root.
 
+## Pack raw/
+
+```
+python -I data/pipeline/pack_raw.py --dry-run [--data-root DIR] [--manifests DIR]
+python -I data/pipeline/pack_raw.py --out DIR
+```
+
+Every manifest's `requests[].sha256` pins a response body, and the bodies live in `<data-root>/raw/`, on one disk, outside git. `pack_raw.py` packs that folder into `raw.tar` with an `index.json` beside it, so a copy can be kept somewhere else and checked against the manifests.
+
+- **What goes in:** every regular file under `raw/`, recursively: the bodies, their `.json` sidecars (url and `retrievedAt`), the athletes cache and the county boundary zip. A symlink or any other non-regular file stops the run. `raw-stale-nid-2026-10-19/` sits beside `raw/` in the data root, not under it, and is not packed.
+- **The tar:** members are `raw/<path>`, so `tar -xf raw.tar -C <data-root>` restores the cache. They are sorted by name, with mtime 0, uid and gid 0 and mode 0644, and not compressed, so the same `raw/` gives the same bytes. No compression has been measured, so none is chosen.
+- **index.json:** `files` lists every member as `{path, bytes, sha256}`, then the tar's own size and sha256 and the coverage counts. No dates, so the index is reproducible too.
+- **Coverage:** the sha256 of every file is computed from its bytes (a sidecar's claim is not read). Each distinct `requests[].sha256` in `data/manifests/*/*.json` must equal one of them. A pin with no file is printed as `MISSING <snapshot> <purpose> <url> <sha256>` and the exit code is 1. No manifests, a manifest without `requests[]`, or a pin that isn't 64 hex digits is refused too.
+- **`--dry-run`:** does all of the above except writing: file count, bytes by kind, the exact tar size, the requests and distinct shas per manifest, the coverage count. It reads `raw/` end to end, so on a RAM-poor box run it under `admit.sh`.
+- **`--out DIR`:** does the dry run, and only if coverage is complete writes `raw.tar.part` and `index.json.part`, re-hashing each file as it goes in, then renames both. It refuses an existing `raw.tar` or `index.json`, and a `DIR` inside `raw/`. It never writes in the data root.
+- **Upload:** none here. Where the tar goes (Hugging Face, rclone, an external disk) is Cam's call, per the datastore tiering.
+
+`test_pack_raw.py` builds a temporary `raw/` for the three fixture snapshots, whose pinned bodies are not in git, and shows that deleting a body, or flipping one bit in it, turns the coverage check red.
+
 ## The 2026-10-19 drift, and its remedy
 
 PR #51 backfilled `embeddableFields` and `embeddableName` into the three Texas manifests of 2026-10-19 in place, but only the committed copies under `data/manifests/`. The `manifest.json` beside each snapshot's files in the data root stayed as the build wrote it, so `nces-public-schools.texas.2026-10-19`, `nid-dams.texas.2026-10-19` and `nrhp-listed.texas.2026-10-19` each existed as two different byte strings, and nothing compared them. Found on 2026-10-20 by comparing every committed manifest with its data-root copy (12 manifests; exactly those 3 differed).

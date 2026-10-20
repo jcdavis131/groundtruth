@@ -310,6 +310,28 @@ class PackRawTest(unittest.TestCase):
         self.assertIn("MISSING", err)
         self.assertFalse(dest.exists(), "no folder, no .part, nothing")
 
+    def test_the_predicted_size_is_the_written_size_at_every_record_boundary(self):
+        # the tar is padded to 10,240-byte records, so a prediction that is off by a block hides until a size lands on an edge
+        for k in range(0, 24):  # k one-byte files: 1,024 bytes each, so k = 9 ends exactly on a record
+            root = self.tmp / f"edge-{k}"
+            raw = root / "raw"
+            raw.mkdir(parents=True)
+            for i in range(k):
+                (raw / f"f{i:02d}.body").write_bytes(b"x")
+            entries = pack_raw.scan(raw)
+            size, digest = pack_raw.write_tar(root, entries, self.tmp / f"edge-{k}.tar")
+            self.assertEqual(size, (self.tmp / f"edge-{k}.tar").stat().st_size)
+            self.assertEqual(digest, sha((self.tmp / f"edge-{k}.tar").read_bytes()))
+            self.assertEqual(pack_raw.predicted_tar_bytes(entries), size, f"{k} files")
+        for n in (0, 1, 511, 512, 513, 1023, 1024, 10240, 10241):
+            root = self.tmp / f"size-{n}"
+            raw = root / "raw"
+            raw.mkdir(parents=True)
+            (raw / "one.body").write_bytes(b"y" * n)
+            entries = pack_raw.scan(raw)
+            size, _ = pack_raw.write_tar(root, entries, self.tmp / f"size-{n}.tar")
+            self.assertEqual(pack_raw.predicted_tar_bytes(entries), size, f"one file of {n} bytes")
+
     def test_the_same_input_gives_the_same_bytes(self):
         a, b = self.tmp / "a", self.tmp / "b"
         self.assertEqual(self.out(a)[0], 0)
