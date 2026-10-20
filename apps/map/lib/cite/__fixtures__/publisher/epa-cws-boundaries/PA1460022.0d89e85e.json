@@ -1,0 +1,11 @@
+{
+ "sourceId": "epa-cws-boundaries",
+ "recordId": "PA1460022.0d89e85e",
+ "url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0/query?where=PWSID%3D'PA1460022'&outFields=PWSID,Population_Served_Count&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T12:33:40.379Z",
+ "status": 200,
+ "bytes": 596,
+ "sha256": "8042fbf4b25a7bde551b78666905e5f5682634795a41fc36c3fb74550725d70f",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"objectIdFieldName\":\"OBJECTID\",\"uniqueIdField\":{\"name\":\"OBJECTID\",\"isSystemMaintained\":true},\"globalIdFieldName\":\"\",\"geometryType\":\"esriGeometryPolygon\",\"spatialReference\":{\"wkid\":4326,\"latestWkid\":4326},\"features\":[{\"attributes\":{\"PWSID\":\"PA1460022\",\"Population_Served_Count\":8470}}]}"
+}

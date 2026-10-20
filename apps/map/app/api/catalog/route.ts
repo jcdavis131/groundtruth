@@ -78,7 +78,7 @@ export function GET(req: NextRequest) {
     const id = q.get("collection");
     const x = id ? placeExport(id) : null;
     if (!x) return badRequest(`collection must be one of: ${PLACE_EXPORTS.join(", ")}`, { collections: PLACE_EXPORTS });
-    return ok(x.data, { ttlS: 3600, caveats: x.caveats });
+    return ok(x.data, { ttlS: 3600, caveats: x.caveats, provenance: x.provenance });
   }
   if (op != null) return badRequest(`unknown op "${op}"`, { ops: ["search", "place-export"] });
   const id = q.get("id");

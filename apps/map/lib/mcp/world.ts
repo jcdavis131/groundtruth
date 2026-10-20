@@ -384,6 +384,9 @@ function qcewRecord(period: string | undefined, area: string | null): string | N
 }
 
 /** NID fields a dam item states (owner type, hazard, condition, year), besides NIDID and, for a named dam, NAME. */
+/** Water record URLs name their fields: the ones the cite-check matchers read, so a water system's name and the sampling facilities never ride along. */
+const CWS_RECORD_FIELDS = "PWSID,Population_Served_Count";
+const UCMR_RECORD_FIELDS = "F_PWS_ID,Contaminant,Analytical_Result_Value__ng_L_,Result_At_or_Above_UCMR_MRL,Minimum_Reporting_Level__ng_L_,Collection_Date,UCMR_Cycle";
 const DAM_RECORD_FIELDS = ["PRIMARY_OWNER_TYPE", "OWNER_TYPES", "HAZARD_POTENTIAL", "CONDITION_ASSESSMENT", "YEAR_COMPLETED"];
 
 /** USDM's county area-percent statistics for the one map date the item states. */
@@ -1223,7 +1226,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
           item(cws, "community water system serving the point (EPA service area)", pwsid, {
             code: pwsid,
             note: [pop != null ? `population served ${pop}` : null, x.modelled === true ? "boundary modelled by EPA" : x.modelled === false ? "boundary from the system or state" : "boundary source not said", `EPA's boundary (simplified to about 50 m) contains ${at}; labelled by PWSID, names are not copied`].filter(Boolean).join("; "),
-            record: arcgisRecord(cws, `PWSID='${pwsid}'`),
+            record: arcgisRecord(cws, `PWSID='${pwsid}'`, CWS_RECORD_FIELDS),
           }),
         );
         const state = str(x.state);
@@ -1246,7 +1249,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
                 state === "not-in-ucmr5"
                   ? "EPA's PFAS Analytic Tools hold no UCMR 5 result for this system (of systems serving under 3,300 people, EPA sampled a representative 800)"
                   : `${det.length} of ${results.length} PFAS at or above UCMR 5's minimum reporting level in at least one result; samples where treated water enters the distribution system, 2023-2025; not a tap, not compared with any health limit`,
-              record: arcgisRecord(pat, `F_PWS_ID='${pwsid}' AND UCMR_Cycle='${ucmr}'`),
+              record: arcgisRecord(pat, `F_PWS_ID='${pwsid}' AND UCMR_Cycle='${ucmr}'`, UCMR_RECORD_FIELDS),
             }),
           );
           for (const y of capList(s, `UCMR 5 detections for ${pwsid}`, det, max)) {
@@ -1260,7 +1263,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
                   unit: "ng/L",
                   code: pwsid,
                   note: `${num(y.detections)} of ${num(y.results)} results at or above the minimum reporting level${v == null ? "; EPA gives no value: null, not 0" : ""}`,
-                  record: arcgisRecord(pat, `F_PWS_ID='${pwsid}' AND UCMR_Cycle='${ucmr}' AND Contaminant='${c.replace(/'/g, "''")}'`),
+                  record: arcgisRecord(pat, `F_PWS_ID='${pwsid}' AND UCMR_Cycle='${ucmr}' AND Contaminant='${c.replace(/'/g, "''")}'`, UCMR_RECORD_FIELDS),
                 }),
               ),
             );
