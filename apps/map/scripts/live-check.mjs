@@ -1,6 +1,7 @@
 // The preview pass as a script. Against one origin (a Vercel preview, or any
 // deployment) it checks, and counts each check as an assertion:
-//   1. the front door: GET / answers 200 and the server HTML has an <h1>
+//   1. the front door: GET / answers 200 itself (a redirect is not followed: it
+//      fails and names the host it points to) and the server HTML has an <h1>
 //   2. POST /api/mcp initialize carries non-empty `instructions`
 //   3. tools/list names exactly EXPECTED_TOOL_NAMES (lib/mcp/expectedTools.mjs),
 //      and `_meta["anthropic/alwaysLoad"]` is true on world_context only
@@ -87,6 +88,12 @@ export function diffShape(base, cand) {
   return d;
 }
 
+/** Where a 3xx points, for the failure text: "redirects to <host>". */
+function redirectTarget(location, origin) {
+  if (!location) return "(a redirect with no Location header)";
+  try { return "redirects to " + new URL(location, origin).host; } catch { return "redirects to " + location; }
+}
+
 async function rpc(origin, headers, method, params, id) {
   const res = await fetch(origin + "/api/mcp", {
     method: "POST",
@@ -130,10 +137,13 @@ export async function liveCheck(opts) {
 
   // 1. front door
   try {
-    const r = await fetch(origin + "/", { headers: { ...headers, accept: "text/html" } });
+    // redirect: "manual". A protected preview with no credentials answers 302 to a
+    // login page that has an <h1>; following it would report this origin as up.
+    const r = await fetch(origin + "/", { headers: { ...headers, accept: "text/html" }, redirect: "manual" });
     const html = await r.text();
-    check("front door: GET / answers 200", r.status === 200, `HTTP ${r.status}`);
-    check("front door: the server HTML has an <h1>", /<h1[\s>]/i.test(html), r.status === 200 ? "no <h1> in the HTML" : "page not served");
+    const moved = r.status >= 300 && r.status < 400;
+    check("front door: GET / answers 200", r.status === 200, `HTTP ${r.status}${moved ? " " + redirectTarget(r.headers.get("location"), origin) : ""}`);
+    check("front door: the server HTML has an <h1>", r.status === 200 && /<h1[\s>]/i.test(html), r.status === 200 ? "no <h1> in the HTML" : "page not served");
   } catch (e) {
     check("front door: GET / answers 200", false, String(e));
     check("front door: the server HTML has an <h1>", false, "page not fetched");
