@@ -5,6 +5,7 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv";
+import { EXPECTED_TOOL_NAMES } from "./expectedTools.mjs";
 import { ERROR_CATEGORIES, ERROR_CODES, ERROR_ENVELOPE_SCHEMA } from "./errors";
 import { z } from "zod";
 import { argsSummary, createServer, describeServer, errorResult, INSTRUCTIONS, listDocs, PLACE_CITE, PROMPTS, toCallResult, toolManifest, toolTable } from "./server";
@@ -26,47 +27,6 @@ function expectErrorEnvelope(r: Awaited<ReturnType<Awaited<ReturnType<typeof con
   expect(typeof text.error).toBe("string");
   return text as Envelope;
 }
-
-const EXPECTED_TOOL_NAMES = [
-  "water_report",
-  "market_report",
-  "areas",
-  "sectors",
-  "ports",
-  "border_crossings",
-  "countries",
-  "trade_partners",
-  "pulse",
-  "gauges",
-  "gauge_history",
-  "series_list",
-  "series_get",
-  "screen",
-  "indicators",
-  "indicator_history",
-  "release_calendar",
-  "movers",
-  "county_history",
-  "company",
-  "companies_near",
-  "banks",
-  "federal_spending",
-  "place_fabric",
-  "place_compare",
-  "construct_field",
-  "downstream",
-  "upstream",
-  "flow_normals",
-  "water_trace",
-  "risk_index",
-  "social_vulnerability",
-  "broadband_availability",
-  "live_events",
-  "catalog_search",
-  "place_export",
-  "world_context",
-  "openapi",
-];
 
 let dir: string;
 beforeAll(async () => {

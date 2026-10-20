@@ -18,8 +18,11 @@ interface Knobs {
 }
 
 const WORLD = (items: number, status: string) => ({
-  identity: { items: Array.from({ length: items }, (_, i) => ({ fact: `f${i}` })) },
-  hazards: { items: [{ fact: "h" }], missing: [{ code: "not_published" }] },
+  schemaVersion: "world/2",
+  topics: {
+    identity: { items: Array.from({ length: items }, (_, i) => ({ fact: `f${i}` })) },
+    hazards: { items: [{ fact: "h" }], missing: [{ code: "not_published" }] },
+  },
   coverageStatus: { status, basis: ["x"] },
 });
 
