@@ -23,31 +23,14 @@ export function scanManifests(dir) {
   return out;
 }
 
-/** Errors with code "lock": a manifest whose bytes changed, a locked one that is missing, one the lock doesn't list. */
+/** RED EVIDENCE (neutered, restored in the next commit): reports nothing. */
 export function lockErrors(dir, lock) {
-  const held = lock?.snapshots ?? {};
-  const have = scanManifests(dir);
-  const errs = [];
-  for (const id of Object.keys(held).sort()) {
-    if (!(id in have)) errs.push({ code: "lock", path: `/snapshots/${id}`, message: `${id} is locked but its manifest is missing` });
-    else if (have[id] !== held[id]) errs.push({ code: "lock", path: `/snapshots/${id}`, message: `${id} changed: manifest sha256 ${have[id].slice(0, 12)}, the lock says ${held[id].slice(0, 12)}. A written manifest is never edited in place; a changed manifest is a new snapshot id on a new UTC day` });
-  }
-  for (const id of Object.keys(have).sort()) if (!(id in held)) errs.push({ code: "lock", path: `/snapshots/${id}`, message: `${id} is untracked: run node data/schema/lock.mjs --write to lock it` });
-  return errs;
+  return [];
 }
 
-/** Adds ids the lock lacks. Throws, writing nothing, if an id already in the lock now hashes differently. */
+/** RED EVIDENCE (neutered, restored in the next commit): adds nothing, refuses nothing, writes nothing. */
 export function writeLock(dir, lockFile) {
-  const held = existsSync(lockFile) ? JSON.parse(readFileSync(lockFile, "utf8")).snapshots ?? {} : {};
-  const have = scanManifests(dir);
-  const changed = Object.keys(held).filter((id) => id in have && have[id] !== held[id]);
-  if (changed.length) throw new Error(`refusing to change the sha of a locked snapshot: ${changed.join(", ")}. A changed manifest is a new snapshot id on a new UTC day`);
-  const added = Object.keys(have).filter((id) => !(id in held)).sort();
-  const next = { ...held };
-  for (const id of added) next[id] = have[id];
-  const sorted = Object.fromEntries(Object.entries(next).sort(([a], [b]) => (a < b ? -1 : 1)));
-  writeFileSync(lockFile, JSON.stringify({ schemaVersion: "lock/1", snapshots: sorted }, null, 2) + "\n");
-  return { added };
+  return { added: [] };
 }
 
 function main(argv) {

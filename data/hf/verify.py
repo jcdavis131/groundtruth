@@ -98,28 +98,8 @@ def wants(manifests: Path, readme: Path, data_root: Path | None) -> tuple[list[W
 
 
 def compare(want: Want, entry: dict | None) -> tuple[str, str]:
-    """('ok' | 'FAIL' | 'unchecked', detail)."""
-    if entry is None:
-        return "FAIL", "not on the Hub"
-    lfs = entry.get("lfs")
-    if lfs:
-        sha = want.sha256
-        if sha is None and want.local is not None:
-            sha = hashlib.sha256(want.local.read_bytes()).hexdigest()
-        if sha is None:
-            return "unchecked", "LFS file with no expected sha256 here"
-        if lfs.get("oid") != sha:
-            return "FAIL", f"sha256 {str(lfs.get('oid'))[:12]} on the Hub, the {want.source} says {sha[:12]}"
-        return "ok", f"sha256 {sha[:12]}"
-    if want.local is None:
-        return "unchecked", f"small file (blob oid {str(entry.get('oid'))[:12]}) with no local copy to compare"
-    data = want.local.read_bytes()
-    if want.sha256 is not None and hashlib.sha256(data).hexdigest() != want.sha256:
-        return "FAIL", f"the local copy no longer matches the {want.source}; nothing to compare the Hub with"
-    oid = git_blob_oid(data)
-    if entry.get("oid") != oid:
-        return "FAIL", f"blob oid {str(entry.get('oid'))[:12]} on the Hub, {oid[:12]} for the {want.source}"
-    return "ok", f"blob oid {oid[:12]}"
+    """RED EVIDENCE (neutered, restored in the next commit): every file is reported ok."""
+    return "ok", "neutered"
 
 
 def main(argv: list[str] | None = None) -> int:
