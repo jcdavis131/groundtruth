@@ -57,8 +57,8 @@ const ZCTA_COUNTY_URL = "https://www2.census.gov/geo/docs/maps-data/data/rel2020
 // TIGERweb ZCTA layer: could not be verified from the sandbox; if the query
 // errors with "Invalid layer", look the id up in the service directory and
 // change ZCTA_LAYER_ID here and in lib/companies/geo.ts.
-const TIGER_ZCTA_SERVICE = "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2023/Tracts_Blocks/MapServer";
-const ZCTA_LAYER_ID = 2;
+const TIGER_ZCTA_SERVICE = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/PUMA_TAD_TAZ_UGA_ZCTA/MapServer";
+const ZCTA_LAYER_ID = 1; // "2020 Census ZIP Code Tabulation Areas", checked 2026-10-19: answers ZCTA5, CENTLAT, CENTLON
 
 // Same table as lib/companies/facts.ts CONCEPTS; keep in step.
 const CONCEPTS = [
