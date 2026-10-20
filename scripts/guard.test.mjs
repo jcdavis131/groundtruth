@@ -138,6 +138,39 @@ for (const f of ["tag.yml", "branch.yaml", "short.yml", "upper.yml", "bare.yml",
   check(flags(ru.stdout, "pin", ".github/workflows/" + f), `flags pin in ${f}`);
 check(/line 5: actions\/checkout@v4$/m.test(ru.stdout), "a pin finding names the line and the value");
 
+// eval-leak: nothing gradable (gold, KEY, split outputs) is committed, by name or by header marker.
+// The marker strings are joined so this file never carries one.
+const marker = (kind) => ["groundtruth", "eval", kind, "v1"].join("-");
+const leaky = repo({
+  "gold.json": "{}\n",
+  "KEY.json": "{}\n",
+  "split.json": "{}\n",
+  "eval/gold-v4.json": "{}\n",
+  "eval/split.v4.json": "{}\n",
+  "eval/KEY": "x\n",
+  "eval/grades/key_blind.csv": "a,b\n",
+  "notes/renamed.txt": '{"marker": "' + marker("gold") + '"}\n',
+  "notes/renamed2.md": "header " + marker("split") + "\n",
+  "notes/renamed3.md": "header " + marker("key") + "\n",
+});
+const rl = run(leaky);
+check(rl.status === 1, "a repo with gold, KEY or split files fails");
+for (const f of ["gold.json", "KEY.json", "split.json", "eval/gold-v4.json", "eval/split.v4.json", "eval/KEY", "eval/grades/key_blind.csv", "notes/renamed.txt", "notes/renamed2.md", "notes/renamed3.md"])
+  check(flags(rl.stdout, "eval-leak", f), `flags eval-leak in ${f}`);
+const evalClean = repo({
+  "eval/split.mjs": "// code\n",
+  "eval/split.test.mjs": "// code\n",
+  "eval/gold/build-gold.mjs": "// code\n",
+  "eval/gold.test.mjs": "// code\n",
+  "eval/score.py": "# code\n",
+  "eval/README.md": "Gold, the KEY and split files stay outside the repo.\n",
+  "apps/keyboard.json": "{}\n",
+  "data/monkey.json": "{}\n",
+  "docs/goldfish.md": "x\n",
+});
+const rc = run(evalClean);
+check(rc.status === 0, `eval code, docs and look-alike names pass${rc.status ? ": " + rc.stdout.trim() : ""}`);
+
 for (const d of made) rmSync(d, { recursive: true, force: true });
 console.log(failed ? `\n${failed} check(s) failed` : "\nall checks pass");
 process.exitCode = failed ? 1 : 0;

@@ -23,6 +23,11 @@
 //              Idea: trimstray/the-book-of-secret-knowledge (MIT, reviewed at 7d37069), which points to
 //              GitHub's supply-chain hardening; the trivy-action tag force-push (GHSA-69fq-xp46-6x23) is
 //              the case it guards. No text or code copied.
+//   eval-leak  a tracked file named like the v4 eval's sealed material (gold, KEY or split, with or without a
+//              data extension: gold.json, KEY.json, split.v4.json, grades/key_blind.csv) or any text file carrying
+//              the header marker the eval kit puts in its gold, key and split files. The sealed files live outside
+//              the repo until scoring is done (writeups PREREG-TEMPLATE rule 6); code such as eval/split.mjs is
+//              not flagged.
 // Exit 0 when clean, 1 with one line per finding. No file is exempt, the guard's own included: its
 // patterns and test fixtures are written so they never match themselves.
 //
@@ -57,6 +62,12 @@ const SECRETS = [
 // is accepted as a miss: Git Bash itself prints /c/Users.
 const HOME_PATH = /[A-Za-z]:(?:\\+|\/+)Users(?:\\+|\/+)[^\\/\s"'<>]+|(?:(?<![\w/.-])|(?<=\/mnt|\/cygdrive))\/[A-Za-z]\/Users\/[^/\s"'<>]+/i;
 const GITBASH_CASE = /\/[A-Za-z]\/Users\//;
+const EVAL_DATA_EXT = /\.(?:json|jsonl|ndjson|csv|tsv|txt|sqlite|db)$/i;
+const EVAL_STEM = /^(?:gold|key|split)(?:[._-]|$)/i;
+const EVAL_MARKER = /groundtruth-eval-(?:gold|key|split)-v\d/;
+function evalLeakName(base) {
+  return /^(?:gold|key|split)$/i.test(base) || (EVAL_DATA_EXT.test(base) && EVAL_STEM.test(base));
+}
 const WORKFLOW = /^\.github\/workflows\/[^/]+\.ya?ml$/;
 const USES = /^\s*(?:-\s+)?uses:\s*["']?([^"'\s#]+)/;
 const SHA_PIN = /@[0-9a-f]{40}$/;
@@ -107,6 +118,7 @@ for (const f of files) {
   const text = textOf(buf);
   const scan = text ?? buf.toString("latin1");
   for (const [name, re] of SECRETS) if (re.test(scan)) findings.push(`secret   ${f}  (${name})`);
+  if (evalLeakName(base) || EVAL_MARKER.test(scan)) findings.push(`eval-leak ${f}`);
   if (text === null) continue;
   if (text.includes("\r")) findings.push(`crlf     ${f}`);
   const m = [...text.matchAll(new RegExp(HOME_PATH.source, "gi"))].find(

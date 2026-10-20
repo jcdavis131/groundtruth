@@ -1,0 +1,36 @@
+# The v4 eval kit's own tests (eval/): split, lineage, the scorer and the gold builder. Plain Node and the Python standard
+# library, no install. Each step runs in a network namespace with no interface, so a test that reaches for
+# the network fails instead of passing quietly.
+name: eval
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+      - name: split, lineage, scorer and gold-builder tests, with no network
+        run: |
+          set -e
+          offline() { sudo unshare --net -- env "PATH=$PATH" "$@"; }
+          offline node eval/split.test.mjs
+          offline node eval/lineage.test.mjs
+          offline node eval/gold.test.mjs
+          offline python -I eval/test_score.py
