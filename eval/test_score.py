@@ -15,9 +15,10 @@ provenance. Recording provenance, as each fixture's own header says: ct_09110.js
   g5  states of the four fixture counties  AK, AL, CT, PR       the state field of the four screen rows
   g6  NRI EAL_VALT for county 09110        302299864.61157477   ct_09110.json, with a declared tolerance of 1 USD
 
-Substitution, stated plainly: the brief asks for fixtures from the publisher records themselves (B1's
-__fixtures__/publisher). B1 is not on master, so these are our own route's rendering of the publisher row, one hop
-removed. Once B1 lands, add or re-point at least one fixture drawn from a publisher record itself.
+Substitution, stated plainly: these fixtures are our own route's rendering of the publisher row, one hop removed, not
+the publisher's reply itself. B1's recorded publisher replies (apps/map/lib/cite/__fixtures__/publisher/) are on master;
+this test does not use them. The gold builder's test, eval/gold.test.mjs, does: it reads its gold values from those
+recorded replies. This scorer test stays on the route fixtures.
 
 The expected numbers below are worked by hand (see the comment above each test), not read back from score.py.
 """

@@ -18,7 +18,7 @@ Gold, the KEY and the split output are sealed during the run (PREREG-TEMPLATE ru
 
 Each planner answers `{answer, status, citation}`, `status` one of `answered`, `not_published`, `unknown`. Scoring, per answered item-run, credit `c` in [0, 1]: exact for codes, ids, dates and labels (NFC, trimmed, whitespace collapsed, case kept), a declared tolerance for numbers, set-F1 for lists. Any answer on an item whose gold is NOT_PUBLISHED has `c = 0` (a false fill). Score for penalty `k`: answered `c - k(1 - c)`; `not_published` +1 when gold is NOT_PUBLISHED, else 0; `unknown` 0.
 
-## Gold file shape (what `eval/gold/build-gold.mjs` will write)
+## Gold file shape (what `eval/gold/build-gold.mjs` writes)
 
 `{marker, items: {id: {type, verdict: PUBLISHED | NOT_PUBLISHED, gold, tolerance, flag, url}}}`: every row carries the publisher URL it came from and a verdict; NOT_PUBLISHED comes from the publisher's own suppression flag.
 
@@ -27,3 +27,7 @@ Each planner answers `{answer, status, citation}`, `status` one of `answered`, `
 `node eval/gold/build-gold.mjs --tasks TASKS.json --out GOLD.json --pool pool.json` reads each task's publisher query, runs it through cite-check (`apps/map/lib/cite`: `plan`, `classify`) against the recorded publisher replies in `__fixtures__/publisher`, and writes the gold file. It prints only the sha256, refuses an `--out` inside the git root, and never overwrites. A value the matcher reads is PUBLISHED; the publisher's own suppression flag (QCEW `disclosure_code` N, NRI "Insufficient Data", CMS "Not Available") is NOT_PUBLISHED; a route's own missing entry with code `not_published`, `not_in_release` or `withheld` is NOT_PUBLISHED (the B4 amendment). Everything else (no recorded reply, an unreachable publisher, "no such record", any retry, narrow or redirect code) is listed in `GOLD.json.unrecorded.json` and is not gold. Needs Node 22.18+ (it loads the TypeScript in `apps/map/lib/cite`); `eval/gold.test.mjs` is its test.
 
 The tasks file and the gold file are written outside the repo. How many pool items have a recorded publisher row is a fact about the recordings, not about the builder; the preregistration states the count.
+
+## Where gold stands today
+
+Gold exists for 1 of the 46 admitted pool items, with 0 NOT_PUBLISHED and none on the sealed half, so the confirmatory v4 run cannot proceed until gold supply changes (see `writeups/jev-2026-10-18/eval-v4/GOLD-SUPPLY.md`, outside the repo).
