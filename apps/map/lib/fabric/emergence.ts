@@ -290,7 +290,8 @@ function byId(a: string, b: string): number {
   return a < b ? -1 : a > b ? 1 : 0;
 }
 
-function fmtValue(v: number): string {
+/** A value as the field's labels and the legend print it. */
+export function fmtValue(v: number): string {
   return v >= 100 ? Math.round(v).toLocaleString("en-US") : v >= 10 ? v.toFixed(0) : v.toFixed(1);
 }
 

@@ -7,13 +7,14 @@
 import type { LayerStyle } from "./renderer";
 import type { LayerFeature } from "@/lib/layers/types";
 import { polyFills, polyOutlines } from "./hazardStyles";
-import { NRI_COLORS, NRI_NO_RATING_EDGE, type NriExtra } from "@/lib/hazards/nri";
+import { NRI_CLASSES, NRI_COLORS, NRI_NO_RATING_EDGE, type NriExtra } from "@/lib/hazards/nri";
+import type { LegendEntry } from "@/lib/fabric/legend";
 import { PLACES_BIN_COLORS } from "@/lib/civic/places";
 import type { HealthExtra } from "@/lib/layers/health";
-import { SVI_BIN_COLORS, SVI_NO_RANK_EDGE, type SviExtra } from "@/lib/civic/svi";
-import { BROADBAND_BIN_COLORS, BROADBAND_NO_DATA_EDGE, type BroadbandExtra } from "@/lib/civic/broadband";
-import { WRC_BIN_COLORS, WRC_NO_RANK_EDGE, type WrcExtra } from "@/lib/hazards/wrc";
-import { HOUSING_BIN_COLORS, HOUSING_NO_DATA_EDGE, HOUSING_SUPPRESSED_FILL, QCT_EDGE, type HousingExtra } from "@/lib/civic/housing";
+import { SVI_BIN_COLORS, SVI_BIN_LABELS, SVI_NO_RANK_EDGE, type SviExtra } from "@/lib/civic/svi";
+import { BROADBAND_BIN_COLORS, BROADBAND_NO_DATA_EDGE, binLabelsFor, parseBroadbandMeasure, type BroadbandExtra } from "@/lib/civic/broadband";
+import { WRC_BIN_COLORS, WRC_BIN_LABELS, WRC_NO_RANK_EDGE, type WrcExtra } from "@/lib/hazards/wrc";
+import { HOUSING_BIN_COLORS, HOUSING_NO_DATA_EDGE, HOUSING_SUPPRESSED_FILL, QCT_EDGE, SUPPRESSED_LEGEND, housingBinLabels, parseHousingMeasure, type HousingExtra } from "@/lib/civic/housing";
 import { DDA_EDGE, LIHTC_COLOR, LIHTC_POINT_SIZES, type DdaExtra, type LihtcExtra } from "@/lib/civic/taxcredit";
 
 export function riskColor(f: LayerFeature): string {
@@ -163,3 +164,41 @@ export const housingStyle: LayerStyle = {
     return polyOutlines(f, drawn ? "#1F2937" : HOUSING_NO_DATA_EDGE, drawn ? 0.3 : 0.85, 1, !drawn);
   },
 };
+
+// ---------------------------------------------------------------- legends
+// Each index layer's legend is built from the same *_BIN_COLORS and the same
+// interval text its dossier prints, so the key and the paint share one source.
+// A no-data edge is only ever an outline entry, never a fill.
+
+export type IndexLayer = "riskindex" | "health" | "vulnerability" | "broadband" | "wildfirerisk" | "housing";
+
+const bins = (colors: readonly string[], labels: readonly string[]): LegendEntry[] => colors.map((color, i) => ({ color, label: labels[i], kind: "class" as const }));
+const edge = (color: string, label: string): LegendEntry => ({ color, label, kind: "outline" });
+
+/** Quintile labels: the view's own breaks when it has them (PLACES ranks the loaded counties), else the fifths by name. */
+function placesLabels(breaks?: readonly number[]): string[] {
+  if (breaks?.length === 4) return [`under ${breaks[0]} %`, `${breaks[0]} to ${breaks[1]} %`, `${breaks[1]} to ${breaks[2]} %`, `${breaks[2]} to ${breaks[3]} %`, `${breaks[3]} % or more`];
+  return ["lowest fifth of counties", "second fifth", "middle fifth", "fourth fifth", "highest fifth of counties"];
+}
+
+/** The key for one index layer. `measure` picks broadband's and housing's measure; `placesBreaks` are CDC PLACES' four quintile breaks in view. */
+export function indexLegend(layer: IndexLayer, opts: { measure?: number; placesBreaks?: readonly number[] } = {}): LegendEntry[] {
+  switch (layer) {
+    case "riskindex":
+      return [...NRI_CLASSES.map((c) => ({ color: NRI_COLORS[c], label: c, kind: "class" as const })), edge(NRI_NO_RATING_EDGE, "not rated (dashed edge)")];
+    case "health":
+      return [...bins(PLACES_BIN_COLORS, placesLabels(opts.placesBreaks)), edge(NRI_NO_RATING_EDGE, "not published (dashed edge)")];
+    case "vulnerability":
+      return [...bins(SVI_BIN_COLORS, SVI_BIN_LABELS), edge(SVI_NO_RANK_EDGE, "not ranked (dashed edge)")];
+    case "broadband":
+      return [...bins(BROADBAND_BIN_COLORS, binLabelsFor(parseBroadbandMeasure(opts.measure))), edge(BROADBAND_NO_DATA_EDGE, "no data (dashed edge)")];
+    case "wildfirerisk":
+      return [...bins(WRC_BIN_COLORS, WRC_BIN_LABELS), edge(WRC_NO_RANK_EDGE, "not ranked (dashed edge)")];
+    case "housing":
+      return [
+        ...bins(HOUSING_BIN_COLORS, housingBinLabels(parseHousingMeasure(opts.measure))),
+        { color: HOUSING_SUPPRESSED_FILL, label: SUPPRESSED_LEGEND, kind: "class" },
+        edge(HOUSING_NO_DATA_EDGE, "no data (dashed edge)"),
+      ];
+  }
+}

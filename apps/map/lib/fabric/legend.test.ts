@@ -82,11 +82,14 @@ describe("legendFor: the legend contains every colour the field paints", () => {
     });
   }
   it("the ramp the entries define is heatColor itself, at 200 heats", () => {
-    const legend = legendFor(randomVitals(5, "count"), "all", "count");
+    const vitals = randomVitals(5, "count");
+    vitals.set("county:top", { total: 40, byLayer: {}, density: null, value: 40, heat: 1, coverage: "complete", rank: 0, display: "40" });
+    const legend = legendFor(vitals, "all", "count");
+    expect(legend.entries.some((e) => e.kind === "ramp")).toBe(true);
     const r = rng(11);
     for (let i = 0; i < 200; i++) {
       const h = r();
-      expect(rampColorAt(legend.entries, h)).toBe(heatColor(h));
+      expect(rampColorAt(legend.entries, h), `heat ${h}`).toBe(heatColor(h));
     }
   });
 });
