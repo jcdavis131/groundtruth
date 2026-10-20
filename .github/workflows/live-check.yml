@@ -1,0 +1,88 @@
+# Weekly run of apps/map/scripts/live-check.mjs against production (https://www.arxiviq.com): the front door,
+# MCP initialize instructions, tools/list against EXPECTED_TOOL_NAMES, and world_context for county 01097 against
+# the committed baseline shape. Production is public and the check is keyless, so there is no secret and no
+# preview to reach. It is the schedule half of the status line: the run's assertion count, failures and exit
+# code are written to status.json (printed in the log and in the job summary) and the job fails when any
+# assertion does, which GitHub emails to the repository owner.
+#
+# status.json is not uploaded as an artifact yet: no workflow here pins actions/upload-artifact, and a pin has
+# to be a sha copied from a workflow already in the repo. Adding the action is one step after that pin is
+# reviewed in; until then the summary and the log are the record.
+#
+# Not a required check. A pull request that touches the check or this file gets a real run too, so a change
+# shows its output before it merges; a workflow_dispatch run needs this file on master.
+name: live-check
+
+on:
+  schedule:
+    # Thursdays 07:47 UTC, off the top of the hour and away from the Monday sweep and the Wednesday cite-check.
+    - cron: "47 7 * * 4"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "apps/map/scripts/live-check*"
+      - "apps/map/lib/mcp/expectedTools.mjs"
+      - ".github/workflows/live-check.yml"
+
+permissions:
+  contents: read
+
+# One group per trigger and ref, so a pull request run never holds up the weekly one.
+concurrency:
+  group: live-check-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: apps/map
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      # Plain Node, no dependencies: live-check.mjs uses only node: built-ins and fetch.
+      - name: live-check against production
+        env:
+          ORIGIN: https://www.arxiviq.com
+          REF: ${{ github.sha }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          set +e
+          node scripts/live-check.mjs "$ORIGIN" --baseline scripts/live-check.baseline.01097.json --ref "$REF" > "$RUNNER_TEMP/live-check.out" 2>&1
+          code=$?
+          set -e
+          cat "$RUNNER_TEMP/live-check.out"
+          CODE="$code" node - <<'NODE'
+          const fs = require("fs");
+          const text = fs.readFileSync(process.env.RUNNER_TEMP + "/live-check.out", "utf8");
+          const sum = /^live-check: (\d+) assertions, (\d+) failed \(/m.exec(text);
+          const run = /^live-check-run: \S+ ref=\S+ at=(\S+)$/m.exec(text);
+          const exit = Number(process.env.CODE);
+          // A line live-check did not print is null with the reason, never 0.
+          const status = {
+            at: run ? run[1] : null,
+            origin: process.env.ORIGIN,
+            ref: process.env.REF,
+            event: process.env.EVENT,
+            assertions: sum ? Number(sum[1]) : null,
+            failed: sum ? Number(sum[2]) : null,
+            exit,
+          };
+          if (!sum) status.note = "live-check printed no summary line (it exited " + exit + " before finishing)";
+          const json = JSON.stringify(status, null, 2);
+          fs.writeFileSync("status.json", json + "\n");
+          console.log(json);
+          const md = ["## live-check against " + status.origin, "", "```json", json, "```", "", "```", text.trim(), "```"].join("\n");
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, md + "\n");
+          NODE
+          exit "$code"
