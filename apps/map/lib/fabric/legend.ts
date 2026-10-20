@@ -68,7 +68,7 @@ export function legendFor(vitals: Map<string, Vitals>, measure: Measure, normali
     if (max) for (const h of RAMP_STOPS) entries.push({ color: heatColor(h), label: h === 0 ? "0" : fmtValue(max.value * h * h), kind: "ramp", heat: h });
     else entries.push({ color: heatColor(0), label: "0", kind: "ramp", heat: 0 });
   }
-  if (nulls > 0) entries.push({ color: NOT_LOADED, label: "not loaded", kind: "not-loaded" });
+  // MUTATION: not-loaded entry dropped
 
   const units: LegendUnits = streamflow ? "percentile against normal for today" : normalise === "density" ? "per 1,000 km²" : "count";
   return { entries, max, notLoaded: { count: nulls, reasons }, units };
