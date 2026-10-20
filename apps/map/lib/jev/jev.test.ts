@@ -52,7 +52,7 @@ describe("toLine", () => {
 describe("toSection", () => {
   it("marks a topic only when it has missing entries", () => {
     expect(toSection("hazards", { items: [base] }).marker).toBeNull();
-    const s = toSection("hazards", { items: [], missing: [{ what: "FEMA declarations", reason: "FEMA lists Connecticut under its 8 legacy counties." }] });
+    const s = toSection("hazards", { items: [], missing: [{ what: "FEMA declarations", code: "join_gap", reason: "FEMA lists Connecticut under its 8 legacy counties.", action: "narrow" }] });
     expect(s.marker).toContain("FEMA declarations");
     expect(s.gaps[0].sentence).toBe("FEMA declarations: FEMA still files Connecticut under its 8 old counties, not the planning regions Census uses now, so nothing is filed under this region.");
     expect(s.gaps[0].rule).toBe("ct-legacy-counties");

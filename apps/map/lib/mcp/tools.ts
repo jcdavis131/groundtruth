@@ -11,6 +11,7 @@
 import { z } from "zod";
 import { replyCoverage } from "./coverage";
 import { InvalidArguments } from "./errors";
+import { WORLD_OUTPUT_SCHEMA } from "./worldSchema";
 import { WORLD_DEFAULT_RECORDS, WORLD_MAX_BOX_DEG, WORLD_MAX_BYTES, WORLD_MAX_RECORDS, WORLD_TOPICS, worldContext } from "./world";
 
 /** What a route answered. `body` is the parsed JSON (or a string when the route did not send JSON). */
@@ -59,6 +60,12 @@ export interface ToolDef {
    * Claude Code (2.1.x) defers tool descriptions until a tool search, and this key loads one upfront.
    */
   meta?: Record<string, unknown>;
+  /**
+   * JSON Schema for structuredContent on a non-error reply. Only world_context sets it. It is published in
+   * GET /api/mcp and tools/list (server.ts adds it: the SDK registers only zod schemas), and the server
+   * checks every non-error reply against it, turning a reply that fails into an internal_error envelope.
+   */
+  outputSchema?: Record<string, unknown>;
   /** Validate `input` against `inputSchema` (throws ZodError) and call the route. */
   run(input: unknown, ctx: ToolCtx): Promise<ToolReply>;
 }
@@ -237,7 +244,7 @@ export async function relay(ctx: ToolCtx, path: string, opts: RelayOptions = {})
   else if (r.status >= 400) payload = addNote(payload, `route answered HTTP ${r.status}`);
   if (opts.dropGeometry) payload = stripGeometry(payload);
   const bounded = boundPayload(payload);
-  const coverage = replyCoverage(bounded, bounded !== payload);
+  const coverage = replyCoverage(bounded, bounded !== payload, path);
   payload = coverage ? { ...bounded, coverageStatus: coverage } : bounded;
   return { status: r.status, payload };
 }
@@ -349,6 +356,7 @@ function defineTool<S extends z.ZodRawShape>(def: {
   description: string;
   inputSchema: z.ZodObject<S>;
   meta?: Record<string, unknown>;
+  outputSchema?: Record<string, unknown>;
   handler: (input: z.infer<z.ZodObject<S>>, ctx: ToolCtx) => Promise<ToolReply>;
 }): ToolDef {
   return {
@@ -357,6 +365,7 @@ function defineTool<S extends z.ZodRawShape>(def: {
     description: def.description,
     inputSchema: def.inputSchema as unknown as z.ZodObject<z.ZodRawShape>,
     ...(def.meta ? { meta: def.meta } : {}),
+    ...(def.outputSchema ? { outputSchema: def.outputSchema } : {}),
     // async so a ZodError (or a handler's own check) rejects instead of throwing before a promise exists.
     run: async (input, ctx) => def.handler(def.inputSchema.parse(input ?? {}), ctx),
   };
@@ -789,8 +798,9 @@ export const TOOLS: ToolDef[] = [
     name: "world_context",
     title: "Cited world context for a place, before you act",
     meta: { "anthropic/alwaysLoad": true },
+    outputSchema: WORLD_OUTPUT_SCHEMA,
     description:
-      `Call this before you act on a place (answering about it, planning for it, or saying something is or is not there), and cite upstreamRecordUrl for every fact you use. One small bundle: pass exactly one of lon+lat, fips (5-digit county, or a state as 2 digits or SS000) or bbox (at most ${WORLD_MAX_BOX_DEG} degrees a side). Returns place (kind, name, countyFips, stateFips, point and its basis, searchBox; a county's point is Census's internal point from eye's county table, cited with its TIGERweb record) and topics: identity always (county, state, CBSA metro code, city, tract, ZCTA from Census TIGERweb), then fabric (time zone, NWS office, HUC-12 and where it drains, FEMA flood zone and NFIP community, school and congressional district, ecoregion, 3DEP elevation), hazards (FEMA NRI rating, expected annual loss and top hazards; newest FEMA declarations; this week's Drought Monitor; Severe/Extreme NWS alerts and quakes touching the place now), economy (BLS QCEW jobs and weekly wage, withheld as null not 0; Zillow home value and rent; population as FEMA's NRI row carries it), vulnerability (CDC/ATSDR SVI and FEMA's NRI social vulnerability, side by side), institutions (hospitals and dams in the search box, named only where the record's card allows; public companies by ticker and CIK; CMS star ratings as CMS's own items), water (the EPA community water system whose service area holds the point, by PWSID, and its UCMR 5 PFAS status and detections in ng/L), freshness (next scheduled releases of the sources cited; a schedule page that refuses automated clients is said to) and, with about, collections (catalog_search). Each item: fact, value, unit, period, note, sourceId, publisher, upstreamUrl, upstreamRecordUrl (the publisher's own keyless URL for exactly that record; where none exists the note says "no record-level URL"), retrievedAt, link (the eye route that reproduces it) and, for claims about eye's own catalogue, kind "about-eye". Cite upstreamRecordUrl (or upstreamUrl) for the fact, and use link to reproduce it. topics[t].missing lists what is absent and why; coverageStatus is partial whenever anything is missing, cut by max_records (default ${WORLD_DEFAULT_RECORDS}, max ${WORLD_MAX_RECORDS}) or cut to the ${WORLD_MAX_BYTES}-byte cap (truncated says how many). A sub-route that fails costs only its own items; the call errors only when nothing answered. Composes this server's own routes; no new upstream.`,
+      `Call this before you act on a place (answering about it, planning for it, or saying something is or is not there), and cite upstreamRecordUrl for every fact you use. One small bundle: pass exactly one of lon+lat, fips (5-digit county, or a state as 2 digits or SS000) or bbox (at most ${WORLD_MAX_BOX_DEG} degrees a side). Returns place (kind, name, countyFips, stateFips, point and its basis, searchBox; a county's point is Census's internal point from eye's county table, cited with its TIGERweb record) and topics: identity always (county, state, CBSA metro code, city, tract, ZCTA from Census TIGERweb), then fabric (time zone, NWS office, HUC-12 and where it drains, FEMA flood zone and NFIP community, school and congressional district, ecoregion, 3DEP elevation), hazards (FEMA NRI rating, expected annual loss and top hazards; newest FEMA declarations; this week's Drought Monitor; Severe/Extreme NWS alerts and quakes touching the place now), economy (BLS QCEW jobs and weekly wage, withheld as null not 0; Zillow home value and rent; population as FEMA's NRI row carries it), vulnerability (CDC/ATSDR SVI and FEMA's NRI social vulnerability, side by side), institutions (hospitals and dams in the search box, named only where the record's card allows; public companies by ticker and CIK; CMS star ratings as CMS's own items), water (the EPA community water system whose service area holds the point, by PWSID, and its UCMR 5 PFAS status and detections in ng/L), freshness (next scheduled releases of the sources cited; a schedule page that refuses automated clients is said to) and, with about, collections (catalog_search). Each item: fact, value, unit, period, note, sourceId, publisher, upstreamUrl, upstreamRecordUrl (the publisher's own keyless URL for exactly that record; where none exists the note says "no record-level URL"), retrievedAt, link (the eye route that reproduces it) and, for claims about eye's own catalogue, kind "about-eye". Cite upstreamRecordUrl (or upstreamUrl) for the fact, and use link to reproduce it. topics[t].missing lists what is absent, why, a code and the action to take (abstain, retry, narrow, redirect); coverageStatus is partial whenever anything is missing, cut by max_records (default ${WORLD_DEFAULT_RECORDS}, max ${WORLD_MAX_RECORDS}) or cut to the ${WORLD_MAX_BYTES}-byte cap (truncated says how many). A sub-route that fails costs only its own items; the call errors only when nothing answered. Composes this server's own routes; no new upstream.`,
     inputSchema: z
       .object({
         lon: lon.optional(),

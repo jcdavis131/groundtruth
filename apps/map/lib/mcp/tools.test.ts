@@ -4,7 +4,9 @@ import { PLACE_EXPORTS } from "../catalog/placeExport";
 import { NRI_SOVI_NOTE } from "../hazards/nri";
 import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+import { ABSENCE_CODES } from "./absence";
 import { ERROR_ENVELOPE_SCHEMA, InvalidArguments } from "./errors";
+import { WORLD_OUTPUT_SCHEMA } from "./worldSchema";
 import { errorResult, toCallResult } from "./server";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
@@ -40,6 +42,76 @@ async function urlFor(name: string, input: unknown): Promise<string> {
   expect(f.calls).toHaveLength(1);
   return f.calls[0];
 }
+
+describe("coverageStatus codes from the routes' own flags", () => {
+  const ask = (body: unknown, p = "/api/fabric?op=field&kind=county&bbox=-98,29,-97,30") => relay({ fetchJson: fake(200, body).fetchJson }, p);
+
+  it("data.truncated: true is cut_by_route_limit", async () => {
+    const r = await ask({ data: { kind: "county", units: [], truncated: true } });
+    expect(r.payload.coverageStatus).toEqual({ status: "partial", basis: [{ code: "cut_by_route_limit", text: expect.stringContaining("data.truncated") }] });
+  });
+
+  it("failed: ['x'], in data or at the top, is failed", async () => {
+    const inData = await ask({ data: { units: [], failed: ["x"] } });
+    expect(inData.payload.coverageStatus).toEqual({ status: "partial", basis: [{ code: "failed", text: expect.stringContaining("failed") }] });
+    const top = await ask({ data: { units: [] }, failed: [{ id: "x", error: "503" }] });
+    expect((top.payload.coverageStatus as { basis: { code: string }[] }).basis.map((b) => b.code)).toEqual(["failed"]);
+  });
+
+  it("neither flag, or both empty, says nothing: no coverageStatus, and never 'complete'", async () => {
+    expect((await ask({ data: { units: [], truncated: false, failed: [] }, failed: [] })).payload).not.toHaveProperty("coverageStatus");
+    expect((await ask({ data: { units: [] } })).payload).not.toHaveProperty("coverageStatus");
+  });
+
+  it("meta.bbox smaller than the box asked is not_loaded, naming both boxes; equal or larger says nothing", async () => {
+    const small = await ask({ data: {}, meta: { bbox: [-97.9, 29, -97, 30] } });
+    expect(small.payload.coverageStatus).toEqual({ status: "partial", basis: [{ code: "not_loaded", text: expect.stringMatching(/meta\.bbox.*-97\.9.*-98/) }] });
+    const same = await ask({ data: {}, meta: { bbox: [-98, 29, -97, 30] } });
+    expect(same.payload).not.toHaveProperty("coverageStatus");
+    const bigger = await ask({ data: {}, meta: { bbox: [-99, 28, -96, 31] } });
+    expect(bigger.payload).not.toHaveProperty("coverageStatus");
+    const noAsk = await ask({ data: {}, meta: { bbox: [-97.9, 29, -97, 30] } }, "/api/economy?op=pulse");
+    expect(noAsk.payload).not.toHaveProperty("coverageStatus");
+  });
+
+  it("built from a recorded reply: the recorded construct-field reply says nothing; with its truncated flag set, or one failed upstream, it says so", async () => {
+    const rec = JSON.parse(readFileSync(path.join(__dirname, "__fixtures__", "world", "nola_smallbox.json"), "utf8")) as { routes: Record<string, { body: Record<string, unknown> }> };
+    const key = Object.keys(rec.routes).find((k) => k.startsWith("/api/fabric?op=field"))!;
+    expect(key).toBeDefined();
+    const body = rec.routes[key].body as { data: Record<string, unknown> };
+    expect(body.data.truncated).toBe(false);
+    const plain = await relay({ fetchJson: fake(200, structuredClone(body)).fetchJson }, key);
+    expect(plain.payload).not.toHaveProperty("coverageStatus");
+    // two stated edits to the recorded body
+    const cut = structuredClone(body);
+    cut.data.truncated = true;
+    const r1 = await relay({ fetchJson: fake(200, cut).fetchJson }, key);
+    expect((r1.payload.coverageStatus as { basis: { code: string }[] }).basis.map((b) => b.code)).toEqual(["cut_by_route_limit"]);
+    const stack = JSON.parse(readFileSync(path.join(__dirname, "__fixtures__", "world", "austin_pt.json"), "utf8")) as { routes: Record<string, { body: { data: Record<string, unknown> } }> };
+    const sk = Object.keys(stack.routes).find((k) => k.startsWith("/api/fabric?op=stack"))!;
+    const failed = structuredClone(stack.routes[sk].body);
+    failed.data.failed = ["usgs-wbd"];
+    const r2 = await relay({ fetchJson: fake(200, failed).fetchJson }, sk);
+    expect((r2.payload.coverageStatus as { basis: { code: string }[] }).basis.map((b) => b.code)).toEqual(["failed"]);
+  });
+
+  it("every code in a basis is on the closed list and every basis line has text", async () => {
+    const r = await ask({ data: { truncated: true, failed: ["x"], nullPlaces: { "09110": "join:no_source_row" } }, meta: { bbox: [-97.9, 29, -97, 30] } });
+    const basis = (r.payload.coverageStatus as { basis: { code: string; text: string }[] }).basis;
+    expect(basis.length).toBe(4);
+    for (const b of basis) {
+      expect(Object.keys(ABSENCE_CODES)).toContain(b.code);
+      expect(b.text.length).toBeGreaterThan(10);
+    }
+  });
+});
+
+describe("outputSchema on tool definitions", () => {
+  it("only world_context declares one, and it is the published world/2 schema", () => {
+    expect(TOOLS.filter((x) => x.outputSchema).map((x) => x.name)).toEqual(["world_context"]);
+    expect(toolByName("world_context")!.outputSchema).toBe(WORLD_OUTPUT_SCHEMA);
+  });
+});
 
 describe("qs", () => {
   it("keeps order, skips empties, leaves commas and colons readable", () => {
