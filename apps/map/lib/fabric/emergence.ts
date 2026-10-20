@@ -332,7 +332,7 @@ export function vitalsKey(v: Map<string, Vitals>): string {
 }
 
 /** A unit with no value: the field draws it as a dashed outline in this grey, outside the heat ramp. */
-export const NOT_LOADED = "#9CA3AF";
+export const NOT_LOADED = heatColor(0);
 
 /**
  * Heat ramp for the field: dark slate, through teal and gold, to light orange.
