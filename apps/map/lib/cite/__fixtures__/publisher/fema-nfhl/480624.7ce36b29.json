@@ -1,0 +1,11 @@
+{
+ "sourceId": "fema-nfhl",
+ "recordId": "480624.7ce36b29",
+ "url": "https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/22/query?where=CID%3D'480624'&outFields=CID,POL_NAME1&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:30:58.422Z",
+ "status": 200,
+ "bytes": 1419,
+ "sha256": "18a0fd9b50452dee9677e1de39d1ff1812fb9f85f756547e706afd50dbda1cab",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"POL_NAME1\",\"features\":[{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City Of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"City of Austin\"}},{\"attributes\":{\"CID\":\"480624\",\"POL_NAME1\":\"CITY OF AUSTIN\"}}]}"
+}

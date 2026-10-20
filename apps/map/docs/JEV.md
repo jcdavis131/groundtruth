@@ -27,7 +27,7 @@ Narrow it with `topics` (for example `["hazards", "economy"]`) and `max_records`
 
 Every item carries `sourceId`, `publisher`, `upstreamUrl`, `retrievedAt` and `link`. `link` is the eye route that, fetched, returns the thing cited. Most items also carry `upstreamRecordUrl`: a keyless query on the publisher's own host for exactly that record (a TIGERweb GEOID, an OpenFEMA disaster number, the BLS QCEW area CSV, the CMS row for a CCN, the NID row for a dam, EPA's rows for a PWSID). Where there is none, the item's note says "no record-level URL" and why. Cite `upstreamRecordUrl` (or `upstreamUrl`) for the fact and use `link` to reproduce it. Items about eye's own catalogue are `kind: "about-eye"`: claims about what eye holds, with no outside publisher to confirm them. An item whose route sent no provenance is not shown; it is listed under `missing` instead.
 
-The invariant, tested in `lib/mcp/world.test.ts` over route replies recorded from the live site (`lib/mcp/__fixtures__/world/`, written by `node scripts/world-record.mjs <name> <input>`, or `--fill` to add only the routes a fixture lacks): every item's `sourceId` is the source its fact is about (a table in the test, kept apart from `world.ts`), its `publisher` and `upstreamUrl` come from that source's own provenance entry on the route its `link` names, and that route does not list the source in its `missing` or `failed`; a 0 appears only where the route itself says the answer is complete (`declarationRows` 0 with no boundary or join gap, `truncated: false`, a full SEC pull, a live list with nothing failed or unmapped). Every `upstreamRecordUrl` is on its source's own host (a table in the test) and contains the record's id; an item without one says so; `about-eye` is exactly the catalogue's items. A mutation case drops each cited source from its route in turn (provenance removed, named missing) and requires a missing entry in place of the value, and the fixtures between them cite every source in the table. When the reply is over the byte cap, rows of lists (declarations, records, events, companies) are cut before summaries such as the drought reading or a live count. A missing source never becomes a value or borrows another source's citation. Whatever is absent is listed in `topics[t].missing` with its reason, and `coverageStatus: { status: "partial", basis }` names every gap, every list cut by `max_records` and any cut to fit the byte cap. A route that fails or takes longer than 25 s costs only its own items. The call is an error (the typed envelope in [MCP.md](MCP.md)) only when the input is bad, the FIPS is unknown, or nothing answered at all. When every route answered 401 or 403 it is an auth refusal (HTTP 403, `refusal: "auth"`, not retryable), not an upstream failure.
+The invariant, tested in `lib/mcp/world.test.ts` over route replies recorded from the live site (`lib/mcp/__fixtures__/world/`, written by `node scripts/world-record.mjs <name> <input>`, or `--fill` to add only the routes a fixture lacks): every item's `sourceId` is the source its fact is about (a table in the test, kept apart from `world.ts`), its `publisher` and `upstreamUrl` come from that source's own provenance entry on the route its `link` names, and that route does not list the source in its `missing` or `failed`; a 0 appears only where the route itself says the answer is complete (`declarationRows` 0 with no boundary or join gap, `truncated: false`, a full SEC pull, a live list with nothing failed or unmapped). Every `upstreamRecordUrl` is on its source's own host (a table in the test) and contains the record's id; an item without one says so; `about-eye` is exactly the catalogue's items. A mutation case drops each cited source from its route in turn (provenance removed, named missing) and requires a missing entry in place of the value, and the fixtures between them cite every source in the table. When the reply is over the byte cap, rows of lists (declarations, records, events, companies) are cut before summaries such as the drought reading or a live count. A missing source never becomes a value or borrows another source's citation. Whatever is absent is listed in `topics[t].missing` as `{ what, code, reason, action }` (the codes and actions are in [MCP.md](MCP.md), Coverage status and absence codes), and `coverageStatus: { status: "partial", basis: [{ code, text }] }` names every gap, every list cut by `max_records` and any cut to fit the byte cap. A route that fails or takes longer than 25 s costs only its own items. The call is an error (the typed envelope in [MCP.md](MCP.md)) only when the input is bad, the FIPS is unknown, or nothing answered at all. When every route answered 401 or 403 it is an auth refusal (HTTP 403, `refusal: "auth"`, not retryable), not an upstream failure.
 
 It composes eye's own routes (`/api/fabric`, `/api/screen`, `/api/hazards`, `/api/live`, `/api/civic`, `/api/infra`, `/api/companies`, `/api/water`, `/api/releases`, `/api/catalog`) on the server and calls no upstream of its own.
 
@@ -41,7 +41,7 @@ Add eye's MCP server to Claude Code over HTTP. A suggestion for Cam to run; noth
 claude mcp add --transport http eye https://www.arxiviq.com/api/mcp
 ```
 
-Then, before acting on a place, call `world_context` and paste the bundle into the plan, citing items by their `link`. When `coverageStatus` is partial, read `missing` before relying on an absence.
+Then, before acting on a place, call `world_context` and paste the bundle into the plan, citing items by their `link`. When `coverageStatus` is partial, read `missing` before relying on an absence, and act on `missing[].action`: `abstain` means say it is absent here, `retry` means call again, `narrow` means change the request (a county FIPS or a point, a smaller box, fewer topics), `redirect` means the value is filed under another code. The reply says `schemaVersion: "world/2"` and validates against the `outputSchema` in `tools/list`.
 
 ## What it does not do yet
 
@@ -50,3 +50,30 @@ Then, before acting on a place, call `world_context` and paste the bundle into t
 - No memory. It does not know Cam's preferences or earlier answers; every call starts fresh.
 - No daily weather, IPEDS colleges, rail or airports, or which CBSA delineation a past year used.
 - A county FIPS is read at the point `/api/screen` publishes for it; the fabric topic asks for a point.
+
+## How to verify a bundle
+
+`world_context` cites; `cite-check` checks. It takes an item as the tool emits it and asks the publisher's own record whether the item is right. No model grades anything.
+
+```
+node scripts/cite-check.mjs --fixtures                  # the twelve recorded world fixtures against recorded publisher replies; no network
+node scripts/cite-check.mjs --live reply.json           # fetch each record URL from the publisher
+```
+
+Input is a recorded world fixture, a `world_context` reply, or a facts file (`{"facts": [{fact, value, unit, period, sourceId, upstreamRecordUrl, retrievedAt, code}]}`). It needs Node 22.18 or later, and `npm ci` in `apps/map` for the first form.
+
+Each item gets one verdict:
+
+- `CONFIRMED`: the publisher's record states what the item states, within a tolerance declared per field (0 for codes, ids, dates and counts; whole USD for wages and expected annual loss; 1 m for elevation; 0.1 point for drought shares).
+- `CONTRADICTED`: the record states something else for the same period, or there is no such record.
+- `CHANGED_SINCE_RETRIEVAL`: the record now carries a later period or release than the item states (a new QCEW quarter, a new NRI release).
+- `NOT_PUBLISHED`: the publisher's own suppression flag (QCEW `disclosure_code` N, NRI "Insufficient Data", CMS "Not Available").
+- `UNREACHABLE`: HTTP 403, 429, 5xx, 404, a timeout, or a reply the matcher cannot read. Unscored. It is never counted wrong.
+- `NO_RECORD_URL`: the item has no record URL, or its record expires (an NWS alert). Not machine-verifiable.
+- `REFUSED`: the host is not in the table in `lib/cite/hosts.ts`, or an id the item names is absent from its record URL. Nothing is fetched.
+
+Every verdict carries the publisher's value, period, record URL, fetch time and the sha256 of the body. There is no `CONFIRMED` without the hash. The summary's confirmed and wrong totals leave out `UNREACHABLE`, `NO_RECORD_URL` and `REFUSED`, so a publisher that blocks the client moves nothing into "wrong". Only items with a record URL can be checked, so report that subset on its own.
+
+`--live` sends the User-Agent each host accepts (SEC and BLS answer 403 to a string carrying a GitHub URL), one request a second per host, 25 s timeout, 400 requests at most. `.github/workflows/cite-check.yml` runs it weekly over the twelve fixtures and writes the `CONTRADICTED` and `CHANGED_SINCE_RETRIEVAL` lists to the job summary; it reports and never gates.
+
+Recorded publisher replies are in `lib/cite/__fixtures__/publisher/`, written by `node scripts/publisher-record.mjs --from-fixtures`. Each header holds the URL, `retrievedAt` and the sha256 of the full body as received; a trimmed body says what was cut.

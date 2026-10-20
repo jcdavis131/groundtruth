@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "28-4805000.2a694e0c",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/28/query?where=GEOID%3D'4805000'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:30:51.639Z",
+ "status": 200,
+ "bytes": 304,
+ "sha256": "65d539baba37f4b1baf07bce3f01a5e7505a1c8b7ed4350494c4fa96a6615227",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"4805000\",\"NAME\":\"Austin city\"}}]}"
+}

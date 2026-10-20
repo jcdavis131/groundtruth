@@ -22,7 +22,11 @@
 //   - Items about eye's own catalogue are kind "about-eye": claims about what
 //     eye holds, not about the world.
 //   - Missing is absent with a reason (topics[t].missing), never a placeholder;
-//     a value BLS withheld is null with the reason, not 0.
+//     a value BLS withheld is null with the reason, not 0. Every missing entry also
+//     carries a code and the action the agent may take (./absence): not_published and
+//     withheld come only from a route's own missing entry or the publisher's own flag.
+//   - The reply says schemaVersion "world/2" and is validated against ./worldSchema
+//     (the outputSchema in tools/list and GET /api/mcp) before it is sent.
 //   - A sub-route that fails or times out costs only its own items: the reply
 //     says coverageStatus partial and names it. Only a reply with no item at
 //     all is an error.
@@ -37,9 +41,11 @@
 // Relative imports only (see ./tools.ts for why); only types come from
 // ./tools, so there is no import cycle at run time.
 
+import { absence, codeForRouteEntry, type AbsenceCode, type AbsenceEntry, type BasisLine } from "./absence";
 import type { CoverageStatus } from "./coverage";
 import { envelopeForStatus } from "./errors";
 import type { JsonObject, JsonReply, ToolCtx, ToolReply } from "./tools";
+import { WORLD_SCHEMA_VERSION } from "./worldSchema";
 
 /** Topics a caller can ask for. identity is always included. */
 export const WORLD_TOPICS = ["fabric", "hazards", "economy", "vulnerability", "institutions", "water", "freshness", "collections"] as const;
@@ -87,15 +93,17 @@ export interface WorldItem {
   link: string;
   /** "about-eye": a claim about eye's own catalogue, not about the world; it has no upstream to confirm. */
   kind?: "about-eye";
+  /** "withheld": the value is null because the publisher's own suppression flag says so (BLS QCEW jobs.suppressed). */
+  absence?: "withheld";
 }
 
 export interface WorldSection {
   items: WorldItem[];
-  missing?: { what: string; reason: string }[];
+  missing?: AbsenceEntry[];
   coverageStatus?: CoverageStatus;
 }
 
-type Section = WorldSection & { cut: string[] };
+type Section = WorldSection & { cut: BasisLine[] };
 
 // ---- fetching ----------------------------------------------------------------
 
@@ -105,6 +113,13 @@ interface Got {
   body: JsonObject;
   url: string;
   reason?: string;
+  /** Why the call has no body: timeout (a deadline or an HTTP 408/504), else failed. Set whenever reason is. */
+  code?: AbsenceCode;
+}
+
+/** The absence code of a call that did not answer. */
+function codeOf(g: Got): AbsenceCode {
+  return g.code ?? "failed";
 }
 
 function q(params: Record<string, string | number | undefined>): string {
@@ -151,17 +166,17 @@ function fetcher(ctx: ToolCtx, stepMs: number) {
     });
     try {
       const r = await Promise.race([ctx.fetchJson(path), deadline]);
-      if (r === "timeout") return { ok: false, status: 504, body: {}, url: path, reason: `no answer within ${stepMs / 1000} s` };
+      if (r === "timeout") return { ok: false, status: 504, body: {}, url: path, reason: `no answer within ${stepMs / 1000} s`, code: "timeout" };
       const reply = r as JsonReply;
       const body = obj(reply.body);
       if (reply.status >= 400) {
         const err = typeof body.error === "string" ? body.error : "";
         const reason = reply.status === 404 && err === "non-JSON reply" ? "this route is not deployed on this server" : `HTTP ${reply.status}${err ? ": " + err.slice(0, 160) : ""}`;
-        return { ok: false, status: reply.status, body, url: reply.url, reason };
+        return { ok: false, status: reply.status, body, url: reply.url, reason, code: reply.status === 408 || reply.status === 504 ? "timeout" : "failed" };
       }
       return { ok: true, status: reply.status, body, url: reply.url };
     } catch (err) {
-      return { ok: false, status: 0, body: {}, url: path, reason: err instanceof Error ? err.message.slice(0, 160) : String(err).slice(0, 160) };
+      return { ok: false, status: 0, body: {}, url: path, reason: err instanceof Error ? err.message.slice(0, 160) : String(err).slice(0, 160), code: err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError") ? "timeout" : "failed" };
     } finally {
       if (timer) clearTimeout(timer);
     }
@@ -212,7 +227,7 @@ export const MISSING_NAMES: Record<string, string> = {
 };
 
 /** Plain words for the routes' reason codes; the code stays in brackets. */
-const REASONS: Record<string, (who: string) => string> = {
+export const REASONS: Record<string, (who: string) => string> = {
   "join:legacy_ct_counties": (who) => `${who} lists Connecticut under its 8 legacy counties (09001-09015), not the planning regions (09110-09190) Census now uses, so it has nothing filed under this region`,
   "source:not_published_for_puerto_rico": (who) => `${who} does not publish Puerto Rico`,
   "join:boundary_changed_since_2010": (who) => `this county's boundary changed after 2010, so ${who}'s 2010-based row is not attached to it`,
@@ -230,13 +245,13 @@ export function explainReason(code: string, who: string, detail?: string | null)
 }
 
 /** The route's own entry saying this source is missing or failed, if any. */
-function routeMissing(got: Got, id: string): { source: string; reason: string } | null {
+function routeMissing(got: Got, id: string): { source: string; reason: string; code: AbsenceCode } | null {
   const d = obj(got.body.data);
   for (const m of [...arr(d.missing), ...arr(d.failed), ...arr(got.body.missing)].map(obj)) {
     const name = str(m.source ?? m.id);
     if (name && (name === id || MISSING_NAMES[name] === id)) {
       const code = str(m.reason) ?? (str(m.error) ? "source:failed" : "");
-      return { source: name, reason: explainReason(code || "source:failed", name, str(m.detail) ?? str(m.error)) };
+      return { source: name, reason: explainReason(code || "source:failed", name, str(m.detail) ?? str(m.error)), code: codeForRouteEntry({ reason: code || "source:failed", detail: str(m.detail), error: str(m.error) }) };
     }
   }
   return null;
@@ -254,16 +269,18 @@ interface Cite {
 interface NoCite {
   none: string;
   reason: string;
+  /** no_citation (the route sent no provenance), about_eye for eye's own catalogue, else the code of the route's own missing entry. */
+  code: AbsenceCode;
 }
 
 /** The citation for `id` from this route's reply, or why there is none. */
 function cite(got: Got, id: string, pick?: (p: Prov) => boolean): Cite | NoCite {
   const gone = routeMissing(got, id);
-  if (gone) return { none: id, reason: `${id}: the route lists it as missing: ${gone.reason}` };
+  if (gone) return { none: id, reason: `${id}: the route lists it as missing: ${gone.reason}`, code: gone.code };
   const p = provOf(got.body, id, pick);
   const src = obj(p?.source);
   const publisher = str(src.publisher);
-  if (!p || !publisher) return { none: id, reason: `${id}: the route sent no provenance for it, so nothing from it is shown` };
+  if (!p || !publisher) return { none: id, reason: `${id}: the route sent no provenance for it, so nothing from it is shown`, code: id === "eye-catalog" ? "about_eye" : "no_citation" };
   const upstreamUrl = (typeof p.upstreamUrl === "string" && p.upstreamUrl) || (typeof src.url === "string" && src.url) || got.url;
   const retrievedAt = (typeof p.retrievedAt === "string" && p.retrievedAt) || (typeof got.body.generatedAt === "string" && got.body.generatedAt) || new Date().toISOString();
   return { sourceId: id, publisher, upstreamUrl, retrievedAt, link: got.url };
@@ -274,7 +291,7 @@ function isCite(c: Cite | NoCite): c is Cite {
 }
 
 /** An item, or the fact it would have stated and why it has no citation. */
-type Built = WorldItem | { uncited: string; reason: string };
+type Built = WorldItem | { uncited: string; reason: string; code: AbsenceCode };
 
 /** Why an item has no record-level URL; said in its note as "no record-level URL: <why>". */
 interface NoRecord {
@@ -289,7 +306,7 @@ type Extra = Partial<Omit<WorldItem, "fact" | "value" | "upstreamRecordUrl" | ke
 };
 
 function item(c: Cite | NoCite, fact: string, value: WorldItem["value"], extra: Extra): Built {
-  if (!isCite(c)) return { uncited: fact, reason: c.reason };
+  if (!isCite(c)) return { uncited: fact, reason: c.reason, code: c.code };
   const out = { fact, value } as WorldItem;
   const { record, ...rest } = extra;
   if (typeof record !== "string") rest.note = [rest.note, `no record-level URL: ${record.noRecord}`].filter(Boolean).join("; ");
@@ -420,12 +437,13 @@ function listRow(b: Built): Built {
 
 /** Add an item; one without a citation is never shown, and is listed as missing instead. */
 function push(s: Section, it: Built): void {
-  if ("uncited" in it) miss(s, it.uncited, it.reason);
+  if ("uncited" in it) miss(s, it.uncited, it.reason, it.code);
   else s.items.push(it);
 }
 
-function miss(s: Section, what: string, reason: string): void {
-  (s.missing ??= []).push({ what, reason });
+/** Record what is missing, why in words, and the code that says what the agent may do about it. */
+function miss(s: Section, what: string, reason: string, code: AbsenceCode): void {
+  (s.missing ??= []).push(absence(what, code, reason));
 }
 
 // ---- boxes -------------------------------------------------------------------
@@ -615,22 +633,22 @@ function identityGaps(s: Section, fabric: Got, expect: string | null, at: string
   const failed = arr(obj(fabric.body.data).failed).map((f) => obj(f));
   const tiger = failed.find((f) => str(f.source ?? f.id) === "census-tigerweb");
   if (tiger) {
-    miss(s, expect ? "state and metro area (CBSA)" : "county, state and metro area (CBSA)", `Census TIGERweb failed on this call (/api/fabric failed[]${str(tiger.error) ? `: ${str(tiger.error)}` : ""})`);
+    miss(s, expect ? "state and metro area (CBSA)" : "county, state and metro area (CBSA)", `Census TIGERweb failed on this call (/api/fabric failed[]${str(tiger.error) ? `: ${str(tiger.error)}` : ""})`, codeForRouteEntry({ detail: str(tiger.error) }));
     return;
   }
   if (!has("county")) {
     const why = str(obj(fabric.body.data).coverage);
-    miss(s, expect ? "state and metro area (CBSA)" : "county, state and metro area (CBSA)", `the place fabric answered but has no county polygon at ${at}: it is offshore or outside the US${why ? ` (the fabric says: ${why})` : ""}`);
+    miss(s, expect ? "state and metro area (CBSA)" : "county, state and metro area (CBSA)", `the place fabric answered but has no county polygon at ${at}: it is offshore or outside the US${why ? ` (the fabric says: ${why})` : ""}`, "not_in_release");
     return;
   }
-  if (!has("state")) miss(s, "state", `the place fabric returned no state at ${at}`);
-  if (!has("cbsa")) miss(s, "metro area (CBSA)", "none: this county is in no metropolitan or micropolitan statistical area (Census TIGERweb answered and returned no CBSA here)");
+  if (!has("state")) miss(s, "state", `the place fabric returned no state at ${at}`, "not_in_release");
+  if (!has("cbsa")) miss(s, "metro area (CBSA)", "none: this county is in no metropolitan or micropolitan statistical area (Census TIGERweb answered and returned no CBSA here)", "not_in_release");
 }
 
 function fabricFailed(fabric: Got, s: Section): void {
   for (const f of arr(obj(fabric.body.data).failed)) {
     const id = str(typeof f === "string" ? f : obj(f).id ?? obj(f).source);
-    if (id) miss(s, `place fabric: ${id}`, "that upstream failed on this call (listed in /api/fabric failed[])");
+    if (id) miss(s, `place fabric: ${id}`, "that upstream failed on this call (listed in /api/fabric failed[])", "failed");
   }
 }
 
@@ -663,14 +681,17 @@ function nriRow(nri: Got): JsonObject | null {
 const NRI_CLASSES = new Set(["Very Low", "Relatively Low", "Relatively Moderate", "Relatively High", "Very High"]);
 
 /** A FEMA NRI rating word when it is a class; FEMA's other words ("Insufficient Data", "Data Unavailable", ...) are not a value. */
-function nriRating(v: unknown): { rating: string | null; reason?: string } {
+function nriRating(v: unknown): { rating: string | null; reason?: string; code?: AbsenceCode } {
   const w = str(v);
   if (w && NRI_CLASSES.has(w)) return { rating: w };
-  return { rating: null, reason: w ? `FEMA publishes "${w}" here, which is not a rating (and never means low)` : "FEMA's row has no rating here" };
+  // Not not_published: the word arrives as a row value, not in a route missing entry or a suppression flag, and
+  // FEMA's definitions of its words could not be retrieved to quote ("Not Applicable", "Insufficient Data",
+  // "Data Unavailable", "No Rating"). The row has no rating to show: not_in_release, which abstains all the same.
+  return { rating: null, reason: w ? `FEMA publishes "${w}" here, which is not a rating (and never means low)` : "FEMA's row has no rating here", code: "not_in_release" };
 }
 
 function capList<T>(s: Section, label: string, list: T[], max: number): T[] {
-  if (list.length > max) s.cut.push(`${label}: ${max} of ${list.length} shown (max_records)`);
+  if (list.length > max) s.cut.push({ code: "cut_by_max_records", text: `${label}: ${max} of ${list.length} shown (max_records)` });
   return list.slice(0, max);
 }
 
@@ -741,7 +762,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
       r.countyFips = nodes.find((n) => n.kind === "county")?.code ?? null;
       r.stateFips = nodes.find((n) => n.kind === "state")?.code ?? (r.countyFips ? r.countyFips.slice(0, 2) : null);
       r.name = nodes.find((n) => n.kind === "county")?.name ?? nodes.find((n) => n.kind === "country")?.name ?? null;
-    } else miss(id, "place fabric at the point", fabric.reason ?? "failed");
+    } else miss(id, "place fabric at the point", fabric.reason ?? "failed", codeOf(fabric));
   } else {
     const kind = r.kind === "state" ? "state" : "county";
     const geoid = r.kind === "state" ? r.stateFips! : r.countyFips!;
@@ -755,7 +776,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     if (screen.ok) {
       r.name = str(row.name);
       r.usps = str(obj(row.values).state);
-    } else miss(id, `${kind} row`, screen.reason ?? "failed");
+    } else miss(id, `${kind} row`, screen.reason ?? "failed", codeOf(screen));
     if (r.kind === "county") {
       // Census's own internal point for the county (INTPTLON/INTPTLAT), from the bundled county table,
       // never the screener's map anchor (Mobile 01097's was 11 km off it).
@@ -763,7 +784,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
       if (cp) {
         r.point = { lon: round(cp.lon, 4), lat: round(cp.lat, 4), basis: "Census internal point (INTPTLON/INTPTLAT) of the county, from eye's county table", census: { geoid, pulled: cp.pulled } };
         r.box = boxAround(cp.lon, cp.lat, 0.25);
-      } else miss(id, "the county's point", ctx.countyPoint ? `eye's county table has no county ${geoid}, so nothing is centred on it` : "this server was started without eye's county table (ctx.countyPoint), so the county has no point and no search box");
+      } else miss(id, "the county's point", ctx.countyPoint ? `eye's county table has no county ${geoid}, so nothing is centred on it` : "this server was started without eye's county table (ctx.countyPoint), so the county has no point and no search box", ctx.countyPoint ? "not_in_release" : "not_loaded");
     } else if (screen.ok) {
       // A state: the screener's representative point, said as such (no box is searched for a state).
       const geo = arr(row.geo);
@@ -817,14 +838,14 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
       const at = r.point ? `the county's Census internal point (${r.point.lon}, ${r.point.lat})` : "the county's Census internal point";
       const there = nodesOf(g).find((n) => n.kind === "county");
       if (there && there.code !== cf) {
-        miss(id, "state and metro area (CBSA) from the place fabric", `the fabric at ${at} resolved to county ${there.code}${there.name ? ` (${there.name})` : ""}, not ${cf}; that county's state and CBSA are not shown for this one`);
+        miss(id, "state and metro area (CBSA) from the place fabric", `the fabric at ${at} resolved to county ${there.code}${there.name ? ` (${there.name})` : ""}, not ${cf}; that county's state and CBSA are not shown for this one`, "join_gap");
       } else {
         fabricItems(id, g, IDENTITY_KINDS, new Set(["state", "cbsa"]), "read at the county's Census internal point");
         identityGaps(id, g, cf, at);
       }
-    } else if (g) miss(id, "state and metro area (CBSA) from the place fabric", g.reason ?? "failed");
+    } else if (g) miss(id, "state and metro area (CBSA) from the place fabric", g.reason ?? "failed", codeOf(g));
   }
-  if (r.kind === "state") miss(id, "metro area (CBSA)", "a state has no single metro; pass a county FIPS or a point");
+  if (r.kind === "state") miss(id, "metro area (CBSA)", "a state has no single metro; pass a county FIPS or a point", "not_asked");
   if (got.counties && r.box) {
     const g = got.counties;
     if (g.ok) {
@@ -835,22 +856,22 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
       // The county under the centre of the box first, so the cap never drops it.
       touching.sort((a, b2) => Number(str(b2.code) === cf) - Number(str(a.code) === cf));
       const c = cite(g, "census-tigerweb");
-      if (obj(g.body.data).truncated === true) id.cut.push("counties touching the box: the route hit its record limit, so some may be missing");
-      if (!touching.length) miss(id, "counties touching the box", units.length ? "none of the county outlines the route returned touches the box" : "Census TIGERweb returned no county in the box (offshore or outside the US)");
+      if (obj(g.body.data).truncated === true) id.cut.push({ code: "cut_by_route_limit", text: "counties touching the box: the route hit its record limit, so some may be missing" });
+      if (!touching.length) miss(id, "counties touching the box", units.length ? "none of the county outlines the route returned touches the box" : "Census TIGERweb returned no county in the box (offshore or outside the US)", "not_in_release");
       for (const u of capList(id, "counties touching the box", touching, max)) {
         push(id, listRow(item(c, "county touching the box", str(u.name), { code: str(u.code) ?? undefined, note: "its Census TIGERweb outline (generalised) touches the box", record: tigerRecord("county", str(u.code)) })));
       }
-    } else miss(id, "counties touching the box", g.reason ?? "failed");
+    } else miss(id, "counties touching the box", g.reason ?? "failed", codeOf(g));
   }
   if (r.stateFips === "09" && (r.kind === "county" || r.kind === "point" || r.kind === "bbox")) {
-    miss(id, "Connecticut county id", "Census uses planning regions (09110-09190) as county equivalents; some sources publish only legacy counties (09001-09015), so a county-keyed fact can be absent here for that reason alone");
+    miss(id, "Connecticut county id", "Census uses planning regions (09110-09190) as county equivalents; some sources publish only legacy counties (09001-09015), so a county-keyed fact can be absent here for that reason alone", "join_gap");
   }
-  if (!cf && r.kind !== "state" && !fabric?.ok) miss(id, "county", r.point ? "the place fabric did not answer, so no county was resolved" : "the place could not be resolved");
+  if (!cf && r.kind !== "state" && !fabric?.ok) miss(id, "county", r.point ? "the place fabric did not answer, so no county was resolved" : "the place could not be resolved", r.point ? "failed" : "not_in_release");
 
   // ---- fabric ----
   if (want("fabric")) {
     const s = S.fabric;
-    if (r.kind === "state" || r.kind === "county") miss(s, "place fabric", `the fabric is per point; call world_context with lon/lat${r.point ? ` (the ${r.kind}'s point is ${r.point.lon}, ${r.point.lat})` : ""}`);
+    if (r.kind === "state" || r.kind === "county") miss(s, "place fabric", `the fabric is per point; call world_context with lon/lat${r.point ? ` (the ${r.kind}'s point is ${r.point.lon}, ${r.point.lat})` : ""}`, "not_asked");
     else if (fabric?.ok) {
       fabricItems(s, fabric, FABRIC_KINDS, undefined, r.kind === "bbox" ? "at the centre of the box" : undefined);
       const elev = num(obj(obj(fabric.body.data).point).elevationM);
@@ -858,9 +879,9 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         const at = fabricPoint(fabric);
         push(s, item(cite(fabric, "usgs-epqs"), "elevation", elev, { unit: "m", note: r.kind === "bbox" ? "at the centre of the box" : undefined, record: at ? pointRecord("usgs-epqs", "elevation", null, at[0], at[1]) : noRecord("the fabric reply does not state the point it was read at") }));
       }
-      else miss(s, "elevation", "USGS 3DEP gave no elevation for this point");
+      else miss(s, "elevation", "USGS 3DEP gave no elevation for this point", "not_in_release");
       fabricFailed(fabric, s);
-    } else miss(s, "place fabric", fabric?.reason ?? "not asked");
+    } else miss(s, "place fabric", fabric?.reason ?? "not asked", fabric ? codeOf(fabric) : "not_asked");
   }
 
   // ---- hazards ----
@@ -868,19 +889,19 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
   const row = nri?.ok ? nriRow(nri) : null;
   if (want("hazards")) {
     const s = S.hazards;
-    if (!cf) miss(s, "county hazard baseline (FEMA NRI, declarations, drought)", r.kind === "state" ? "not asked for a state: county-level sources only; pass a county FIPS" : "no county resolved");
-    if (r.kind === "state") miss(s, "live events (NWS alerts, earthquakes)", "not asked for a state: the live list is matched to a search box; pass a county FIPS, a point or a box");
+    if (!cf) miss(s, "county hazard baseline (FEMA NRI, declarations, drought)", r.kind === "state" ? "not asked for a state: county-level sources only; pass a county FIPS" : "no county resolved", r.kind === "state" ? "not_asked" : "join_gap");
+    if (r.kind === "state") miss(s, "live events (NWS alerts, earthquakes)", "not asked for a state: the live list is matched to a search box; pass a county FIPS, a point or a box", "not_asked");
     if (nri) {
       if (row) {
         const c = cite(nri, "fema-nri");
         const nriRec = arcgisRecord(c, `STCOFIPS='${cf}'`);
         const risk = nriRating(row.RISK_RATNG);
         if (risk.rating) push(s, item(c, "FEMA NRI overall risk rating", risk.rating, { note: num(row.RISK_SCORE) != null ? `score ${round(num(row.RISK_SCORE)!, 1)} (percentile among US counties, not a likelihood)` : undefined, period: str(row.NRI_VER) ?? undefined, record: nriRec }));
-        else miss(s, "FEMA NRI overall risk rating", risk.reason!);
+        else miss(s, "FEMA NRI overall risk rating", risk.reason!, risk.code!);
         const eal = num(row.EAL_VALT);
         const ealR = nriRating(row.EAL_RATNG);
         if (eal != null) push(s, item(c, "FEMA NRI expected annual loss", Math.round(eal), { unit: "USD a year (modelled)", note: ealR.rating ? `rating ${ealR.rating}` : `rating not given: ${ealR.reason}`, record: nriRec }));
-        else miss(s, "FEMA NRI expected annual loss", "FEMA's row has no expected annual loss for this county");
+        else miss(s, "FEMA NRI expected annual loss", "FEMA's row has no expected annual loss for this county", "not_in_release");
         const by: Record<string, string[]> = {};
         for (const [code, name] of Object.entries(NRI_HAZARDS)) {
           const rating = str(row[`${code}_RISKR`]);
@@ -888,7 +909,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         }
         const top = ["Very High", "Relatively High"].filter((k) => by[k]).map((k) => `${k}: ${by[k].join(", ")}`).join("; ");
         if (top) push(s, item(c, "NRI hazards rated Very High or Relatively High", top, { record: nriRec }));
-      } else miss(s, "FEMA National Risk Index", nri.ok ? "FEMA's index has no row for this county" : nri.reason ?? "failed");
+      } else miss(s, "FEMA National Risk Index", nri.ok ? "FEMA's index has no row for this county" : nri.reason ?? "failed", nri.ok ? "not_in_release" : codeOf(nri));
     }
     const h = got.history;
     if (h) {
@@ -912,14 +933,14 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         const gap = arr(d.missing)
           .map(obj)
           .find((m) => /^join:|boundary/.test(str(m.reason) ?? ""));
-        if (!isCite(fema)) miss(s, "FEMA declarations", fema.reason);
+        if (!isCite(fema)) miss(s, "FEMA declarations", fema.reason, fema.code);
         else if (!decls.length) {
-          if (gap) miss(s, "FEMA declarations", `the route reports a boundary or join gap for this county (${explainReason(str(gap.reason) ?? "", str(gap.source) ?? "a source", str(gap.detail))}), so an empty FEMA list is not proof that none were declared`);
-          else if (rowsTotal !== 0) miss(s, "FEMA declarations", `the route listed none but did not report reading zero rows (declarationRows ${rowsTotal ?? "absent"}), so no count is given`);
+          if (gap) miss(s, "FEMA declarations", `the route reports a boundary or join gap for this county (${explainReason(str(gap.reason) ?? "", str(gap.source) ?? "a source", str(gap.detail))}), so an empty FEMA list is not proof that none were declared`, codeForRouteEntry(gap));
+          else if (rowsTotal !== 0) miss(s, "FEMA declarations", `the route listed none but did not report reading zero rows (declarationRows ${rowsTotal ?? "absent"}), so no count is given`, "failed");
           else push(s, item(fema, "FEMA declarations listed", 0, { note: "OpenFEMA lists no declaration naming this county, at any date (declarationRows 0)", record: fema.upstreamUrl.includes("fipsCountyCode") ? fema.upstreamUrl : noRecord("the route's OpenFEMA query for this county is not stated") }));
         } else {
           const shown = decls.slice(0, max);
-          if (rowsTotal == null || rowsTotal > shown.length) s.cut.push(`FEMA declarations: the latest ${shown.length} distinct shown, any date (FEMA files ${rowsTotal ?? "an unstated number of"} rows for this county; a disaster can have one row per designated area)`);
+          if (rowsTotal == null || rowsTotal > shown.length) s.cut.push({ code: "cut_by_max_records", text: `FEMA declarations: the latest ${shown.length} distinct shown, any date (FEMA files ${rowsTotal ?? "an unstated number of"} rows for this county; a disaster can have one row per designated area)` });
           for (const x of shown) {
             const filed = str(x.filedUnder);
             push(
@@ -945,15 +966,15 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
           const nowGap = arr(d.missing)
             .map(obj)
             .find((m) => str(m.source) === "USDM this week");
-          miss(s, "U.S. Drought Monitor this week", nowGap ? explainReason(str(nowGap.reason) ?? "", "USDM", str(nowGap.detail)) : "not in the hazard history reply");
+          miss(s, "U.S. Drought Monitor this week", nowGap ? explainReason(str(nowGap.reason) ?? "", "USDM", str(nowGap.detail)) : "not in the hazard history reply", nowGap ? codeForRouteEntry(nowGap) : "failed");
         }
         // The route's other gaps (sources this tool does not read), in plain words.
         for (const m of arr(d.missing).map(obj)) {
           const who = str(m.source);
           if (!who || MISSING_NAMES[who] === "fema-openfema" || MISSING_NAMES[who] === "usdm") continue;
-          miss(s, who, explainReason(str(m.reason) ?? "", who, str(m.detail)));
+          miss(s, who, explainReason(str(m.reason) ?? "", who, str(m.detail)), codeForRouteEntry(m));
         }
-      } else miss(s, "hazard history (FEMA, drought)", h.reason ?? "failed");
+      } else miss(s, "hazard history (FEMA, drought)", h.reason ?? "failed", codeOf(h));
     }
     const live = got.live;
     if (live && r.box) {
@@ -972,11 +993,11 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         const quakes = hits.filter((x) => x.kind === "quake");
         const unmapped = num(obj(live.body.data).unmapped) ?? 0;
         const nws = cite(live, "nws-api");
-        if (!isCite(nws)) miss(s, "Severe or Extreme NWS alerts touching the box now", nws.reason);
-        else if (unmapped > 0) miss(s, "count of Severe or Extreme NWS alerts touching the box now", `${unmapped} alert${unmapped === 1 ? "" : "s"} in the national list could not be outlined, so a count for this box could miss them; the alerts that do touch it are listed`);
+        if (!isCite(nws)) miss(s, "Severe or Extreme NWS alerts touching the box now", nws.reason, nws.code);
+        else if (unmapped > 0) miss(s, "count of Severe or Extreme NWS alerts touching the box now", `${unmapped} alert${unmapped === 1 ? "" : "s"} in the national list could not be outlined, so a count for this box could miss them; the alerts that do touch it are listed`, "join_gap");
         else push(s, item(nws, "Severe or Extreme NWS alerts touching the box now", alerts.length, { note: where, record: noRecord("a count over NWS's national list of active alerts, matched to this box here; NWS has no URL for exactly this box") }));
         const usgs = cite(live, "usgs-earthquakes");
-        if (!isCite(usgs)) miss(s, "M4.5+ earthquakes in the past day touching the box", usgs.reason);
+        if (!isCite(usgs)) miss(s, "M4.5+ earthquakes in the past day touching the box", usgs.reason, usgs.code);
         else push(s, item(usgs, "M4.5+ earthquakes in the past day touching the box", quakes.length, { note: where, record: noRecord("a count over USGS's past-day M4.5+ feed, matched to this box here; the feed has no URL for exactly this box") }));
         for (const x of capList(s, "live events", hits, max)) {
           const quake = x.kind === "quake";
@@ -985,7 +1006,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
           const u = num(x.until);
           push(s, listRow(item(c, quake ? "earthquake" : "NWS alert", str(x.title), { note: str(x.subtitle) ?? undefined, period: t != null ? new Date(t).toISOString() + (u != null ? "/" + new Date(u).toISOString() : "") : undefined, record: typeof x.url === "string" && /^https:\/\//.test(x.url) ? x.url : noRecord("the live list gave no URL for this event") })));
         }
-      } else miss(s, "live events", live.reason ?? "failed");
+      } else miss(s, "live events", live.reason ?? "failed", codeOf(live));
     }
   }
 
@@ -994,7 +1015,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     const s = S.economy;
     if (screen?.ok) {
       const v = obj(obj(arr(obj(screen.body.data).rows)[0]).values);
-      if (!Object.keys(v).length) miss(s, "county economy row", "the screener has no row for this county");
+      if (!Object.keys(v).length) miss(s, "county economy row", "the screener has no row for this county", "not_in_release");
       else {
         const qcew = cite(screen, "bls-qcew");
         const period = str(v["jobs.period"]) ?? undefined;
@@ -1006,50 +1027,50 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
           const n = num(v[k]);
           const record = qcewRecord(period, r.kind === "state" ? `${r.stateFips}000` : cf);
           if (n != null) push(s, item(qcew, fact, n, { unit, period, record }));
-          else if (withheld) push(s, item(qcew, fact, null, { unit, period, note: "withheld by BLS for confidentiality: null, not 0", record }));
-          else miss(s, fact, "not published for this place");
+          else if (withheld) push(s, item(qcew, fact, null, { unit, period, note: "withheld by BLS for confidentiality: null, not 0", absence: "withheld", record }));
+          else miss(s, fact, "not published for this place", "not_in_release");
         }
         const home = num(v["home.latest"]);
         if (home != null) push(s, item(cite(screen, "zillow-zhvi"), "typical home value (Zillow ZHVI)", Math.round(home), { unit: "USD", period: str(v["home.asOf"]) ?? undefined, note: num(v["home.yoyPct"]) != null ? `${round(num(v["home.yoyPct"])!, 1)}% over the year` : undefined, record: ZILLOW_NO_RECORD }));
-        else miss(s, "typical home value (Zillow ZHVI)", "Zillow publishes no value for this place");
+        else miss(s, "typical home value (Zillow ZHVI)", "Zillow publishes no value for this place", "not_in_release");
         const rent = num(v["rent.latest"]);
         if (rent != null) push(s, item(cite(screen, "zillow-zori"), "typical asking rent (Zillow ZORI)", Math.round(rent), { unit: "USD a month", record: ZILLOW_NO_RECORD }));
-        else miss(s, "typical asking rent (Zillow ZORI)", "Zillow publishes no rent index for this place");
+        else miss(s, "typical asking rent (Zillow ZORI)", "Zillow publishes no rent index for this place", "not_in_release");
       }
-    } else miss(s, "jobs, wages, home value and rent", screen?.reason ?? "no county resolved");
+    } else miss(s, "jobs, wages, home value and rent", screen?.reason ?? "no county resolved", screen ? codeOf(screen) : "join_gap");
     if (row) {
       const pop = num(row.POPULATION);
       if (pop != null) push(s, item(cite(nri!, "fema-nri"), "population (as carried in FEMA's NRI row)", pop, { unit: "people", note: `FEMA NRI ${str(row.NRI_VER) ?? ""}`.trim() + "; NRI's own population input, not a Census table eye reads directly", record: arcgisRecord(cite(nri!, "fema-nri"), `STCOFIPS='${cf}'`) }));
-    } else if (cf) miss(s, "population", "eye serves population only through FEMA's NRI row, which did not answer for this county");
+    } else if (cf) miss(s, "population", "eye serves population only through FEMA's NRI row, which did not answer for this county", "failed");
   }
 
   // ---- vulnerability ----
   if (want("vulnerability")) {
     const s = S.vulnerability;
-    if (!cf) miss(s, "social vulnerability", r.kind === "state" ? "county-level indices only; pass a county FIPS" : "no county resolved");
+    if (!cf) miss(s, "social vulnerability", r.kind === "state" ? "county-level indices only; pass a county FIPS" : "no county resolved", r.kind === "state" ? "not_asked" : "join_gap");
     const svi = got.svi;
     if (svi) {
       const rpl = arr(obj(obj(svi.body.data).row).rpl);
       const overall = num(rpl[0]);
       if (svi.ok && overall != null && overall >= 0) push(s, item(cite(svi, "cdc-svi"), "CDC/ATSDR SVI 2022 overall percentile", overall, { unit: "0 least to 1 most vulnerable among US counties", record: arcgisRecord(cite(svi, "cdc-svi"), `FIPS='${cf}'`) }));
-      else miss(s, "CDC/ATSDR SVI 2022", svi.ok ? "CDC does not rank this place" : svi.reason ?? "failed");
+      else miss(s, "CDC/ATSDR SVI 2022", svi.ok ? "CDC does not rank this place" : svi.reason ?? "failed", svi.ok ? "not_in_release" : codeOf(svi));
     }
     const sovi = row ? nriRating(row.SOVI_RATNG) : null;
-    if (row && sovi && !sovi.rating) miss(s, "FEMA NRI social vulnerability", sovi.reason!);
+    if (row && sovi && !sovi.rating) miss(s, "FEMA NRI social vulnerability", sovi.reason!, sovi.code!);
     else if (row && sovi?.rating) {
       push(s, item(cite(nri!, "fema-nri"), "FEMA NRI social vulnerability rating (Census Community Resilience Estimate; not CDC SVI)", sovi.rating, { note: num(row.SOVI_SCORE) != null ? `score ${round(num(row.SOVI_SCORE)!, 1)} of 100` : undefined, record: arcgisRecord(cite(nri!, "fema-nri"), `STCOFIPS='${cf}'`) }));
-    } else if (cf) miss(s, "FEMA NRI social vulnerability", nri?.reason ?? "FEMA's index has no row for this county");
+    } else if (cf) miss(s, "FEMA NRI social vulnerability", nri?.reason ?? "FEMA's index has no row for this county", nri && !nri.ok ? codeOf(nri) : "not_in_release");
   }
 
   // ---- institutions ----
   if (want("institutions")) {
     const s = S.institutions;
-    if (!r.box) miss(s, "hospitals and dams", r.kind === "state" ? "a state is too large for the record routes; pass a county FIPS, a point or a box" : "no box to search");
+    if (!r.box) miss(s, "hospitals and dams", r.kind === "state" ? "a state is too large for the record routes; pass a county FIPS, a point or a box" : "no box to search", r.kind === "state" ? "not_asked" : "not_loaded");
     const b = r.box;
     const boxNote = b ? (r.kind === "county" ? `within 0.25 degrees of the county's Census internal point, not the whole county` : r.kind === "point" ? "within 0.1 degrees of the point" : "inside the box") : undefined;
     const records = (g: Got | null, label: string, sourceId: string, build: (p: JsonObject, pt: [number, number] | null, c: Cite, g: Got) => Built | Built[]) => {
       if (!g || !b) return;
-      if (!g.ok) return miss(s, label, g.reason ?? "failed");
+      if (!g.ok) return miss(s, label, g.reason ?? "failed", codeOf(g));
       const feats = arr(obj(g.body.data).features)
         .map(obj)
         .filter((f) => {
@@ -1057,14 +1078,14 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
           return pt != null && inBox(b, pt[0], pt[1]);
         });
       const c = cite(g, sourceId);
-      if (!isCite(c)) return miss(s, label, c.reason);
+      if (!isCite(c)) return miss(s, label, c.reason, c.code);
       // The route's own flag: its upstream's record limit was hit, so what came back is not every record in the box.
       const routeCut = g.body.truncated === true;
       if (routeCut) {
-        s.cut.push(`${label}: the route hit its upstream's record limit for this box, so the ${feats.length} it returned inside the box are not all of them`);
-        if (!feats.length) miss(s, `${label} found`, "the route hit its record limit and returned none inside the box; a count of 0 would not be true");
+        s.cut.push({ code: "cut_by_route_limit", text: `${label}: the route hit its upstream's record limit for this box, so the ${feats.length} it returned inside the box are not all of them` });
+        if (!feats.length) miss(s, `${label} found`, "the route hit its record limit and returned none inside the box; a count of 0 would not be true", "cut_by_route_limit");
       } else if (!feats.length) push(s, item(c, `${label} found`, 0, { note: boxNote, record: noRecord("a count of the route's records inside this box; the publisher has no URL for exactly this box") }));
-      if (routeCut && feats.length > max) s.cut.push(`${label}: ${max} of at least ${feats.length} shown (max_records)`);
+      if (routeCut && feats.length > max) s.cut.push({ code: "cut_by_max_records", text: `${label}: ${max} of at least ${feats.length} shown (max_records)` });
       const shown = routeCut ? feats.slice(0, max) : capList(s, label, feats, max);
       for (const f of shown) for (const one of [build(obj(f.properties), pointOf(f), c, g)].flat()) push(s, listRow(one));
     };
@@ -1110,7 +1131,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     });
     const co = got.companies;
     const coCite = co?.ok ? cite(co, "sec-edgar") : null;
-    if (co && coCite && !isCite(coCite)) miss(s, "public companies", coCite.reason);
+    if (co && coCite && !isCite(coCite)) miss(s, "public companies", coCite.reason, coCite.code);
     else if (co) {
       if (co.ok) {
         const feats = arr(obj(co.body.data).features).map(obj);
@@ -1121,30 +1142,30 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         const pulled = str(co.body.pulled);
         const size = num(obj(co.body.bundle).companies);
         const universe = `within eye's SEC bundle${size != null ? ` of ${size} companies` : ""}${pulled ? ` pulled ${pulled}` : " (a committed fixture, pulled: null)"}; not every registrant`;
-        if (!pulled) miss(s, `SEC-registered public companies ${where}`, `eye's SEC bundle is a committed fixture (pulled: null), not a full pull of EDGAR registrants, so it cannot say how many are ${where}; any listed are ${universe}`);
+        if (!pulled) miss(s, `SEC-registered public companies ${where}`, `eye's SEC bundle is a committed fixture (pulled: null), not a full pull of EDGAR registrants, so it cannot say how many are ${where}; any listed are ${universe}`, "not_loaded");
         else if (!feats.length) push(s, item(c, `public companies in eye's SEC bundle ${where}`, 0, { note: universe, record: noRecord("a count within eye's SEC bundle; SEC has no URL for it") }));
         for (const f of capList(s, "public companies", feats, max)) {
           const x = obj(obj(f.properties).extra);
           const ticker = str(x.ticker);
           push(s, listRow(item(c, "public company (by ticker; names are not copied)", ticker, { code: x.cik != null ? `CIK ${str(x.cik)}` : undefined, note: [str(x.exchange), where, universe].filter(Boolean).join("; "), record: x.cik != null && /^\d{1,10}$/.test(String(x.cik)) ? secRecord(String(x.cik)) : noRecord("the bundle gave no CIK") })));
         }
-      } else miss(s, "public companies", co.reason ?? "failed");
+      } else miss(s, "public companies", co.reason ?? "failed", codeOf(co));
     }
   }
 
   // ---- collections ----
   if (want("collections")) {
     const s = S.collections;
-    if (!input.about) miss(s, "collections", "pass `about` (what you are looking for, in words) to rank eye's collections");
+    if (!input.about) miss(s, "collections", "pass `about` (what you are looking for, in words) to rank eye's collections", "not_asked");
     const cat = got.catalog;
     if (cat) {
       if (cat.ok) {
         const hits = arr(obj(cat.body.data).hits).map(obj);
         // The ranking is cited to the catalogue's own provenance on the search route; the card is at ?id=.
         const c = cite(cat, "eye-catalog");
-        if (obj(cat.body.data).matched === false) miss(s, "collections", "no word of `about` is in the embedder's vocabulary");
+        if (obj(cat.body.data).matched === false) miss(s, "collections", "no word of `about` is in the embedder's vocabulary", "not_in_release");
         if (!isCite(c)) {
-          if (hits.length) miss(s, "collections", c.reason);
+          if (hits.length) miss(s, "collections", c.reason, c.code);
         } else
           for (const hit of hits.slice(0, max)) {
             const hid = str(hit.id);
@@ -1152,7 +1173,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
             const card = "/api/catalog" + q({ id: hid });
             push(s, listRow(item(c, "collection", str(hit.title), { code: hid, note: [num(hit.score) != null ? `cosine ${round(num(hit.score)!, 3)} between descriptions; not proof the collection answers the question` : null, `card: ${card}`].filter(Boolean).join("; "), kind: "about-eye", record: noRecord("a claim about eye's own catalogue, which has no outside publisher") })));
           }
-      } else miss(s, "collections", cat.reason ?? "failed");
+      } else miss(s, "collections", cat.reason ?? "failed", codeOf(cat));
     }
   }
 
@@ -1161,8 +1182,8 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     const s = S.water;
     const g = got.water;
     const what = "community water system serving the point";
-    if (!g) miss(s, what, r.kind === "state" ? "a state has no single water system; pass a county FIPS, a point or a box" : "no point to look up");
-    else if (!g.ok) miss(s, what, g.reason ?? "failed");
+    if (!g) miss(s, what, r.kind === "state" ? "a state has no single water system; pass a county FIPS, a point or a box" : "no point to look up", r.kind === "state" ? "not_asked" : "not_loaded");
+    else if (!g.ok) miss(s, what, g.reason ?? "failed", codeOf(g));
     else {
       const { lon, lat } = r.point!;
       const at = r.kind === "county" ? "the county's Census internal point" : r.kind === "bbox" ? "the centre of the box" : "the point";
@@ -1178,8 +1199,8 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         });
       // UCMR 5 rows here belong to "the system serving the point", which only the service-area layer can say.
       const areasOk = isCite(cws) && str(areas?.state) !== "error";
-      if (!isCite(cws)) miss(s, what, cws.reason);
-      else if (!areasOk) miss(s, what, "EPA's service-area layer did not answer this time (the route's coverage says error): unknown, not none");
+      if (!isCite(cws)) miss(s, what, cws.reason, cws.code);
+      else if (!areasOk) miss(s, what, "EPA's service-area layer did not answer this time (the route's coverage says error): unknown, not none", "failed");
       else if (!serving.length) {
         miss(
           s,
@@ -1187,6 +1208,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
           str(areas?.state) === "partial"
             ? `EPA's service-area layer hit its record limit for this box, so a system serving ${at} may be among those not returned`
             : `no EPA community water system service area contains ${at}: it may be served by a private well or by a system EPA has no boundary for (EPA answered for the box; this is not a 0)`,
+          str(areas?.state) === "partial" ? "cut_by_route_limit" : "not_in_release",
         );
       }
       const ucmr = "UCMR 5 (2023-2025)";
@@ -1206,14 +1228,14 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         );
         const state = str(x.state);
         const label = `UCMR 5 PFAS results for ${pwsid}`;
-        if (!state || state === "unknown") miss(s, label, "EPA's UCMR 5 results did not answer for this system this time: unknown, never 'not detected'");
-        else if (!isCite(pat)) miss(s, label, pat.reason);
+        if (!state || state === "unknown") miss(s, label, "EPA's UCMR 5 results did not answer for this system this time: unknown, never 'not detected'", "failed");
+        else if (!isCite(pat)) miss(s, label, pat.reason, pat.code);
         else {
           const results = arr(x.results).map(obj);
           const det = results.filter((y) => (num(y.detections) ?? 0) > 0);
           const status = state === "detected" ? "detected" : state === "not-detected" ? "not detected" : state === "not-in-ucmr5" ? "not in UCMR 5" : null;
           if (!status) {
-            miss(s, label, `the route gave a state this tool does not know (${state})`);
+            miss(s, label, `the route gave a state this tool does not know (${state})`, "failed");
             continue;
           }
           push(
@@ -1268,7 +1290,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
           return true;
         });
       const span = [str(obj(cal.body.data).from), str(obj(cal.body.data).to)].filter(Boolean).join(" to ");
-      if (!rel.length) miss(s, "next releases", `none of the sources cited here has a scheduled release on eye's calendar${span ? ` (${span})` : ""}`);
+      if (!rel.length) miss(s, "next releases", `none of the sources cited here has a scheduled release on eye's calendar${span ? ` (${span})` : ""}`, "not_in_release");
       for (const x of capList(s, "next releases", rel, max)) {
         const w = obj(x.window);
         const sid = String(x.sourceId);
@@ -1279,7 +1301,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         });
         push(s, it);
       }
-    } else if (cal) miss(s, "next releases", cal.reason ?? "failed");
+    } else if (cal) miss(s, "next releases", cal.reason ?? "failed", codeOf(cal));
   }
 
   // ---- assemble, cap, report coverage ----
@@ -1318,6 +1340,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
   }
   const payload: JsonObject = {
     ...head,
+    schemaVersion: WORLD_SCHEMA_VERSION,
     place,
     topics: out,
     limits: { maxBytes: WORLD_MAX_BYTES, maxRecords: max },
@@ -1326,17 +1349,17 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
 
   let dropped = 0;
   const finish = () => {
-    const basis: string[] = [];
+    const basis: BasisLine[] = [];
     for (const k of order) {
       const sec = S[k];
-      const lines = [...(sec.missing ?? []).map((m) => `${m.what}: ${m.reason}`), ...sec.cut];
+      const lines: BasisLine[] = [...(sec.missing ?? []).map((m) => ({ code: m.code, text: `${m.what}: ${m.reason}` })), ...sec.cut];
       if (lines.length) out[k].coverageStatus = { status: "partial", basis: lines };
       else delete out[k].coverageStatus;
-      for (const l of lines) basis.push(`${k}: ${l}`);
+      for (const l of lines) basis.push({ code: l.code, text: `${k}: ${l.text}` });
     }
     if (dropped) {
       payload.truncated = { droppedItems: dropped, note: `items cut from the longest topics to stay under ${WORLD_MAX_BYTES} bytes; ask fewer topics or a smaller max_records` };
-      basis.push(`the reply was cut to ${WORLD_MAX_BYTES} bytes (${dropped} item${dropped === 1 ? "" : "s"} dropped)`);
+      basis.push({ code: "cut_by_byte_cap", text: `the reply was cut to ${WORLD_MAX_BYTES} bytes (${dropped} item${dropped === 1 ? "" : "s"} dropped)` });
     }
     if (basis.length) payload.coverageStatus = { status: "partial", basis: basis.slice(0, 40) };
     else delete payload.coverageStatus;

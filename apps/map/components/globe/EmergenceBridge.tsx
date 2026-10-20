@@ -14,7 +14,7 @@ import { useGlobe } from "@/lib/store/globe";
 import { useSettings } from "@/lib/store/settings";
 import { allRenderers, getRenderer } from "@/lib/globe/registry";
 import { computeVitals, vitalsKey, type Vitals } from "@/lib/fabric/emergence";
-import { setVitals, vitalsFor } from "@/lib/fabric/emergenceState";
+import { setUnitNames, setVitals, vitalsFor } from "@/lib/fabric/emergenceState";
 import { conditionOf, ensureNormals } from "@/lib/fabric/normalsClient";
 import type { LayerFeature } from "@/lib/layers/types";
 import type { ConstructExtra, ConstructNode } from "@/lib/fabric/types";
@@ -42,6 +42,7 @@ function recompute() {
     void ensureNormals(physical).then((got) => {
       if (got) recompute();
     });
+  setUnitNames(nodes.map((n) => [n.id, n.name]));
   const next = computeVitals(nodes, physical, measure, fieldNormalise ?? "density", conditionOf, shown);
   const changed: string[] = [];
   const differs = (a: Vitals | undefined, b: Vitals | undefined) =>

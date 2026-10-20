@@ -1,0 +1,11 @@
+{
+ "sourceId": "sec-edgar",
+ "recordId": "CIK0001341439.9dd067a6",
+ "url": "https://data.sec.gov/submissions/CIK0001341439.json",
+ "retrievedAt": "2026-10-20T05:37:06.896Z",
+ "status": 200,
+ "bytes": 158495,
+ "sha256": "c41260def74f2052a1bfc9088a063688e772e5f1e4a7007ecb46c30312c84719",
+ "trimmed": "identity fields only (cik, entityType, sic, sicDescription, name, tickers, exchanges, category, stateOfIncorporation)",
+ "body": "{\"cik\":\"0001341439\",\"entityType\":\"operating\",\"sic\":\"7372\",\"sicDescription\":\"Services-Prepackaged Software\",\"name\":\"ORACLE CORP\",\"tickers\":[\"ORCL\",\"ORCL-PD\"],\"exchanges\":[\"NYSE\",\"NYSE\"],\"category\":\"Large accelerated filer\",\"stateOfIncorporation\":\"\"}"
+}

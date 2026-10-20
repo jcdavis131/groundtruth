@@ -290,7 +290,8 @@ function byId(a: string, b: string): number {
   return a < b ? -1 : a > b ? 1 : 0;
 }
 
-function fmtValue(v: number): string {
+/** A value as the field's labels and the legend print it. */
+export function fmtValue(v: number): string {
   return v >= 100 ? Math.round(v).toLocaleString("en-US") : v >= 10 ? v.toFixed(0) : v.toFixed(1);
 }
 
@@ -333,13 +334,21 @@ export function vitalsKey(v: Map<string, Vitals>): string {
 /** A unit with no value: the field draws it as a dashed outline in this grey, outside the heat ramp. */
 export const NOT_LOADED = "#9CA3AF";
 
-/** Heat ramp for the field: dim slate, through cyan and gold, to hot orange. */
+/**
+ * Heat ramp for the field: dark slate, through teal and gold, to light orange.
+ * The stops are fixed by the legend contract (lib/color/cvd.test.ts): CIE L*
+ * rises at every stop under protan, deutan and tritan vision, neighbouring
+ * stops differ by CIEDE2000 >= 10, and NOT_LOADED stays 3:1 from the first.
+ * Slate #334155, teal #0E7490, gold #C28A0A, orange #FFB27A. The previous ramp
+ * (slate, cyan, gold, hot orange) had a gold lighter than its orange and a first stop 2.98:1 from
+ * NOT_LOADED.
+ */
 export function heatColor(heat: number): string {
   const stops: Array<[number, [number, number, number]]> = [
-    [0, [71, 85, 105]],
-    [0.25, [34, 211, 238]],
-    [0.6, [250, 204, 21]],
-    [1, [249, 115, 22]],
+    [0, [51, 65, 85]],
+    [0.25, [14, 116, 144]],
+    [0.6, [194, 138, 10]],
+    [1, [255, 178, 122]],
   ];
   const h = Math.max(0, Math.min(1, heat));
   for (let i = 1; i < stops.length; i++) {
@@ -351,5 +360,5 @@ export function heatColor(heat: number): string {
       return `#${c.map((x) => x.toString(16).padStart(2, "0")).join("")}`;
     }
   }
-  return "#f97316";
+  return "#ffb27a";
 }

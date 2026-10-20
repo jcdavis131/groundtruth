@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "82-42091.d14d74f9",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/82/query?where=GEOID%3D'42091'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:37:23.031Z",
+ "status": 200,
+ "bytes": 308,
+ "sha256": "241361d290b1ed1b81d8ade5ed0bd4346e5bad2fe89e764f0057a45177d2e1a2",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"42091\",\"NAME\":\"Montgomery County\"}}]}"
+}

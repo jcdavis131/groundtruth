@@ -30,5 +30,7 @@ jobs:
         run: node scripts/hooks/git-guard.test.mjs
       - name: worktree-remove self-test
         run: node scripts/worktree-remove.test.mjs
+      - name: usage-scan self-test
+        run: python3 -I scripts/usage-scan.test.py
       - name: guard
         run: node scripts/guard.mjs

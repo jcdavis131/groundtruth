@@ -152,7 +152,7 @@ export function toSection(key: JevSectionKey, sec: WorldSection | undefined, kin
     title: JEV_TITLES[key],
     lines: (sec?.items ?? []).map((it) => toLine(it, kind, lat)),
     gaps,
-    cuts: cutSentences(sec?.coverageStatus?.basis),
+    cuts: cutSentences(sec?.coverageStatus?.basis.map((b) => (typeof b === "string" ? (b as string) : b.text))),
     marker: gaps.length ? `partial: ${gaps.length === 1 ? "1 thing" : `${gaps.length} things`} not shown (${gaps.map((g) => g.what).join("; ")})` : null,
   };
 }

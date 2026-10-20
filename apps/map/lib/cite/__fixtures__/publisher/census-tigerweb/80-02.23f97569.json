@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "80-02.23f97569",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/80/query?where=GEOID%3D'02'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:37:16.857Z",
+ "status": 200,
+ "bytes": 294,
+ "sha256": "974a316f14209b40cfee3943affbe9879af735e940e41ac2feb9c08311eeb73a",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"02\",\"NAME\":\"Alaska\"}}]}"
+}

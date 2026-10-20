@@ -7,14 +7,32 @@
 
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
 import { envelopeForStatus, envelopeForThrown, InvalidArguments } from "./errors";
-import { NOT_DEPLOYED_NOTE, TOOLS, type FetchJson, type ToolCtx, type ToolDef, type ToolReply } from "./tools";
+import { boundErrorPayload, NOT_DEPLOYED_NOTE, TOOLS, type FetchJson, type ToolCtx, type ToolDef, type ToolReply } from "./tools";
 
 export const SERVER_NAME = "embedding-atlas-mcp-server";
 export const SERVER_VERSION = "0.1.0";
+
+/**
+ * What a client reads at session start. Claude Code 2.1.x defers tool descriptions until a tool search and
+ * loads only tool names plus these instructions, so this says what the server covers and when to go looking
+ * for its tools. server.test.ts holds this to 1,500 characters, to stay well inside any client cut.
+ */
+export const INSTRUCTIONS = [
+  "eye is a read-only map of public, keyless US data about a place: a point, a county, a box or a record. Every answer names its publisher.",
+  "",
+  "Search for these tools before acting on a place, before citing a place fact, and before saying something does not exist for a place.",
+  "",
+  "Start with world_context: one call for a point, a county FIPS or a box returns identity, fabric, hazards, economy, vulnerability, institutions, water and freshness, each item with its publisher and record URL. Then place_fabric for the units a point sits inside, and catalog_search to find which collection could answer a question. The other tools go deeper on one topic.",
+  "",
+  "Two rules:",
+  "1. Cite upstreamRecordUrl, the publisher's own URL for that record (upstreamUrl where the note says there is no record-level URL). Do not cite eye for a number a publisher owns.",
+  "2. Read missing[] before relying on an absence. An entry there says what could not be answered and why; it is not a zero. coverageStatus partial means something is missing or was cut.",
+].join("\n");
 
 export interface ServerOptions {
   fetchJson: FetchJson;
@@ -24,6 +42,8 @@ export interface ServerOptions {
   docsDir?: string;
   /** Path of the OpenAPI document served as gev://openapi.json. */
   openapiPath?: string;
+  /** The tools to register. Default: TOOLS. A test passes a changed copy to inject a bad reply. */
+  tools?: ToolDef[];
 }
 
 export interface ManifestEntry {
@@ -32,6 +52,10 @@ export interface ManifestEntry {
   description: string;
   /** JSON Schema (draft 2020-12) generated from the zod input schema. */
   inputSchema: Record<string, unknown>;
+  /** True when the tool declares _meta["anthropic/alwaysLoad"] (Claude Code loads its description upfront). */
+  alwaysLoad: boolean;
+  /** JSON Schema of a non-error reply's structuredContent, for the tools that publish one (world_context). */
+  outputSchema?: Record<string, unknown>;
 }
 
 /** Plain-JSON list of tools for docs, the GET handler and tests. */
@@ -41,6 +65,8 @@ export function toolManifest(tools: ToolDef[] = TOOLS): ManifestEntry[] {
     title: t.title,
     description: t.description,
     inputSchema: z.toJSONSchema(t.inputSchema) as Record<string, unknown>,
+    alwaysLoad: t.meta?.["anthropic/alwaysLoad"] === true,
+    ...(t.outputSchema ? { outputSchema: t.outputSchema } : {}),
   }));
 }
 
@@ -84,7 +110,11 @@ export interface PromptDef {
 
 const CITE = "Cite every number with the source, period and upstream URL from its provenance (or meta.source and the route URL when a route has no provenance field). Say 'estimate' wherever the payload does. Do not give investment, lending or relocation advice.";
 
-/** The three prompts. Each names the tools it chains so a client can plan the calls. */
+/** The closing rule of place_brief: the two rules the server instructions give, in the words a brief ends on. */
+export const PLACE_CITE =
+  "Cite upstreamRecordUrl for every fact (upstreamUrl only where the note says there is no record-level URL), never eye's link alone. Read missing[] before saying anything is absent: say what is missing and why, never fill it in, and say 'estimate' wherever the payload does.";
+
+/** The four prompts. Each names the tools it chains so a client can plan the calls. */
 export const PROMPTS: PromptDef[] = [
   {
     name: "county_due_diligence",
@@ -100,6 +130,28 @@ export const PROMPTS: PromptDef[] = [
         "Write: one paragraph on jobs and wages, one on housing (values, rents, affordability estimate and its formula), one on the corporate and public-money footprint, then a short list of what is missing (withheld QCEW cells, null values) and the next release dates.",
         CITE,
       ].join("\n"),
+  },
+  {
+    name: "place_brief",
+    title: "Place brief",
+    description: "What is known and what is missing about one US place, from a single world_context call, every fact cited to its publisher's record.",
+    args: [
+      { name: "lon", description: "Longitude in degrees, e.g. -97.74 (give lat too)", required: false },
+      { name: "lat", description: "Latitude in degrees, e.g. 30.27 (give lon too)", required: false },
+      { name: "fips", description: "5-digit county FIPS, e.g. 48453, or a state as 2 digits (use this or lon and lat)", required: false },
+    ],
+    build: ({ lon, lat, fips }) => {
+      const call = fips ? `world_context(fips: "${fips}")` : lon && lat ? `world_context(lon: ${lon}, lat: ${lat})` : null;
+      return [
+        "Write a short brief on one US place.",
+        call
+          ? `1. Call ${call} first, before any other tool. Add about: '<what the brief is for>' if the collections topic would help.`
+          : "1. You were given neither a point (lon and lat) nor a county FIPS: ask for one, then call world_context with it first, before any other tool.",
+        "2. For a topic that comes back missing or partial and that the brief needs, name the tool that goes deeper (place_fabric for the units, county_history, risk_index, water_report) and call it for that gap only.",
+        "3. Write two parts. What is known: each fact with its value, unit, period and citation. What is missing: each missing[] entry with its reason, and each source that failed.",
+        PLACE_CITE,
+      ].join("\n");
+    },
   },
   {
     name: "port_congestion_check",
@@ -171,7 +223,8 @@ export function toCallResult(reply: ToolReply): CallToolResult {
   }
   const notDeployed = typeof reply.payload.note === "string" && reply.payload.note.includes(NOT_DEPLOYED_NOTE);
   // The route's payload first, then the envelope; `error` keeps the route's own string when it sent one.
-  const payload = { ...reply.payload, ...envelopeForStatus(reply.status, reply.payload, notDeployed) };
+  // An error reply is held to ERROR_MAX_CHARS with its envelope fields kept (see boundErrorPayload).
+  const payload = boundErrorPayload({ ...reply.payload, ...envelopeForStatus(reply.status, reply.payload, notDeployed) });
   return { content: [{ type: "text", text: JSON.stringify(payload) }], structuredContent: payload, isError: true };
 }
 
@@ -197,32 +250,69 @@ function envelopeSdkErrors(server: McpServer): void {
 }
 
 /**
+ * Put each tool's JSON-Schema outputSchema into the tools/list reply. SDK 1.30's registerTool takes
+ * only zod schemas for outputSchema (it converts them to JSON Schema itself, and checks structuredContent
+ * with zod), so a hand-written JSON Schema cannot go through it. The server checks replies with the
+ * SDK's own JSON Schema validator in the tool handler instead (see createServer) and adds the schema to
+ * the list here. This wraps the SDK's tools/list handler by its method name in the protocol's handler
+ * map; a test pins it, and an SDK that moves the map throws here rather than silently publishing nothing.
+ */
+function publishOutputSchemas(server: McpServer, schemas: Map<string, Record<string, unknown>>): void {
+  if (!schemas.size) return;
+  const handlers = (server.server as unknown as { _requestHandlers?: Map<string, (request: unknown, extra: unknown) => Promise<unknown>> })._requestHandlers;
+  const inner = handlers?.get("tools/list");
+  if (!handlers || !inner) throw new Error("the MCP SDK no longer keeps its tools/list handler where server.ts expects; outputSchema cannot be published");
+  handlers.set("tools/list", async (request, extra) => {
+    const res = (await inner(request, extra)) as { tools: Array<{ name: string }> };
+    return { ...res, tools: res.tools.map((t) => (schemas.has(t.name) ? { ...t, outputSchema: schemas.get(t.name) } : t)) };
+  });
+}
+
+/**
  * Build a McpServer with every tool, prompt and resource registered. One per
  * request in the HTTP route (stateless), one per process on stdio.
  */
 export function createServer(opts: ServerOptions): McpServer {
-  const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION });
+  const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION }, { instructions: INSTRUCTIONS });
   const ctx: ToolCtx = { fetchJson: opts.fetchJson, ...(opts.countyPoint ? { countyPoint: opts.countyPoint } : {}) };
   envelopeSdkErrors(server);
 
-  for (const t of TOOLS) {
+  const tools = opts.tools ?? TOOLS;
+  const validator = new AjvJsonSchemaValidator();
+  const published = new Map<string, Record<string, unknown>>();
+  for (const t of tools) {
+    // A reply that fails the tool's published outputSchema is a bug in eye, not a result: it goes out as an
+    // internal_error envelope (isError: true), never as a plain reply. Error replies are not checked.
+    const check = t.outputSchema ? validator.getValidator(t.outputSchema as never) : null;
+    if (t.outputSchema) published.set(t.name, t.outputSchema);
     server.registerTool(
       t.name,
       {
         title: t.title,
         description: t.description,
         inputSchema: t.inputSchema,
+        ...(t.meta ? { _meta: t.meta } : {}),
         annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
       },
       async (args: unknown) => {
         try {
-          return toCallResult(await t.run(args, ctx));
+          const result = toCallResult(await t.run(args, ctx));
+          if (check && !result.isError) {
+            // The schema also admits the error envelope (for isError replies), so a payload shaped as one must not pass as a result.
+            const sc = result.structuredContent as Record<string, unknown> | undefined;
+            if (sc && Object.prototype.hasOwnProperty.call(sc, "error")) return errorResult(new Error(`${t.name} returned an error-shaped payload as a result (an error key with isError false)`));
+            const v = check(result.structuredContent);
+            if (!v.valid) return errorResult(new Error(`${t.name} built a reply that fails its published outputSchema: ${(v.errorMessage ?? "").slice(0, 600)}`));
+          }
+          return result;
         } catch (err) {
           return errorResult(err);
         }
       },
     );
   }
+
+  publishOutputSchemas(server, published);
 
   for (const p of PROMPTS) {
     const argsSchema: Record<string, z.ZodString | z.ZodOptional<z.ZodString>> = {};
@@ -274,6 +364,7 @@ export function describeServer(endpoint: string) {
   return {
     name: SERVER_NAME,
     version: SERVER_VERSION,
+    instructions: INSTRUCTIONS,
     transport: "streamable-http (stateless, JSON responses)",
     endpoint,
     usage: `POST JSON-RPC 2.0 to ${endpoint} with Content-Type: application/json (initialize, tools/list, tools/call, prompts/list, prompts/get, resources/list, resources/read). No session, no auth; read-only.`,

@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "54-4204.70e26cd8",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/54/query?where=GEOID%3D'4204'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:37:27.467Z",
+ "status": 200,
+ "bytes": 314,
+ "sha256": "346517bc19ad74c93bfe8513b031f26e2f394b0aa5a450f18519d19935bf9f95",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"4204\",\"NAME\":\"Congressional District 4\"}}]}"
+}

@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "8-42091206300.7f808e9c",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/8/query?where=GEOID%3D'42091206300'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:37:20.048Z",
+ "status": 200,
+ "bytes": 315,
+ "sha256": "62df798ec732dc7426bf5394cf99dd5b61e4669a50bfe0eadc0ff8ad6184b456",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"42091206300\",\"NAME\":\"Census Tract 2063\"}}]}"
+}

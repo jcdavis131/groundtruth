@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "80-48.69e2de77",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/80/query?where=GEOID%3D'48'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:30:54.627Z",
+ "status": 200,
+ "bytes": 293,
+ "sha256": "0022ab81abadc287a34b062123ffdeda3252a9b0f1c673bb8bf51c82c4cd6c52",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"48\",\"NAME\":\"Texas\"}}]}"
+}

@@ -1,0 +1,11 @@
+{
+ "sourceId": "usgs-wbd",
+ "recordId": "020402030809.21c72f1a",
+ "url": "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query?where=huc12%3D'020402030809'&outFields=huc12,name,tohuc&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:42:19.240Z",
+ "status": 200,
+ "bytes": 429,
+ "sha256": "ddf12bef7dfc1cd9645dbaabb2b44716a315f176ab074abf3cd6ce72a9639c1b",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"NAME\",\"features\":[{\"attributes\":{\"huc12\":\"020402030809\",\"name\":\"Lower Perkiomen Creek\",\"tohuc\":\"020402031006\"}}]}"
+}
