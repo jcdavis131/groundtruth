@@ -7,8 +7,8 @@ import path from "node:path";
 import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv";
 import { ERROR_CATEGORIES, ERROR_CODES, ERROR_ENVELOPE_SCHEMA } from "./errors";
 import { z } from "zod";
-import { argsSummary, createServer, describeServer, errorResult, listDocs, PROMPTS, toolManifest, toolTable } from "./server";
-import { TOOLS, type FetchJson } from "./tools";
+import { argsSummary, createServer, describeServer, errorResult, INSTRUCTIONS, listDocs, PLACE_CITE, PROMPTS, toCallResult, toolManifest, toolTable } from "./server";
+import { ERROR_MAX_CHARS, TOOLS, type FetchJson } from "./tools";
 
 const validateEnvelope = new AjvJsonSchemaValidator().getValidator(ERROR_ENVELOPE_SCHEMA as never);
 
@@ -296,10 +296,10 @@ describe("createServer over an in-memory transport", () => {
     expect(sc.coverageStatus).toEqual({ status: "partial", basis: [expect.stringMatching(/the MCP cut the list/)] });
   });
 
-  it("lists and renders the three prompts, each naming the tools it chains", async () => {
+  it("lists and renders the four prompts, each naming the tools it chains", async () => {
     const { client } = await connect(async () => ({ status: 200, body: {}, url: "" }));
     const { prompts } = await client.listPrompts();
-    expect(prompts.map((p) => p.name).sort()).toEqual(["county_due_diligence", "port_congestion_check", "water_stress_brief"]);
+    expect(prompts.map((p) => p.name).sort()).toEqual(["county_due_diligence", "place_brief", "port_congestion_check", "water_stress_brief"]);
     const dd = await client.getPrompt({ name: "county_due_diligence", arguments: { fips: "48453" } });
     const text = (dd.messages[0].content as { text: string }).text;
     for (const tool of ["sectors", "county_history", "companies_near", "banks", "federal_spending", "release_calendar"]) expect(text).toContain(tool);
@@ -335,12 +335,114 @@ describe("createServer over an in-memory transport", () => {
   });
 });
 
+describe("surfacing: what a fresh Claude Code session sees before any tool search", () => {
+  it("the initialize result carries instructions of at most 1,500 chars that name world_context first", async () => {
+    const { client } = await connect(async () => ({ status: 200, body: {}, url: "" }));
+    const ins = client.getInstructions();
+    expect(ins).toBe(INSTRUCTIONS);
+    expect(ins!.length).toBeLessThanOrEqual(1500);
+    const at = (s: string) => ins!.indexOf(s);
+    expect(at("world_context")).toBeGreaterThanOrEqual(0);
+    expect(at("world_context")).toBeLessThan(at("place_fabric"));
+    expect(at("place_fabric")).toBeLessThan(at("catalog_search"));
+    // the two rules and the three moments to search
+    expect(ins).toContain("upstreamRecordUrl");
+    expect(ins).toMatch(/missing\[\]/);
+    expect(ins).toMatch(/before acting on a place/i);
+    expect(ins).toMatch(/before citing a place fact/i);
+    expect(ins).toMatch(/does not exist/i);
+  });
+
+  it("tools/list marks world_context alwaysLoad and no other tool", async () => {
+    const { client } = await connect(async () => ({ status: 200, body: {}, url: "" }));
+    const { tools } = await client.listTools();
+    const flagged = tools.filter((t) => t._meta?.["anthropic/alwaysLoad"] === true).map((t) => t.name);
+    expect(flagged).toEqual(["world_context"]);
+    for (const t of tools.filter((x) => x.name !== "world_context")) expect(t._meta?.["anthropic/alwaysLoad"], t.name).toBeUndefined();
+  });
+
+  it("every description fits Claude Code's upfront cut, and world_context says 'before' and 'cite' in its first 300 chars", async () => {
+    const { client } = await connect(async () => ({ status: 200, body: {}, url: "" }));
+    const { tools } = await client.listTools();
+    for (const t of tools) expect((t.description ?? "").length, t.name).toBeLessThanOrEqual(3800);
+    const head = tools.find((t) => t.name === "world_context")!.description!.slice(0, 300).toLowerCase();
+    expect(head).toContain("before");
+    expect(head).toContain("cite");
+  });
+
+  it("place_brief names world_context first and ends with the citation rule", async () => {
+    const { client } = await connect(async () => ({ status: 200, body: {}, url: "" }));
+    const names = TOOLS.map((t) => t.name).filter((n) => n !== "world_context");
+    for (const args of [{ fips: "48453" }, { lon: "-97.74", lat: "30.27" }]) {
+      const r = await client.getPrompt({ name: "place_brief", arguments: args });
+      const text = (r.messages[0].content as { text: string }).text;
+      const first = text.indexOf("world_context");
+      expect(first).toBeGreaterThanOrEqual(0);
+      for (const n of names) {
+        const m = new RegExp("\\b" + n + "\\b").exec(text);
+        if (m) expect(m.index, n + " comes before world_context").toBeGreaterThan(first);
+      }
+      expect(text.trim().endsWith(PLACE_CITE)).toBe(true);
+    }
+    expect(PLACE_CITE).toContain("upstreamRecordUrl");
+    expect(PLACE_CITE).toMatch(/missing\[\]/);
+    const brief = PROMPTS.find((p) => p.name === "place_brief")!;
+    expect(brief.build({ fips: "48453" })).toContain('fips: "48453"');
+    expect(brief.build({ lon: "-97.74", lat: "30.27" })).toContain("lon: -97.74, lat: 30.27");
+    // neither a point nor a fips: say so, still end with the rule
+    expect(brief.build({}).trim().endsWith(PLACE_CITE)).toBe(true);
+  });
+});
+
+describe("error replies are bounded", () => {
+  const long = "Z".repeat(900);
+  const topics = Object.fromEntries(
+    ["identity", "fabric", "hazards", "economy", "vulnerability", "institutions", "water", "freshness"].map((k) => [
+      k,
+      {
+        items: [],
+        missing: Array.from({ length: 12 }, (_, i) => ({ what: "source " + i, reason: "HTTP 503: " + long })),
+        coverageStatus: { status: "partial", basis: Array.from({ length: 12 }, (_, i) => k + ": source " + i + ": " + long) },
+      },
+    ]),
+  );
+  const payload = { error: "no source answered for this place", place: { kind: "point" }, topics, coverageStatus: { status: "partial", basis: Array.from({ length: 40 }, (_, i) => "b" + i + long) }, note: "n" };
+
+  it(`an error reply is at most ${ERROR_MAX_CHARS} chars and keeps code, category, retryable and remediation`, () => {
+    expect(JSON.stringify(payload).length).toBeGreaterThan(ERROR_MAX_CHARS);
+    const r = toCallResult({ status: 502, payload });
+    const text = (r.content as { text: string }[])[0].text;
+    expect(text.length).toBeLessThanOrEqual(ERROR_MAX_CHARS);
+    expect(JSON.stringify(r.structuredContent).length).toBeLessThanOrEqual(ERROR_MAX_CHARS);
+    const env = expectErrorEnvelope(r as never);
+    expect(env.code).toBe("upstream_failure");
+    expect(env.retryable).toBe(true);
+    expect(env.error).toContain("no source answered");
+  });
+
+  it("trims the missing lists first: every topic still names at least one thing that is missing", () => {
+    const r = toCallResult({ status: 502, payload });
+    const sc = r.structuredContent as { topics: Record<string, { missing: { what: string }[] }>; note: string };
+    for (const k of Object.keys(topics)) expect(sc.topics[k].missing.length, k).toBeGreaterThanOrEqual(1);
+    expect(sc.note).toMatch(/trimmed/);
+  });
+
+  it("leaves a small error reply and every success reply untouched", () => {
+    const small = { error: "boom", note: "x" };
+    expect(JSON.parse((toCallResult({ status: 502, payload: small }).content as { text: string }[])[0].text)).toMatchObject(small);
+    const ok = toCallResult({ status: 200, payload: { data: "Q".repeat(30_000) } });
+    expect((ok.content as { text: string }[])[0].text.length).toBeGreaterThan(ERROR_MAX_CHARS);
+  });
+});
+
 describe("describeServer", () => {
   it("names the endpoint, tools, prompts and resources", () => {
     const d = describeServer("https://eye.example/api/mcp");
     expect(d.endpoint).toBe("https://eye.example/api/mcp");
     expect(d.tools.map((t) => t.name)).toEqual(EXPECTED_TOOL_NAMES);
-    expect(d.prompts).toHaveLength(3);
+    expect(d.prompts).toHaveLength(4);
+    expect(d.instructions).toBe(INSTRUCTIONS);
+    expect(d.tools.filter((t) => t.alwaysLoad).map((t) => t.name)).toEqual(["world_context"]);
     expect(d.resources).toContain("gev://openapi.json");
   });
 });
@@ -351,6 +453,14 @@ describe("docs/MCP.md stays in sync with the manifest", () => {
     const m = md.match(/<!-- tools:start -->\n([\s\S]*?)\n<!-- tools:end -->/);
     expect(m, "docs/MCP.md needs <!-- tools:start --> / <!-- tools:end --> markers").not.toBeNull();
     expect(m![1].trim()).toBe(toolTable());
+  });
+
+  it("documents the server instructions, the alwaysLoad flag and every prompt", async () => {
+    const md = await readFile(path.join(process.cwd(), "docs", "MCP.md"), "utf8");
+    expect(md).toContain("instructions");
+    expect(md).toContain("anthropic/alwaysLoad");
+    for (const p of PROMPTS) expect(md, p.name).toContain("`" + p.name + "`");
+    expect(md).toContain(INSTRUCTIONS);
   });
 
   it("lists every error code and category the server can send", async () => {
