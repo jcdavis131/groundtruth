@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -8,9 +9,9 @@ import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv
 import { EXPECTED_TOOL_NAMES } from "./expectedTools.mjs";
 import { ERROR_CATEGORIES, ERROR_CODES, ERROR_ENVELOPE_SCHEMA } from "./errors";
 import { z } from "zod";
-import { argsSummary, createServer, describeServer, errorResult, INSTRUCTIONS, listDocs, PLACE_CITE, PROMPTS, toCallResult, toolManifest, toolTable } from "./server";
+import { argsSummary, createServer, describeServer, errorResult, INSTRUCTIONS, listDocs, PLACE_CITE, PROMPTS, PUBLIC_ORIGIN, SERVER_VERSION, toCallResult, toolManifest, toolTable } from "./server";
 import { ERROR_MAX_CHARS, TOOLS, type FetchJson, type ToolDef } from "./tools";
-import { WORLD_OUTPUT_SCHEMA } from "./worldSchema";
+import { WORLD_OUTPUT_SCHEMA, WORLD_SCHEMA_VERSION } from "./worldSchema";
 
 const validateEnvelope = new AjvJsonSchemaValidator().getValidator(ERROR_ENVELOPE_SCHEMA as never);
 
@@ -492,5 +493,174 @@ describe("docs/MCP.md stays in sync with the manifest", () => {
     const md = await readFile(path.join(process.cwd(), "docs", "MCP.md"), "utf8");
     for (const code of Object.keys(ERROR_CODES)) expect(md, code).toContain("`" + code + "`");
     for (const cat of ERROR_CATEGORIES) expect(md, cat).toContain("`" + cat + "`");
+  });
+});
+
+// ---- the versioning promise ----------------------------------------------------------------------------------
+// docs/MCP.md, "Versioning promise". What a client reads from tools/list (names, titles, descriptions, input
+// schemas, annotations, _meta, and world_context's outputSchema) changes only together with SERVER_VERSION.
+// lib/mcp/server.lock.json keeps, per server version, a hash of that surface, built from the real tools/list reply
+// of an in-memory client, so the test sees what a client sees. SERVER_VERSION is the server string
+// (initialize.serverInfo.version, GET /api/mcp), not the world/N schema version.
+//
+// What the test cannot see: an edit to the newest lock entry made in the same change as the surface edit.
+// The lock is append-only by convention; a reviewer reads the lock's diff.
+
+interface LockEntry {
+  serverVersion: string;
+  date: string;
+  toolsListSha256: string;
+  outputSchemaSha256: string;
+  tools: Record<string, string>;
+}
+interface Surface {
+  toolsListSha256: string;
+  outputSchemaSha256: string;
+  tools: Record<string, string>;
+}
+
+/** JSON with sorted keys, so a hash does not depend on key order. */
+function canon(v: unknown): string {
+  if (Array.isArray(v)) return "[" + v.map(canon).join(",") + "]";
+  if (v !== null && typeof v === "object") {
+    const o = v as Record<string, unknown>;
+    return "{" + Object.keys(o).sort().map((k) => JSON.stringify(k) + ":" + canon(o[k])).join(",") + "}";
+  }
+  return JSON.stringify(v);
+}
+const sha = (s: string) => createHash("sha256").update(s).digest("hex");
+const semver = (v: string): number[] | null => {
+  const m = /^(\d+)\.(\d+)\.(\d+)$/.exec(v);
+  return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : null;
+};
+const cmpVersion = (a: number[], b: number[]) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2];
+
+async function surfaceNow(): Promise<Surface> {
+  const { client } = await connect(async () => ({ status: 200, body: {}, url: "" }));
+  const { tools } = await client.listTools();
+  const list = JSON.parse(JSON.stringify(tools)) as Array<{ name: string; outputSchema?: unknown }>;
+  const world = list.find((t) => t.name === "world_context");
+  return {
+    toolsListSha256: sha(canon(list)),
+    outputSchemaSha256: sha(canon(world?.outputSchema ?? null)),
+    tools: Object.fromEntries(list.map((t) => [t.name, sha(canon(t))])),
+  };
+}
+
+/** Everything wrong with the lock, the code's version and the changelog; empty when they agree. */
+function lockProblems(history: LockEntry[], now: Surface, serverVersion: string, changelog: string): string[] {
+  const out: string[] = [];
+  let prev: number[] | null = null;
+  for (const e of history) {
+    const v = semver(e.serverVersion);
+    if (!v) out.push(`lock entry "${e.serverVersion}" is not an x.y.z version`);
+    else {
+      if (prev && cmpVersion(v, prev) <= 0) out.push(`lock entry ${e.serverVersion} does not rise above the entry before it`);
+      prev = v;
+    }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(e.date)) out.push(`lock entry ${e.serverVersion} has no YYYY-MM-DD date`);
+    if (![e.toolsListSha256, e.outputSchemaSha256, ...Object.values(e.tools)].every((h) => /^[0-9a-f]{64}$/.test(h))) out.push(`lock entry ${e.serverVersion} holds a hash that is not 64 hex digits`);
+    const heading = new RegExp("^## " + e.serverVersion.replace(/\./g, "\\.") + " - " + e.date + "$", "m");
+    if (!heading.test(changelog)) out.push(`CHANGELOG.md has no "## ${e.serverVersion} - ${e.date}" heading`);
+  }
+  const entry = JSON.stringify({ serverVersion, date: "<today>", ...now });
+  const latest = history[history.length - 1];
+  if (!latest) return [...out, `server.lock.json has no entries; record SERVER_VERSION ${serverVersion} with an entry like ${entry}`];
+  if (latest.serverVersion !== serverVersion) {
+    const sv = semver(serverVersion);
+    const lv = semver(latest.serverVersion);
+    return [
+      ...out,
+      sv && lv && cmpVersion(sv, lv) > 0
+        ? `SERVER_VERSION is ${serverVersion} but the lock's newest entry is ${latest.serverVersion}; append an entry for ${serverVersion} like ${entry}`
+        : `SERVER_VERSION is ${serverVersion} but the lock's newest entry is ${latest.serverVersion}; a version must not go back`,
+    ];
+  }
+  const names = [...new Set([...Object.keys(latest.tools), ...Object.keys(now.tools)])].sort();
+  const added = names.filter((n) => !(n in latest.tools));
+  const removed = names.filter((n) => !(n in now.tools));
+  const changed = names.filter((n) => n in latest.tools && n in now.tools && latest.tools[n] !== now.tools[n]);
+  const schemaChanged = latest.outputSchemaSha256 !== now.outputSchemaSha256;
+  if (added.length || removed.length || changed.length || schemaChanged || latest.toolsListSha256 !== now.toolsListSha256) {
+    out.push(
+      `tools/list or world_context's outputSchema changed while SERVER_VERSION stayed ${serverVersion} ` +
+        `(changed: ${changed.join(", ") || "none"}; added: ${added.join(", ") || "none"}; removed: ${removed.join(", ") || "none"}; ` +
+        `outputSchema: ${schemaChanged ? "changed" : "same"}). Bump SERVER_VERSION, add a CHANGELOG.md entry and append a lock entry like ${entry}`,
+    );
+  }
+  return out;
+}
+
+describe("versioning promise", () => {
+  const readLock = async () => JSON.parse(await readFile(path.join(__dirname, "server.lock.json"), "utf8")) as { schemaVersion: string; history: LockEntry[] };
+  const readChangelog = () => readFile(path.resolve(__dirname, "../../CHANGELOG.md"), "utf8").catch(() => "");
+
+  it("the tools/list and outputSchema a client sees are the ones recorded for SERVER_VERSION", async () => {
+    const lock = await readLock();
+    const problems = lockProblems(lock.history, await surfaceNow(), SERVER_VERSION, await readChangelog());
+    expect(problems).toEqual([]);
+  });
+
+  it("the outputSchema in the lock is the world_context outputSchema, and the lock names its schemaVersion", async () => {
+    const lock = await readLock();
+    expect(lock.schemaVersion).toBe(WORLD_SCHEMA_VERSION);
+    expect((await surfaceNow()).outputSchemaSha256).toBe(sha(canon(JSON.parse(JSON.stringify(WORLD_OUTPUT_SCHEMA)))));
+  });
+
+  describe("lockProblems, on planted changes", () => {
+    const base: Surface = { toolsListSha256: sha("list"), outputSchemaSha256: sha("schema"), tools: { alpha: sha("a1"), beta: sha("b1") } };
+    const entry = (over: Partial<LockEntry> = {}): LockEntry => ({ serverVersion: "1.2.3", date: "2026-10-20", ...base, ...over });
+    const log = "# Changelog\n\n## 1.2.3 - 2026-10-20\n\nnotes\n";
+
+    it("passes when the surface is the recorded one", () => {
+      expect(lockProblems([entry()], base, "1.2.3", log)).toEqual([]);
+    });
+    it("fails a changed description with no version change, naming the tool", () => {
+      const now: Surface = { ...base, toolsListSha256: sha("list2"), tools: { alpha: sha("a2"), beta: base.tools.beta } };
+      const p = lockProblems([entry()], now, "1.2.3", log);
+      expect(p).toHaveLength(1);
+      expect(p[0]).toContain("changed while SERVER_VERSION stayed 1.2.3");
+      expect(p[0]).toContain("changed: alpha;");
+    });
+    it("fails a tool added or removed with no version change", () => {
+      const added = lockProblems([entry()], { ...base, toolsListSha256: sha("l3"), tools: { ...base.tools, gamma: sha("g") } }, "1.2.3", log);
+      expect(added[0]).toContain("added: gamma;");
+      const removed = lockProblems([entry()], { ...base, toolsListSha256: sha("l4"), tools: { alpha: base.tools.alpha } }, "1.2.3", log);
+      expect(removed[0]).toContain("removed: beta;");
+    });
+    it("fails an outputSchema change with no version change", () => {
+      const p = lockProblems([entry()], { ...base, outputSchemaSha256: sha("schema2") }, "1.2.3", log);
+      expect(p[0]).toContain("outputSchema: changed");
+    });
+    it("fails a bump with no lock entry, and a version that went back", () => {
+      expect(lockProblems([entry()], base, "1.2.4", log)[0]).toContain("append an entry for 1.2.4");
+      expect(lockProblems([entry()], base, "1.2.2", log)[0]).toContain("must not go back");
+    });
+    it("passes a bump once the lock and the changelog carry it", () => {
+      const now: Surface = { ...base, toolsListSha256: sha("list2") };
+      const next = entry({ serverVersion: "1.3.0", date: "2026-11-01", toolsListSha256: now.toolsListSha256 });
+      expect(lockProblems([entry(), next], now, "1.3.0", log + "\n## 1.3.0 - 2026-11-01\n")).toEqual([]);
+    });
+    it("fails an empty lock, a version that does not rise, a missing changelog heading and a malformed hash", () => {
+      expect(lockProblems([], base, "1.2.3", log)[0]).toContain("no entries");
+      expect(lockProblems([entry(), entry()], base, "1.2.3", log).join("\n")).toContain("does not rise");
+      expect(lockProblems([entry()], base, "1.2.3", "# Changelog\n")).toEqual(['CHANGELOG.md has no "## 1.2.3 - 2026-10-20" heading']);
+      expect(lockProblems([entry({ toolsListSha256: "abc" })], base, "1.2.3", log).join("\n")).toContain("64 hex digits");
+    });
+  });
+
+  it("openapi.json carries SERVER_VERSION and the public host", async () => {
+    const spec = JSON.parse(await readFile(path.resolve(__dirname, "../../public/openapi.json"), "utf8")) as { info: { version: string }; servers: Array<{ url: string }> };
+    expect(spec.info.version).toBe(SERVER_VERSION);
+    expect(spec.servers[0].url).toBe(PUBLIC_ORIGIN);
+  });
+
+  it("docs/MCP.md states the promise with a date and says what the tests enforce", async () => {
+    const md = await readFile(path.resolve(__dirname, "../../docs/MCP.md"), "utf8");
+    const at = md.indexOf("\n## Versioning promise");
+    expect(at, "docs/MCP.md needs a '## Versioning promise' section").toBeGreaterThan(-1);
+    const section = md.slice(at + 1).split(/\n## /)[0];
+    expect(section).toMatch(/\b\d{4}-\d{2}-\d{2}\b/);
+    for (const needle of ["world/N", "additive", "SERVER_VERSION", "server.lock.json", "CHANGELOG.md", "90 days", "30 days"]) expect(section, needle).toContain(needle);
   });
 });

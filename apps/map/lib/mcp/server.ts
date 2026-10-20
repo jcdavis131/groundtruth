@@ -15,7 +15,13 @@ import { envelopeForStatus, envelopeForThrown, InvalidArguments } from "./errors
 import { boundErrorPayload, NOT_DEPLOYED_NOTE, TOOLS, type FetchJson, type ToolCtx, type ToolDef, type ToolReply } from "./tools";
 
 export const SERVER_NAME = "embedding-atlas-mcp-server";
-export const SERVER_VERSION = "0.1.0";
+export const SERVER_VERSION = "0.4.0";
+
+/**
+ * The origin this server answers on in production. public/openapi.json names it as servers[0] and
+ * server.test.ts holds the two together, with SERVER_VERSION, so the document and the server cannot drift apart.
+ */
+export const PUBLIC_ORIGIN = "https://www.arxiviq.com";
 
 /**
  * What a client reads at session start. Claude Code 2.1.x defers tool descriptions until a tool search and

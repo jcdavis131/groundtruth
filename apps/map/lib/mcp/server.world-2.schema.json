@@ -1,0 +1,1104 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "world_context reply, world/2",
+ "type": "object",
+ "properties": {
+  "schemaVersion": {
+   "type": "string",
+   "const": "world/2"
+  },
+  "place": {
+   "type": "object",
+   "required": [
+    "kind"
+   ],
+   "properties": {
+    "kind": {
+     "type": "string",
+     "minLength": 1
+    }
+   }
+  },
+  "topics": {
+   "type": "object",
+   "required": [
+    "identity"
+   ],
+   "additionalProperties": {
+    "type": "object",
+    "required": [
+     "items"
+    ],
+    "properties": {
+     "items": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "fact",
+        "value",
+        "sourceId",
+        "publisher",
+        "upstreamUrl",
+        "retrievedAt",
+        "link"
+       ],
+       "properties": {
+        "fact": {
+         "type": "string",
+         "minLength": 1
+        },
+        "value": {
+         "type": [
+          "string",
+          "number",
+          "boolean",
+          "null"
+         ]
+        },
+        "unit": {
+         "type": "string"
+        },
+        "code": {
+         "type": "string"
+        },
+        "period": {
+         "type": "string"
+        },
+        "note": {
+         "type": "string",
+         "minLength": 1
+        },
+        "point": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "sourceId": {
+         "type": "string",
+         "minLength": 1
+        },
+        "publisher": {
+         "type": "string",
+         "minLength": 1
+        },
+        "upstreamUrl": {
+         "type": "string",
+         "pattern": "^https?://"
+        },
+        "upstreamRecordUrl": {
+         "type": "string",
+         "pattern": "^https://"
+        },
+        "retrievedAt": {
+         "type": "string",
+         "pattern": "^\\d{4}-\\d{2}-\\d{2}T[0-9:.]+Z$"
+        },
+        "link": {
+         "type": "string",
+         "pattern": "^https?://"
+        },
+        "kind": {
+         "type": "string",
+         "enum": [
+          "about-eye"
+         ]
+        },
+        "absence": {
+         "type": "string",
+         "enum": [
+          "withheld"
+         ]
+        }
+       },
+       "allOf": [
+        {
+         "if": {
+          "properties": {
+           "value": {
+            "type": "null"
+           }
+          },
+          "required": [
+           "value"
+          ]
+         },
+         "then": {
+          "required": [
+           "note"
+          ]
+         }
+        },
+        {
+         "if": {
+          "required": [
+           "absence"
+          ]
+         },
+         "then": {
+          "required": [
+           "value"
+          ],
+          "properties": {
+           "value": {
+            "type": "null"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "not": {
+           "required": [
+            "upstreamRecordUrl"
+           ]
+          }
+         },
+         "then": {
+          "required": [
+           "note"
+          ],
+          "properties": {
+           "note": {
+            "pattern": "no record-level URL: \\S"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "census-tigerweb"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://tigerweb\\.geo\\.census\\.gov/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "nws-api"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://api\\.weather\\.gov/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "usgs-wbd"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://hydro\\.nationalmap\\.gov/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "fema-nfhl"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://hazards\\.fema\\.gov/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "epa-ecoregions"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://geodata\\.epa\\.gov/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "usgs-epqs"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://epqs\\.nationalmap\\.gov/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "fema-nri"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://services\\.arcgis\\.com/XG15cJAlne2vxtgt/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "fema-openfema"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://www\\.fema\\.gov/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "usdm"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://usdmdataservices\\.unl\\.edu/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "usgs-earthquakes"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://earthquake\\.usgs\\.gov/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "bls-qcew"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://data\\.bls\\.gov/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "cdc-svi"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://services3\\.arcgis\\.com/ZvidGQkLaDJxRSJ2/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "hifld-hospitals"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://services\\.arcgis\\.com/XG15cJAlne2vxtgt/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "cms-provider-data"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://data\\.cms\\.gov/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "usace-nid"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://geospatial\\.sec\\.usace\\.army\\.mil/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "sec-edgar"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://data\\.sec\\.gov/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "epa-cws-boundaries"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://services\\.arcgis\\.com/cJ9YHowT8TU7DUyn/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "epa-ucmr5-pat"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "properties": {
+           "upstreamRecordUrl": {
+            "pattern": "^https://services\\.arcgis\\.com/cJ9YHowT8TU7DUyn/"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "sourceId": {
+            "const": "eye-catalog"
+           }
+          },
+          "required": [
+           "sourceId"
+          ]
+         },
+         "then": {
+          "required": [
+           "kind"
+          ]
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "kind": {
+            "const": "about-eye"
+           }
+          },
+          "required": [
+           "kind"
+          ]
+         },
+         "then": {
+          "properties": {
+           "sourceId": {
+            "const": "eye-catalog"
+           }
+          },
+          "not": {
+           "required": [
+            "upstreamRecordUrl"
+           ]
+          }
+         }
+        }
+       ]
+      }
+     },
+     "missing": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+       "title": "Embedding Atlas MCP absence entry",
+       "type": "object",
+       "required": [
+        "what",
+        "code",
+        "reason",
+        "action"
+       ],
+       "properties": {
+        "what": {
+         "type": "string",
+         "minLength": 1
+        },
+        "code": {
+         "type": "string",
+         "enum": [
+          "not_published",
+          "not_in_release",
+          "withheld",
+          "join_gap",
+          "filed_under_other_code",
+          "not_asked",
+          "not_loaded",
+          "cut_by_route_limit",
+          "cut_by_max_records",
+          "cut_by_byte_cap",
+          "failed",
+          "timeout",
+          "no_citation",
+          "about_eye"
+         ]
+        },
+        "reason": {
+         "type": "string",
+         "minLength": 1
+        },
+        "action": {
+         "type": "string",
+         "enum": [
+          "abstain",
+          "retry",
+          "narrow",
+          "redirect",
+          "none"
+         ]
+        },
+        "to": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "additionalProperties": false,
+       "allOf": [
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "not_published"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "abstain"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "not_in_release"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "abstain"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "withheld"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "abstain"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "join_gap"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "narrow"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "filed_under_other_code"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "redirect"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "not_asked"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "narrow"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "not_loaded"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "narrow"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "cut_by_route_limit"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "narrow"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "cut_by_max_records"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "narrow"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "cut_by_byte_cap"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "narrow"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "failed"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "retry"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "timeout"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "retry"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "no_citation"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "none"
+           }
+          }
+         }
+        },
+        {
+         "if": {
+          "properties": {
+           "code": {
+            "const": "about_eye"
+           }
+          },
+          "required": [
+           "code"
+          ]
+         },
+         "then": {
+          "properties": {
+           "action": {
+            "const": "none"
+           }
+          }
+         }
+        }
+       ]
+      }
+     },
+     "coverageStatus": {
+      "type": "object",
+      "required": [
+       "status",
+       "basis"
+      ],
+      "properties": {
+       "status": {
+        "type": "string",
+        "const": "partial"
+       },
+       "basis": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "title": "Embedding Atlas MCP coverage basis line",
+         "type": "object",
+         "required": [
+          "code",
+          "text"
+         ],
+         "properties": {
+          "code": {
+           "type": "string",
+           "enum": [
+            "not_published",
+            "not_in_release",
+            "withheld",
+            "join_gap",
+            "filed_under_other_code",
+            "not_asked",
+            "not_loaded",
+            "cut_by_route_limit",
+            "cut_by_max_records",
+            "cut_by_byte_cap",
+            "failed",
+            "timeout",
+            "no_citation",
+            "about_eye"
+           ]
+          },
+          "text": {
+           "type": "string",
+           "minLength": 1
+          }
+         },
+         "additionalProperties": false
+        }
+       }
+      },
+      "additionalProperties": false
+     }
+    },
+    "additionalProperties": false,
+    "allOf": [
+     {
+      "if": {
+       "required": [
+        "missing"
+       ]
+      },
+      "then": {
+       "required": [
+        "coverageStatus"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "limits": {
+   "type": "object"
+  },
+  "note": {
+   "type": "string",
+   "minLength": 1
+  },
+  "truncated": {
+   "type": "object",
+   "required": [
+    "droppedItems"
+   ],
+   "properties": {
+    "droppedItems": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "note": {
+     "type": "string",
+     "minLength": 1
+    }
+   }
+  },
+  "coverageStatus": {
+   "type": "object",
+   "required": [
+    "status",
+    "basis"
+   ],
+   "properties": {
+    "status": {
+     "type": "string",
+     "const": "partial"
+    },
+    "basis": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "title": "Embedding Atlas MCP coverage basis line",
+      "type": "object",
+      "required": [
+       "code",
+       "text"
+      ],
+      "properties": {
+       "code": {
+        "type": "string",
+        "enum": [
+         "not_published",
+         "not_in_release",
+         "withheld",
+         "join_gap",
+         "filed_under_other_code",
+         "not_asked",
+         "not_loaded",
+         "cut_by_route_limit",
+         "cut_by_max_records",
+         "cut_by_byte_cap",
+         "failed",
+         "timeout",
+         "no_citation",
+         "about_eye"
+        ]
+       },
+       "text": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "additionalProperties": false
+     }
+    }
+   },
+   "additionalProperties": false
+  },
+  "error": {
+   "type": "string",
+   "minLength": 1
+  },
+  "code": {
+   "type": "string",
+   "enum": [
+    "invalid_arguments",
+    "bad_request",
+    "not_found",
+    "route_not_deployed",
+    "rate_limited",
+    "upstream_failure",
+    "upstream_rejected",
+    "timeout",
+    "server_unreachable",
+    "internal_error"
+   ]
+  },
+  "category": {
+   "type": "string",
+   "enum": [
+    "invalid_input",
+    "unavailable",
+    "timeout",
+    "execution_failure"
+   ]
+  },
+  "retryable": {
+   "type": "boolean"
+  },
+  "remediation": {
+   "type": "string",
+   "minLength": 1,
+   "maxLength": 200
+  }
+ },
+ "allOf": [
+  {
+   "if": {
+    "required": [
+     "error"
+    ]
+   },
+   "then": {
+    "required": [
+     "error",
+     "code",
+     "category",
+     "retryable",
+     "remediation"
+    ]
+   },
+   "else": {
+    "required": [
+     "schemaVersion",
+     "place",
+     "topics",
+     "limits",
+     "note"
+    ]
+   }
+  },
+  {
+   "if": {
+    "required": [
+     "truncated"
+    ]
+   },
+   "then": {
+    "required": [
+     "coverageStatus"
+    ]
+   }
+  }
+ ]
+}

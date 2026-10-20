@@ -1,23 +1,33 @@
 import { describe, expect, it } from "vitest";
-import { LICENCE_TERMS, licenceTerm, lintLicences } from "./licenceTerms";
+import { LICENCE_TERMS, licenceTerm, lintLicences, type LicenceTerm } from "./licenceTerms";
 import { SOURCES } from "./sources";
 
 describe("licence vocabulary", () => {
-  it("every entry is keyed by its own id and links to its terms over https", () => {
-    for (const [key, term] of Object.entries(LICENCE_TERMS)) {
+  it("every entry is keyed by its own id and links to its terms over https, except the one that has none", () => {
+    for (const [key, term] of Object.entries(LICENCE_TERMS) as Array<[string, LicenceTerm]>) {
       expect(term.id, key).toBe(key);
-      expect(term.url.startsWith("https://"), key).toBe(true);
       expect(term.name.length, key).toBeGreaterThan(0);
+      if (term.kind === "unstated") expect(term.url, key).toBeUndefined();
+      else expect(term.url?.startsWith("https://"), key).toBe(true);
     }
+    expect(licenceTerm("publisher-terms-unstated")?.kind).toBe("unstated");
   });
-  it("named ids are lower-case so they can't be mistaken for SPDX ids", () => {
-    for (const term of Object.values(LICENCE_TERMS)) {
-      if (term.kind === "named") expect(term.id, term.id).toMatch(/^[a-z0-9][a-z0-9.-]*$/);
+  it("named and unstated ids are lower-case so they can't be mistaken for SPDX ids", () => {
+    for (const term of Object.values(LICENCE_TERMS) as LicenceTerm[]) {
+      if (term.kind !== "spdx") expect(term.id, term.id).toMatch(/^[a-z0-9][a-z0-9.-]*$/);
     }
   });
   it("looks an id up, and returns nothing for an unknown one", () => {
     expect(licenceTerm("CC-BY-4.0")?.url).toBe("https://spdx.org/licenses/CC-BY-4.0.html");
     expect(licenceTerm("not-a-licence")).toBeUndefined();
+  });
+  it("strict mode fails a relayed source with no licenseId, and a relayed id that is not registered", () => {
+    const sources = { a: { id: "a" }, b: { id: "b", licenseId: "MIT" }, c: { id: "c" } };
+    // c has no id too, but nothing relays it: reported, not failed
+    expect(lintLicences(sources, ["a", "b", "z"]).strict).toEqual({ missing: ["a"], unregistered: ["z"] });
+    expect(lintLicences(sources, ["b"]).strict).toEqual({ missing: [], unregistered: [] });
+    expect(lintLicences(sources).strict).toBeUndefined();
+    expect(lintLicences(sources, ["a", "a", "b"]).strict?.missing).toEqual(["a"]);
   });
   it("the lint fails an unknown id and reports a missing one", () => {
     const r = lintLicences({
