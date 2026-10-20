@@ -9,35 +9,14 @@
 // can only show that the names exist; "killed" is what CI's recorded kill table shows
 // (.github/workflows/rule-mutations.yml passes it with --table).
 //
-// ALLOWLIST is the 2026-10-20 snapshot of the Checked rows that name no mutant yet. Builders may not edit
-// AGENTS.md, so the proposed rows (see --propose) go in the PR body and the docs follow-up PR adds them and
-// deletes ALLOWLIST. Until then the allowlist can only shrink: a Checked row that is neither listed nor
-// naming a mutant fails, a listed row that now names a mutant fails (delete its entry), and a listed row
-// that no longer exists fails.
+// There is no allowlist: every Checked-here row names a mutant, with no exceptions. (The 2026-10-20
+// allowlist of the 11 rows that named none was deleted by the docs follow-up that added their names.)
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { MUTANTS } from "../apps/map/scripts/rule-mutate.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-
-/** The Checked rows that named no mutant on 2026-10-20, by the first 60 characters of their Rule cell. */
-export const ALLOWLIST = {
-  date: "2026-10-20",
-  rows: [
-    "Every record cites its source: publisher, release and retrie",
-    "Missing means missing. No placeholder or made-up values",
-    "The MCP server tells a fresh client what it covers and loads",
-    "The field's legend is derived from the paint functions and h",
-    "Missing means missing, for a joined field: a record is place",
-    "The v4 eval's sealed material (gold, KEY, split output) is n",
-    "No search or embedding of private individuals",
-    "Professional athletes only by Cam's 2026-10-18 exception: na",
-    "Large data, caches and model weights don't go in git",
-    "No `.env` files, token-shaped strings, CRLF, home-directory ",
-    "Workflow actions are pinned to a full commit sha, never a ta",
-  ],
-};
 
 const KEY_LENGTH = 60;
 export const keyOf = (rule) => rule.slice(0, KEY_LENGTH);
@@ -166,8 +145,8 @@ function main(argv) {
     check(got === MUTANTS.map((m) => m.name).join(","), "the recorded table lists exactly the registry's mutants, in order", got);
     recorded = new Map((doc.mutants ?? []).map((m) => [m.name, m.result]));
   }
-  const findings = judge({ rows: real.rows, mutants: MUTANTS, table: recorded, allowlist: ALLOWLIST.rows });
-  check(findings.length === 0, `every Checked row names a ${recorded ? "killed " : ""}mutant or is on the ${ALLOWLIST.date} allowlist (${ALLOWLIST.rows.length} listed)`, findings.join("\n      "));
+  const findings = judge({ rows: real.rows, mutants: MUTANTS, table: recorded, allowlist: [] });
+  check(findings.length === 0, `every Checked row names a ${recorded ? "killed " : ""}mutant`, findings.join("\n      "));
   console.log(failed ? `\n${failed} check(s) failed` : "\nall checks pass");
   return failed ? 1 : 0;
 }
