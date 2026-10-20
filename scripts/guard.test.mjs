@@ -171,6 +171,31 @@ const evalClean = repo({
 const rc = run(evalClean);
 check(rc.status === 0, `eval code, docs and look-alike names pass${rc.status ? ": " + rc.stdout.trim() : ""}`);
 
+// rules: a "Checked here" row of AGENTS.md's table must name a tracked path and an existing workflow file.
+const table = (...rows) =>
+  "# Rules\n\n## Record rules and what enforces them\n\nProse mentioning `scripts/nope.mjs` and `.github/workflows/nope.yml` is not judged.\n\n| Rule | Enforced by | Status |\n|---|---|---|\n" +
+  rows.map((r) => `| ${r.join(" | ")} |`).join("\n") + "\n\nAfter the table.\n";
+const okRow = ["A rule", "`scripts/a.mjs`, run by `.github/workflows/w.yml`", "Checked here"];
+const base = { "scripts/a.mjs": "// a\n", ".github/workflows/w.yml": steps(`actions/checkout@${hex}`) };
+const rulesOk = repo({ ...base, "AGENTS.md": table(okRow, ["Judgement", "Nothing yet", "Review only"], ["Eye only", "eye: `lib/x.ts`", "Checked in eye"]) });
+const rr0 = run(rulesOk);
+check(rr0.status === 0, `a table whose Checked rows name tracked paths and an existing workflow passes${rr0.status ? ": " + rr0.stdout.trim() : ""}`);
+const rr1 = run(repo({ ...base, "AGENTS.md": table(["Gone", "`scripts/missing.mjs`", "Checked here"]) }));
+check(rr1.status === 1 && flags(rr1.stdout, "rules", "AGENTS.md:9"), "a Checked row naming only an untracked path fails");
+const rr2 = run(repo({ ...base, "AGENTS.md": table(["No wf", "`scripts/a.mjs`, run by `.github/workflows/ghost.yml`", "Checked here"]) }));
+check(rr2.status === 1 && flags(rr2.stdout, "rules", "AGENTS.md:9") && /ghost\.yml/.test(rr2.stdout), "a Checked row naming a missing workflow fails");
+const rr3 = run(repo({ ...base, "AGENTS.md": table(["Nothing", "Nothing yet", "Checked here"]) }));
+check(rr3.status === 1, "a Checked row naming no path at all fails");
+const rr4 = run(repo({ "AGENTS.md": table(["Gone", "`scripts/missing.mjs`", "Review only"]) }));
+check(rr4.status === 0, "a row that is not marked Checked is not judged");
+const rr5 = run(repo({ "README.md": "x\n" }));
+check(rr5.status === 0, "a repo with no AGENTS.md is not judged");
+
+// prereg-check has its own self-test; guard.yml runs this file, so run it from here too.
+const pre = spawnSync(process.execPath, [path.join(path.dirname(guard), "prereg-check.test.mjs")], { encoding: "utf8" });
+process.stdout.write(pre.stdout);
+check(pre.status === 0, "scripts/prereg-check.test.mjs passes");
+
 for (const d of made) rmSync(d, { recursive: true, force: true });
 console.log(failed ? `\n${failed} check(s) failed` : "\nall checks pass");
 process.exitCode = failed ? 1 : 0;
