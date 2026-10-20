@@ -75,7 +75,7 @@ function provenanceOf(id: PlaceExportId, d: { meta: object }): Provenance[] {
       upstreamUrl: m.source.layer,
       retrievedAt: m.source.fetchedAt,
       ...(m.source.serviceDataLastEdit ? { releasedAt: m.source.serviceDataLastEdit } : {}),
-      kind: "published",
+      kind: "estimate",
       method: `county aggregate computed by the export script from ${m.source.name}`,
     },
     {
