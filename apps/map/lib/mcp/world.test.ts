@@ -1228,6 +1228,11 @@ describe("world_context: water", () => {
     expect(JSON.stringify(w)).not.toContain("TX2270999");
     // Water system names are never copied.
     expect(JSON.stringify(r.payload)).not.toContain("CITY OF EXAMPLE");
+    // No water item's record link asks for every field. Pins each arcgisRecord call, not only w[0]: a call that drops its field list falls back to the '*' default, which the outFieldsRatchet count (2) cannot see.
+    for (const row of w) {
+      expect(row.upstreamRecordUrl, row.fact).toMatch(/[?&]outFields=[A-Za-z_]/);
+      expect(row.upstreamRecordUrl ?? "", row.fact).not.toContain("outFields=*");
+    }
     expect(w[0].upstreamRecordUrl).toBe("https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0/query?where=PWSID%3D'TX2270001'&outFields=PWSID,Population_Served_Count&returnGeometry=false&f=json");
     expect(w[2].upstreamRecordUrl).toMatch(/PFAS_Analytic_Tools_Layers\/FeatureServer\/1\/query\?where=F_PWS_ID%3D'TX2270001'%20AND%20UCMR_Cycle%3D'UCMR%205%20\(2023-2025\)'%20AND%20Contaminant%3D'PFOA'/);
     expect(w[1].note).toMatch(/^1 of 2 PFAS at or above/);
@@ -1276,6 +1281,7 @@ describe("world_context: water", () => {
     expect(w[0]).toMatchObject({ fact: "community water system serving the point (EPA service area)", value: "PA1460022", sourceId: "epa-cws-boundaries" });
     expect(w.find((i) => i.fact === "UCMR 5 highest single result: PFOA")).toMatchObject({ value: 235, unit: "ng/L", sourceId: "epa-ucmr5-pat" });
     expect(w.every((i) => /^https:\/\/services\.arcgis\.com\/cJ9YHowT8TU7DUyn\//.test(i.upstreamRecordUrl ?? ""))).toBe(true);
+    for (const row of w) expect(row.upstreamRecordUrl ?? "", row.fact).not.toContain("outFields=*");
     expect(JSON.stringify(r.payload)).not.toMatch(/COLLEGEVILLE TRAPPE/);
   });
 
