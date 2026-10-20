@@ -2,6 +2,7 @@
 //
 //   node data/schema/validate.mjs record <file.json | file.jsonl> ...
 //   node data/schema/validate.mjs manifest <manifest.json> ...   (also checks the files it lists, next to it)
+//   node data/schema/validate.mjs diff <diff.json> ...   (a snapshot diff written by data/pipeline/diff.py)
 //   node data/schema/validate.mjs manifest --no-files <manifest.json> ...   (the manifest alone)
 //
 // Two layers of checks:
@@ -29,6 +30,7 @@ import { embeddableProblems } from "./embeddable.mjs";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const RECORD_SCHEMA = JSON.parse(readFileSync(path.join(HERE, "record.schema.json"), "utf8"));
 export const MANIFEST_SCHEMA = JSON.parse(readFileSync(path.join(HERE, "manifest.schema.json"), "utf8"));
+export const DIFF_SCHEMA = JSON.parse(readFileSync(path.join(HERE, "diff.schema.json"), "utf8"));
 
 // ---------------------------------------------------------------- JSON Schema subset
 
@@ -282,6 +284,40 @@ export function validateManifest(m) {
 
 
 /**
+ * A snapshot diff (diff.schema.json) and the rules JSON Schema can't say: an id is listed once in each list, the
+ * counts agree with the lists, the removed-by-reason counts agree with the reasons, and an id-churn removal and the
+ * added record it names point at each other. `unchanged` is not re-derived here: it needs the snapshots.
+ */
+export function validateDiff(d) {
+  const out = schemaErrors(d, DIFF_SCHEMA);
+  if (typeOf(d) !== "object" || !d.counts || !Array.isArray(d.added) || !Array.isArray(d.removed) || !Array.isArray(d.changed)) return out;
+  const bad = (code, p, message) => out.push({ code, path: p, message });
+  for (const k of ["added", "removed", "changed"]) {
+    if (Number.isInteger(d.counts[k]) && d.counts[k] !== d[k].length) bad("count", `/counts/${k}`, `counts.${k} is ${d.counts[k]} but ${k} lists ${d[k].length}`);
+    const seen = new Set();
+    d[k].forEach((x, i) => {
+      if (seen.has(x?.id)) bad("duplicate", `/${k}/${i}/id`, `${x.id} listed twice`);
+      seen.add(x?.id);
+    });
+  }
+  const by = d.counts.removedByReason;
+  if (by && typeOf(by) === "object")
+    for (const r of ["publisher-status", "our-rule", "id-churn", "unknown"]) {
+      const n = d.removed.filter((x) => x?.reason === r).length;
+      if (Number.isInteger(by[r]) && by[r] !== n) bad("count", `/counts/removedByReason/${r}`, `removedByReason.${r} is ${by[r]} but ${n} removals have it`);
+    }
+  const added = new Map(d.added.map((a) => [a?.id, a]));
+  d.removed.forEach((r, i) => {
+    if (r?.reason !== "id-churn") return;
+    const a = added.get(r.replacedBy);
+    if (!a) bad("churn", `/removed/${i}/replacedBy`, `${r.replacedBy} is not in added`);
+    else if (a.replaces !== r.id) bad("churn", `/removed/${i}/replacedBy`, `${r.replacedBy} says it replaces ${a.replaces}, not ${r.id}`);
+  });
+  return out;
+}
+
+
+/**
  * The joins block's own arithmetic, without the files: every record is placed or listed unplaced, once; the
  * methods add up to placed; the cross-check adds up and its disagreements are the listed ones.
  */
@@ -373,8 +409,8 @@ function main(argv) {
   // data root, outside git.
   const noFiles = rest.includes("--no-files");
   const files = rest.filter((a) => a !== "--no-files");
-  if (!["record", "manifest"].includes(what) || !files.length || (noFiles && what !== "manifest")) {
-    console.log("usage: node data/schema/validate.mjs record <file> ... | manifest [--no-files] <file> ...");
+  if (!["record", "manifest", "diff"].includes(what) || !files.length || (noFiles && what !== "manifest")) {
+    console.log("usage: node data/schema/validate.mjs record <file> ... | manifest [--no-files] <file> ... | diff <file> ...");
     return 2;
   }
   let bad = 0;
@@ -382,7 +418,7 @@ function main(argv) {
     const text = readFileSync(f, "utf8");
     const docs = f.endsWith(".jsonl") ? text.split("\n").filter(Boolean).map((l) => JSON.parse(l)) : [JSON.parse(text)];
     docs.forEach((d, n) => {
-      const errs = what === "record" ? validateRecord(d) : [...validateManifest(d), ...(noFiles ? [] : verifyFiles(d, path.dirname(f)))];
+      const errs = what === "record" ? validateRecord(d) : what === "diff" ? validateDiff(d) : [...validateManifest(d), ...(noFiles ? [] : verifyFiles(d, path.dirname(f)))];
       const label = docs.length > 1 ? `${f}:${n + 1}` : f;
       if (errs.length) bad++;
       console.log(errs.length ? `FAIL  ${label}` : `ok    ${label}`);
