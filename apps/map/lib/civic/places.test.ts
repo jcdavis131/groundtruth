@@ -16,6 +16,7 @@ import areasCt from "@/lib/economy/fixtures/areas-ct.json";
 import { countyOutlines } from "@/lib/layers/areas";
 import { countiesInView, esriRingsToMulti, joinHealthCounties, joinHealthTracts, type HealthExtra } from "@/lib/layers/health";
 import type { ConstructNode } from "@/lib/fabric/types";
+import { placesBreaks } from "@/lib/breaks";
 import { binOf, countyMeasureUrl, parsePlaces, PLACES_MEASURES, placeDetails, quintiles, SOCIAL_NEEDS, tractUrl } from "./places";
 
 const outlines = countyOutlines((areasCt as unknown as { data: Parameters<typeof countyOutlines>[0] }).data);
@@ -82,30 +83,44 @@ describe("tract values", () => {
     for (const src of [route, lib.replace(/\/\/.*$/gm, "")]) expect(src).not.toContain("within_box(");
   });
 
-  it("joins Capitol Planning Region's tracts by FIPS onto TIGER outlines, quintiles of the tracts loaded", () => {
+  it("joins Capitol Planning Region's tracts by FIPS onto TIGER outlines, binned on the national county breaks", () => {
     const rows = parsePlaces(tracts09110, "tract");
     expect(rows).toHaveLength(246);
     const units = (fabricTracts as unknown as { data: { units: ConstructNode[] } }).data.units;
     expect(countiesInView(units)).toEqual(["09110"]);
     const j = joinHealthTracts(units, rows, "DIABETES", new Set(["09110"]));
     expect(j.features).toHaveLength(66);
-    expect(j.breaks).toHaveLength(4);
+    // The breaks are the committed national county breaks, not quintiles of the 246 tracts loaded.
+    const national = placesBreaks("DIABETES").breaks;
+    expect(national).toHaveLength(4);
+    expect(j.breaks).toEqual(national);
+    expect(j.breaks).not.toEqual(quintiles(rows.map((r) => r.value)));
     expect(j.features.every((f) => (f.properties.extra as HealthExtra).bin != null)).toBe(true);
+    for (const f of j.features) {
+      const x = f.properties.extra as HealthExtra;
+      expect(x.breaks).toEqual(national);
+      expect(x.bin).toBe(binOf(x.value, national));
+    }
     expect(j.features[0].geometry.type).toBe("MultiPolygon");
     // Tracts of counties not asked are counted, not drawn.
     expect(joinHealthTracts(units, rows, "DIABETES", new Set(["09120"])).notAsked).toBe(66);
   });
 
-  it("draws published tracts as published when fewer than five are, and says they are not ranked", () => {
+  it("bins a few published tracts on the national breaks all the same: what is in view never moves a break", () => {
     const units = (fabricTracts as unknown as { data: { units: ConstructNode[] } }).data.units;
     const some = parsePlaces(tracts09110, "tract").filter((r) => units.some((u) => u.code === r.fips)).slice(0, 3);
     expect(some).toHaveLength(3);
     const j = joinHealthTracts(units, some, "DIABETES", new Set(["09110"]));
-    expect(j.breaks).toEqual([]);
+    const national = placesBreaks("DIABETES").breaks;
+    expect(j.breaks).toEqual(national);
     const drawn = j.features.filter((f) => (f.properties.extra as HealthExtra).bin != null);
     expect(drawn).toHaveLength(3);
-    expect(drawn.every((f) => f.properties.kind === "unranked")).toBe(true);
-    expect(drawn[0].properties.details?.bin).toMatch(/^not ranked/);
+    for (const f of drawn) {
+      const x = f.properties.extra as HealthExtra;
+      expect(x.bin).toBe(binOf(x.value, national));
+      expect(f.properties.kind).toBe(`q${(x.bin as number) + 1}`);
+    }
+    expect(drawn[0].properties.details?.bin).toMatch(/^quintile \d of 5 \(national county breaks, n=\d+\)/);
     expect(j.features.filter((f) => f.properties.kind === "not-published")).toHaveLength(66 - 3);
   });
 

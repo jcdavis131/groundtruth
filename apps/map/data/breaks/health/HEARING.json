@@ -1,0 +1,28 @@
+{
+  "schema": "breaks/1",
+  "layer": "health",
+  "measure": "HEARING",
+  "period": "data year 2023",
+  "valueType": "age-adjusted prevalence (percent)",
+  "method": "quintile-nearest-rank",
+  "rule": "Sort the published values ascending (n of them); breaks[i] = sorted[min(n-1, floor(q*n))] for q = 0.2, 0.4, 0.6, 0.8. A value's bin is the number of breaks it is at or above, 0 to 4.",
+  "breaks": [
+    6.2,
+    6.7,
+    7.1,
+    7.7
+  ],
+  "n": 2956,
+  "nNull": 1,
+  "universe": "US counties and county equivalents (Connecticut as planning regions) with a published age-adjusted prevalence for Hearing Disability, CDC PLACES 2025 release",
+  "source": {
+    "url": "https://data.cdc.gov/resource/swc5-untb.json?%24select=year%2Cstateabbr%2Cstatedesc%2Clocationid%2Clocationname%2Cmeasureid%2Cdatavaluetypeid%2Cdata_value%2Clow_confidence_limit%2Chigh_confidence_limit%2Ctotalpopulation&measureid=HEARING&datavaluetypeid=AgeAdjPrv&%24order=locationid&%24limit=5000",
+    "retrievedAt": "2026-10-20T15:10:54.357Z",
+    "lastModified": "Thu, 04 Dec 2025 10:35:59 GMT",
+    "sha256": "8540875345099d4a7a2bf4ed3178b123dc5832b4e737d358847aa2695d5368c0"
+  },
+  "input": {
+    "path": "data/breaks/inputs/health/HEARING.json",
+    "sha256": "74a3add376bc541b6ee20e2f09526444ccb5cb45e5b71b1c91aaab8351b609ea"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "breaks/1",
+  "layer": "npl-status",
+  "measure": "npl_active",
+  "period": "year-end 2025",
+  "valueType": "count of NPL sites listed by December 31 and not deleted by then",
+  "method": "zero-bin-quartile-nearest-rank",
+  "rule": "Bin 0 is the value 0. Sort the nonzero values ascending (m of them); breaks = the smallest nonzero value, then sorted[min(m-1, floor(q*m))] for q = 0.25, 0.5, 0.75, with a repeated cut point dropped so the breaks rise strictly. A value's bin is the number of breaks it is at or above.",
+  "breaks": [
+    1,
+    2
+  ],
+  "n": 3112,
+  "nNull": 110,
+  "universe": "US counties and county equivalents in the committed county table (50 states, DC and Puerto Rico; TIGERweb ACS2023) with a value for active NPL sites at year-end 2025: 0 where EPA lists no site there (the NPL list is complete), null where a site could be in the county but EPA's county string did not place it",
+  "source": {
+    "url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Superfund_National_Priorities_List_(NPL)_Sites_with_Status_Information/FeatureServer/0",
+    "retrievedAt": "2026-10-16T10:02:13.295Z",
+    "lastModified": "2026-09-30T18:12:05.866Z",
+    "pages": [
+      {
+        "url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Superfund_National_Priorities_List_(NPL)_Sites_with_Status_Information/FeatureServer/0/query?f=json&where=1%3D1&outFields=Site_EPA_ID%2CState%2CCounty%2CStatus%2CProposed_Date%2CListing_Date%2CConstruction_Completion_Date%2CDeletion_Date%2CLatitude%2CLongitude&returnGeometry=false&orderByFields=Site_EPA_ID&resultOffset=0&resultRecordCount=1000",
+        "sha256": "8c0131f36e27391eeace2a1189057369bd40a7bf355af30a575406e8bd99b432",
+        "lastModified": "Wed, 30 Sep 2026 18:12:05 GMT",
+        "rows": 1000
+      },
+      {
+        "url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Superfund_National_Priorities_List_(NPL)_Sites_with_Status_Information/FeatureServer/0/query?f=json&where=1%3D1&outFields=Site_EPA_ID%2CState%2CCounty%2CStatus%2CProposed_Date%2CListing_Date%2CConstruction_Completion_Date%2CDeletion_Date%2CLatitude%2CLongitude&returnGeometry=false&orderByFields=Site_EPA_ID&resultOffset=1000&resultRecordCount=1000",
+        "sha256": "8c578ba8522ffe094cb8965a04d9103e7d4c8cf0e568e9db26c359bdc401f4fb",
+        "lastModified": "Wed, 30 Sep 2026 18:12:05 GMT",
+        "rows": 840
+      }
+    ]
+  },
+  "input": {
+    "path": "lib/catalog/data/npl-county.json",
+    "sha256": "92eba28c279a73acd724f51c0c31ccc13f94cd28479d9a81fcc58096a3dc575b"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "breaks/1",
+  "layer": "health",
+  "measure": "LACKTRPT",
+  "period": "data year 2023",
+  "valueType": "age-adjusted prevalence (percent)",
+  "method": "quintile-nearest-rank",
+  "rule": "Sort the published values ascending (n of them); breaks[i] = sorted[min(n-1, floor(q*n))] for q = 0.2, 0.4, 0.6, 0.8. A value's bin is the number of breaks it is at or above, 0 to 4.",
+  "breaks": [
+    7.2,
+    8.2,
+    9.3,
+    11.2
+  ],
+  "n": 2299,
+  "nNull": 0,
+  "universe": "US counties and county equivalents (Connecticut as planning regions) with a published age-adjusted prevalence for Transportation Barriers, CDC PLACES 2025 release",
+  "source": {
+    "url": "https://data.cdc.gov/resource/swc5-untb.json?%24select=year%2Cstateabbr%2Cstatedesc%2Clocationid%2Clocationname%2Cmeasureid%2Cdatavaluetypeid%2Cdata_value%2Clow_confidence_limit%2Chigh_confidence_limit%2Ctotalpopulation&measureid=LACKTRPT&datavaluetypeid=AgeAdjPrv&%24order=locationid&%24limit=5000",
+    "retrievedAt": "2026-10-20T15:10:58.975Z",
+    "lastModified": "Thu, 04 Dec 2025 10:35:59 GMT",
+    "sha256": "86051bbc4fa66fd91fab50ddc5cdc7c0d872848c98114e762ad1d9fc7c4a81b2"
+  },
+  "input": {
+    "path": "data/breaks/inputs/health/LACKTRPT.json",
+    "sha256": "f8f6e24388711c68f44219df20f10ac03dd5bdc1b80779c005acb12f4d60d299"
+  }
+}

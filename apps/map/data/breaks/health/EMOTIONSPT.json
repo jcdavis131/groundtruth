@@ -1,0 +1,28 @@
+{
+  "schema": "breaks/1",
+  "layer": "health",
+  "measure": "EMOTIONSPT",
+  "period": "data year 2023",
+  "valueType": "age-adjusted prevalence (percent)",
+  "method": "quintile-nearest-rank",
+  "rule": "Sort the published values ascending (n of them); breaks[i] = sorted[min(n-1, floor(q*n))] for q = 0.2, 0.4, 0.6, 0.8. A value's bin is the number of breaks it is at or above, 0 to 4.",
+  "breaks": [
+    21.4,
+    22.9,
+    24.6,
+    26.8
+  ],
+  "n": 2299,
+  "nNull": 0,
+  "universe": "US counties and county equivalents (Connecticut as planning regions) with a published age-adjusted prevalence for Lack of Social/Emotional Support, CDC PLACES 2025 release",
+  "source": {
+    "url": "https://data.cdc.gov/resource/swc5-untb.json?%24select=year%2Cstateabbr%2Cstatedesc%2Clocationid%2Clocationname%2Cmeasureid%2Cdatavaluetypeid%2Cdata_value%2Clow_confidence_limit%2Chigh_confidence_limit%2Ctotalpopulation&measureid=EMOTIONSPT&datavaluetypeid=AgeAdjPrv&%24order=locationid&%24limit=5000",
+    "retrievedAt": "2026-10-20T15:10:48.875Z",
+    "lastModified": "Thu, 04 Dec 2025 10:35:59 GMT",
+    "sha256": "6fc316156ebc6cadfb3dd463e2d1f46df7e223bbc4f8af9ec52ff1886fd354a3"
+  },
+  "input": {
+    "path": "data/breaks/inputs/health/EMOTIONSPT.json",
+    "sha256": "15c3b1b79c15dcbc30e27750a5013e4349af8fca9946bc1b9624c2ee9130518b"
+  }
+}

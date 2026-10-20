@@ -1,0 +1,28 @@
+{
+  "schema": "breaks/1",
+  "layer": "health",
+  "measure": "CHOLSCREEN",
+  "period": "data year 2023",
+  "valueType": "age-adjusted prevalence (percent)",
+  "method": "quintile-nearest-rank",
+  "rule": "Sort the published values ascending (n of them); breaks[i] = sorted[min(n-1, floor(q*n))] for q = 0.2, 0.4, 0.6, 0.8. A value's bin is the number of breaks it is at or above, 0 to 4.",
+  "breaks": [
+    81.1,
+    82.4,
+    83.5,
+    84.8
+  ],
+  "n": 2956,
+  "nNull": 1,
+  "universe": "US counties and county equivalents (Connecticut as planning regions) with a published age-adjusted prevalence for Cholesterol Screening, CDC PLACES 2025 release",
+  "source": {
+    "url": "https://data.cdc.gov/resource/swc5-untb.json?%24select=year%2Cstateabbr%2Cstatedesc%2Clocationid%2Clocationname%2Cmeasureid%2Cdatavaluetypeid%2Cdata_value%2Clow_confidence_limit%2Chigh_confidence_limit%2Ctotalpopulation&measureid=CHOLSCREEN&datavaluetypeid=AgeAdjPrv&%24order=locationid&%24limit=5000",
+    "retrievedAt": "2026-10-20T15:10:39.060Z",
+    "lastModified": "Thu, 04 Dec 2025 10:35:59 GMT",
+    "sha256": "9b1afc47d0e89d2682f138d5cd5c35a7f78151b8e568849dbff5cc8fb2e423a5"
+  },
+  "input": {
+    "path": "data/breaks/inputs/health/CHOLSCREEN.json",
+    "sha256": "5e501578536f3917e903b76fd10ab7b8ec70760868696a23df8c4562858f4df9"
+  }
+}

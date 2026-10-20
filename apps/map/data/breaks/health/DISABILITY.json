@@ -1,0 +1,28 @@
+{
+  "schema": "breaks/1",
+  "layer": "health",
+  "measure": "DISABILITY",
+  "period": "data year 2023",
+  "valueType": "age-adjusted prevalence (percent)",
+  "method": "quintile-nearest-rank",
+  "rule": "Sort the published values ascending (n of them); breaks[i] = sorted[min(n-1, floor(q*n))] for q = 0.2, 0.4, 0.6, 0.8. A value's bin is the number of breaks it is at or above, 0 to 4.",
+  "breaks": [
+    27.8,
+    30.5,
+    33.3,
+    37.2
+  ],
+  "n": 2956,
+  "nNull": 1,
+  "universe": "US counties and county equivalents (Connecticut as planning regions) with a published age-adjusted prevalence for Any Disability, CDC PLACES 2025 release",
+  "source": {
+    "url": "https://data.cdc.gov/resource/swc5-untb.json?%24select=year%2Cstateabbr%2Cstatedesc%2Clocationid%2Clocationname%2Cmeasureid%2Cdatavaluetypeid%2Cdata_value%2Clow_confidence_limit%2Chigh_confidence_limit%2Ctotalpopulation&measureid=DISABILITY&datavaluetypeid=AgeAdjPrv&%24order=locationid&%24limit=5000",
+    "retrievedAt": "2026-10-20T15:10:48.294Z",
+    "lastModified": "Thu, 04 Dec 2025 10:35:59 GMT",
+    "sha256": "6a33446466a80e4b11cc86dced82ec3f152b473bc5d40e14741efcd0145213eb"
+  },
+  "input": {
+    "path": "data/breaks/inputs/health/DISABILITY.json",
+    "sha256": "2418d860a73f2878bd1890455f377648b93abf8c6d31748dc19c2326e4e19b3c"
+  }
+}

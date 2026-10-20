@@ -8,8 +8,9 @@ import type { LayerStyle } from "./renderer";
 import type { LayerFeature } from "@/lib/layers/types";
 import { polyFills, polyOutlines } from "./hazardStyles";
 import { NRI_CLASSES, NRI_COLORS, NRI_NO_RATING_EDGE, type NriExtra } from "@/lib/hazards/nri";
-import type { LegendEntry } from "@/lib/fabric/legend";
-import { PLACES_BIN_COLORS } from "@/lib/civic/places";
+import type { Legend, LegendEntry, LegendScale } from "@/lib/fabric/legend";
+import { placesBreaks, scaleOf, tractCaveat } from "@/lib/breaks";
+import { PLACES_BIN_COLORS, type PlacesMeasure } from "@/lib/civic/places";
 import type { HealthExtra } from "@/lib/layers/health";
 import { SVI_BIN_COLORS, SVI_BIN_LABELS, SVI_NO_RANK_EDGE, type SviExtra } from "@/lib/civic/svi";
 import { BROADBAND_BIN_COLORS, BROADBAND_NO_DATA_EDGE, binLabelsFor, parseBroadbandMeasure, type BroadbandExtra } from "@/lib/civic/broadband";
@@ -175,19 +176,45 @@ export type IndexLayer = "riskindex" | "health" | "vulnerability" | "broadband" 
 const bins = (colors: readonly string[], labels: readonly string[]): LegendEntry[] => colors.map((color, i) => ({ color, label: labels[i], kind: "class" as const }));
 const edge = (color: string, label: string): LegendEntry => ({ color, label, kind: "outline" });
 
-/** Quintile labels: the view's own breaks when it has them (PLACES ranks the loaded counties), else the fifths by name. */
+/** Quintile labels: the breaks it is given (PLACES' committed national county breaks), else the fifths by name. */
 function placesLabels(breaks?: readonly number[]): string[] {
   if (breaks?.length === 4) return [`under ${breaks[0]} %`, `${breaks[0]} to ${breaks[1]} %`, `${breaks[1]} to ${breaks[2]} %`, `${breaks[2]} to ${breaks[3]} %`, `${breaks[3]} % or more`];
   return ["lowest fifth of counties", "second fifth", "middle fifth", "fourth fifth", "highest fifth of counties"];
 }
 
+export interface IndexLegendOpts {
+  /** Broadband's and housing's measure. */
+  measure?: number;
+  /** CDC PLACES' four quintile breaks, when the caller has them (they win over placesMeasure). */
+  placesBreaks?: readonly number[];
+  /** The PLACES measure: its committed national county breaks label the bins and give the scale. */
+  placesMeasure?: PlacesMeasure;
+}
+
+/**
+ * The key for one index layer as a Legend. A layer whose bins are cut from a committed breaks file (PLACES, given
+ * its measure) also carries the file's universe and n and the tract caveat, read through scaleOf and tractCaveat.
+ * The others bin on publisher or fixed breaks that name themselves in their labels and carry no scale.
+ */
+export function legendOfIndex(layer: IndexLayer, opts: IndexLegendOpts = {}): Legend {
+  const legend: Legend = { entries: indexLegend(layer, opts), max: null, notLoaded: { count: 0, reasons: {} }, units: "classes" };
+  if (layer === "health" && opts.placesMeasure) legend.scale = healthScale(opts.placesMeasure);
+  return legend;
+}
+
+function healthScale(measure: PlacesMeasure): LegendScale {
+  const file = placesBreaks(measure);
+  const { universe, n } = scaleOf(file);
+  return { universe, n, caveat: tractCaveat(file) };
+}
+
 /** The key for one index layer. `measure` picks broadband's and housing's measure; `placesBreaks` are CDC PLACES' four quintile breaks in view. */
-export function indexLegend(layer: IndexLayer, opts: { measure?: number; placesBreaks?: readonly number[] } = {}): LegendEntry[] {
+export function indexLegend(layer: IndexLayer, opts: IndexLegendOpts = {}): LegendEntry[] {
   switch (layer) {
     case "riskindex":
       return [...NRI_CLASSES.map((c) => ({ color: NRI_COLORS[c], label: c, kind: "class" as const })), edge(NRI_NO_RATING_EDGE, "not rated (dashed edge)")];
     case "health":
-      return [...bins(PLACES_BIN_COLORS, placesLabels(opts.placesBreaks)), edge(NRI_NO_RATING_EDGE, "not published (dashed edge)")];
+      return [...bins(PLACES_BIN_COLORS, placesLabels(opts.placesBreaks ?? (opts.placesMeasure ? placesBreaks(opts.placesMeasure).breaks : undefined))), edge(NRI_NO_RATING_EDGE, "not published (dashed edge)")];
     case "vulnerability":
       return [...bins(SVI_BIN_COLORS, SVI_BIN_LABELS), edge(SVI_NO_RANK_EDGE, "not ranked (dashed edge)")];
     case "broadband":

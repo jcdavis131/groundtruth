@@ -1,0 +1,28 @@
+{
+  "schema": "breaks/1",
+  "layer": "health",
+  "measure": "SLEEP",
+  "period": "data year 2022",
+  "valueType": "age-adjusted prevalence (percent)",
+  "method": "quintile-nearest-rank",
+  "rule": "Sort the published values ascending (n of them); breaks[i] = sorted[min(n-1, floor(q*n))] for q = 0.2, 0.4, 0.6, 0.8. A value's bin is the number of breaks it is at or above, 0 to 4.",
+  "breaks": [
+    33.6,
+    36.4,
+    38.6,
+    40.8
+  ],
+  "n": 3143,
+  "nNull": 1,
+  "universe": "US counties and county equivalents (Connecticut as planning regions) with a published age-adjusted prevalence for Short Sleep Duration, CDC PLACES 2025 release",
+  "source": {
+    "url": "https://data.cdc.gov/resource/swc5-untb.json?%24select=year%2Cstateabbr%2Cstatedesc%2Clocationid%2Clocationname%2Cmeasureid%2Cdatavaluetypeid%2Cdata_value%2Clow_confidence_limit%2Chigh_confidence_limit%2Ctotalpopulation&measureid=SLEEP&datavaluetypeid=AgeAdjPrv&%24order=locationid&%24limit=5000",
+    "retrievedAt": "2026-10-20T15:11:09.942Z",
+    "lastModified": "Thu, 04 Dec 2025 10:35:59 GMT",
+    "sha256": "7bf0e75fd88f3e55ee0a22d320118d18f44cf2c93c42af765472c9dc4d394718"
+  },
+  "input": {
+    "path": "data/breaks/inputs/health/SLEEP.json",
+    "sha256": "79f8e94e6c005981d6e736e1024afcbe680ec617eb61d01169bbd163889e72ec"
+  }
+}

@@ -1,7 +1,9 @@
 // The construct field's legend: one 20 px bar, the units, the unit that sets
 // the top of the ramp, and the dashed entry for units that are not loaded,
-// with how many and the commonest reason. It only draws a Legend
-// (lib/fabric/legend.ts); it computes nothing of its own.
+// with how many and the commonest reason. A binned index layer's key (class
+// and outline rows, lib/globe/indexStyles.ts legendOfIndex) is drawn the same
+// way, with the universe and n its committed breaks were cut from. It only
+// draws a Legend (lib/fabric/legend.ts); it computes nothing of its own.
 
 import type { Legend, LegendEntry } from "@/lib/fabric/legend";
 
@@ -57,6 +59,12 @@ export default function FieldLegend({ legend }: { legend: Legend }) {
         </div>
       )}
       {legend.max && <div className="text-muted-foreground">{`scaled to ${legend.max.name}, ${legend.max.display}`}</div>}
+      {legend.scale && (
+        <div className="text-muted-foreground" data-legend-scale>
+          <div>{`${legend.scale.universe} (n=${legend.scale.n})`}</div>
+          {legend.scale.caveat && <div>{legend.scale.caveat}</div>}
+        </div>
+      )}
       {rows.length > 0 && (
         <ul className="space-y-0.5">
           {rows.map((e) =>

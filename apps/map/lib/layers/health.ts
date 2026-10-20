@@ -1,9 +1,15 @@
 // Layer: community health (CDC PLACES, 2025 release). One measure at a time
 // (the picker under the layer's row, pref placesMeasure), as CDC publishes
 // it: age-adjusted prevalence by county below COUNTY_MAX_HEIGHT_M, on the
-// shared county outlines (lib/layers/areas.ts), binned by national
-// quintiles; crude prevalence by census tract below PLACES_TRACT_MAX_M, on
-// fabric's TIGER tract outlines, for at most six counties in view.
+// shared county outlines (lib/layers/areas.ts); crude prevalence by census
+// tract below PLACES_TRACT_MAX_M, on fabric's TIGER tract outlines, for at
+// most six counties in view.
+//
+// Both levels are binned on the same committed national county breaks
+// (lib/breaks, data/breaks/health/<MEASURE>.json: quintiles of the published
+// age-adjusted county values), never on the features in view, so a tract's
+// shade does not change when the camera moves. A tract's crude value against
+// age-adjusted county cut points is a stated approximation (tractCaveat).
 //
 // Model-based estimates, not counts of diagnosed people. A county or tract
 // CDC publishes no row for is drawn unfilled with a dashed grey edge, "not
@@ -16,6 +22,7 @@ import { proxy } from "./aircraft";
 import { COUNTY_MAX_HEIGHT_M, countyViewBbox, loadCountyOutlines, type CountyOutline } from "./areas";
 import { viewBbox } from "./water";
 import type { ConstructNode } from "@/lib/fabric/types";
+import { placesBreaks, tractCaveat } from "@/lib/breaks";
 import {
   binOf,
   isPlacesMeasure,
@@ -24,7 +31,6 @@ import {
   PLACES_MAX_COUNTIES,
   PLACES_MEASURES,
   PLACES_TRACT_MAX_M,
-  quintiles,
   valueText,
   type PlacesMeasure,
 } from "@/lib/civic/places";
@@ -75,8 +81,8 @@ function feature(id: string, name: string, geometry: Polygon | MultiPolygon, ext
           extra.bin == null
             ? "not published"
             : extra.breaks.length !== 4
-              ? "not ranked: fewer than five published values to make quintiles from"
-              : `quintile ${extra.bin + 1} of 5 (${extra.level === "county" ? "all US counties" : "the tracts in view"})`,
+              ? "not ranked: the measure has no four breaks to bin on"
+              : `quintile ${extra.bin + 1} of 5 (national county breaks, n=${placesBreaks(extra.measure).n})`,
         "what this is": "a model-based estimate, not a count of diagnosed people; not for ranking small differences",
       },
       extra,
@@ -113,10 +119,10 @@ export function esriRingsToMulti(rings: number[][][]): MultiPolygon {
   return { type: "MultiPolygon", coordinates: polys };
 }
 
-/** Tract rows joined by tract FIPS onto fabric's tract outlines, binned by the quintiles of the tracts loaded. */
+/** Tract rows joined by tract FIPS onto fabric's tract outlines, binned on the committed national county breaks for the measure (never on the rows loaded). */
 export function joinHealthTracts(tracts: readonly ConstructNode[], rows: readonly HealthRow[], measure: PlacesMeasure, asked: ReadonlySet<string>): { features: LayerFeature<Polygon | MultiPolygon>[]; breaks: number[]; notAsked: number } {
   const by = new Map(rows.map((r) => [r.fips, r]));
-  const breaks = quintiles(rows.map((r) => r.value));
+  const breaks = placesBreaks(measure).breaks;
   const features: LayerFeature<Polygon | MultiPolygon>[] = [];
   let notAsked = 0;
   for (const t of tracts) {
@@ -165,18 +171,19 @@ async function fetchHealth(ctx: FetchContext): Promise<FetchResult> {
       ...base,
       source: "CDC PLACES + Census TIGERweb tracts",
       collection: { type: "FeatureCollection", features: j.features as LayerFeature[] },
-      note: `${j.features.length} tracts · ${m.short}, crude prevalence, ${m.year} · ${j.breaks.length === 4 ? "quintiles of the tracts in view" : j.features.some((f) => (f.properties.extra as HealthExtra).bin != null) ? "fewer than five published here: one shade, not ranked" : "none published here"} · dashed grey: not published${j.notAsked ? ` · ${j.notAsked} tracts in counties beyond the ${PLACES_MAX_COUNTIES} asked` : ""} · model-based estimates, not counts`,
+      note: `${j.features.length} tracts · ${m.short}, crude prevalence, ${m.year} · ${tractCaveat(placesBreaks(measure))} · dashed grey: not published${j.notAsked ? ` · ${j.notAsked} tracts in counties beyond the ${PLACES_MAX_COUNTIES} asked` : ""} · model-based estimates, not counts`,
       meta: { count: j.features.length, level: "tract", measure, counties },
     };
   }
   const [areas, env] = await Promise.all([loadCountyOutlines(ctx), proxy<{ rows: HealthRow[] }>(`/api/civic?op=health&level=county&measure=${measure}`, ctx)]);
-  const breaks = Array.isArray((env as unknown as { breaks?: unknown }).breaks) ? ((env as unknown as { breaks: number[] }).breaks) : quintiles((env.data.rows ?? []).map((r) => r.value));
+  const national = placesBreaks(measure);
+  const breaks = national.breaks;
   const j = joinHealthCounties(areas.outlines, env.data.rows ?? [], measure, breaks);
   return {
     ...base,
     source: "CDC PLACES + Census TIGERweb",
     collection: { type: "FeatureCollection", features: j.features as LayerFeature[] },
-    note: `${j.published} ${j.published === 1 ? "county" : "counties"} · ${m.short}, age-adjusted prevalence, ${m.year} · national quintiles${j.notPublished ? ` · ${j.notPublished} not published (dashed grey)` : ""} · model-based estimates, not counts · descend below ${PLACES_TRACT_MAX_M / 1000} km for tracts`,
+    note: `${j.published} ${j.published === 1 ? "county" : "counties"} · ${m.short}, age-adjusted prevalence, ${m.year} · national quintiles (n=${national.n})${j.notPublished ? ` · ${j.notPublished} not published (dashed grey)` : ""} · model-based estimates, not counts · descend below ${PLACES_TRACT_MAX_M / 1000} km for tracts`,
     meta: { count: j.features.length, level: "county", measure, breaks, bbox: countyViewBbox(ctx) },
   };
 }

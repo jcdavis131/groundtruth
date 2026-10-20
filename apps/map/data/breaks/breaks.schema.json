@@ -1,0 +1,56 @@
+{
+  "title": "breaks/1: the cut points a styled layer bins against, with where they came from",
+  "description": "One file per layer and measure, written by scripts/export-breaks.mjs and checked by lib/breaks/breaks.test.ts with the subset evaluator in data/schema/validate.mjs. A value's bin is the number of breaks it is at or above (lib/civic/places.ts binOf). Two rules JSON Schema cannot say are tested beside it: breaks rise strictly, and source carries exactly one of sha256 (one fetched body) and pages (a paginated source, each page's sha256).",
+  "type": "object",
+  "required": ["schema", "layer", "measure", "period", "valueType", "method", "rule", "breaks", "n", "nNull", "universe", "source", "input"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "breaks/1" },
+    "layer": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "The layer or collection id: health (CDC PLACES counties) or a place export's collection id." },
+    "measure": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$", "description": "CDC's measure id, or the export's feature name." },
+    "period": { "type": "string", "minLength": 1, "description": "The data year or vintage the values describe, as the publisher gives it." },
+    "valueType": { "type": "string", "minLength": 1, "description": "What a value is, including age-adjusted or crude where the publisher says." },
+    "method": { "enum": ["quintile-nearest-rank", "zero-bin-quartile-nearest-rank"] },
+    "rule": { "type": "string", "minLength": 1, "description": "The exact formula, so a recomputation matches." },
+    "breaks": { "type": "array", "minItems": 1, "maxItems": 4, "items": { "type": "number" }, "description": "Cut points, strictly increasing." },
+    "n": { "type": "integer", "minimum": 1, "description": "Units of the universe with a value: the count the breaks were cut from." },
+    "nNull": { "type": "integer", "minimum": 0, "description": "Units of the universe with no value. They take no bin." },
+    "universe": { "type": "string", "minLength": 1, "description": "What the n units are. The legend prints it with n." },
+    "source": {
+      "type": "object",
+      "required": ["url", "retrievedAt", "lastModified"],
+      "additionalProperties": false,
+      "properties": {
+        "url": { "type": "string", "pattern": "^https://" },
+        "retrievedAt": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{3})?Z$" },
+        "lastModified": { "type": ["string", "null"], "description": "The publisher's own last-modified stamp for what was fetched; null when it gave none." },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of the one body fetched from url." },
+        "pages": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["url", "sha256", "lastModified", "rows"],
+            "additionalProperties": false,
+            "properties": {
+              "url": { "type": "string", "pattern": "^https://" },
+              "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+              "lastModified": { "type": ["string", "null"] },
+              "rows": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "input": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "additionalProperties": false,
+      "description": "The committed file the breaks were computed from, relative to apps/map, and its sha256.",
+      "properties": {
+        "path": { "type": "string", "pattern": "^[a-z][A-Za-z0-9_./-]*$" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

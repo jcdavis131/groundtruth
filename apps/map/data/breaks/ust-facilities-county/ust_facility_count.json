@@ -1,0 +1,41 @@
+{
+  "schema": "breaks/1",
+  "layer": "ust-facilities-county",
+  "measure": "ust_facility_count",
+  "period": "state records as of 2018-2021, tribal records to October 2025",
+  "valueType": "count of underground storage tank facilities",
+  "method": "zero-bin-quartile-nearest-rank",
+  "rule": "Bin 0 is the value 0. Sort the nonzero values ascending (m of them); breaks = the smallest nonzero value, then sorted[min(m-1, floor(q*m))] for q = 0.25, 0.5, 0.75, with a repeated cut point dropped so the breaks rise strictly. A value's bin is the number of breaks it is at or above.",
+  "breaks": [
+    1,
+    55,
+    111,
+    232
+  ],
+  "n": 3211,
+  "nNull": 11,
+  "universe": "US counties and county equivalents in the committed county table (50 states, DC and Puerto Rico; TIGERweb ACS2023) that EPA UST Finder has a county row for; a county with no row is null",
+  "source": {
+    "url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/UST_Finder_Feature_Layer_2eb/FeatureServer/2",
+    "retrievedAt": "2026-10-17T02:22:24.170Z",
+    "lastModified": "2026-02-13T15:22:21.030Z",
+    "pages": [
+      {
+        "url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/UST_Finder_Feature_Layer_2eb/FeatureServer/2/query?f=json&where=1%3D1&orderByFields=OBJECTID&resultOffset=0&resultRecordCount=2000&outFields=OBJECTID%2CNAME%2CState%2CFacility_Count%2COpen_USTs%2CClosed_USTs%2CTOS_USTs&returnGeometry=false",
+        "sha256": "9e71a887f88ae10c7876e5a6de862e7dc9d279dc4599fc3d6bfcb9f8c31b745e",
+        "lastModified": "Fri, 13 Feb 2026 15:22:21 GMT",
+        "rows": 2000
+      },
+      {
+        "url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/UST_Finder_Feature_Layer_2eb/FeatureServer/2/query?f=json&where=1%3D1&orderByFields=OBJECTID&resultOffset=2000&resultRecordCount=2000&outFields=OBJECTID%2CNAME%2CState%2CFacility_Count%2COpen_USTs%2CClosed_USTs%2CTOS_USTs&returnGeometry=false",
+        "sha256": "a79df88f10419e67ccd13ae7b43155d6745f809e1cfd3a7c42ba9099e6a8c175",
+        "lastModified": "Fri, 13 Feb 2026 15:22:21 GMT",
+        "rows": 1220
+      }
+    ]
+  },
+  "input": {
+    "path": "lib/catalog/data/ust-facilities-county.json",
+    "sha256": "420dea43bacd7c32dd58c390ac0b87fac271585d6c45bfbc169a36840dd8ad58"
+  }
+}

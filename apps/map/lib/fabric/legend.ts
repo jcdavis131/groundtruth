@@ -24,7 +24,18 @@ export interface LegendEntry {
   heat?: number;
 }
 
-export type LegendUnits = "count" | "per 1,000 km²" | "percentile against normal for today";
+export type LegendUnits = "count" | "per 1,000 km²" | "percentile against normal for today" | "classes";
+
+/**
+ * What a binned layer's classes were cut from, read from its committed breaks file
+ * (lib/breaks): the universe the cut points were computed over and how many units
+ * had a value, with the caveat on any unit binned against another level's cut points.
+ */
+export interface LegendScale {
+  universe: string;
+  n: number;
+  caveat: string | null;
+}
 
 export interface Legend {
   entries: LegendEntry[];
@@ -33,6 +44,8 @@ export interface Legend {
   /** Units with no value, and why, counted by the reason each carries. */
   notLoaded: { count: number; reasons: Record<string, number> };
   units: LegendUnits;
+  /** Set by a binned layer that has a breaks file; the construct field scales to its largest unit in view and names that unit in `max`. */
+  scale?: LegendScale;
 }
 
 /** The heats at which the ramp is labelled. */
