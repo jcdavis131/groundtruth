@@ -482,7 +482,7 @@ describe("outputSchema on the wire", () => {
     return client.callTool({ name: "world_context", arguments: { fips: "48453" } });
   }
   const item = { fact: "covered employment", value: null, sourceId: "bls-qcew", publisher: "U.S. Bureau of Labor Statistics", upstreamUrl: "https://data.bls.gov/cew/", retrievedAt: "2026-10-18T12:00:00.000Z", link: "http://t/api/screen", upstreamRecordUrl: "https://data.bls.gov/cew/data/api/2026/1/area/48453.csv" };
-  const reply = (it: Record<string, unknown>) => ({ schemaVersion: "world/2", place: { kind: "county" }, topics: { economy: { items: [it] } }, limits: { maxBytes: 40000, maxRecords: 3 }, note: "n" });
+  const reply = (it: Record<string, unknown>) => ({ schemaVersion: "world/2", place: { kind: "county" }, topics: { identity: { items: [] }, economy: { items: [it] } }, limits: { maxBytes: 40000, maxRecords: 3 }, note: "n" });
 
   it("a bad route reply (value null, no note) surfaces as an isError envelope with code internal_error, never as a plain reply", async () => {
     const r = await callBad(reply(item));

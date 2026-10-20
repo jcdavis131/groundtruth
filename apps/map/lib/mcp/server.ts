@@ -7,6 +7,7 @@
 
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
@@ -41,6 +42,8 @@ export interface ServerOptions {
   docsDir?: string;
   /** Path of the OpenAPI document served as gev://openapi.json. */
   openapiPath?: string;
+  /** The tools to register. Default: TOOLS. A test passes a changed copy to inject a bad reply. */
+  tools?: ToolDef[];
 }
 
 export interface ManifestEntry {
@@ -51,6 +54,8 @@ export interface ManifestEntry {
   inputSchema: Record<string, unknown>;
   /** True when the tool declares _meta["anthropic/alwaysLoad"] (Claude Code loads its description upfront). */
   alwaysLoad: boolean;
+  /** JSON Schema of a non-error reply's structuredContent, for the tools that publish one (world_context). */
+  outputSchema?: Record<string, unknown>;
 }
 
 /** Plain-JSON list of tools for docs, the GET handler and tests. */
@@ -61,6 +66,7 @@ export function toolManifest(tools: ToolDef[] = TOOLS): ManifestEntry[] {
     description: t.description,
     inputSchema: z.toJSONSchema(t.inputSchema) as Record<string, unknown>,
     alwaysLoad: t.meta?.["anthropic/alwaysLoad"] === true,
+    ...(t.outputSchema ? { outputSchema: t.outputSchema } : {}),
   }));
 }
 
@@ -244,6 +250,25 @@ function envelopeSdkErrors(server: McpServer): void {
 }
 
 /**
+ * Put each tool's JSON-Schema outputSchema into the tools/list reply. SDK 1.30's registerTool takes
+ * only zod schemas for outputSchema (it converts them to JSON Schema itself, and checks structuredContent
+ * with zod), so a hand-written JSON Schema cannot go through it. The server checks replies with the
+ * SDK's own JSON Schema validator in the tool handler instead (see createServer) and adds the schema to
+ * the list here. This wraps the SDK's tools/list handler by its method name in the protocol's handler
+ * map; a test pins it, and an SDK that moves the map throws here rather than silently publishing nothing.
+ */
+function publishOutputSchemas(server: McpServer, schemas: Map<string, Record<string, unknown>>): void {
+  if (!schemas.size) return;
+  const handlers = (server.server as unknown as { _requestHandlers?: Map<string, (request: unknown, extra: unknown) => Promise<unknown>> })._requestHandlers;
+  const inner = handlers?.get("tools/list");
+  if (!handlers || !inner) throw new Error("the MCP SDK no longer keeps its tools/list handler where server.ts expects; outputSchema cannot be published");
+  handlers.set("tools/list", async (request, extra) => {
+    const res = (await inner(request, extra)) as { tools: Array<{ name: string }> };
+    return { ...res, tools: res.tools.map((t) => (schemas.has(t.name) ? { ...t, outputSchema: schemas.get(t.name) } : t)) };
+  });
+}
+
+/**
  * Build a McpServer with every tool, prompt and resource registered. One per
  * request in the HTTP route (stateless), one per process on stdio.
  */
@@ -252,7 +277,14 @@ export function createServer(opts: ServerOptions): McpServer {
   const ctx: ToolCtx = { fetchJson: opts.fetchJson, ...(opts.countyPoint ? { countyPoint: opts.countyPoint } : {}) };
   envelopeSdkErrors(server);
 
-  for (const t of TOOLS) {
+  const tools = opts.tools ?? TOOLS;
+  const validator = new AjvJsonSchemaValidator();
+  const published = new Map<string, Record<string, unknown>>();
+  for (const t of tools) {
+    // A reply that fails the tool's published outputSchema is a bug in eye, not a result: it goes out as an
+    // internal_error envelope (isError: true), never as a plain reply. Error replies are not checked.
+    const check = t.outputSchema ? validator.getValidator(t.outputSchema as never) : null;
+    if (t.outputSchema) published.set(t.name, t.outputSchema);
     server.registerTool(
       t.name,
       {
@@ -264,13 +296,20 @@ export function createServer(opts: ServerOptions): McpServer {
       },
       async (args: unknown) => {
         try {
-          return toCallResult(await t.run(args, ctx));
+          const result = toCallResult(await t.run(args, ctx));
+          if (check && !result.isError) {
+            const v = check(result.structuredContent);
+            if (!v.valid) return errorResult(new Error(`${t.name} built a reply that fails its published outputSchema: ${(v.errorMessage ?? "").slice(0, 600)}`));
+          }
+          return result;
         } catch (err) {
           return errorResult(err);
         }
       },
     );
   }
+
+  publishOutputSchemas(server, published);
 
   for (const p of PROMPTS) {
     const argsSchema: Record<string, z.ZodString | z.ZodOptional<z.ZodString>> = {};

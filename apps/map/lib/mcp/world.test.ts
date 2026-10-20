@@ -1501,6 +1501,29 @@ describe("world_context: outputSchema", () => {
     expect(validateWorld(d).valid, "an item with no record URL must say so in its note").toBe(false);
   });
 
+  it("the typed error envelope validates too: the SDK client checks structuredContent even when isError is true", async () => {
+    const notFound = await run({ fips: "99999" }, { "/api/screen?kind=county": { data: { rows: [], total: 0 }, provenance: [] } }).reply;
+    expect(notFound.status).toBe(404);
+    expect(validateWorld(toCallResult(notFound).structuredContent).errorMessage).toBeUndefined();
+    const down: Record<string, Answer> = Object.fromEntries(BASE.map(([k]) => [k, { status: 503, body: { error: "down" } }]));
+    const nothing = await run({ lon: -97.74, lat: 30.27 }, down).reply;
+    expect(nothing.status).toBe(502);
+    expect(validateWorld(toCallResult(nothing).structuredContent).errorMessage).toBeUndefined();
+    // and a client that has listed the tools gets the envelope back as a result, not a thrown McpError
+    const f = router({ "/api/screen?kind=county": { data: { rows: [], total: 0 }, provenance: [] } });
+    const server = createServer({ fetchJson: f.fetchJson });
+    const [ct, st] = InMemoryTransport.createLinkedPair();
+    const client = new Client({ name: "test", version: "0.0.0" });
+    await server.connect(st);
+    await client.connect(ct);
+    await client.listTools();
+    const res = await client.callTool({ name: "world_context", arguments: { fips: "99999" } });
+    expect(res.isError).toBe(true);
+    expect(res.structuredContent).toMatchObject({ code: "not_found", retryable: false });
+    // an error envelope is not a licence: a reply with an error key but no envelope fields is invalid
+    expect(validateWorld({ error: "x" }).valid).toBe(false);
+  });
+
   it("a client that has listed the tools validates the reply against the published schema and still gets it", async () => {
     const f = router();
     const server = createServer({ fetchJson: f.fetchJson });
