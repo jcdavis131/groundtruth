@@ -56,7 +56,6 @@ const ITEM_SCHEMA = {
   properties: {
     fact: nonEmpty,
     value: { type: ["string", "number", "boolean", "null"] },
-    unit: { type: "string" },
     code: { type: "string" },
     period: { type: "string" },
     note: nonEmpty,
