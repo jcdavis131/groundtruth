@@ -15,6 +15,7 @@ interface Knobs {
   worldItems?: number;
   requireCookie?: string;
   requireBypass?: string;
+  frontRedirectTo?: string;
 }
 
 const WORLD = (items: number, status: string) => ({
@@ -33,6 +34,8 @@ function stub(k: Knobs = {}) {
     if (k.requireCookie && !String(req.headers.cookie ?? "").includes(k.requireCookie)) { res.writeHead(401).end("no"); return; }
     if (k.requireBypass && req.headers["x-vercel-protection-bypass"] !== k.requireBypass) { res.writeHead(401).end("no"); return; }
     if (req.method === "GET" && req.url === "/") {
+      // A protected preview with no credentials: Vercel answers 302 to its login page.
+      if (k.frontRedirectTo) { res.writeHead(302, { location: k.frontRedirectTo, "content-type": "text/html" }).end("<html><body><h1>Redirecting</h1></body></html>"); return; }
       res.writeHead(200, { "content-type": "text/html" }).end(k.h1 === false ? "<html><body><p>hi</p></body></html>" : "<html><body><h1><button>Embedding Atlas</button></h1></body></html>");
       return;
     }
@@ -56,6 +59,14 @@ function stub(k: Knobs = {}) {
   });
   return new Promise<{ origin: string; seen: http.IncomingHttpHeaders[]; close: () => Promise<void> }>((resolve) =>
     server.listen(0, "127.0.0.1", () => resolve({ origin: `http://127.0.0.1:${(server.address() as AddressInfo).port}`, seen, close: () => new Promise((r) => server.close(() => r())) })),
+  );
+}
+
+// A second server standing in for vercel.com/login: 200 and an <h1>.
+function loginPage() {
+  const server = http.createServer((_req, res) => { res.writeHead(200, { "content-type": "text/html" }).end("<html><body><h1>Log in to Vercel</h1></body></html>"); });
+  return new Promise<{ origin: string; close: () => Promise<void> }>((resolve) =>
+    server.listen(0, "127.0.0.1", () => resolve({ origin: `http://127.0.0.1:${(server.address() as AddressInfo).port}`, close: () => new Promise((r) => server.close(() => r())) })),
   );
 }
 
@@ -97,6 +108,17 @@ describe("live-check against a stubbed preview", () => {
   it("fails without the front-door h1 and without initialize instructions", async () => {
     expect((await run({ h1: false })).failures.join("\n")).toMatch(/h1/);
     expect((await run({ instructions: null })).failures.join("\n")).toMatch(/instructions/);
+  });
+
+  it("does not follow a redirect on /: a 302 to a page with an <h1> fails both front-door assertions and names the Location host", async () => {
+    const login = await loginPage();
+    closers.push(login.close);
+    const r = await run({ frontRedirectTo: login.origin + "/login" });
+    const front = r.assertions.filter((a: { name: string }) => a.name.startsWith("front door"));
+    expect(front.map((a: { ok: boolean }) => a.ok)).toEqual([false, false]);
+    expect(front[0].detail).toMatch(/302/);
+    expect(r.exitCode).toBe(1);
+    expect(r.failures.join("\n")).toContain(new URL(login.origin).host);
   });
 
   it("fails when the world_context shape moves from the baseline", async () => {
