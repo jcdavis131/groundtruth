@@ -1,0 +1,46 @@
+{
+  "description": "What each real record in join-records.jsonl must come to under data/pipeline/join.py against counties-subset.geojson, written before the join was run on the population. unplacedReasonStartsWith/EndsWith pin the manifest entry; disagreement is the manifest's joins[].disagreements entry. Only Brazoria, Matagorda and El Paso are loaded, but each case came out the same against the whole TIGER/Line 2025 file.",
+  "cases": [
+    {
+      "id": "nid:TX01760",
+      "kinds": ["county-line", "name-disagrees"],
+      "why": "NID files this dam under Brazoria; its point lies about a metre inside Matagorda on the Brazoria line. The polygon wins and the pair is listed.",
+      "expect": { "countyFips": "48321", "method": "point-in-polygon", "disagreement": { "id": "nid:TX01760", "pip": "48321", "name": "48039" } }
+    },
+    {
+      "id": "nrhp:pt:1417339",
+      "kinds": ["no-polygon-within-tolerance"],
+      "why": "NPS's point for this El Paso listing is about 0.01 degree outside every county polygon of Texas (the Rio Grande border). No polygon contains it, so the name join places it, and the method says so.",
+      "expect": { "countyFips": "48141", "method": "name-lookup" }
+    },
+    {
+      "id": "nid:TX06681",
+      "kinds": ["unplaced-with-reason"],
+      "why": "A dam NID files under Texas whose county string is 'Harmon, Oklahoma'. No Texas polygon contains the point and the name rule can't place the string, so the record is unplaced, with the reason in the manifest only.",
+      "expect": {
+        "countyFips": null,
+        "method": "name-lookup",
+        "unplacedReasonStartsWith": "no county polygon contains the point (TIGER/Line 2025); publisher county string \"Harmon, Oklahoma\"",
+        "unplacedReasonEndsWith": "name join: multi_county"
+      }
+    },
+    {
+      "id": "nid:TX01722",
+      "kinds": ["agree"],
+      "why": "A dam inside Brazoria whose county string says Brazoria.",
+      "expect": { "countyFips": "48039", "method": "point-in-polygon" }
+    },
+    {
+      "id": "nrhp:pt:1408423",
+      "kinds": ["agree"],
+      "why": "A listing inside Brazoria whose county string says Brazoria.",
+      "expect": { "countyFips": "48039", "method": "point-in-polygon" }
+    },
+    {
+      "id": "nces:480006513976",
+      "kinds": ["control-source-field"],
+      "why": "A school keeps NCES's own county code (source-field); its point is tested too, and agrees.",
+      "expect": { "countyFips": "48039", "method": "source-field" }
+    }
+  ]
+}

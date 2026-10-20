@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "manifest/1",
+  "snapshotId": "nrhp-listed.austin-east.2026-10-18",
+  "collection": "nrhp-listed",
+  "region": {
+    "id": "austin-east",
+    "name": "East Austin, Texas (small test box)",
+    "bbox": [
+      -97.72,
+      30.26,
+      -97.7,
+      30.28
+    ],
+    "rule": "point-in-bbox",
+    "definition": "Point records whose longitude and latitude fall inside the box, edges included; the publisher's count uses the same box."
+  },
+  "createdAt": "2026-10-18T22:35:04Z",
+  "builder": {
+    "name": "groundtruth data/schema/fixtures/build-fixtures.mjs",
+    "version": "0.1.0",
+    "gitSha": "c11bdaf33f8b8e9e4624ebf40c277f01f17d32e9",
+    "repo": "github.com/jcdavis131/groundtruth"
+  },
+  "recordSchemaVersion": "record/1",
+  "sources": [
+    {
+      "sourceId": "nps-nrhp",
+      "licence": "US federal (public domain); general reference only, not Section 106 compliance; NPS publishes only non-sensitive, non-restricted listings"
+    }
+  ],
+  "requests": [
+    {
+      "purpose": "records",
+      "url": "https://eye.jcamd.com/api/land?op=historic&bbox=-97.72,30.26,-97.7,30.28",
+      "status": 200,
+      "retrievedAt": "2026-10-18T22:35:04.344Z",
+      "bytes": 5001,
+      "sha256": "776cd0cf58f8e3381c21c81af3378a3a9f0260a5a0adf0f3529e8693d964e7f5"
+    },
+    {
+      "purpose": "count",
+      "url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?where=1%3D1&geometry=-97.72%2C30.26%2C-97.7%2C30.28&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&returnCountOnly=true&f=json",
+      "status": 200,
+      "retrievedAt": "2026-10-18T22:35:04.574Z",
+      "bytes": 11,
+      "sha256": "a5fb8eb97856970b61d9f466deb64f7659e835ee8ec5497003b78438fe888cad"
+    },
+    {
+      "purpose": "gap",
+      "url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?where=1%3D1&geometry=-97.72%2C30.26%2C-97.7%2C30.28&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID,STATUS&returnGeometry=false&f=json",
+      "status": 200,
+      "retrievedAt": "2026-10-18T22:35:04.638Z",
+      "bytes": 469,
+      "sha256": "9a727f467af8fe214bd35644decae74a95f84baebb90e6422398b0e5bdf8f195"
+    }
+  ],
+  "recordCount": 3,
+  "publisherCount": {
+    "value": 4,
+    "method": "ArcGIS REST query on the publisher's layer: where 1=1, the region box as an esriGeometryEnvelope (inSR 4326, intersects), returnCountOnly=true",
+    "url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?where=1%3D1&geometry=-97.72%2C30.26%2C-97.7%2C30.28&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&returnCountOnly=true&f=json",
+    "countedAt": "2026-10-18T22:35:04Z",
+    "gap": "1 publisher row(s) in the box are not records here: nrhp:pt:1420054 (STATUS Removed)."
+  },
+  "files": [
+    {
+      "path": "records.jsonl",
+      "format": "jsonl",
+      "sha256": "3b50d4729c715a95435274a927e105a12904dd0442f01a740822d580e8cb3be2",
+      "bytes": 5149,
+      "records": 3
+    }
+  ],
+  "withheldFields": [
+    {
+      "field": "property name (as NPS lists it)",
+      "why": "NPS's RESNAME can be a person's name (eye's nrhp-listed card: never searched or embedded); a training snapshot leaves it out"
+    }
+  ],
+  "embeddableFields": [
+    "resource type",
+    "national historic landmark",
+    "listed",
+    "city",
+    "county",
+    "state"
+  ],
+  "embeddableName": "never",
+  "joins": [
+    {
+      "field": "place.countyFips",
+      "boundary": {
+        "publisher": "U.S. Census Bureau",
+        "product": "TIGER/Line 2025 COUNTY",
+        "vintage": "2025",
+        "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUNTY/tl_2025_us_county.zip",
+        "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+        "retrievedAt": "2026-10-20T06:00:00.000Z"
+      },
+      "methods": {
+        "point-in-polygon": 0,
+        "source-field": 0,
+        "name-lookup": 0
+      },
+      "crossCheck": {
+        "source": "details.county (publisher's county name, joined by the countyJoin name rule)",
+        "agree": 0,
+        "disagree": 0,
+        "unchecked": 3
+      },
+      "placed": 0,
+      "unplaced": [
+        {
+          "id": "nrhp:pt:1475839",
+          "reason": "no county polygon contains the point (TIGER/Line 2025); publisher county string \"Travis\""
+        },
+        {
+          "id": "nrhp:pt:1475856",
+          "reason": "no county polygon contains the point (TIGER/Line 2025); publisher county string \"Travis\""
+        }
+      ],
+      "disagreements": []
+    }
+  ]
+}
