@@ -123,4 +123,16 @@ describe("helpers", () => {
     expect(diffShape(baseline, shapeOf(WORLD(2, "partial")))).toEqual([expect.stringContaining("identity")]);
     expect(diffShape(baseline, baseline)).toEqual([]);
   });
+  it("prints one run-id line: origin, ref and an ISO timestamp, before the summary", async () => {
+    const lines: string[] = [];
+    await run({}, { ref: "dpl_test123", log: (l: string) => lines.push(l) });
+    const id = lines.find((l) => l.startsWith("live-check-run: "));
+    expect(id).toMatch(/^live-check-run: http:\/\/127\.0\.0\.1:\d+ ref=dpl_test123 at=\d{4}-\d{2}-\d{2}T[\d:.]+Z$/);
+    expect(lines.findIndex((l) => l.startsWith("live-check-run: "))).toBeLessThan(lines.findIndex((l) => l.startsWith("live-check: ")));
+  });
+  it("says ref=none when no --ref is given", async () => {
+    const lines: string[] = [];
+    await run({}, { log: (l: string) => lines.push(l) });
+    expect(lines.find((l) => l.startsWith("live-check-run: "))).toMatch(/ ref=none at=/);
+  });
 });
