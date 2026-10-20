@@ -88,7 +88,8 @@ function opSearch(q: string, limit: number): OpResult {
 interface CompanyDossier {
   profile: CompanyProfile;
   sector: ReturnType<typeof sicToSector>;
-  hq: { countyFips: string | null; lon: number | null; lat: number | null; geo: string | null } | null;
+  /** geoReason says why a bundled company has no position; null when placed. */
+  hq: { countyFips: string | null; lon: number | null; lat: number | null; geo: string | null; geoReason: string | null } | null;
   filings: Filing[];
   facts: Record<ConceptKey, FactValue | null>;
   ratios: DerivedRatio[];
@@ -151,7 +152,7 @@ async function opCompany(cik: number, opts: { sub?: SubmissionsFile; predecessor
     const profile = parseProfile(sub);
     const filings = parseFilings(sub, 20);
     const local = findCompany({ cik });
-    const hq = local ? { countyFips: local.countyFips, lon: local.lon, lat: local.lat, geo: local.geo } : null;
+    const hq = local ? { countyFips: local.countyFips, lon: local.lon, lat: local.lat, geo: local.geo, geoReason: local.geoReason ?? null } : null;
     const latest = facts ? latestFacts(facts) : ({} as Record<ConceptKey, FactValue | null>);
     const ratios = facts ? derivedRatios(latest) : [];
     const geo = local && local.lon != null && local.lat != null ? ({ kind: "point", id: `cik:${cik}`, name: profile.name, lon: local.lon, lat: local.lat } as const) : undefined;
@@ -164,6 +165,7 @@ async function opCompany(cik: number, opts: { sub?: SubmissionsFile; predecessor
     const caveats: string[] = [];
     if (!facts) caveats.push("companyfacts did not answer; no XBRL facts in this response (small filers and funds often have none).");
     if (!hq) caveats.push("Company is not in the bundled snapshot, so no county or map position is attached.");
+    else if (hq.lon == null || hq.lat == null) caveats.push(`Not on the map: ${hq.geoReason ?? "the snapshot records no reason"}.`);
     const dossier: CompanyDossier = {
       profile,
       sector: sicToSector(profile.sic),

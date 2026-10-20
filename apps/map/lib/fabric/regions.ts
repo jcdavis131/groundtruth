@@ -53,6 +53,9 @@ const FED_CITY: Record<number, string> = {
   7: "Chicago", 8: "St. Louis", 9: "Minneapolis", 10: "Kansas City", 11: "Dallas", 12: "San Francisco",
 };
 
+/** USPS codes of the 50 states, DC and the five inhabited territories: the keys of the federal region table. */
+export const US_POSTAL_CODES: readonly string[] = Object.keys(FEDERAL_REGION);
+
 export interface RegionRef {
   number: number;
   /** Seat of the regional office. */

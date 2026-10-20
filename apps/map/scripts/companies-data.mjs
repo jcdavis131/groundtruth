@@ -34,7 +34,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { decodeBundle, encodeBundle, firstDifference } from "./companies-compact.mjs";
+import { decodeBundle, encodeBundle, firstDifference, US_STATE_CODES } from "./companies-compact.mjs";
 
 const CONTACT = process.env.CONTACT || "jcdavis131@gmail.com";
 // No URL token: SEC answers 403 to a UA carrying "(+https://...)" (measured 2026-09-30); see SEC_USER_AGENT in lib/companies/edgar.ts.
@@ -235,17 +235,30 @@ for (const l of listings) {
   const b = sub?.addresses?.business ?? {};
   const zip = normalizeZip(b.zipCode);
   const state = str(b.stateOrCountry);
-  const county = zip ? (zctaCounty.get(zip)?.county ?? null) : null;
+  // A five-digit postcode abroad (Munich 80333) is not a US ZIP: only a US state or territory address is looked up.
+  const inUS = !!state && US_STATE_CODES.has(state);
+  const county = zip && inUS ? (zctaCounty.get(zip)?.county ?? null) : null;
   let lon = null;
   let lat = null;
   let geo = null;
+  // Why a company is not placed, named from the step that stopped it; null when placed.
+  let geoReason = null;
+  const rawZip = str(b.zipCode);
+  if (!sub) geoReason = "SEC returned no submissions file";
+  else if (!rawZip) geoReason = "no business-address ZIP in SEC submissions";
+  else if (rawZip && !inUS) geoReason = `business address outside the US (postcode ${zip ?? rawZip})`;
+  else if (!zip) geoReason = `business-address ZIP ${JSON.stringify(rawZip)} in SEC submissions is not a US five-digit ZIP`;
+  else if (!county) geoReason = `ZIP ${zip} is not a 2020 Census ZCTA`;
   if (zip && county) {
     const pt = await centroid(zip);
     if (pt) {
       [lon, lat] = pt;
       geo = "zcta-centroid";
       placed++;
-    } else noFeature++;
+    } else {
+      noFeature++;
+      geoReason = `TIGERweb returned no centroid for ZCTA ${zip}`;
+    }
   }
   const rec = {
     cik: l.cik,
@@ -263,6 +276,7 @@ for (const l of listings) {
     geo,
     fiscalYearEnd: str(sub?.fiscalYearEnd),
     stateOfIncorporation: str(sub?.stateOfIncorporation),
+    geoReason,
     facts: factsFor(l.cik),
     pulled: new Date().toISOString().slice(0, 10),
   };
@@ -278,7 +292,7 @@ if (placed === 0 && noFeature > 0) throw new Error(`TIGERweb returned no feature
 
 const companies = [...done.values()].sort((a, b) => a.cik - b.cik);
 const bundle = {
-  source: "SEC EDGAR company_tickers_exchange.json + submissions API (business address, SIC) + XBRL frames API; US Census Bureau 2020 ZCTA-to-county relationship file and TIGERweb ZCTA centroids",
+  source: "SEC EDGAR company_tickers_exchange.json + submissions API (business address, SIC) + XBRL frames API; US Census Bureau 2020 ZCTA-to-county relationship file and TIGERweb ZCTA centroids; placement is US-only (business-address state a US state or territory code)",
   pulled: new Date().toISOString().slice(0, 10),
   counts: {
     companies: companies.length,
