@@ -52,9 +52,17 @@ export async function upstream(
  * Per-upstream politeness gate: at most one request every `minIntervalMs`,
  * callers queue behind each other. After a 429 (or any status in
  * `backoffOn`, e.g. a 503 from a county server) the gate closes for
- * `backoffMs` and callers fail fast with the last error instead of piling on.
+ * `backoffMs` and callers fail fast with the last error instead of piling on,
+ * the ones already queued behind the 429 included (they re-check when their
+ * turn comes). The gate is keyed by name and kept per server process: it does
+ * not cap a host that several names talk to, or several instances.
  */
 const gates = new Map<string, { next: number; blockedUntil: number; lastError?: Error }>();
+
+/** What a caller turned away by a closed gate gets: the error that closed it, or a 429 saying so. */
+function closedError(upstreamName: string, g: { lastError?: Error }): Error {
+  return g.lastError ?? new UpstreamError(upstreamName, 429, `${upstreamName} cooling down after 429`);
+}
 
 export async function polite<T>(
   upstreamName: string,
@@ -69,13 +77,15 @@ export async function polite<T>(
     gates.set(upstreamName, g);
   }
   const now = Date.now();
-  if (g.blockedUntil > now) {
-    throw g.lastError ?? new UpstreamError(upstreamName, 429, `${upstreamName} cooling down after 429`);
-  }
+  if (g.blockedUntil > now) throw closedError(upstreamName, g);
   const slot = Math.max(now, g.next);
   g.next = slot + minIntervalMs;
   const wait = slot - now;
-  if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+  if (wait > 0) {
+    await new Promise((r) => setTimeout(r, wait));
+    // A publisher that answered 429 while this caller queued has closed the gate for everyone behind it.
+    if (g.blockedUntil > Date.now()) throw closedError(upstreamName, g);
+  }
   try {
     return await fn();
   } catch (err) {

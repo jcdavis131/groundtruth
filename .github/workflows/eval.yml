@@ -1,4 +1,5 @@
-# The v4 eval kit's own tests (eval/): split, lineage, the scorer and the gold builder. Plain Node and the Python standard
+# The v4 eval kit's own tests (eval/): split, lineage, the scorer and the gold builder, then the prereg gate (every
+# RESULT.md in the repo, checked against the recorded #15 comments). Plain Node and the Python standard
 # library, no install. Each step runs in a network namespace with no interface, so a test that reaches for
 # the network fails instead of passing quietly.
 name: eval
@@ -34,3 +35,12 @@ jobs:
           offline node eval/lineage.test.mjs
           offline node eval/gold.test.mjs
           offline python -I eval/test_score.py
+      # Every RESULT.md in the repo names its preregistration hash, and that hash's #15 comment (recorded in
+      # prereg-comments.json beside it, since CI is offline) predates the run's first logged plan line. The
+      # fixtures are skipped by name; their own test asserts the late one fails. See eval/prereg-gate.mjs.
+      - name: prereg gate, with no network
+        run: |
+          set -e
+          offline() { sudo unshare --net -- env "PATH=$PATH" "$@"; }
+          offline node eval/prereg-gate.test.mjs
+          offline node eval/prereg-gate.mjs --skip eval/fixtures
