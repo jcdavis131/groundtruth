@@ -23,7 +23,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))  # python -I leaves the
 import publish  # noqa: E402
 
 SID = "nid-dams.testland.2026-10-19"
-EXTRA = "companies/companies.full.2026-10-20.json"
+EXTRA = "companies/companies.full.2026-10-20.us-placed.json"
+
+PLACED = {"cik": 1, "name": "A CORP", "state": "TX", "zip": "78701", "countyFips": "48453", "lon": -97.74, "lat": 30.27, "geo": "zcta-centroid", "geoReason": None}
+UNPLACED = {"cik": 2, "name": "B SA", "state": "2M", "zip": "28660", "countyFips": None, "lon": None, "lat": None, "geo": None, "geoReason": "business address outside the US (postcode 28660)"}
 
 
 def sha(b: bytes) -> str:
@@ -51,16 +54,21 @@ class PublishTest(unittest.TestCase):
         self.mp = self.manifests / "nid-dams" / f"{SID}.json"
         self.mp.parent.mkdir(parents=True)
         self.write_manifest()
-        self.companies = b'{"source":"test","companies":[]}\n'
         cp = self.root / EXTRA
         cp.parent.mkdir(parents=True)
-        cp.write_bytes(self.companies)
         self.sidecar = cp.with_name(cp.name + ".sha256")
-        self.sidecar.write_text(sha(self.companies) + "\n", "utf8")
+        self.bundle = {"source": "test", "pulled": "2026-10-20", "counts": {"companies": 2, "geocoded": 1, "withFacts": 0}, "companies": [dict(PLACED), dict(UNPLACED)]}
+        self.write_companies()
         self.addCleanup(shutil.rmtree, self.tmp, True)
 
     def write_manifest(self):
         self.mp.write_text(json.dumps(self.manifest, indent=1), "utf8")
+
+    def write_companies(self):
+        """Writes the companies bundle and a sidecar that matches it, so only the records can be at fault."""
+        self.companies = (json.dumps(self.bundle) + "\n").encode("utf8")
+        (self.root / EXTRA).write_bytes(self.companies)
+        self.sidecar.write_text(sha(self.companies) + " *" + Path(EXTRA).name + "\n", "utf8")
 
     def run_main(self, *extra: str) -> tuple[int, str, str]:
         out, err = io.StringIO(), io.StringIO()
@@ -104,6 +112,41 @@ class PublishTest(unittest.TestCase):
         code, _, err = self.run_main()
         self.assertEqual(code, 1)
         self.assertIn(f"{EXTRA}: sha256", err)
+
+    def test_placed_company_with_a_non_us_state_fails(self):
+        self.bundle["companies"][1].update(lon=-78.9, lat=35.8, countyFips="37183", geo="zcta-centroid", geoReason=None)  # the #60 defect
+        self.bundle["counts"]["geocoded"] = 2
+        self.write_companies()
+        code, out, err = self.run_main()
+        self.assertEqual(code, 1)
+        self.assertIn(f"{EXTRA}: cik 2 is placed with business-address state '2M'", err)
+        self.assertIn("FAIL", out)
+
+    def test_unplaced_company_without_a_geo_reason_fails(self):
+        for bad in (None, ""):
+            self.bundle["companies"][1]["geoReason"] = bad
+            self.write_companies()
+            code, _, err = self.run_main()
+            self.assertEqual(code, 1, bad)
+            self.assertIn("cik 2 is unplaced without a geoReason", err)
+        del self.bundle["companies"][1]["geoReason"]
+        self.write_companies()
+        code, _, err = self.run_main()
+        self.assertEqual(code, 1)
+        self.assertIn("cik 2 is unplaced without a geoReason", err)
+
+    def test_header_count_that_disagrees_with_the_records_fails(self):
+        self.bundle["counts"]["geocoded"] = 2
+        self.write_companies()
+        code, _, err = self.run_main()
+        self.assertEqual(code, 1)
+        self.assertIn("1 companies have a point, counts.geocoded says 2", err)
+
+    def test_us_state_codes_cover_states_dc_pr_and_the_four_territories(self):
+        codes = publish.us_state_codes()
+        self.assertTrue({"TX", "AL", "DC", "PR", "GU", "VI", "AS", "MP"} <= codes)
+        self.assertNotIn("2M", codes)
+        self.assertNotIn(None, codes)
 
     def test_sidecar_that_is_not_a_digest_is_refused(self):
         self.sidecar.write_text("not a hash\n", "utf8")

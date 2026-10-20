@@ -7,8 +7,10 @@ The file list is built from the committed manifests, data/manifests/<collection>
 manifest, every file in its files[] is read from <data-root>/snapshots/<snapshot-id>/ and its byte count and sha256
 are compared with the manifest's entry; the committed manifest itself goes along as snapshots/<snapshot-id>/manifest.json
 (the committed copy is the one with embeddableFields; the copy next to the files in the data root is not). The
-companies full copy, <data-root>/companies/companies.full.<date>.json, is checked against its .sha256 sidecar, and
-the sidecar goes along too. data/hf/README.md is the dataset card.
+companies bundle, <data-root>/companies/companies.full.<date>.us-placed.json (the raw pull after the US-only
+placement rule, written by apps/map/scripts/companies-compact.mjs --write-full), is checked against its .sha256
+sidecar and its records are checked too: no placed company with a non-US business-address state, a geoReason on
+every unplaced one. The sidecar goes along. data/hf/README.md is the dataset card.
 
 A missing file or a mismatch is printed, the exit code is 1, and nothing is uploaded. huggingface_hub is imported
 only under --upload, so the dry run needs nothing beyond the standard library. The token is whatever
@@ -36,8 +38,14 @@ DEFAULT_README = HERE / "README.md"
 DEFAULT_REPO_ID = "jcdavis210/groundtruth-snapshots"
 
 # Files that no manifest lists, relative to the data root. Each must have a sidecar <path>.sha256 whose first
-# word is the hex digest. A new companies pull adds its line here.
-EXTRA_FILES = ["companies/companies.full.2026-10-20.json"]
+# word is the hex digest, and each is a full-format companies bundle after the US-only placement rule (written
+# by apps/map/scripts/companies-compact.mjs --write-full from the raw pull, which stays off the dataset). A new
+# companies pull adds its line here. check_companies refuses a bundle that still places a non-US filer or
+# leaves an unplaced company without a geoReason.
+EXTRA_FILES = ["companies/companies.full.2026-10-20.us-placed.json"]
+STATES_JSON = REPO / "apps" / "map" / "lib" / "places" / "data" / "states.json"
+# The four inhabited territories states.json leaves out; same set as US_STATE_CODES in companies-compact.mjs.
+TERRITORIES = {"GU", "VI", "AS", "MP"}
 
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
@@ -55,6 +63,7 @@ class Item:
     expected_sha: str | None = None
     expected_bytes: int | None = None
     against: str = "nothing"
+    content: str | None = None  # "companies-bundle": the file's records are checked too (check_companies)
     sha256: str | None = None
     bytes: int | None = None
     problems: list[str] = field(default_factory=list)
@@ -90,6 +99,39 @@ def read_sidecar(side: Path) -> str:
     if not words or not HEX64.match(words[0]):
         raise PublishRefused(f"{side} does not start with a 64-character lowercase hex sha256")
     return words[0]
+
+
+def us_state_codes(states_json: Path = STATES_JSON) -> set[str]:
+    """USPS codes that mean a US business address: the rows of states.json plus the four territories it leaves out."""
+    rows = json.loads(Path(states_json).read_text("utf8"))["rows"]
+    return {r["usps"] for r in rows} | TERRITORIES
+
+
+def check_companies(path: Path, codes: set[str] | None = None, limit: int = 5) -> list[str]:
+    """Problems in a full-format companies bundle: a placed company whose business-address state is not a US
+    state or territory code (the #60 defect: a foreign postcode matching a US ZCTA), an unplaced company without a
+    geoReason, or a header count that doesn't match. At most `limit` are named, with a count of the rest."""
+    codes = codes if codes is not None else us_state_codes()
+    try:
+        bundle = json.loads(path.read_text("utf8"))
+        companies = bundle["companies"]
+        geocoded = bundle["counts"]["geocoded"]
+    except (ValueError, KeyError, TypeError) as e:
+        return [f"not a companies bundle with counts.geocoded and companies[]: {type(e).__name__}: {e}"]
+    problems: list[str] = []
+    placed = 0
+    for c in companies:
+        if c.get("lon") is not None and c.get("lat") is not None:
+            placed += 1
+            if c.get("state") not in codes:
+                problems.append(f"cik {c.get('cik')} is placed with business-address state {c.get('state')!r}, not a US state or territory")
+        elif not isinstance(c.get("geoReason"), str) or not c.get("geoReason"):
+            problems.append(f"cik {c.get('cik')} is unplaced without a geoReason")
+    if placed != geocoded:
+        problems.append(f"{placed} companies have a point, counts.geocoded says {geocoded}")
+    if len(problems) > limit:
+        problems = problems[:limit] + [f"and {len(problems) - limit} more"]
+    return problems
 
 
 def plan(
@@ -131,7 +173,7 @@ def plan(
         side = local.with_name(local.name + ".sha256")
         if not side.is_file():
             raise PublishRefused(f"{side} is missing: every extra file needs its .sha256 sidecar")
-        items.append(Item(rel, local, read_sidecar(side), None, f"sidecar {rel}.sha256"))
+        items.append(Item(rel, local, read_sidecar(side), None, f"sidecar {rel}.sha256", content="companies-bundle"))
         items.append(Item(rel + ".sha256", side, against="sidecar"))
     items.append(Item("README.md", Path(readme), against="dataset card"))
     return items
@@ -148,6 +190,8 @@ def check(items: list[Item]) -> list[Item]:
             it.problems.append(f"{it.bytes} bytes, the {it.against} says {it.expected_bytes}")
         if it.expected_sha is not None and it.sha256 != it.expected_sha:
             it.problems.append(f"sha256 {it.sha256[:12]}, the {it.against} says {it.expected_sha[:12]}")
+        if it.content == "companies-bundle":
+            it.problems.extend(check_companies(it.local))
     return items
 
 

@@ -18,6 +18,9 @@
 // keep the two in step.
 //
 //   node scripts/companies-compact.mjs <full.json> [out.json]   pack a full-format bundle and check it round-trips
+//   node scripts/companies-compact.mjs <full.json> --write-full <us-placed.json>
+//                                       also write the full-format bundle after US-only placement and place
+//                                       reasons, one line, as the dataset copy (data/hf/publish.py uploads it)
 //
 // Before packing, the CLI applies usOnlyPlacement (below) and records that in
 // the bundle's source line; the round trip is checked against the result.
@@ -190,8 +193,12 @@ export function firstDifference(a, b, at = "$") {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(process.argv[1])) {
-  const [inPath, outPath] = process.argv.slice(2);
-  if (!inPath) throw new Error("usage: node scripts/companies-compact.mjs <full.json> [out.json]");
+  const argv = process.argv.slice(2);
+  const wf = argv.indexOf("--write-full");
+  const fullOut = wf >= 0 ? argv[wf + 1] : undefined;
+  if (wf >= 0 && !fullOut) throw new Error("--write-full needs a path");
+  const [inPath, outPath] = wf < 0 ? argv : argv.filter((a, i) => i !== wf && i !== wf + 1);
+  if (!inPath) throw new Error("usage: node scripts/companies-compact.mjs <full.json> [out.json] [--write-full <us-placed.json>]");
   const pulled = JSON.parse(fs.readFileSync(inPath, "utf8"));
   const us = usOnlyPlacement(pulled);
   console.log(`US-only placement: ${us.changed} placed filers with a non-US business address unplaced (geocoded ${pulled.counts.geocoded} -> ${us.bundle.counts.geocoded})`);
@@ -209,6 +216,12 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(proces
   if (outPath) {
     fs.writeFileSync(outPath, text);
     console.log(`wrote ${outPath}`);
+  }
+  if (fullOut) {
+    // The same records the compact file decodes to, in full format, one line: the copy that leaves the repo.
+    const fullText = JSON.stringify(full) + "\n";
+    fs.writeFileSync(fullOut, fullText);
+    console.log(`wrote ${fullOut} (${Buffer.byteLength(fullText)} bytes, geocoded ${full.counts.geocoded})`);
   }
 }
 
