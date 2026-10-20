@@ -12,6 +12,9 @@ import npl from "./data/npl-county.json";
 import ustReleases from "./data/ust-releases-county.json";
 import ustFacilities from "./data/ust-facilities-county.json";
 import fuds from "./data/fuds-county.json";
+import { source } from "@/lib/provenance/sources";
+import type { SourceId } from "@/lib/provenance/sources";
+import type { Provenance } from "@/lib/provenance/types";
 import { UST_FACILITY_NULLS, UST_RELEASE_NULLS } from "@/lib/permits/ust";
 
 export const PLACE_EXPORTS = ["npl-status", "ust-releases-county", "ust-facilities-county", "fuds-properties"] as const;
@@ -43,11 +46,53 @@ const FUDS_CAVEATS = [
   "Placed by USACE's county string; the point (in a TIGERweb ACS2023 500K outline) places a property when the string is blank, names no county, or could name more than one (a county-or-independent-city name such as ST LOUIS, FAIRFAX, RICHMOND or BALTIMORE, or a list) and the point is in one of them; otherwise the point is a check (meta.pointDisagreements, kept). The file carries property numbers, never coordinates, owners or names.",
 ];
 
-const EXPORTS: Record<PlaceExportId, { data: unknown; caveats: string[] }> = {
-  "npl-status": { data: withForm("npl-status", npl), caveats: NPL_CAVEATS },
-  "ust-releases-county": { data: withForm("ust-releases-county", ustReleases), caveats: [...UST_CAVEATS, UST_RELEASE_NULLS] },
-  "ust-facilities-county": { data: withForm("ust-facilities-county", ustFacilities), caveats: [...UST_CAVEATS, UST_FACILITY_NULLS] },
-  "fuds-properties": { data: withForm("fuds-properties", fuds), caveats: FUDS_CAVEATS },
+const PUBLISHER: Record<PlaceExportId, SourceId> = {
+  "npl-status": "epa-npl-status",
+  "ust-releases-county": "epa-ust-finder",
+  "ust-facilities-county": "epa-ust-finder",
+  "fuds-properties": "usace-fuds",
+};
+
+const TIGER_COUNTIES = "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2023/State_County/MapServer/13";
+
+interface ExportMeta {
+  source: { name: string; layer: string; fetchedAt: string; serviceDataLastEdit?: string };
+  counties: { file: string; pulled: string };
+}
+
+/**
+ * Provenance read from the export file's own meta: the publisher's layer as fetched (fetchedAt, and the service's
+ * own last-edit time as releasedAt when the file has one) and the county table the export joins to (its pull date).
+ * Nothing is filled in: a file without a fetch time throws at load rather than serving a made-up one.
+ */
+function provenanceOf(id: PlaceExportId, d: { meta: object }): Provenance[] {
+  const m = d.meta as ExportMeta;
+  if (!m.source?.layer || !m.source.fetchedAt) throw new Error(`${id}: meta.source needs layer and fetchedAt`);
+  if (!m.counties?.pulled) throw new Error(`${id}: meta.counties needs pulled`);
+  return [
+    {
+      source: source(PUBLISHER[id]),
+      upstreamUrl: m.source.layer,
+      retrievedAt: m.source.fetchedAt,
+      ...(m.source.serviceDataLastEdit ? { releasedAt: m.source.serviceDataLastEdit } : {}),
+      kind: "estimate",
+      method: `county aggregate computed by the export script from ${m.source.name}`,
+    },
+    {
+      source: source("census-tigerweb"),
+      upstreamUrl: TIGER_COUNTIES,
+      retrievedAt: m.counties.pulled,
+      kind: "published",
+      method: "county names and FIPS the export joins to (lib/places/data/counties.json, TIGERweb ACS2023)",
+    },
+  ];
+}
+
+const EXPORTS: Record<PlaceExportId, { data: unknown; caveats: string[]; provenance: Provenance[] }> = {
+  "npl-status": { data: withForm("npl-status", npl), provenance: provenanceOf("npl-status", npl), caveats: NPL_CAVEATS },
+  "ust-releases-county": { data: withForm("ust-releases-county", ustReleases), provenance: provenanceOf("ust-releases-county", ustReleases), caveats: [...UST_CAVEATS, UST_RELEASE_NULLS] },
+  "ust-facilities-county": { data: withForm("ust-facilities-county", ustFacilities), provenance: provenanceOf("ust-facilities-county", ustFacilities), caveats: [...UST_CAVEATS, UST_FACILITY_NULLS] },
+  "fuds-properties": { data: withForm("fuds-properties", fuds), provenance: provenanceOf("fuds-properties", fuds), caveats: FUDS_CAVEATS },
 };
 
 /**
@@ -60,6 +105,6 @@ function withForm(id: PlaceExportId, d: { meta: object }): { meta: object } {
 }
 
 /** One export's payload and caveats, or null for an unknown collection. */
-export function placeExport(collection: string): { data: unknown; caveats: string[] } | null {
+export function placeExport(collection: string): { data: unknown; caveats: string[]; provenance: Provenance[] } | null {
   return (PLACE_EXPORTS as readonly string[]).includes(collection) ? EXPORTS[collection as PlaceExportId] : null;
 }
