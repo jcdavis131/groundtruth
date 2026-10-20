@@ -29,6 +29,16 @@ import { fileURLToPath } from "node:url";
 
 export const COMPACT_FORMAT = "companies/2-compact";
 
+// USPS codes that mean a US business address: the 50 states, DC and PR from
+// lib/places/data/states.json, plus the four other inhabited territories that
+// table leaves out. Anything else in `state` (null, or an EDGAR country code
+// such as 2M for Germany) is an address outside the US. bundle.test.ts checks
+// this set against US_POSTAL_CODES in lib/fabric/regions.ts.
+export const US_STATE_CODES = new Set([
+  ...JSON.parse(fs.readFileSync(new URL("../lib/places/data/states.json", import.meta.url), "utf8")).rows.map((r) => r.usps),
+  "GU", "VI", "AS", "MP",
+]);
+
 export const COLUMNS = ["cik", "name", "ticker", "exchange", "sic", "sicDescription", "state", "city", "zip", "countyFips", "lon", "lat", "geo", "fiscalYearEnd", "stateOfIncorporation", "geoReason"];
 
 // Same order as lib/companies/facts.ts CONCEPTS.
@@ -46,6 +56,7 @@ const RECORD_KEYS = new Set([...COLUMNS, "facts", "pulled"]);
 export function placeReason(c) {
   if (c.lon != null && c.lat != null) return null;
   if (c.zip == null) return "no US five-digit business-address ZIP in SEC submissions";
+  if (c.state == null || !US_STATE_CODES.has(c.state)) return `business address outside the US (postcode ${c.zip})`;
   if (c.countyFips == null) return `ZIP ${c.zip} is not a 2020 Census ZCTA`;
   return `TIGERweb returned no centroid for ZCTA ${c.zip}`;
 }
@@ -163,6 +174,8 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === fs.realpathSync(proces
   console.log("round trip: decode(compact) deep-equals the full file, every company and fact");
   const reasons = {};
   for (const c of full.companies) if (c.geoReason) reasons[c.geoReason.replace(/\d{5}/, "<zip>")] = (reasons[c.geoReason.replace(/\d{5}/, "<zip>")] ?? 0) + 1;
+  const abroad = full.companies.filter((c) => c.lon != null && (c.state == null || !US_STATE_CODES.has(c.state))).length;
+  if (abroad) console.log(`warning: ${abroad} placed companies have a business address outside the US (left as pulled)`);
   console.log(`unplaced by reason: ${JSON.stringify(reasons)}`);
   if (outPath) {
     fs.writeFileSync(outPath, text);

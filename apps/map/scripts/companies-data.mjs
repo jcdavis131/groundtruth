@@ -34,7 +34,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { decodeBundle, encodeBundle, firstDifference } from "./companies-compact.mjs";
+import { decodeBundle, encodeBundle, firstDifference, US_STATE_CODES } from "./companies-compact.mjs";
 
 const CONTACT = process.env.CONTACT || "jcdavis131@gmail.com";
 // No URL token: SEC answers 403 to a UA carrying "(+https://...)" (measured 2026-09-30); see SEC_USER_AGENT in lib/companies/edgar.ts.
@@ -235,7 +235,9 @@ for (const l of listings) {
   const b = sub?.addresses?.business ?? {};
   const zip = normalizeZip(b.zipCode);
   const state = str(b.stateOrCountry);
-  const county = zip ? (zctaCounty.get(zip)?.county ?? null) : null;
+  // A five-digit postcode abroad (Munich 80333) is not a US ZIP: only a US state or territory address is looked up.
+  const inUS = !!state && US_STATE_CODES.has(state);
+  const county = zip && inUS ? (zctaCounty.get(zip)?.county ?? null) : null;
   let lon = null;
   let lat = null;
   let geo = null;
@@ -244,6 +246,7 @@ for (const l of listings) {
   const rawZip = str(b.zipCode);
   if (!sub) geoReason = "SEC returned no submissions file";
   else if (!rawZip) geoReason = "no business-address ZIP in SEC submissions";
+  else if (rawZip && !inUS) geoReason = `business address outside the US (postcode ${zip ?? rawZip})`;
   else if (!zip) geoReason = `business-address ZIP ${JSON.stringify(rawZip)} in SEC submissions is not a US five-digit ZIP`;
   else if (!county) geoReason = `ZIP ${zip} is not a 2020 Census ZCTA`;
   if (zip && county) {

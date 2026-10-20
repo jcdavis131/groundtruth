@@ -6,7 +6,8 @@ import { describe, expect, it } from "vitest";
 import { COMPACT_FORMAT, decodeBundle } from "./bundle";
 import { BUNDLE } from "./features";
 import type { CompanyBundle, CompanyRecord, ConceptKey } from "./types";
-import { encodeBundle, placeReason, withPlaceReasons } from "@/scripts/companies-compact.mjs";
+import { encodeBundle, placeReason, US_STATE_CODES, withPlaceReasons } from "@/scripts/companies-compact.mjs";
+import { US_POSTAL_CODES } from "@/lib/fabric/regions";
 import fixtureJson from "./fixtures/companies.fixture.json";
 
 const KEYS: ConceptKey[] = ["Revenues", "NetIncomeLoss", "OperatingIncomeLoss", "Assets", "StockholdersEquity", "CashAndCashEquivalentsAtCarryingValue", "LongTermDebt", "EntityNumberOfEmployees"];
@@ -90,6 +91,19 @@ describe("place reasons", () => {
     expect(placeReason({ ...NO_FACTS, zip: "78701", countyFips: "48453" })).toBe("TIGERweb returned no centroid for ZCTA 78701");
   });
 
+  it("calls a foreign five-digit postcode an address outside the US, not a missing ZCTA", () => {
+    // Siemens Energy AG/ADR as the 2026-10-20 pull has it: Munich, EDGAR country code 2M (Germany).
+    const munich = { ...NO_FACTS, name: "Siemens Energy AG/ADR", state: "2M", city: "MUNICH", zip: "80333" };
+    expect(placeReason(munich)).toBe("business address outside the US (postcode 80333)");
+    expect(placeReason({ ...munich, state: null })).toBe("business address outside the US (postcode 80333)");
+    expect(placeReason({ ...munich, state: "GU", zip: "96910" })).toBe("ZIP 96910 is not a 2020 Census ZCTA");
+  });
+
+  it("knows the same US states and territories as the federal region table", () => {
+    expect([...US_STATE_CODES].sort()).toEqual([...US_POSTAL_CODES].sort());
+    expect(US_STATE_CODES.size).toBe(56);
+  });
+
   it("fills a missing geoReason in column order and leaves a present one alone", () => {
     const { geoReason: _drop, ...bare } = NO_FACTS;
     void _drop;
@@ -113,10 +127,15 @@ describe("committed snapshot", () => {
       const k = c.geoReason!.replace(/\d{5}/, "<zip>");
       byReason.set(k, (byReason.get(k) ?? 0) + 1);
     }
-    expect(Object.fromEntries(byReason)).toEqual({ "no US five-digit business-address ZIP in SEC submissions": 1999, "ZIP <zip> is not a 2020 Census ZCTA": 464 });
+    expect(Object.fromEntries(byReason)).toEqual({
+      "no US five-digit business-address ZIP in SEC submissions": 1999,
+      "ZIP <zip> is not a 2020 Census ZCTA": 193,
+      "business address outside the US (postcode <zip>)": 271,
+    });
     expect([...byReason.values()].reduce((a, b) => a + b, 0)).toBe(2463);
     expect(BUNDLE.counts.companies - BUNDLE.counts.geocoded).toBe(2463);
     expect(BUNDLE.companies.find((c) => c.ticker === "AXP")?.geoReason).toBe("ZIP 10285 is not a 2020 Census ZCTA");
+    expect(BUNDLE.companies.find((c) => c.name === "Siemens Energy AG/ADR")?.geoReason).toBe("business address outside the US (postcode 80333)");
   });
 
   it("is the dated EDGAR pull, not the fixture, so the layer never marks it missing", () => {
