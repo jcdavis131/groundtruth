@@ -27,7 +27,8 @@
 //   node scripts/rule-mutate.mjs --render <results.tsv> <out.md> <out.json>   the kill table
 //
 // Environment: RULE_MUT_ROOT (the repo root, for tests on a copy), RULE_MUT_STATE (where saved bytes go),
-// RULE_MUT_SHA (the commit the table was made on).
+// RULE_MUT_SHA (the commit the table was made on), RULE_MUT_CHECKOUT (the commit actually checked out, when that
+// is a merge of it).
 
 import { createHash } from "node:crypto";
 import fs from "node:fs";
@@ -451,14 +452,14 @@ export function parseResults(tsv) {
 }
 
 /** The kill table as Markdown and as JSON (rules-table.test.mjs --table reads the JSON). */
-export function renderTable(rows, sha = null) {
+export function renderTable(rows, sha = null, checkout = null) {
   const cell = (s) => String(s ?? "").replace(/\|/g, "\\|").replace(/\s+/g, " ").trim();
   const n = (r) => rows.filter((x) => x.result === r).length;
   const counts = { killed: n("killed"), survived: n("survived"), notApplied: n("not-applied"), total: rows.length };
   const lines = [
     "## Rule mutation proof",
     "",
-    `Commit: \`${sha ?? "unknown"}\`. Each break is run against only the test files it names (vitest from apps/map, or node from the repo root).`,
+    `Commit: \`${sha ?? "unknown"}\`${checkout && checkout !== sha ? ` (the job checked out \`${checkout}\`, that commit merged with its base)` : ""}. Each break is run against only the test files it names (vitest from apps/map, or node from the repo root).`,
     "",
     "| # | Mutant | AGENTS.md row | Rule | Result | First failing test |",
     "|---|---|---|---|---|---|",
@@ -545,7 +546,7 @@ function main(argv) {
         console.error("usage: node scripts/rule-mutate.mjs --render <results.tsv> <out.md> <out.json>");
         return 2;
       }
-      const t = renderTable(parseResults(fs.readFileSync(a, "utf8")), process.env.RULE_MUT_SHA || null);
+      const t = renderTable(parseResults(fs.readFileSync(a, "utf8")), process.env.RULE_MUT_SHA || null, process.env.RULE_MUT_CHECKOUT || null);
       fs.writeFileSync(b, t.md);
       fs.writeFileSync(c, t.json);
       console.log(t.md);

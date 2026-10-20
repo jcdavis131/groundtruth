@@ -89,6 +89,9 @@ jobs:
         working-directory: apps/map
 
       - name: kill table
+        env:
+          # A pull request run checks out the merge of its head into the base; the table names the head.
+          RULE_MUT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: bash scripts/rule-mutations.sh
         working-directory: apps/map
 

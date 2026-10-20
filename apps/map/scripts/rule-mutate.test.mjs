@@ -138,6 +138,7 @@ check(cli("--apply", "no-such-mutant").status === 2, "--apply of an unknown name
   check(json.schema === "rule-mutations/1" && json.sha === "abc123" && json.counts.killed === MUTANTS.length && json.counts.survived === 0 && json.counts.notApplied === 0, "an all-killed table counts every mutant killed");
   check(json.mutants.length === MUTANTS.length && json.mutants.every((x) => x.result === "killed" && typeof x.row === "string"), "the JSON lists each mutant with its row and result");
   check(killed.md.includes("a test \\| with a bar") && killed.md.includes(`**${MUTANTS.length} killed, 0 survived, 0 not applied, of ${MUTANTS.length}.**`), "the Markdown escapes a bar and states the totals");
+  check(renderTable(parseResults(all("killed")), "abc123", "def456").md.includes("the job checked out `def456`") && !killed.md.includes("checked out"), "the Markdown names the checked-out commit only when it differs from the one the table is for");
   const mixed = `${all("killed").split("\n").slice(1).join("\n")}\n${MUTANTS[0].name}\tsurvived\t`;
   const t = renderTable(parseResults(mixed), null);
   check(t.counts.survived === 1 && t.md.includes("**SURVIVED**"), "a survivor is counted and shown in capitals");

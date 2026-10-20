@@ -185,6 +185,20 @@ describe("emergence coverage", () => {
     expect(cov(v).reason).toMatch(/area/);
   });
 
+  it("gives a unit with no known area no density even where every counted layer loaded", () => {
+    // The test above leaves water without a loaded box, so the unit reads not loaded whatever its area. Here water
+    // loaded for a box around the unit, so the missing area is the only reason for the gap.
+    const noArea = unit("county:x", sq(0, 0, 1));
+    const fs = [pt("water", "g1", 0.5, 0.5), box("water", -10, -10, 10, 10)];
+    const v = cov(computeVitals([noArea], fs, "all", "density").get("county:x"));
+    expect(v.value).toBeNull();
+    expect(v.coverage).toBe("partial");
+    expect(v.reason).toMatch(/no area known/);
+    expect(v.display).not.toMatch(/^\d/);
+    // Counted instead of divided, the same unit is complete: the gap is the density's, not the layer's.
+    expect(cov(computeVitals([noArea], fs, "all", "count").get("county:x"))).toMatchObject({ value: 1, coverage: "complete" });
+  });
+
   it("gives a unit outside a counted layer's loaded box no value, with the reason", () => {
     // Schools loaded for a box around a only; c lies wholly outside it, b runs past its edge.
     const fs = [pt("schools", "s1", 0.5, 0.5), pt("schools", "s2", 2.2, 0.5), box("schools", -0.5, -0.5, 2.5, 1.5)];

@@ -21,7 +21,8 @@ JSON="${RULE_MUT_JSON:-$OUT_DIR/rule-mutations.json}"
 LOGS="${RULE_MUT_LOGS:-$OUT_DIR/logs}"
 TSV="$LOGS/results.tsv"
 export RULE_MUT_STATE="${RULE_MUT_STATE:-$OUT_DIR/state}"
-export RULE_MUT_SHA="${RULE_MUT_SHA:-$(git -C "$ROOT" rev-parse HEAD 2>/dev/null || echo unknown)}"
+export RULE_MUT_CHECKOUT="$(git -C "$ROOT" rev-parse HEAD 2>/dev/null || echo unknown)"
+export RULE_MUT_SHA="${RULE_MUT_SHA:-$RULE_MUT_CHECKOUT}"
 mkdir -p "$LOGS" "$RULE_MUT_STATE"
 MUT=(node scripts/rule-mutate.mjs)
 
