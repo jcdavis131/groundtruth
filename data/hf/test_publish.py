@@ -244,6 +244,29 @@ class PublishTest(unittest.TestCase):
         self.assertEqual(calls, [])
         self.assertIn("nothing uploaded", err)
 
+    def test_data_root_manifest_that_differs_from_the_committed_copy_fails(self):
+        # The 2026-10-19 drift: #51 backfilled the committed copy in place, the data root's copy stayed as built.
+        drifted = self.root / "snapshots" / SID / "manifest.json"
+        drifted.write_text(json.dumps({k: v for k, v in self.manifest.items() if k != "recordCount"}, indent=1), "utf8")
+        code, out, err = self.run_main()
+        self.assertEqual(code, 1)
+        self.assertIn("FAIL", out)
+        self.assertIn(f"snapshots/{SID}/manifest.json", err)
+        self.assertIn("differs byte for byte", err)
+        self.assertIn("embeddable.mjs --backfill", err)
+        self.assertIn("nothing uploaded", err)
+
+    def test_data_root_manifest_one_byte_off_fails_and_an_identical_copy_passes(self):
+        copy = self.root / "snapshots" / SID / "manifest.json"
+        copy.write_bytes(self.mp.read_bytes() + b"
+")
+        code, _, err = self.run_main()
+        self.assertEqual(code, 1, "a trailing newline is a different byte string")
+        self.assertIn("differs byte for byte", err)
+        copy.write_bytes(self.mp.read_bytes())
+        code, _, err = self.run_main()
+        self.assertEqual(code, 0, err)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
