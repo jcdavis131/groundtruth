@@ -22,6 +22,8 @@ Each planner answers `{answer, status, citation}`, `status` one of `answered`, `
 
 `{marker, items: {id: {type, verdict: PUBLISHED | NOT_PUBLISHED, gold, tolerance, flag, url}}}`: every row carries the publisher URL it came from and a verdict; NOT_PUBLISHED comes from the publisher's own suppression flag.
 
-## Not here yet
+## Building the gold file
 
-`eval/gold/build-gold.mjs` and its test. It imports the cite-check matchers (`apps/map/lib/cite/`, build item B1), which are not on master. It lands after B1.
+`node eval/gold/build-gold.mjs --tasks TASKS.json --out GOLD.json --pool pool.json` reads each task's publisher query, runs it through cite-check (`apps/map/lib/cite`: `plan`, `classify`) against the recorded publisher replies in `__fixtures__/publisher`, and writes the gold file. It prints only the sha256, refuses an `--out` inside the git root, and never overwrites. A value the matcher reads is PUBLISHED; the publisher's own suppression flag (QCEW `disclosure_code` N, NRI "Insufficient Data", CMS "Not Available") is NOT_PUBLISHED; a route's own missing entry with code `not_published`, `not_in_release` or `withheld` is NOT_PUBLISHED (the B4 amendment). Everything else (no recorded reply, an unreachable publisher, "no such record", any retry, narrow or redirect code) is listed in `GOLD.json.unrecorded.json` and is not gold. Needs Node 22.18+ (it loads the TypeScript in `apps/map/lib/cite`); `eval/gold.test.mjs` is its test.
+
+The tasks file and the gold file are written outside the repo. How many pool items have a recorded publisher row is a fact about the recordings, not about the builder; the preregistration states the count.
