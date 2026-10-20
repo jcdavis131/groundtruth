@@ -1,14 +1,18 @@
 import { describe, expect, it } from "vitest";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv";
 import { errorResult, toCallResult, createServer } from "./server";
+import { ABSENCE_CODES, codeForRouteEntry, ROUTE_REASON_CODE, type AbsenceCode } from "./absence";
+import { WORLD_OUTPUT_SCHEMA, WORLD_SCHEMA_VERSION } from "./worldSchema";
+import { RECORD_HOSTS } from "./worldHosts";
 import { ERROR_MAX_CHARS, toolByName, type FetchJson, type JsonObject, type ToolReply } from "./tools";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { BOUNDARY_CHANGED_SINCE_2010, femaCodes } from "../hazards/history";
 import { countyByFips, countyPoint } from "../places/registry";
 import { RELEASE_CALENDAR } from "../releases/calendar";
-import { ringsContain, ringsTouchBox, SCHEDULE_BLOCKED_NOTE, waterBox, WORLD_MAX_BYTES, worldContext, type WorldItem, type WorldSection } from "./world";
+import { MISSING_NAMES, REASONS, ringsContain, ringsTouchBox, SCHEDULE_BLOCKED_NOTE, waterBox, WORLD_MAX_BYTES, worldContext, type WorldItem, type WorldSection } from "./world";
 
 // Fixtures trimmed from real replies of www.arxiviq.com on 2026-10-18 (shapes only; values shortened).
 
@@ -270,6 +274,9 @@ const topicsOf = (r: ToolReply) => r.payload.topics as Record<string, WorldSecti
 const allItems = (r: ToolReply): WorldItem[] => Object.values(topicsOf(r)).flatMap((s) => s.items);
 const facts = (r: ToolReply, t: string) => topicsOf(r)[t].items.map((i) => i.fact);
 
+/** The published outputSchema, run by the MCP SDK's own validator (the one a client would use). */
+const validateWorld = new AjvJsonSchemaValidator().getValidator(WORLD_OUTPUT_SCHEMA as never);
+
 describe("world_context: shape", () => {
   it("a point resolves through the fabric, then asks every topic's route once", async () => {
     const { f, reply } = run({ lon: -97.74, lat: 30.27 });
@@ -444,7 +451,10 @@ describe("world_context: missing, withheld, partial", () => {
     const jobs = topicsOf(r).economy.items.find((i) => i.fact.startsWith("covered employment"))!;
     expect(jobs.value).toBeNull();
     expect(jobs.note).toMatch(/withheld by BLS.*null, not 0/);
-    expect(topicsOf(r).economy.missing).toContainEqual({ what: "typical asking rent (Zillow ZORI)", reason: "Zillow publishes no rent index for this place" });
+    expect(topicsOf(r).economy.missing).toContainEqual({ what: "typical asking rent (Zillow ZORI)", code: "not_in_release", reason: "Zillow publishes no rent index for this place", action: "abstain" });
+    // BLS's own suppression flag is the only source of `withheld`; the item says so, and the schema reads it
+    expect(jobs.absence).toBe("withheld");
+    expect(validateWorld(r.payload).errorMessage).toBeUndefined();
   });
 
   it("a failing, throwing or silent sub-route costs only its own items: partial, not an error", async () => {
@@ -453,10 +463,11 @@ describe("world_context: missing, withheld, partial", () => {
     expect(r.status).toBe(200);
     const res = toCallResult(r);
     expect(res.isError).toBe(false);
-    const basis = (r.payload.coverageStatus as { status: string; basis: string[] }).basis;
-    expect(basis).toContain("hazards: FEMA National Risk Index: HTTP 502: FEMA 503");
-    expect(basis).toContain("hazards: live events: fetch failed");
-    expect(basis).toContain("vulnerability: CDC/ATSDR SVI 2022: no answer within 0.05 s");
+    const basis = (r.payload.coverageStatus as { status: string; basis: { code: string; text: string }[] }).basis;
+    expect(basis).toContainEqual({ code: "failed", text: "hazards: FEMA National Risk Index: HTTP 502: FEMA 503" });
+    expect(basis).toContainEqual({ code: "failed", text: "hazards: live events: fetch failed" });
+    // a deadline is a timeout: retryable like a failure, but it says so
+    expect(basis).toContainEqual({ code: "timeout", text: "vulnerability: CDC/ATSDR SVI 2022: no answer within 0.05 s" });
     // What did answer is still there.
     expect(facts(r, "hazards")).toContain("FEMA declaration");
     expect(facts(r, "economy")).toContain("typical home value (Zillow ZHVI)");
@@ -494,9 +505,16 @@ describe("world_context: byte cap", () => {
     expect(size).toBeLessThanOrEqual(WORLD_MAX_BYTES);
     const t = r.payload.truncated as { droppedItems: number };
     expect(t.droppedItems).toBeGreaterThan(0);
-    expect((r.payload.coverageStatus as { basis: string[] }).basis.some((b) => b.includes(`cut to ${WORLD_MAX_BYTES} bytes`))).toBe(true);
+    expect((r.payload.coverageStatus as { basis: { code: string; text: string }[] }).basis.some((b) => b.code === "cut_by_byte_cap" && b.text.includes(`cut to ${WORLD_MAX_BYTES} bytes`))).toBe(true);
     // Identity is the last thing cut.
     expect(topicsOf(r).identity.items.length).toBeGreaterThan(3);
+    // and the cut reply is valid as sent; tamper: the same reply with the cut list's coverageStatus removed is not, and the error names it
+    expect(validateWorld(r.payload).errorMessage).toBeUndefined();
+    const bad = structuredClone(r.payload);
+    delete bad.coverageStatus;
+    const v = validateWorld(bad);
+    expect(v.valid, "a truncated reply without coverageStatus").toBe(false);
+    expect(v.errorMessage).toContain("coverageStatus");
   });
 });
 
@@ -532,7 +550,7 @@ describe("world_context: identity gaps", () => {
     const r = await run({ fips: "48453", topics: ["economy"] }, { "/api/fabric?op=stack": offshore }).reply;
     const id = topicsOf(r).identity;
     expect(id.items.map((i) => i.fact)).toEqual(["county"]);
-    expect(id.missing).toContainEqual({ what: "state and metro area (CBSA)", reason: expect.stringMatching(/no county polygon at the county's Census internal point \(-97.6913, 30.2395\): it is offshore/) });
+    expect(id.missing).toContainEqual({ what: "state and metro area (CBSA)", code: "not_in_release", action: "abstain", reason: expect.stringMatching(/no county polygon at the county's Census internal point \(-97.6913, 30.2395\): it is offshore/) });
     expect(id.coverageStatus).toMatchObject({ status: "partial" });
   });
 
@@ -575,7 +593,7 @@ describe("world_context: companies are counted only within the bundle", () => {
     const r = await run({ fips: "48453", topics: ["institutions"] }, { "/api/companies": empty }).reply;
     const inst = topicsOf(r).institutions;
     expect(inst.items.some((i) => /compan/i.test(i.fact))).toBe(false);
-    expect(inst.missing).toContainEqual({ what: "SEC-registered public companies headquartered in the county", reason: expect.stringMatching(/committed fixture \(pulled: null\), not a full pull/) });
+    expect(inst.missing).toContainEqual({ what: "SEC-registered public companies headquartered in the county", code: "not_loaded", action: "narrow", reason: expect.stringMatching(/committed fixture \(pulled: null\), not a full pull/) });
     expect(inst.coverageStatus).toMatchObject({ status: "partial" });
 
     const one = await run({ bbox: [-97.8, 30.2, -97.6, 30.35], topics: ["institutions"] }, { "/api/companies": { ...COMPANIES, bundle: { companies: 25, geocoded: 25, withFacts: 0 } } }).reply;
@@ -596,15 +614,15 @@ describe("world_context: the route's own truncated flag", () => {
     const none = { ...DAMS, truncated: true, data: { type: "FeatureCollection", features: [] } };
     const r = await run({ lon: -97.74, lat: 30.27, topics: ["institutions"] }, { "/api/infra?op=hospitals": cut, "/api/infra?op=dams": none }).reply;
     const inst = topicsOf(r).institutions;
-    expect(inst.coverageStatus!.basis).toContain("hospitals: the route hit its upstream's record limit for this box, so the 1 it returned inside the box are not all of them");
+    expect(inst.coverageStatus!.basis).toContainEqual({ code: "cut_by_route_limit", text: "hospitals: the route hit its upstream's record limit for this box, so the 1 it returned inside the box are not all of them" });
     expect(inst.items.some((i) => i.fact === "dams found")).toBe(false);
-    expect(inst.missing).toContainEqual({ what: "dams found", reason: expect.stringMatching(/hit its record limit/) });
+    expect(inst.missing).toContainEqual({ what: "dams found", code: "cut_by_route_limit", action: "narrow", reason: expect.stringMatching(/hit its record limit/) });
   });
 
   it("a capped reply longer than max_records says 'of at least'", async () => {
     const many = Array.from({ length: 5 }, (_, i) => feature(-97.74 + i * 0.001, 30.27, { id: `nid:TX${i}`, name: `D${i}`, details: { "owner type": "Private" }, extra: {} }));
     const r = await run({ lon: -97.74, lat: 30.27, topics: ["institutions"] }, { "/api/infra?op=dams": { ...DAMS, truncated: true, data: { type: "FeatureCollection", features: many } } }).reply;
-    expect(topicsOf(r).institutions.coverageStatus!.basis).toContain("dams: 3 of at least 5 shown (max_records)");
+    expect(topicsOf(r).institutions.coverageStatus!.basis).toContainEqual({ code: "cut_by_max_records", text: "dams: 3 of at least 5 shown (max_records)" });
     expect(topicsOf(r).institutions.items.filter((i) => i.fact === "dam")).toHaveLength(3);
   });
 });
@@ -774,31 +792,6 @@ function checkInvariant(label: string, rec: Recorded, r: ToolReply): void {
 }
 
 /**
- * Each source's own host, written here independently of world.ts: a record URL on any other host
- * cites a different publisher than the item does (the borrowed-citation bug, one level down).
- */
-const RECORD_HOSTS: Record<string, RegExp> = {
-  "census-tigerweb": /^https:\/\/tigerweb\.geo\.census\.gov\/arcgis\/rest\/services\//,
-  "nws-api": /^https:\/\/api\.weather\.gov\//,
-  "usgs-wbd": /^https:\/\/hydro\.nationalmap\.gov\//,
-  "fema-nfhl": /^https:\/\/hazards\.fema\.gov\//,
-  "epa-ecoregions": /^https:\/\/geodata\.epa\.gov\//,
-  "usgs-epqs": /^https:\/\/epqs\.nationalmap\.gov\//,
-  "fema-nri": /^https:\/\/services\.arcgis\.com\/XG15cJAlne2vxtgt\/arcgis\/rest\/services\/National_Risk_Index_Counties\//,
-  "fema-openfema": /^https:\/\/www\.fema\.gov\/api\/open\//,
-  usdm: /^https:\/\/usdmdataservices\.unl\.edu\//,
-  "usgs-earthquakes": /^https:\/\/earthquake\.usgs\.gov\//,
-  "bls-qcew": /^https:\/\/data\.bls\.gov\/cew\//,
-  "cdc-svi": /^https:\/\/services3\.arcgis\.com\/ZvidGQkLaDJxRSJ2\//,
-  "hifld-hospitals": /^https:\/\/services\.arcgis\.com\/XG15cJAlne2vxtgt\/arcgis\/rest\/services\/Hospitals_RAPT\//,
-  "cms-provider-data": /^https:\/\/data\.cms\.gov\/provider-data\//,
-  "usace-nid": /^https:\/\/geospatial\.sec\.usace\.army\.mil\//,
-  "sec-edgar": /^https:\/\/data\.sec\.gov\//,
-  "epa-cws-boundaries": /^https:\/\/services\.arcgis\.com\/cJ9YHowT8TU7DUyn\/arcgis\/rest\/services\/Water_System_Boundaries\//,
-  "epa-ucmr5-pat": /^https:\/\/services\.arcgis\.com\/cJ9YHowT8TU7DUyn\/arcgis\/rest\/services\/PFAS_Analytic_Tools_Layers\//,
-};
-
-/**
  * The point a fabric item was read at: the snapped point in the reply its own link recorded
  * (the route snaps to 0.001 and reads every upstream there), never the point the link asked for.
  */
@@ -937,6 +930,9 @@ describe("world_context: invariant over recorded live replies", () => {
         if (typeof p.lon === "number") expect(it.upstreamRecordUrl, `${label}: ${it.fact} has a record URL`).toBeDefined();
       }
       expect(new TextEncoder().encode(JSON.stringify(toCallResult(r).structuredContent)).length).toBeLessThanOrEqual(WORLD_MAX_BYTES);
+      // with codes added, the recorded default reply still fits whole, and is valid against the published schema
+      expect(r.payload.truncated, `${label}: no item dropped by the byte cap`).toBeUndefined();
+      expect(validateWorld(toCallResult(r).structuredContent).errorMessage, label).toBeUndefined();
     });
 
     it(`${label}: drop each cited source from its route (provenance gone, named missing) and it becomes a missing entry, never a value`, async () => {
@@ -954,6 +950,10 @@ describe("world_context: invariant over recorded live replies", () => {
           expect(allItems(r).filter((i) => routeOf(i.link) === p && i.sourceId === id), where).toEqual([]);
           const missing = Object.values(topicsOf(r)).flatMap((s) => s.missing ?? []);
           expect(missing.some((m) => m.reason.includes(id)), `${where}: a missing entry names it`).toBe(true);
+          // the route listed it with reason source:failed, so that is the code (no guess about the publisher)
+          const own = missing.filter((m) => m.reason.startsWith(`${id}: `));
+          expect(own.length, `${where}: the entry the source's own item became`).toBeGreaterThan(0);
+          for (const m of own) expect(m.code, `${where}: ${m.reason}`).toBe("failed");
           checkInvariant(where, mutated, r);
         }
       }
@@ -1097,7 +1097,7 @@ describe("world_context: FEMA zeros, duplicates and the cut order", () => {
     const r = await run({ fips: "48453", topics: ["hazards"] }, { "/api/hazards?op=history": h }).reply;
     const hz = topicsOf(r).hazards;
     expect(hz.items.some((i) => i.fact.startsWith("U.S. Drought Monitor this week"))).toBe(false);
-    expect(hz.missing).toContainEqual({ what: "U.S. Drought Monitor this week", reason: "USDM failed on this call (source:failed): usdm 503" });
+    expect(hz.missing).toContainEqual({ what: "U.S. Drought Monitor this week", code: "failed", action: "retry", reason: "USDM failed on this call (source:failed): usdm 503" });
     expect(hz.missing!.some((x) => x.what === "USDM this week")).toBe(false);
   });
 
@@ -1323,5 +1323,195 @@ describe("world_context: release items cite a schedule an agent can fetch, or sa
     }
     expect(seen.map((i) => i.upstreamUrl).sort()).toEqual([...all].sort());
     for (const it of seen) expect(String(it.note).includes(SCHEDULE_BLOCKED_NOTE), it.upstreamUrl).toBe(ANSWERED_403.includes(it.upstreamUrl));
+  });
+});
+
+// ---- typed absence --------------------------------------------------------------
+
+describe("world_context: typed absence", () => {
+  it("every REASONS key and every MISSING_NAMES entry maps to a code (an unmapped key fails here by name)", () => {
+    for (const k of Object.keys(REASONS)) expect(ROUTE_REASON_CODE[k], `REASONS key ${k} has a code`).toBeDefined();
+    for (const [name, id] of Object.entries(MISSING_NAMES)) {
+      expect(id, name).toMatch(/^[a-z0-9-]+$/);
+      // a route listing this name as failed is a failure, whichever source it names
+      expect(codeForRouteEntry({ source: name, reason: "source:failed" }), `MISSING_NAMES entry ${name}`).toBe("failed");
+      expect(codeForRouteEntry({ source: name }), `MISSING_NAMES entry ${name} with no reason`).toBe("failed");
+    }
+  });
+
+  const variants: Array<[string, string | null, (id: string) => AbsenceCode]> = [
+    ["the route lists it failed", "source:failed", () => "failed"],
+    ["the route lists it with no reason", "", () => "failed"],
+    ["the route lists it not in the release", "source:not_in_release", () => "not_in_release"],
+    ["the route lists Puerto Rico as not published", "source:not_published_for_puerto_rico", () => "not_published"],
+    ["the route lists a legacy Connecticut county", "join:legacy_ct_counties", () => "join_gap"],
+    ["the route lists rows filed under another code", "join:filed_under_other_code", () => "filed_under_other_code"],
+    ["the route sent no provenance and does not list it", null, (id) => (id === "eye-catalog" ? "about_eye" : "no_citation")],
+  ];
+
+  for (const [what, reason, want] of variants) {
+    it(`${what}: the entry its item became carries the matching code`, async () => {
+      let checked = 0;
+      for (const [label, rec] of recorded) {
+        for (const [p, ids] of citedPairs(await runRecorded(rec))) {
+          for (const id of ids) {
+            const body = structuredClone(rec.routes[p].body);
+            body.provenance = ((body.provenance as JsonObject[]) ?? []).filter((x) => (x.source as JsonObject)?.id !== id);
+            if (reason !== null) {
+              const data = (body.data ??= {}) as JsonObject;
+              data.missing = [...((data.missing as unknown[]) ?? []), reason ? { source: id, reason } : { source: id }];
+            }
+            const r = await runRecorded({ ...rec, routes: { ...rec.routes, [p]: { ...rec.routes[p], body } } });
+            const own = Object.values(topicsOf(r))
+              .flatMap((sec) => sec.missing ?? [])
+              .filter((m) => m.reason.startsWith(`${id}: `));
+            expect(own.length, `${label}: ${id} from ${p}`).toBeGreaterThan(0);
+            for (const m of own) expect(m.code, `${label}: ${id} from ${p}: ${m.reason}`).toBe(want(id));
+            checked++;
+          }
+        }
+      }
+      expect(checked).toBeGreaterThan(30);
+    });
+  }
+
+  it("every missing entry in a recorded reply has the action its code carries, and a code from the closed list", async () => {
+    for (const [label, rec] of recorded) {
+      const r = await runRecorded(rec);
+      for (const sec of Object.values(topicsOf(r))) {
+        for (const m of sec.missing ?? []) {
+          expect(Object.keys(ABSENCE_CODES), `${label}: ${m.what}`).toContain(m.code);
+          expect(m.action, `${label}: ${m.what}`).toBe(ABSENCE_CODES[m.code].action);
+        }
+      }
+    }
+  });
+
+  it("a Connecticut region's gap is a join gap the agent can narrow around; no recorded reply claims withheld from a missing entry", async () => {
+    const ct = await runRecorded(recorded.find(([k]) => k === "ct_09110")![1]);
+    const ctMissing = Object.values(topicsOf(ct)).flatMap((sec) => sec.missing ?? []);
+    expect(ctMissing.some((m) => m.code === "join_gap" && m.action === "narrow")).toBe(true);
+    for (const [label, rec] of recorded) {
+      const r = await runRecorded(rec);
+      expect(Object.values(topicsOf(r)).flatMap((sec) => sec.missing ?? []).every((m) => m.code !== "withheld"), label).toBe(true);
+    }
+  });
+});
+
+// ---- the published outputSchema ---------------------------------------------------
+
+type Loose = Record<string, unknown> & { topics: Record<string, { items: Array<Record<string, unknown>>; missing?: Array<Record<string, unknown>>; coverageStatus?: { basis: unknown[] } & Record<string, unknown> }> };
+
+describe("world_context: outputSchema", () => {
+  const austin = async (): Promise<Loose> => structuredClone((await runRecorded(recorded.find(([k]) => k === "austin_pt")![1])).payload) as Loose;
+
+  it("is world/2, and every recorded reply validates against it as the structuredContent a client gets", async () => {
+    expect(WORLD_OUTPUT_SCHEMA.properties.schemaVersion.const).toBe(WORLD_SCHEMA_VERSION);
+    expect(WORLD_SCHEMA_VERSION).toBe("world/2");
+    for (const [label, rec] of recorded) {
+      const r = await runRecorded(rec);
+      expect(r.payload.schemaVersion, label).toBe("world/2");
+      const v = validateWorld(toCallResult(r).structuredContent);
+      expect(v.errorMessage, label).toBeUndefined();
+      expect(v.valid, label).toBe(true);
+    }
+  });
+
+  it("carries a host rule for every source in RECORD_HOSTS", () => {
+    const text = JSON.stringify(WORLD_OUTPUT_SCHEMA);
+    for (const id of Object.keys(RECORD_HOSTS)) expect(text, id).toContain(JSON.stringify(id));
+  });
+
+  it("tamper: a null value without a note fails, and the error names note", async () => {
+    const p = await austin();
+    const first = p.topics.identity.items[0];
+    first.value = null;
+    delete first.note;
+    const v = validateWorld(p);
+    expect(v.valid).toBe(false);
+    expect(v.errorMessage).toContain("note");
+    // with a note it is valid again
+    first.note = "withheld by the publisher: null, not 0; no record-level URL: test";
+    delete first.upstreamRecordUrl;
+    expect(validateWorld(p).errorMessage).toBeUndefined();
+  });
+
+  /** The first recorded reply with a section that lists missing entries (and so has a coverageStatus). */
+  const withMissing = async (): Promise<Loose> => {
+    for (const [, rec] of recorded) {
+      const p = structuredClone((await runRecorded(rec)).payload) as Loose;
+      if (Object.values(p.topics).some((x) => x.missing?.length && x.coverageStatus)) return p;
+    }
+    throw new Error("no recorded reply lists a missing entry");
+  };
+
+  it("tamper: a section with missing entries but no coverageStatus fails, and the error names coverageStatus", async () => {
+    const p = await withMissing();
+    const sec = Object.values(p.topics).find((x) => x.missing?.length && x.coverageStatus)!;
+    expect(sec).toBeDefined();
+    delete sec.coverageStatus;
+    const v = validateWorld(p);
+    expect(v.valid).toBe(false);
+    expect(v.errorMessage).toContain("coverageStatus");
+  });
+
+  it("tamper: a missing entry without code, a basis line that is a bare string, status complete and an unknown kind all fail", async () => {
+    const a = await withMissing();
+    const sec = Object.values(a.topics).find((x) => x.missing?.length)!;
+    delete sec.missing![0].code;
+    expect(validateWorld(a).errorMessage).toContain("code");
+
+    const b = await withMissing();
+    const withCs = Object.values(b.topics).find((x) => x.coverageStatus)!;
+    withCs.coverageStatus!.basis[0] = "a bare string";
+    expect(validateWorld(b).valid).toBe(false);
+
+    const c = await austin();
+    (c.coverageStatus as { status: string }).status = "complete";
+    expect(validateWorld(c).valid, "no 'complete' (that reversal is Cam's call)").toBe(false);
+
+    const d = await austin();
+    d.topics.identity.items[0].kind = "about-world";
+    expect(validateWorld(d).valid).toBe(false);
+  });
+
+  it("tamper: a record URL on another publisher's host, a retrievedAt without Z, an item with no link, and a missing record URL not said in the note all fail", async () => {
+    const a = await austin();
+    const rec = Object.values(a.topics)
+      .flatMap((x) => x.items)
+      .find((i) => i.sourceId === "census-tigerweb" && i.upstreamRecordUrl)!;
+    rec.upstreamRecordUrl = "https://evil.example/tigerweb";
+    const v = validateWorld(a);
+    expect(v.valid).toBe(false);
+    expect(v.errorMessage).toContain("upstreamRecordUrl");
+
+    const b = await austin();
+    b.topics.identity.items[0].retrievedAt = "2026-10-18T12:00:00+02:00";
+    expect(validateWorld(b).valid).toBe(false);
+
+    const c = await austin();
+    delete c.topics.identity.items[0].link;
+    expect(validateWorld(c).valid).toBe(false);
+
+    const d = await austin();
+    const noRecord = Object.values(d.topics)
+      .flatMap((x) => x.items)
+      .find((i) => !i.upstreamRecordUrl)!;
+    noRecord.note = "something else";
+    expect(validateWorld(d).valid, "an item with no record URL must say so in its note").toBe(false);
+  });
+
+  it("a client that has listed the tools validates the reply against the published schema and still gets it", async () => {
+    const f = router();
+    const server = createServer({ fetchJson: f.fetchJson });
+    const [ct, st] = InMemoryTransport.createLinkedPair();
+    const client = new Client({ name: "test", version: "0.0.0" });
+    await server.connect(st);
+    await client.connect(ct);
+    const { tools } = await client.listTools();
+    expect(tools.find((t) => t.name === "world_context")!.outputSchema).toEqual(JSON.parse(JSON.stringify(WORLD_OUTPUT_SCHEMA)));
+    const res = await client.callTool({ name: "world_context", arguments: { lon: -97.74, lat: 30.27 } });
+    expect(res.isError).toBe(false);
+    expect((res.structuredContent as { schemaVersion: string }).schemaVersion).toBe("world/2");
   });
 });

@@ -8,7 +8,8 @@ import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv
 import { ERROR_CATEGORIES, ERROR_CODES, ERROR_ENVELOPE_SCHEMA } from "./errors";
 import { z } from "zod";
 import { argsSummary, createServer, describeServer, errorResult, INSTRUCTIONS, listDocs, PLACE_CITE, PROMPTS, toCallResult, toolManifest, toolTable } from "./server";
-import { ERROR_MAX_CHARS, TOOLS, type FetchJson } from "./tools";
+import { ERROR_MAX_CHARS, TOOLS, type FetchJson, type ToolDef } from "./tools";
+import { WORLD_OUTPUT_SCHEMA } from "./worldSchema";
 
 const validateEnvelope = new AjvJsonSchemaValidator().getValidator(ERROR_ENVELOPE_SCHEMA as never);
 
@@ -275,10 +276,13 @@ describe("createServer over an in-memory transport", () => {
     const { client } = await connect(async () => ({ status: 200, body: { data: { places: ["48453"], nullPlaces: { "09110": "join:no_source_row", "02063": "join:no_source_row" }, nullCells: { "12065": { a: "source:null_in_county_layer" } } } }, url: "" }));
     const r = await client.callTool({ name: "place_export", arguments: { collection: "ust-releases-county" } });
     expect(r.isError).toBe(false);
-    const cs = (r.structuredContent as { coverageStatus: { status: string; basis: string[] } }).coverageStatus;
+    const cs = (r.structuredContent as { coverageStatus: { status: string; basis: { code: string; text: string }[] } }).coverageStatus;
     expect(cs.status).toBe("partial");
     expect(cs.basis).toHaveLength(2);
-    expect(cs.basis[0]).toMatch(/^2 places in data\.nullPlaces/);
+    expect(cs.basis[0].text).toMatch(/^2 places in data\.nullPlaces/);
+    // the route's own reason codes (join:no_source_row, source:null_in_county_layer) decide the code
+    expect(cs.basis[0].code).toBe("join_gap");
+    expect(cs.basis[1].code).toBe("not_in_release");
 
     const { client: c2 } = await connect(async () => ({ status: 200, body: { coverage: [{ id: "x", state: "covered", count: 3 }], data: { places: ["48453"], nullPlaces: {} } }, url: "" }));
     const r2 = await c2.callTool({ name: "place_export", arguments: { collection: "npl-status" } });
@@ -290,10 +294,10 @@ describe("createServer over an in-memory transport", () => {
     const big = Array.from({ length: 1000 }, (_, i) => `${i}:${"x".repeat(500)}`);
     const { client } = await connect(async () => ({ status: 200, body: { data: big }, url: "" }));
     const r = await client.callTool({ name: "pulse", arguments: {} });
-    const sc = r.structuredContent as { data: unknown[]; note: string; coverageStatus: { status: string; basis: string[] } };
+    const sc = r.structuredContent as { data: unknown[]; note: string; coverageStatus: { status: string; basis: { code: string; text: string }[] } };
     expect(sc.data.length).toBeLessThan(1000);
     expect(sc.note).toMatch(/truncated to the first/);
-    expect(sc.coverageStatus).toEqual({ status: "partial", basis: [expect.stringMatching(/the MCP cut the list/)] });
+    expect(sc.coverageStatus).toEqual({ status: "partial", basis: [{ code: "cut_by_byte_cap", text: expect.stringMatching(/the MCP cut the list/) }] });
   });
 
   it("lists and renders the four prompts, each naming the tools it chains", async () => {
@@ -444,6 +448,55 @@ describe("describeServer", () => {
     expect(d.instructions).toBe(INSTRUCTIONS);
     expect(d.tools.filter((t) => t.alwaysLoad).map((t) => t.name)).toEqual(["world_context"]);
     expect(d.resources).toContain("gev://openapi.json");
+  });
+
+  it("publishes world_context's outputSchema in the manifest, and no other tool has one", () => {
+    const d = describeServer("https://eye.example/api/mcp");
+    const wc = d.tools.find((t) => t.name === "world_context")!;
+    expect(wc.outputSchema).toEqual(WORLD_OUTPUT_SCHEMA);
+    expect((wc.outputSchema!.properties as { schemaVersion: { const: string } }).schemaVersion.const).toBe("world/2");
+    expect(d.tools.filter((t) => t.outputSchema).map((t) => t.name)).toEqual(["world_context"]);
+    // the manifest stays plain JSON
+    expect(JSON.parse(JSON.stringify(d.tools))).toEqual(d.tools);
+  });
+});
+
+describe("outputSchema on the wire", () => {
+  it("tools/list carries world_context's outputSchema (the SDK takes only zod ones, so the server adds it) and no other tool's", async () => {
+    const { client } = await connect(async () => ({ status: 200, body: {}, url: "" }));
+    const { tools } = await client.listTools();
+    expect(tools.filter((t) => t.outputSchema).map((t) => t.name)).toEqual(["world_context"]);
+    expect(tools.find((t) => t.name === "world_context")!.outputSchema).toEqual(JSON.parse(JSON.stringify(WORLD_OUTPUT_SCHEMA)));
+  });
+
+  /** world_context with a run() that returns what the test says: a route reply gone wrong. */
+  function badWorld(payload: Record<string, unknown>): ToolDef[] {
+    return TOOLS.map((t) => (t.name === "world_context" ? { ...t, run: async () => ({ status: 200, payload }) } : t));
+  }
+  async function callBad(payload: Record<string, unknown>) {
+    const server = createServer({ fetchJson: async () => ({ status: 200, body: {}, url: "" }), tools: badWorld(payload) });
+    const [ct, st] = InMemoryTransport.createLinkedPair();
+    const client = new Client({ name: "test", version: "0.0.0" });
+    await server.connect(st);
+    await client.connect(ct);
+    return client.callTool({ name: "world_context", arguments: { fips: "48453" } });
+  }
+  const item = { fact: "covered employment", value: null, sourceId: "bls-qcew", publisher: "U.S. Bureau of Labor Statistics", upstreamUrl: "https://data.bls.gov/cew/", retrievedAt: "2026-10-18T12:00:00.000Z", link: "http://t/api/screen", upstreamRecordUrl: "https://data.bls.gov/cew/data/api/2026/1/area/48453.csv" };
+  const reply = (it: Record<string, unknown>) => ({ schemaVersion: "world/2", place: { kind: "county" }, topics: { economy: { items: [it] } }, limits: { maxBytes: 40000, maxRecords: 3 }, note: "n" });
+
+  it("a bad route reply (value null, no note) surfaces as an isError envelope with code internal_error, never as a plain reply", async () => {
+    const r = await callBad(reply(item));
+    const e = expectErrorEnvelope(r);
+    expect(e.code).toBe("internal_error");
+    expect(e.retryable).toBe(false);
+    expect(e.error).toMatch(/outputSchema/);
+    expect(e.error).toMatch(/note/);
+  });
+
+  it("the same reply with a note goes through as a normal result", async () => {
+    const r = await callBad(reply({ ...item, note: "withheld by BLS for confidentiality: null, not 0" }));
+    expect(r.isError).toBe(false);
+    expect((r.structuredContent as { schemaVersion: string }).schemaVersion).toBe("world/2");
   });
 });
 
