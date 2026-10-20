@@ -173,7 +173,9 @@ describe("legendFor: the not-loaded entry and the maximum", () => {
     const v = randomVitals(4, "count");
     const legend = legendFor(v, "streamflow", "count");
     const classes = legend.entries.filter((e) => e.kind === "class");
-    expect(classes.map((e) => e.color)).toEqual(FLOW_CLASS_ORDER.map((c) => FLOW_CLASSES[c].color));
+    expect(classes.slice(0, FLOW_CLASS_ORDER.length).map((e) => e.color)).toEqual(FLOW_CLASS_ORDER.map((c) => FLOW_CLASSES[c].color));
+    // A unit with no rated gauge is painted at the bottom of the heat ramp.
+    expect(classes[FLOW_CLASS_ORDER.length].color).toBe(heatColor(0));
     expect(legend.max).toBeNull();
     expect(legend.units).toBe("percentile against normal for today");
   });
