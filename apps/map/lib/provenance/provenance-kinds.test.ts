@@ -122,6 +122,18 @@ const RELAYED: Array<{ file: string; methodStartsWith: string; why: string }> = 
   },
 ];
 
+/** The walk's verdict on a list of entries: what it fails, and how many reviewed exceptions it let through. */
+function verdict(list: PublishedSite[]): { found: string[]; reviewed: number } {
+  const out = { found: [] as string[], reviewed: 0 };
+  for (const s of list) {
+    const why = judgeSite(s);
+    if (!why) continue;
+    if (RELAYED.some((r) => r.file === s.file && s.method !== null && s.method.startsWith(r.methodStartsWith))) out.reviewed++;
+    else out.found.push(`${s.file}:${s.line}${s.sourceId ? ` (${s.sourceId})` : ""}: labelled published, but ${why}`);
+  }
+  return out;
+}
+
 describe("every provenance entry labelled published under apps/map/lib and apps/map/app", () => {
   const files = ["lib", "app"].flatMap((d) => sources(path.join(MAP, d)));
   const rel = (f: string) => path.relative(MAP, f).split(path.sep).join("/");
@@ -147,17 +159,9 @@ describe("every provenance entry labelled published under apps/map/lib and apps/
   });
 
   it("no entry says its value was computed here, names inputs, or hides its method behind a variable", () => {
-    const reviewed = new Set<PublishedSite>();
-    const found: string[] = [];
-    for (const s of sites) {
-      const why = judgeSite(s);
-      if (!why) continue;
-      const ok = RELAYED.find((r) => r.file === s.file && s.method !== null && s.method.startsWith(r.methodStartsWith));
-      if (ok) reviewed.add(s);
-      else found.push(`${s.file}:${s.line}${s.sourceId ? ` (${s.sourceId})` : ""}: labelled published, but ${why}`);
-    }
-    expect(found).toEqual([]);
-    expect(reviewed.size).toBe(RELAYED.length);
+    const v = verdict(sites);
+    expect(v.found).toEqual([]);
+    expect(v.reviewed).toBe(RELAYED.length);
   });
 
   it("each reviewed exception still matches exactly one entry that the words flag", () => {
@@ -168,14 +172,36 @@ describe("every provenance entry labelled published under apps/map/lib and apps/
     }
   });
 
-  it("a computed entry planted in a real file is found there", () => {
+  /** The whole tree's entries with one file's source replaced by `src`. */
+  const withFile = (file: string, src: string): PublishedSite[] => scans.flatMap((s) => (s.file === file ? scanSource(src, file).sites : s.sites));
+
+  it("a seventh computed entry planted in a real file turns the walk red, and only that entry", () => {
     const real = scans.find((s) => s.file === "lib/releases/movers.ts");
     expect(real).toBeDefined();
     const planted = `${real!.src}\nexport const seventh = provenance(source("zillow-zhvi"), { kind: "published", method: "sum of the rows by region" });\n`;
-    const after = scanSource(planted, "lib/releases/movers.ts").sites;
-    expect(after.length).toBe(real!.sites.length + 1);
-    const last = after[after.length - 1];
-    expect(last.sourceId).toBe("zillow-zhvi");
-    expect(judgeSite(last)).toMatch(/says it was computed here/);
+    const v = verdict(withFile("lib/releases/movers.ts", planted));
+    expect(v.found).toHaveLength(1);
+    expect(v.found[0]).toMatch(/^lib\/releases\/movers\.ts:\d+ \(zillow-zhvi\): labelled published, but its method says it was computed here: "sum of the rows/);
+    expect(v.reviewed).toBe(RELAYED.length);
+  });
+
+  it("relabelling the six entries W5A found back to published turns the walk red on exactly those six", () => {
+    for (const [file, n] of [["lib/hazards/history.ts", 3], ["lib/releases/movers.ts", 3]] as const) {
+      const real = scans.find((s) => s.file === file);
+      expect(real, file).toBeDefined();
+      // the three estimates in each file are the entries that were published and computed; any other `kind: "estimate"` would be counted here
+      expect(real!.src.split('kind: "estimate"').length - 1, `${file}: estimates written`).toBe(n);
+      const back = real!.src.split('kind: "estimate"').join('kind: "published"');
+      const v = verdict(withFile(file, back));
+      expect(v.found, file).toHaveLength(n);
+    }
+  });
+
+  it("the estimates among those entries name their inputs, so the relabel above would also be caught by the inputs rule", () => {
+    for (const file of ["lib/hazards/history.ts", "lib/releases/movers.ts"]) {
+      const real = scans.find((s) => s.file === file)!;
+      const back = scanSource(real.src.split('kind: "estimate"').join('kind: "published"'), file).sites;
+      expect(back.filter((s) => s.hasInputs), file).toHaveLength(3);
+    }
   });
 });
