@@ -31,8 +31,7 @@ export const INSTRUCTIONS = [
   "Two rules:",
   "1. Cite upstreamRecordUrl, the publisher's own URL for that record (upstreamUrl where the note says there is no record-level URL). Do not cite eye for a number a publisher owns.",
   "2. Read missing[] before relying on an absence. An entry there says what could not be answered and why; it is not a zero. coverageStatus partial means something is missing or was cut.",
-].join("
-");
+].join("\n");
 
 export interface ServerOptions {
   fetchJson: FetchJson;
@@ -145,8 +144,7 @@ export const PROMPTS: PromptDef[] = [
         "2. For a topic that comes back missing or partial and that the brief needs, name the tool that goes deeper (place_fabric for the units, county_history, risk_index, water_report) and call it for that gap only.",
         "3. Write two parts. What is known: each fact with its value, unit, period and citation. What is missing: each missing[] entry with its reason, and each source that failed.",
         PLACE_CITE,
-      ].join("
-");
+      ].join("\n");
     },
   },
   {
