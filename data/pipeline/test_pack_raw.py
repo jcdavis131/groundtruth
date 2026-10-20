@@ -302,6 +302,29 @@ class PackRawTest(unittest.TestCase):
         self.assertIn("inside", err)
         self.assertEqual(tree(self.tmp), before)
 
+    def test_out_refuses_a_folder_inside_the_data_root(self):
+        # The data root is read-only for the pack: raw/ is not the only place under it that --out must refuse.
+        before = tree(self.tmp)
+        rc, out, err = self.out(self.w.root / "packs")
+        self.assertEqual(rc, 1, out + err)
+        self.assertIn("inside", err)
+        self.assertFalse((self.w.root / "packs").exists())
+        self.assertEqual(tree(self.tmp), before, "nothing was written anywhere")
+
+    def test_out_refuses_the_data_root_itself(self):
+        before = tree(self.tmp)
+        rc, out, err = self.out(self.w.root)
+        self.assertEqual(rc, 1, out + err)
+        self.assertIn("data root", err)
+        self.assertEqual(tree(self.tmp), before, "no raw.tar, no index.json, no .part in the data root")
+
+    def test_out_next_to_the_data_root_is_still_allowed(self):
+        # The refusal is the data root and what is under it, not its parent folder or its siblings.
+        dest = self.tmp / "out"
+        rc, out, err = self.out(dest)
+        self.assertEqual(rc, 0, out + err)
+        self.assertEqual(sorted(p.name for p in dest.iterdir()), ["index.json", "raw.tar"])
+
     def test_out_writes_nothing_when_coverage_fails(self):
         self.w.body_path(self.w.pins[0][2]).unlink()
         dest = self.tmp / "out"
