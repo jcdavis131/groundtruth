@@ -21,6 +21,27 @@ export interface SourceRef {
   licenseId?: string;
 }
 
+/**
+ * One input of a computed value: the receipt of what it was computed from. Three fields are the receipt
+ * (the source, the publisher's own URL, when we fetched it); the rest say which release it was and where
+ * the reply names the rows. Additive: a reader that ignores `inputs` reads every older reply as before.
+ */
+export interface ProvenanceInput {
+  /** Id of the SourceRef the input was read from ("epa-npl-status", "census-tigerweb"). */
+  sourceId: string;
+  /**
+   * The publisher's own URL for the input: the record when one row was used, or the layer or table when the value
+   * aggregates rows of it (a county count over a whole layer). Absent when the publisher has no URL for it.
+   */
+  upstreamRecordUrl?: string;
+  /** When we fetched the input, ISO 8601 (a bare date when that is all the input's own file states). */
+  retrievedAt: string;
+  /** When the upstream published or last edited the input, when it states one. */
+  releasedAt?: string;
+  /** Where the reply lists the rows this was computed from, as a path into the reply body ("data.siteIds": county to EPA site ids). */
+  rowIdsAt?: string;
+}
+
 export interface Provenance {
   source: SourceRef;
   /** Upstream series / dataset / table identifier when one exists ("MORTGAGE30US", "07032000:00065", "CIK0000320193"). */
@@ -37,6 +58,12 @@ export interface Provenance {
   kind: "published" | "estimate" | "snapshot";
   /** Free-text method for estimates, or the formula that was run. */
   method?: string;
+  /**
+   * For kind "estimate": the inputs the value was computed from, each with its receipt. A value computed here from
+   * publisher rows is an estimate and names them; lib/provenance/estimates.ts holds the rule. An entry with `inputs`
+   * is never "published" (published = relayed as-is).
+   */
+  inputs?: ProvenanceInput[];
   /** Upstream revision policy or flag ("preliminary", "revised", "final"). */
   revision?: string;
   /** Caveats a reader must see. */

@@ -129,3 +129,44 @@ describe("place exports", () => {
     expect((d.meta as unknown as { zeroRuleStatus: string }).zeroRuleStatus).toMatch(/^approved/);
   });
 });
+
+describe("place exports: a county count names the rows it was computed from", () => {
+  /** A path the way a ProvenanceInput names it, "data.siteIds", read from the served reply's data. */
+  const at = (data: unknown, p: string): unknown => p.split(".").slice(1).reduce<unknown>((o, k) => (o as Record<string, unknown> | undefined)?.[k], data);
+
+  for (const id of PLACE_EXPORTS) {
+    it(`${id}: the estimate carries one input for the publisher's layer and one for the TIGERweb county rows, each dated`, () => {
+      const x = placeExport(id)!;
+      const meta = (x.data as { meta: { source: { layer: string; fetchedAt: string; serviceDataLastEdit?: string }; counties: { pulled: string } } }).meta;
+      const est = x.provenance.filter((p) => p.kind === "estimate");
+      expect(est).toHaveLength(1);
+      const inputs = est[0].inputs ?? [];
+      expect(inputs.map((i) => i.sourceId)).toEqual([est[0].source.id, "census-tigerweb"]);
+      expect(inputs[0].upstreamRecordUrl).toBe(meta.source.layer);
+      expect(inputs[0].retrievedAt).toBe(meta.source.fetchedAt);
+      expect(inputs[0].releasedAt).toBe(meta.source.serviceDataLastEdit);
+      expect(inputs[1].upstreamRecordUrl).toMatch(/^https:\/\/tigerweb\.geo\.census\.gov\/arcgis\/rest\/services\//);
+      expect(inputs[1].retrievedAt).toBe(meta.counties.pulled);
+      for (const i of inputs) expect(Number.isNaN(Date.parse(i.retrievedAt)), `${id} ${i.sourceId} retrievedAt`).toBe(false);
+    });
+
+    it(`${id}: the reply lists the input rows at the path each input names, for every county it counts`, () => {
+      const x = placeExport(id)!;
+      const inputs = x.provenance.find((p) => p.kind === "estimate")?.inputs ?? [];
+      const places = (x.data as { places: string[] }).places;
+      const rows = at(x.data, inputs[0].rowIdsAt ?? "") as Record<string, unknown> | undefined;
+      expect(rows, `${id} ${inputs[0].rowIdsAt}`).toBeTruthy();
+      for (const g of places) expect(rows![g], `${id} ${g}`).toBeDefined();
+      expect(at(x.data, inputs[1].rowIdsAt ?? "")).toEqual(places);
+    });
+  }
+
+  it("the TIGERweb county table is relayed as-is: published, and it names no inputs", () => {
+    for (const id of PLACE_EXPORTS) {
+      const tiger = placeExport(id)!.provenance.filter((p) => p.source.id === "census-tigerweb");
+      expect(tiger, id).toHaveLength(1);
+      expect(tiger[0].kind).toBe("published");
+      expect(tiger[0].inputs).toBeUndefined();
+    }
+  });
+});
