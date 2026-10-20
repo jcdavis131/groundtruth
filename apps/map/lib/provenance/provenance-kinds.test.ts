@@ -131,7 +131,8 @@ describe("every provenance entry labelled published under apps/map/lib and apps/
   it("sees the tree, not nothing (a floor, not a count to maintain)", () => {
     expect(files.length).toBeGreaterThan(500);
     expect(sites.length).toBeGreaterThan(140);
-    expect(sites.filter((s) => s.method !== null).length).toBeGreaterThan(5);
+    // the entries that still carry a literal method (the TIGERweb join, BLS's own change, the CMS join, USGS's normals) were read
+    expect(sites.filter((s) => s.method !== null).length).toBeGreaterThanOrEqual(3);
   });
 
   it("loses none to the lexer: every `kind: \"published\"` written as code is an entry or a type member", () => {

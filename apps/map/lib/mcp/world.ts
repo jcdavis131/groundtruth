@@ -21,6 +21,10 @@
 //     table (ctx.countyPoint), never on a map anchor.
 //   - Items about eye's own catalogue are kind "about-eye": claims about what
 //     eye holds, not about the world.
+//   - A count this tool makes from a route's list (alerts or quakes touching a box, hospitals or
+//     dams found, companies in the bundle) is kind "estimate": the publisher states no such
+//     number. It names its inputs (the source, the route whose reply held the rows, that
+//     source's own retrieval time) where another item has a record URL, and says so in its note.
 //   - Missing is absent with a reason (topics[t].missing), never a placeholder;
 //     a value BLS withheld is null with the reason, not 0. Every missing entry also
 //     carries a code and the action the agent may take (./absence): not_published and
@@ -91,10 +95,27 @@ export interface WorldItem {
   upstreamRecordUrl?: string;
   retrievedAt: string;
   link: string;
-  /** "about-eye": a claim about eye's own catalogue, not about the world; it has no upstream to confirm. */
-  kind?: "about-eye";
+  /**
+   * "about-eye": a claim about eye's own catalogue, not about the world; it has no upstream to confirm.
+   * "estimate": a value this tool computed from a route's list (a count inside a box), not a number the publisher states;
+   * it names its `inputs`.
+   */
+  kind?: "about-eye" | "estimate";
+  /** For kind "estimate": what the value was computed from. */
+  inputs?: WorldItemInput[];
   /** "withheld": the value is null because the publisher's own suppression flag says so (BLS QCEW jobs.suppressed). */
   absence?: "withheld";
+}
+
+/** One input of an estimate (worldSchema.ts INPUT_SCHEMA): the source, the eye route whose reply held the rows, the publisher's URL for what the route read, and when. */
+export interface WorldItemInput {
+  sourceId: string;
+  /** The eye route that returned the rows (the item's `link`). */
+  route: string;
+  /** The publisher's own https URL for the layer, list or feed the route read; absent when the source states none. */
+  upstreamRecordUrl?: string;
+  /** When this source was retrieved, ISO 8601 UTC: the source's own entry in the route's provenance, not the reply's time. */
+  retrievedAt: string;
 }
 
 export interface WorldSection {
@@ -314,11 +335,29 @@ function item(c: Cite | NoCite, fact: string, value: WorldItem["value"], extra: 
   Object.assign(out, c);
   if (typeof record === "string") out.upstreamRecordUrl = record;
   if (rest.kind) {
-    // Keep kind last but one: it qualifies the whole item, so it reads next to the link.
+    // Keep kind next to the link, and inputs after it: they qualify the whole item.
     delete out.kind;
     out.kind = rest.kind;
   }
+  if (rest.inputs) {
+    delete out.inputs;
+    out.inputs = rest.inputs;
+  }
   return out;
+}
+
+/**
+ * A count this tool makes from a route's list: the publisher states no such number, so it is an estimate and names what it
+ * was computed from instead of a record URL. The input is the source (the cited one), the route whose reply held the rows,
+ * the publisher's own URL for the list or layer the route read, and that source's own retrieval time.
+ */
+function counted(c: Cite | NoCite, fact: string, value: number, note: string | undefined, why: string): Built {
+  return item(c, fact, value, {
+    note,
+    kind: "estimate",
+    inputs: isCite(c) ? [{ sourceId: c.sourceId, route: c.link, ...(c.upstreamUrl.startsWith("https://") ? { upstreamRecordUrl: c.upstreamUrl } : {}), retrievedAt: c.retrievedAt }] : undefined,
+    record: noRecord(why),
+  });
 }
 
 // ---- record-level URLs at the publisher ------------------------------------------
@@ -424,7 +463,7 @@ function scheduleBlocked(url: string | null): boolean {
 
 /** What the reply says about every item, once (not per item, for the byte cap). */
 export const WORLD_REPLY_NOTE =
-  "Cite upstreamRecordUrl for a fact (the publisher's own URL for that exact record), or upstreamUrl where an item's note says it has no record-level URL; `link` is the eye route that reproduces it. kind about-eye marks a claim about eye's own catalogue, not about the world. Missing is listed with its reason, never filled in. Names appear only on places, hospitals and non-private dams.";
+  "Cite upstreamRecordUrl for a fact (the publisher's own URL for that exact record), or upstreamUrl where an item's note says it has no record-level URL; `link` is the eye route that reproduces it. kind about-eye marks a claim about eye's own catalogue, not about the world. kind estimate marks a count eye computed from a route's list, not a number the publisher states; its inputs name the source, the route and when that source was retrieved. Missing is listed with its reason, never filled in. Names appear only on places, hospitals and non-private dams.";
 
 function section(): Section {
   return { items: [], cut: [] };
@@ -998,10 +1037,10 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         const nws = cite(live, "nws-api");
         if (!isCite(nws)) miss(s, "Severe or Extreme NWS alerts touching the box now", nws.reason, nws.code);
         else if (unmapped > 0) miss(s, "count of Severe or Extreme NWS alerts touching the box now", `${unmapped} alert${unmapped === 1 ? "" : "s"} in the national list could not be outlined, so a count for this box could miss them; the alerts that do touch it are listed`, "join_gap");
-        else push(s, item(nws, "Severe or Extreme NWS alerts touching the box now", alerts.length, { note: where, record: noRecord("a count over NWS's national list of active alerts, matched to this box here; NWS has no URL for exactly this box") }));
+        else push(s, counted(nws, "Severe or Extreme NWS alerts touching the box now", alerts.length, where, "a count over NWS's national list of active alerts, matched to this box here; NWS has no URL for exactly this box"));
         const usgs = cite(live, "usgs-earthquakes");
         if (!isCite(usgs)) miss(s, "M4.5+ earthquakes in the past day touching the box", usgs.reason, usgs.code);
-        else push(s, item(usgs, "M4.5+ earthquakes in the past day touching the box", quakes.length, { note: where, record: noRecord("a count over USGS's past-day M4.5+ feed, matched to this box here; the feed has no URL for exactly this box") }));
+        else push(s, counted(usgs, "M4.5+ earthquakes in the past day touching the box", quakes.length, where, "a count over USGS's past-day M4.5+ feed, matched to this box here; the feed has no URL for exactly this box"));
         for (const x of capList(s, "live events", hits, max)) {
           const quake = x.kind === "quake";
           const c = quake ? usgs : nws;
@@ -1087,7 +1126,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
       if (routeCut) {
         s.cut.push({ code: "cut_by_route_limit", text: `${label}: the route hit its upstream's record limit for this box, so the ${feats.length} it returned inside the box are not all of them` });
         if (!feats.length) miss(s, `${label} found`, "the route hit its record limit and returned none inside the box; a count of 0 would not be true", "cut_by_route_limit");
-      } else if (!feats.length) push(s, item(c, `${label} found`, 0, { note: boxNote, record: noRecord("a count of the route's records inside this box; the publisher has no URL for exactly this box") }));
+      } else if (!feats.length) push(s, counted(c, `${label} found`, 0, boxNote, "a count of the route's records inside this box; the publisher has no URL for exactly this box"));
       if (routeCut && feats.length > max) s.cut.push({ code: "cut_by_max_records", text: `${label}: ${max} of at least ${feats.length} shown (max_records)` });
       const shown = routeCut ? feats.slice(0, max) : capList(s, label, feats, max);
       for (const f of shown) for (const one of [build(obj(f.properties), pointOf(f), c, g)].flat()) push(s, listRow(one));
@@ -1146,7 +1185,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         const size = num(obj(co.body.bundle).companies);
         const universe = `within eye's SEC bundle${size != null ? ` of ${size} companies` : ""}${pulled ? ` pulled ${pulled}` : " (a committed fixture, pulled: null)"}; not every registrant`;
         if (!pulled) miss(s, `SEC-registered public companies ${where}`, `eye's SEC bundle is a committed fixture (pulled: null), not a full pull of EDGAR registrants, so it cannot say how many are ${where}; any listed are ${universe}`, "not_loaded");
-        else if (!feats.length) push(s, item(c, `public companies in eye's SEC bundle ${where}`, 0, { note: universe, record: noRecord("a count within eye's SEC bundle; SEC has no URL for it") }));
+        else if (!feats.length) push(s, counted(c, `public companies in eye's SEC bundle ${where}`, 0, universe, "a count within eye's SEC bundle; SEC has no URL for it"));
         for (const f of capList(s, "public companies", feats, max)) {
           const x = obj(obj(f.properties).extra);
           const ticker = str(x.ticker);

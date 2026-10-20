@@ -8,6 +8,10 @@
 //   - an item with no upstreamRecordUrl says "no record-level URL: <why>" in its note;
 //   - an upstreamRecordUrl sits on its own publisher's host (worldHosts.ts, the same table the test reads);
 //   - kind is "about-eye" only on eye's own catalogue items, and those have no publisher record;
+//   - kind is "estimate" on a value this tool computed from a route's list (a count inside a box), and an estimate
+//     names its inputs: each with the source, the eye route whose reply held the rows and that source's own
+//     retrieval time. Only an estimate has inputs. Added to world/2 after its baseline, and additive: an enum
+//     value, a property, and rules that apply only to the new value (CHANGELOG.md, 0.5.0);
 //   - a topic with missing[] entries has a coverageStatus; a reply that was cut (truncated) has one;
 //   - missing[] entries and coverageStatus.basis lines are the typed ones of ./absence;
 //   - coverageStatus.status is "partial" and nothing else ("complete" would be a claim eye cannot make).
@@ -31,6 +35,9 @@ const nonEmpty = { type: "string", minLength: 1 } as const;
 
 const NO_RECORD_NOTE = "no record-level URL: \\S";
 
+/** A retrieval time as every item and input states it: ISO 8601 in UTC, ending Z. */
+const RETRIEVED_AT = "^\\d{4}-\\d{2}-\\d{2}T[0-9:.]+Z$";
+
 /**
  * `^https://<host>/` from a RECORD_HOSTS regex, plus the organisation id segment on a shared ArcGIS
  * Online host (services.arcgis.com serves FEMA, HIFLD and EPA from one host, told apart only by that
@@ -50,6 +57,23 @@ function hostPattern(id: string, host: RegExp): string {
   return `^https://${name}/`;
 }
 
+/**
+ * One input of an estimate: the source a count was computed from, the eye route whose reply held the rows (the
+ * item's own link, so a reader can fetch it), the publisher's own URL for the layer, list or feed the route read
+ * (when it states one) and when that source was retrieved. The names are those of Provenance.inputs
+ * (lib/provenance/types.ts), plus the route.
+ */
+const INPUT_SCHEMA = {
+  type: "object",
+  required: ["sourceId", "route", "retrievedAt"],
+  properties: {
+    sourceId: nonEmpty,
+    route: { type: "string", pattern: "^https?://" },
+    upstreamRecordUrl: { type: "string", pattern: "^https://" },
+    retrievedAt: { type: "string", pattern: RETRIEVED_AT },
+  },
+} as const;
+
 const ITEM_SCHEMA = {
   type: "object",
   required: ["fact", "value", "sourceId", "publisher", "upstreamUrl", "retrievedAt", "link"],
@@ -65,9 +89,10 @@ const ITEM_SCHEMA = {
     publisher: nonEmpty,
     upstreamUrl: { type: "string", pattern: "^https?://" },
     upstreamRecordUrl: { type: "string", pattern: "^https://" },
-    retrievedAt: { type: "string", pattern: "^\\d{4}-\\d{2}-\\d{2}T[0-9:.]+Z$" },
+    retrievedAt: { type: "string", pattern: RETRIEVED_AT },
     link: { type: "string", pattern: "^https?://" },
-    kind: { type: "string", enum: ["about-eye"] },
+    kind: { type: "string", enum: ["about-eye", "estimate"] },
+    inputs: { type: "array", minItems: 1, items: INPUT_SCHEMA },
     absence: { type: "string", enum: ["withheld"] },
   },
   allOf: [
@@ -85,6 +110,11 @@ const ITEM_SCHEMA = {
     // claims about eye's own catalogue are marked, and have no publisher record
     { if: { properties: { sourceId: { const: "eye-catalog" } }, required: ["sourceId"] }, then: { required: ["kind"] } },
     { if: { properties: { kind: { const: "about-eye" } }, required: ["kind"] }, then: { properties: { sourceId: { const: "eye-catalog" } }, not: { required: ["upstreamRecordUrl"] } } },
+    // widening kind loosened nothing: eye's own catalogue is still about-eye, never relabelled an estimate
+    { if: { properties: { sourceId: { const: "eye-catalog" } }, required: ["sourceId"] }, then: { properties: { kind: { const: "about-eye" } } } },
+    // a value computed here names what it was computed from, and only a computed value does
+    { if: { properties: { kind: { const: "estimate" } }, required: ["kind"] }, then: { required: ["inputs"] } },
+    { if: { required: ["inputs"] }, then: { required: ["kind"], properties: { kind: { const: "estimate" } } } },
   ],
 } as const;
 
