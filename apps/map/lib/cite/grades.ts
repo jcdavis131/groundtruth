@@ -1,4 +1,4 @@
-// Reads a reconciled-plan file (writeups/jev-2026-10-18/eval-v3/regrade/grades.json) and compares, per fact, "the
+// Reads the reconciled set (`final`) of a plan file (writeups/jev-2026-10-18/eval-v3/regrade/grades.json) and compares, per fact, "the
 // publisher returned a record at the fact's link" with the reconciler's upstreamConfirmed. This is record existence,
 // not a value check: the facts in that file are prose, not structured items. scripts/cite-grades.mjs drives it live.
 
@@ -31,7 +31,7 @@ export function inTableFacts(grades: unknown): GradeFact[] {
   const plans = isObj(grades) && Array.isArray(grades.result) ? grades.result : [];
   const out: GradeFact[] = [];
   for (const p of plans) {
-    const facts = isObj(p) && isObj(p.g1) && Array.isArray(p.g1.facts) ? p.g1.facts : [];
+    const facts = isObj(p) && isObj(p.final) && Array.isArray(p.final.facts) ? p.final.facts : [];
     for (const f of facts) {
       if (!isObj(f) || f.citeType !== "upstream_publisher" || typeof f.link !== "string") continue;
       const link = f.link;
