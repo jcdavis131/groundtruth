@@ -19,6 +19,14 @@ describe("licence vocabulary", () => {
     expect(licenceTerm("CC-BY-4.0")?.url).toBe("https://spdx.org/licenses/CC-BY-4.0.html");
     expect(licenceTerm("not-a-licence")).toBeUndefined();
   });
+  it("strict mode fails a relayed source with no licenseId, and a relayed id that is not registered", () => {
+    const sources = { a: { id: "a" }, b: { id: "b", licenseId: "MIT" }, c: { id: "c" } };
+    // c has no id too, but nothing relays it: reported, not failed
+    expect(lintLicences(sources, ["a", "b", "z"]).strict).toEqual({ missing: ["a"], unregistered: ["z"] });
+    expect(lintLicences(sources, ["b"]).strict).toEqual({ missing: [], unregistered: [] });
+    expect(lintLicences(sources).strict).toBeUndefined();
+    expect(lintLicences(sources, ["a", "a", "b"]).strict?.missing).toEqual(["a"]);
+  });
   it("the lint fails an unknown id and reports a missing one", () => {
     const r = lintLicences({
       a: { id: "a", licenseId: "MIT" },

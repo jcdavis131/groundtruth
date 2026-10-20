@@ -73,19 +73,35 @@ export function licenceTerm(id: string): LicenceTerm | undefined {
 export interface LicenceLint {
   /** Sources whose licenseId isn't in LICENCE_TERMS. The lint fails on these. */
   unknown: Array<{ source: string; licenseId: string }>;
-  /** Sources with no licenseId. Reported, not failed. */
+  /** Sources with no licenseId. Reported, not failed, unless the source is in the strict set. */
   missing: string[];
   /** Sources with a known licenseId. */
   mapped: number;
+  /**
+   * Present only when a strict set was passed. `missing`: strict sources with no licenseId; `unregistered`: strict ids
+   * that are not in the registry at all. Both must be empty: the lint fails on them.
+   */
+  strict?: { missing: string[]; unregistered: string[] };
 }
 
-/** Check every source's licenseId against the vocabulary. */
-export function lintLicences(sources: Record<string, { id: string; licenseId?: string }>): LicenceLint {
+/**
+ * Check every source's licenseId against the vocabulary. With `strict` (the ids world_context relays), a source in
+ * that set without a licenseId, or an id that is not a registered source, is a failure rather than a line in a report.
+ */
+export function lintLicences(sources: Record<string, { id: string; licenseId?: string }>, strict?: Iterable<string>): LicenceLint {
   const out: LicenceLint = { unknown: [], missing: [], mapped: 0 };
   for (const [key, ref] of Object.entries(sources)) {
     if (ref.licenseId === undefined) out.missing.push(key);
     else if (!isLicenceId(ref.licenseId)) out.unknown.push({ source: key, licenseId: ref.licenseId });
     else out.mapped++;
+  }
+  if (strict) {
+    const need = [...new Set(strict)].sort();
+    const registered = (k: string) => Object.prototype.hasOwnProperty.call(sources, k);
+    out.strict = {
+      missing: need.filter((k) => registered(k) && sources[k].licenseId === undefined),
+      unregistered: need.filter((k) => !registered(k)),
+    };
   }
   return out;
 }

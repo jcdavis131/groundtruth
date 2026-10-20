@@ -18,6 +18,12 @@ export const SERVER_NAME = "embedding-atlas-mcp-server";
 export const SERVER_VERSION = "0.1.0";
 
 /**
+ * The origin this server answers on in production. public/openapi.json names it as servers[0] and
+ * server.test.ts holds the two together, with SERVER_VERSION, so the document and the server cannot drift apart.
+ */
+export const PUBLIC_ORIGIN = "https://www.arxiviq.com";
+
+/**
  * What a client reads at session start. Claude Code 2.1.x defers tool descriptions until a tool search and
  * loads only tool names plus these instructions, so this says what the server covers and when to go looking
  * for its tools. server.test.ts holds this to 1,500 characters, to stay well inside any client cut.

@@ -1,0 +1,5 @@
+{
+ "about": "Append-only. One entry per SERVER_VERSION: a sha256 of the tools/list reply a client sees (names, titles, descriptions, input schemas, annotations, _meta, outputSchema), of world_context's outputSchema alone, and of each tool, so a change to any of them without a version change fails lib/mcp/server.test.ts ('versioning promise'). To record a new version: bump SERVER_VERSION in server.ts, add a dated heading to apps/map/CHANGELOG.md, and append the entry the failing test prints. Never edit an old entry. SERVER_VERSION is the server string (initialize.serverInfo.version), not the world/N schema version.",
+ "schemaVersion": "world/2",
+ "history": []
+}
