@@ -1,0 +1,44 @@
+# The flow data refresh's shape check. Scout's cron runs
+# apps/map/scripts/flows-data.mjs every 6 h and opens a data-only pull request
+# touching apps/map/lib/flows/data/wind.json and currents.json. On such a pull
+# request, apps/map/scripts/flows-shape-check.mjs compares each file with the
+# base's copy: same keys, same grid, same array lengths, same non-null counts
+# (land stays null, never zero-filled), same source, an as-of that is newer
+# and not in the future, every value finite and in range. It runs on the
+# script's own self-test first. Plain Node, no install, no network, a few
+# seconds. It reports only: it merges nothing, and binds a merge only once
+# "flows-shape" is marked required in branch protection. Read-only: no
+# secrets, writes nothing.
+name: flows-shape
+
+on:
+  pull_request:
+    paths:
+      - "apps/map/lib/flows/data/wind.json"
+      - "apps/map/lib/flows/data/currents.json"
+      - "apps/map/scripts/flows-shape-check.mjs"
+      - "apps/map/scripts/flows-shape-check.test.mjs"
+      - ".github/workflows/flows-shape.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  flows-shape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The base commit must be reachable for `git show <base>:<path>`.
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - name: shape check self-test
+        run: node apps/map/scripts/flows-shape-check.test.mjs
+      - name: shape check against the pull request base
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: node apps/map/scripts/flows-shape-check.mjs --base "$BASE"
