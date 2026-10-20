@@ -12,7 +12,12 @@
 //
 // Rules for filling `licenseId` in sources.ts:
 // - Only when the source's own string maps to an entry with confidence. Leave it
-//   out otherwise; the lint lists every source without one.
+//   out otherwise; the lint lists every source without one. For a source that
+//   world_context relays the lint fails instead (sources.test.ts): read the
+//   publisher's own page, put its URL, the day you read it and its sentence in
+//   `license`, and take the id that sentence supports. When the page names no
+//   licence, the id is `publisher-terms-unstated`: no grant is claimed beyond the
+//   quoted words. Never infer a grant.
 // - The id names the terms on what we actually fetch. `esri-mla` is for items Esri
 //   authored or summarised (World Imagery Wayback, Esri's FCC summary layer). A
 //   government dataset that an Esri-hosted item merely re-serves under the MLA gets
@@ -24,7 +29,7 @@
 //   Database, PAD-US, the National Inventory of Dams, landslide and fault
 //   inventories built from state surveys, EONET's relayed events).
 
-export type LicenceKind = "spdx" | "named";
+export type LicenceKind = "spdx" | "named" | "unstated";
 
 export interface LicenceTerm {
   /** SPDX licence id, or a named id for terms SPDX doesn't list. */
@@ -32,8 +37,8 @@ export interface LicenceTerm {
   kind: LicenceKind;
   /** The name as the terms give it. */
   name: string;
-  /** Where the terms are published. */
-  url: string;
+  /** Where the terms are published. Absent only for kind "unstated", which has no terms. */
+  url?: string;
 }
 
 const spdx = (id: string, name: string): LicenceTerm => ({ id, kind: "spdx", name, url: `https://spdx.org/licenses/${id}.html` });
@@ -58,6 +63,9 @@ export const LICENCE_TERMS = {
   "gdelt-terms": { id: "gdelt-terms", kind: "named", name: "GDELT Project terms of use", url: "https://www.gdeltproject.org/about.html#termsofuse" },
   "youtube-terms": { id: "youtube-terms", kind: "named", name: "YouTube Terms of Service", url: "https://www.youtube.com/t/terms" },
   "chicago-data-terms": { id: "chicago-data-terms", kind: "named", name: "City of Chicago data portal terms of use", url: "https://www.chicago.gov/city/en/narr/foia/data_disclaimer.html" },
+  "fema-nri-terms": { id: "fema-nri-terms", kind: "named", name: "FEMA National Risk Index Terms & Conditions (the publisher's item licenseInfo)", url: "https://www.arcgis.com/home/item.html?id=39485e8035d446a5bff03259508ae355" },
+  "sec-website-terms": { id: "sec-website-terms", kind: "named", name: "SEC.gov Privacy and Security Policy, Website Dissemination", url: "https://www.sec.gov/about/privacy-information" },
+  "publisher-terms-unstated": { id: "publisher-terms-unstated", kind: "unstated", name: "The publisher's own page states no licence; no grant is claimed beyond the words quoted in the source's license note" },
 } as const satisfies Record<string, LicenceTerm>;
 
 export type LicenceId = keyof typeof LICENCE_TERMS;

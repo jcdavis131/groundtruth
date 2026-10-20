@@ -73,7 +73,7 @@ A `world_context` missing entry is `{ what, code, reason, action, to? }`. A resu
 
 ### Output schema
 
-`world_context` publishes an `outputSchema` (JSON Schema, `lib/mcp/worldSchema.ts`, `schemaVersion` `"world/2"`): in `tools/list` and in the `tools` list of `GET /api/mcp`. `schemaVersion` is a new key on the reply and the change is additive (no MCP version bump). The schema encodes the honesty rules so a client can check a bundle without trusting eye: every item has `fact`, `value`, `sourceId`, `publisher`, `upstreamUrl`, `retrievedAt` (ending Z) and `link`; a null `value` carries a `note`; an item with no `upstreamRecordUrl` says "no record-level URL: why" in its note; an `upstreamRecordUrl` sits on its own publisher's host (`lib/mcp/worldHosts.ts`, the table the test reads too); `kind` is only `"about-eye"`; a topic with `missing` entries has a `coverageStatus`, a reply with `truncated` has one, and its `status` is `"partial"` and nothing else; `missing` entries and `basis` lines are the typed ones above. An `isError` reply carries the typed error envelope instead of the bundle, and the schema accepts it too, because the MCP SDK's client checks `structuredContent` against the schema even when `isError` is true.
+`world_context` publishes an `outputSchema` (JSON Schema, `lib/mcp/worldSchema.ts`, `schemaVersion` `"world/2"`): in `tools/list` and in the `tools` list of `GET /api/mcp`. `schemaVersion` is a new key on the reply and the change is additive within world/2; the server version that carries it is 0.4.0 (see the versioning promise below). The schema encodes the honesty rules so a client can check a bundle without trusting eye: every item has `fact`, `value`, `sourceId`, `publisher`, `upstreamUrl`, `retrievedAt` (ending Z) and `link`; a null `value` carries a `note`; an item with no `upstreamRecordUrl` says "no record-level URL: why" in its note; an `upstreamRecordUrl` sits on its own publisher's host (`lib/mcp/worldHosts.ts`, the table the test reads too); `kind` is only `"about-eye"`; a topic with `missing` entries has a `coverageStatus`, a reply with `truncated` has one, and its `status` is `"partial"` and nothing else; `missing` entries and `basis` lines are the typed ones above. An `isError` reply carries the typed error envelope instead of the bundle, and the schema accepts it too, because the MCP SDK's client checks `structuredContent` against the schema even when `isError` is true.
 
 The server checks every non-error `world_context` reply against the schema before sending it; a reply that fails comes out as an `isError` reply with code `internal_error` and the validator's message, never as a plain result. SDK 1.30's `registerTool` accepts only zod schemas for `outputSchema`, so the server adds the JSON Schema to `tools/list` itself and validates with the SDK's own JSON Schema validator (`lib/mcp/server.ts`); a test pins both. `fema-nri` and `hifld-hospitals` share one ArcGIS org, so the schema separates publishers, not those two layers.
 
@@ -121,6 +121,22 @@ The server checks every non-error `world_context` reply against the schema befor
 <!-- tools:end -->
 
 The table is generated from `toolManifest()` in `lib/mcp/server.ts`; `lib/mcp/server.test.ts` fails when it drifts. Regenerate with `node scripts/mcp-stdio.mjs --doc-table` and paste between the markers.
+
+## Versioning promise
+
+Written 2026-10-20. Two numbers, and they are not the same thing:
+
+- `SERVER_VERSION` (`lib/mcp/server.ts`) is the server string: `serverInfo.version` at `initialize`, `version` in `GET /api/mcp`, and `info.version` of `public/openapi.json`. It is `0.4.0` today.
+- `schemaVersion` (`"world/2"`, `WORLD_SCHEMA_VERSION` in `lib/mcp/worldSchema.ts`) is the shape of a `world_context` reply. A bump of `SERVER_VERSION` is not a bump of `world/N`; a `world/N` bump is Cam's call.
+
+The promise, and which part a test enforces:
+
+1. What `tools/list` says (tool names, titles, descriptions, input schemas, annotations, `_meta`) and `world_context`'s `outputSchema` change only together with `SERVER_VERSION`, and every version has a dated entry in `apps/map/CHANGELOG.md`. Enforced: `lib/mcp/server.test.ts` ("versioning promise") hashes the real `tools/list` reply and fails when it differs from the entry `lib/mcp/server.lock.json` holds for the current `SERVER_VERSION`, when `SERVER_VERSION` has no entry there, or when an entry has no dated CHANGELOG.md heading. The same test holds `public/openapi.json` to `SERVER_VERSION` and to the production origin (`PUBLIC_ORIGIN`). A change to a description's wording is a version bump too; a bump is cheap on purpose.
+2. `world/N` is additive within N. A property, an enum value or a rule may be added. A property is not removed or retyped, a required field is not relaxed, and a const or an enum value is not dropped. Enforced: `lib/mcp/server.schema-compat.test.ts` compares the published schema with the baseline committed when N was first published (`lib/mcp/server.world-2.schema.json`, never edited).
+3. A breaking change to the reply is `world/N+1`, served beside `world/N` for 90 days, both named in CHANGELOG.md. Promise only: nothing can test it until a `world/3` exists.
+4. A tool, or an argument of a tool, that is removed or renamed is announced under "Deprecated" in CHANGELOG.md at least 30 days before it goes. Promise only: the lock sees the removal, not the notice.
+
+What this does not cover: the other tools relay a route's JSON as it is and publish no schema, so a route's own fields can change without a `SERVER_VERSION` change (each route's provenance names its source and release); the compat test does not read patterns or length limits; and the lock is append-only by convention, not by a check, so a reviewer reads its diff.
 
 ## Resources
 

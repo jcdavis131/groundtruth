@@ -77,12 +77,13 @@ describe("source licences, strict for what world_context relays", () => {
     }
   });
 
-  it("the sources filled from their publishers' own pages name the page, the day it was read and the sentence", () => {
+  it("the sources filled from their publishers' own pages name the page, the day it was read and the sentence (or that there is none)", () => {
     for (const id of ["fema-nri", "cms-provider-data", "usdm", "sec-edgar", "usgs-wbd", "epa-ucmr5-pat", "hifld-hospitals", "usace-nid", "bts-supply-chain"]) {
       const note = registry[id].license;
       expect(note, id + " names a page").toMatch(/https:\/\/\S+/);
       expect(note, id + " says when it was read").toMatch(/read 2026-10-20/);
-      expect(note, id + " quotes a sentence").toMatch(/"[^"]{12,}"/);
+      // the publisher's sentence, or a plain statement that its page has none (an unstated licence has nothing to quote)
+      expect(note, id + " quotes a sentence or says the page states none").toMatch(/"[^"]{12,}"|states no licen[cs]e|has no license field/);
     }
   });
 });

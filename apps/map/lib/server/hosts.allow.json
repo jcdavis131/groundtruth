@@ -1,4 +1,1041 @@
 {
- "hosts": {},
- "dynamic": []
+ "about": "Every host that non-test source under apps/map lib, app, components, scripts, dataops and ml names, and what the app does with it. Checked by lib/server/hosts.test.ts (map-ci) and scripts/hosts-check.mjs (guard.yml), both through lib/server/hosts.scan.mjs. A new host fails until it is classified here; an entry no code names fails as stale. kind request: the app asks this host for data or images (server or browser), so it carries the publisher and whether it needs a key. kind link: a URL shown or cited (a citation, a terms page, a page a person clicks), not requested; this is a reviewed claim and the check does not prove it. kind identifier: a name that is never dereferenced (an XML namespace, a placeholder). keyless true is a reviewed claim; the only machine check is that no URL literal puts key=, apikey=, token= or the like on such a host (keyParamNote answers that for a host where the parameter is not a credential). keyless false is allowed only for an optional key the user enters in Settings (lib/store/settings.ts API_KEYS); the app works without it, and no key ships in the repo. Not seen: a host built at run time or returned by an upstream, a key sent in a header, hosts a bundled library picks from a token (Cesium ion, the child tiles of Google 3D Tiles), and python or JS outside the scanned directories.",
+ "decisionsForCam": [
+  "AGENTS.md says one source needs a key today (AISStream). The code has more hosts that take a key the user enters: Google 3D Tiles, ADS-B Exchange via RapidAPI, OpenSky OAuth, AISStream, Windy Webcams, ElevenLabs. All are optional: each is off until a person pastes a key in Settings (AISStream also runs for the snapshot collector if the operator sets AISSTREAM_KEY); no key ships in the repo. pendingCam marks the one AGENTS.md already names. Whether the others stay, go, or are named in AGENTS.md is Cam's call."
+ ],
+ "hosts": {
+  "adsb.lol": {
+   "kind": "link",
+   "publisher": "adsb.lol"
+  },
+  "adsbexchange-com1.p.rapidapi.com": {
+   "kind": "request",
+   "publisher": "ADS-B Exchange via RapidAPI",
+   "keyless": false,
+   "keyIds": [
+    "ADSBX_RAPIDAPI_KEY"
+   ],
+   "optional": true,
+   "note": "An alternative aircraft source, used only when the person picks it and has entered a RapidAPI key; adsb.lol and OpenSky need none."
+  },
+  "aisstream.io": {
+   "kind": "link",
+   "publisher": "AISStream.io"
+  },
+  "api-portal.tfl.gov.uk": {
+   "kind": "link",
+   "publisher": "Transport for London"
+  },
+  "api.adsb.lol": {
+   "kind": "request",
+   "publisher": "adsb.lol",
+   "keyless": true
+  },
+  "api.data.gov.sg": {
+   "kind": "request",
+   "publisher": "Land Transport Authority of Singapore (data.gov.sg)",
+   "keyless": true
+  },
+  "api.elevenlabs.io": {
+   "kind": "request",
+   "publisher": "ElevenLabs",
+   "keyless": false,
+   "keyIds": [
+    "ELEVENLABS_API_KEY",
+    "ELEVENLABS_AGENT_ID"
+   ],
+   "optional": true,
+   "note": "Signed-URL sessions for a private voice agent, used only when a person has entered an ElevenLabs key; voice is optional."
+  },
+  "api.fdic.gov": {
+   "kind": "request",
+   "publisher": "Federal Deposit Insurance Corporation",
+   "keyless": true
+  },
+  "api.open-meteo.com": {
+   "kind": "request",
+   "publisher": "Open-Meteo",
+   "keyless": true
+  },
+  "api.tfl.gov.uk": {
+   "kind": "request",
+   "publisher": "Transport for London",
+   "keyless": true
+  },
+  "api.usaspending.gov": {
+   "kind": "request",
+   "publisher": "U.S. Department of the Treasury (USAspending)",
+   "keyless": true
+  },
+  "api.water.noaa.gov": {
+   "kind": "request",
+   "publisher": "NOAA National Weather Service (National Water Prediction Service)",
+   "keyless": true
+  },
+  "api.water.usgs.gov": {
+   "kind": "request",
+   "publisher": "U.S. Geological Survey (NLDI)",
+   "keyless": true
+  },
+  "api.waterdata.usgs.gov": {
+   "kind": "request",
+   "publisher": "U.S. Geological Survey",
+   "keyless": true
+  },
+  "api.weather.gov": {
+   "kind": "request",
+   "publisher": "NOAA National Weather Service",
+   "keyless": true
+  },
+  "api.wheretheiss.at": {
+   "kind": "request",
+   "publisher": "Where the ISS at?",
+   "keyless": true
+  },
+  "api.wikimedia.org": {
+   "kind": "request",
+   "publisher": "Wikimedia Foundation",
+   "keyless": true
+  },
+  "api.windy.com": {
+   "kind": "request",
+   "publisher": "Windy.com (Webcams API v3)",
+   "keyless": false,
+   "keyIds": [
+    "WINDY_WEBCAMS_KEY"
+   ],
+   "optional": true,
+   "note": "Worldwide webcams, off until a person pastes a Windy key; TfL and NYC DOT cameras need none."
+  },
+  "api.worldbank.org": {
+   "kind": "request",
+   "publisher": "World Bank",
+   "keyless": true
+  },
+  "apps.nationalmap.gov": {
+   "kind": "link",
+   "publisher": "U.S. Geological Survey"
+  },
+  "auth.opensky-network.org": {
+   "kind": "request",
+   "publisher": "OpenSky Network",
+   "keyless": false,
+   "keyIds": [
+    "OPENSKY_CLIENT_ID",
+    "OPENSKY_CLIENT_SECRET"
+   ],
+   "optional": true,
+   "note": "OAuth token endpoint, called only when a person has entered an OpenSky client id and secret; without them opensky-network.org is read anonymously."
+  },
+  "basemap.nationalmap.gov": {
+   "kind": "request",
+   "publisher": "U.S. Geological Survey (The National Map)",
+   "keyless": true
+  },
+  "biamaps.geoplatform.gov": {
+   "kind": "request",
+   "publisher": "Bureau of Indian Affairs",
+   "keyless": true
+  },
+  "blue.kingcounty.com": {
+   "kind": "link",
+   "publisher": "King County"
+  },
+  "catalogue.data.gov.bc.ca": {
+   "kind": "request",
+   "publisher": "Province of British Columbia (BC Data Catalogue)",
+   "keyless": true
+  },
+  "celestrak.org": {
+   "kind": "request",
+   "publisher": "CelesTrak",
+   "keyless": true
+  },
+  "coast.noaa.gov": {
+   "kind": "request",
+   "publisher": "NOAA Office for Coastal Management",
+   "keyless": true
+  },
+  "cwwp2.dot.ca.gov": {
+   "kind": "request",
+   "publisher": "California Department of Transportation",
+   "keyless": true
+  },
+  "dashboard.vapi.ai": {
+   "kind": "link",
+   "publisher": "Vapi"
+  },
+  "data-nifc.opendata.arcgis.com": {
+   "kind": "link",
+   "publisher": "National Interagency Fire Center"
+  },
+  "data.austintexas.gov": {
+   "kind": "request",
+   "publisher": "City of Austin",
+   "keyless": true
+  },
+  "data.bls.gov": {
+   "kind": "request",
+   "publisher": "U.S. Bureau of Labor Statistics",
+   "keyless": true
+  },
+  "data.bts.gov": {
+   "kind": "request",
+   "publisher": "U.S. Bureau of Transportation Statistics",
+   "keyless": true
+  },
+  "data.cdc.gov": {
+   "kind": "request",
+   "publisher": "Centers for Disease Control and Prevention",
+   "keyless": true
+  },
+  "data.cityofchicago.org": {
+   "kind": "request",
+   "publisher": "City of Chicago",
+   "keyless": true
+  },
+  "data.cityofnewyork.us": {
+   "kind": "request",
+   "publisher": "City of New York",
+   "keyless": true
+  },
+  "data.cms.gov": {
+   "kind": "request",
+   "publisher": "Centers for Medicare & Medicaid Services",
+   "keyless": true
+  },
+  "data.epa.gov": {
+   "kind": "request",
+   "publisher": "U.S. Environmental Protection Agency (Envirofacts)",
+   "keyless": true
+  },
+  "data.gdeltproject.org": {
+   "kind": "request",
+   "publisher": "GDELT Project",
+   "keyless": true
+  },
+  "data.gov.sg": {
+   "kind": "link",
+   "publisher": "Government of Singapore"
+  },
+  "data.lacity.org": {
+   "kind": "request",
+   "publisher": "City of Los Angeles",
+   "keyless": true
+  },
+  "data.ny.gov": {
+   "kind": "request",
+   "publisher": "State of New York",
+   "keyless": true
+  },
+  "data.seattle.gov": {
+   "kind": "request",
+   "publisher": "City of Seattle",
+   "keyless": true
+  },
+  "data.sec.gov": {
+   "kind": "request",
+   "publisher": "U.S. Securities and Exchange Commission",
+   "keyless": true,
+   "note": "The SEC asks for a User-Agent with contact details; the EDGAR client sends exactly that (lib/companies/edgar.ts)."
+  },
+  "data.sf.gov": {
+   "kind": "request",
+   "publisher": "City and County of San Francisco",
+   "keyless": true
+  },
+  "data.worldbank.org": {
+   "kind": "link",
+   "publisher": "World Bank"
+  },
+  "datacatalog.cookcountyil.gov": {
+   "kind": "request",
+   "publisher": "Cook County, Illinois",
+   "keyless": true
+  },
+  "datatopics.worldbank.org": {
+   "kind": "link",
+   "publisher": "World Bank"
+  },
+  "developers.google.com": {
+   "kind": "link",
+   "publisher": "Google"
+  },
+  "doi.org": {
+   "kind": "link",
+   "publisher": "DOI Foundation"
+  },
+  "droughtmonitor.unl.edu": {
+   "kind": "link",
+   "publisher": "National Drought Mitigation Center"
+  },
+  "earth-search.aws.element84.com": {
+   "kind": "request",
+   "publisher": "Element 84 (Earth Search STAC over ESA Sentinel-2)",
+   "keyless": true
+  },
+  "earthquake.usgs.gov": {
+   "kind": "request",
+   "publisher": "U.S. Geological Survey",
+   "keyless": true
+  },
+  "echo.epa.gov": {
+   "kind": "link",
+   "publisher": "U.S. Environmental Protection Agency"
+  },
+  "echodata.epa.gov": {
+   "kind": "request",
+   "publisher": "U.S. Environmental Protection Agency (ECHO)",
+   "keyless": true
+  },
+  "ecos.fws.gov": {
+   "kind": "link",
+   "publisher": "U.S. Fish and Wildlife Service"
+  },
+  "elevation.nationalmap.gov": {
+   "kind": "request",
+   "publisher": "U.S. Geological Survey (3DEP)",
+   "keyless": true
+  },
+  "elevenlabs.io": {
+   "kind": "link",
+   "publisher": "ElevenLabs"
+  },
+  "ember-energy.org": {
+   "kind": "link",
+   "publisher": "Ember"
+  },
+  "en.wikipedia.org": {
+   "kind": "request",
+   "publisher": "Wikimedia Foundation",
+   "keyless": true
+  },
+  "enterprise.gisdata.mn.gov": {
+   "kind": "request",
+   "publisher": "Minnesota Geospatial Information Office",
+   "keyless": true
+  },
+  "eonet.gsfc.nasa.gov": {
+   "kind": "request",
+   "publisher": "NASA (EONET)",
+   "keyless": true
+  },
+  "epqs.nationalmap.gov": {
+   "kind": "request",
+   "publisher": "U.S. Geological Survey (3DEP Elevation Point Query Service)",
+   "keyless": true
+  },
+  "example.invalid": {
+   "kind": "identifier"
+  },
+  "eye.jcamd.com": {
+   "kind": "link",
+   "publisher": "Embedding Atlas"
+  },
+  "feature.geographic.texas.gov": {
+   "kind": "request",
+   "publisher": "Texas Geographic Information Office",
+   "keyless": true
+  },
+  "files.airnowtech.org": {
+   "kind": "request",
+   "publisher": "U.S. EPA AirNow",
+   "keyless": true
+  },
+  "files.ember-energy.org": {
+   "kind": "request",
+   "publisher": "Ember",
+   "keyless": true
+  },
+  "files.zillowstatic.com": {
+   "kind": "request",
+   "publisher": "Zillow Research",
+   "keyless": true
+  },
+  "firms.modaps.eosdis.nasa.gov": {
+   "kind": "request",
+   "publisher": "NASA (LANCE FIRMS)",
+   "keyless": true
+  },
+  "forecast.weather.gov": {
+   "kind": "link",
+   "publisher": "NOAA National Weather Service"
+  },
+  "fred.stlouisfed.org": {
+   "kind": "request",
+   "publisher": "Federal Reserve Bank of St. Louis (FRED)",
+   "keyless": true
+  },
+  "fwspublicservices.wim.usgs.gov": {
+   "kind": "request",
+   "publisher": "U.S. Fish and Wildlife Service",
+   "keyless": true
+  },
+  "geodata.epa.gov": {
+   "kind": "request",
+   "publisher": "U.S. Environmental Protection Agency",
+   "keyless": true
+  },
+  "geopub.epa.gov": {
+   "kind": "request",
+   "publisher": "U.S. Environmental Protection Agency",
+   "keyless": true
+  },
+  "geospatial.sec.usace.army.mil": {
+   "kind": "request",
+   "publisher": "U.S. Army Corps of Engineers (National Inventory of Dams)",
+   "keyless": true
+  },
+  "gibs.earthdata.nasa.gov": {
+   "kind": "request",
+   "publisher": "NASA (GIBS)",
+   "keyless": true
+  },
+  "gis.blm.gov": {
+   "kind": "request",
+   "publisher": "Bureau of Land Management",
+   "keyless": true
+  },
+  "gis.mcassessor.maricopa.gov": {
+   "kind": "request",
+   "publisher": "Maricopa County Assessor",
+   "keyless": true
+  },
+  "gis.traviscountytx.gov": {
+   "kind": "request",
+   "publisher": "Travis County, Texas",
+   "keyless": true
+  },
+  "gis12.cookcountyil.gov": {
+   "kind": "request",
+   "publisher": "Cook County, Illinois",
+   "keyless": true
+  },
+  "gismaps.kingcounty.gov": {
+   "kind": "request",
+   "publisher": "King County, Washington",
+   "keyless": true
+  },
+  "gisservice.mt.gov": {
+   "kind": "request",
+   "publisher": "Montana State Library",
+   "keyless": true
+  },
+  "gisservices.its.ny.gov": {
+   "kind": "request",
+   "publisher": "New York State Office of Information Technology Services",
+   "keyless": true
+  },
+  "github.com": {
+   "kind": "link",
+   "publisher": "GitHub"
+  },
+  "hazards.fema.gov": {
+   "kind": "request",
+   "publisher": "Federal Emergency Management Agency",
+   "keyless": true
+  },
+  "historical1.arcgis.com": {
+   "kind": "request",
+   "publisher": "Esri (USGS Historical Topographic Maps)",
+   "keyless": true
+  },
+  "hudgis-hud.opendata.arcgis.com": {
+   "kind": "link",
+   "publisher": "U.S. Department of Housing and Urban Development"
+  },
+  "huggingface.co": {
+   "kind": "link",
+   "publisher": "Hugging Face"
+  },
+  "hydro.nationalmap.gov": {
+   "kind": "request",
+   "publisher": "U.S. Geological Survey (Watershed Boundary Dataset)",
+   "keyless": true
+  },
+  "imagery.geoplatform.gov": {
+   "kind": "request",
+   "publisher": "USDA Forest Service (via GeoPlatform)",
+   "keyless": true
+  },
+  "ion.cesium.com": {
+   "kind": "link",
+   "publisher": "Cesium"
+  },
+  "json-schema.org": {
+   "kind": "identifier"
+  },
+  "jsonfeed.org": {
+   "kind": "identifier"
+  },
+  "kauai.ccmc.gsfc.nasa.gov": {
+   "kind": "request",
+   "publisher": "NASA Community Coordinated Modeling Center (DONKI)",
+   "keyless": true
+  },
+  "kp.gfz.de": {
+   "kind": "request",
+   "publisher": "GFZ Helmholtz Centre for Geosciences",
+   "keyless": true
+  },
+  "livingatlas.arcgis.com": {
+   "kind": "link",
+   "publisher": "Esri"
+  },
+  "ll.thespacedevs.com": {
+   "kind": "request",
+   "publisher": "The Space Devs (Launch Library 2)",
+   "keyless": true
+  },
+  "localhost": {
+   "kind": "identifier"
+  },
+  "macrostrat.org": {
+   "kind": "request",
+   "publisher": "Macrostrat, University of Wisconsin-Madison",
+   "keyless": true
+  },
+  "maps.fisheries.noaa.gov": {
+   "kind": "request",
+   "publisher": "NOAA Fisheries",
+   "keyless": true
+  },
+  "maps.lacity.org": {
+   "kind": "request",
+   "publisher": "City of Los Angeles",
+   "keyless": true
+  },
+  "maps.nj.gov": {
+   "kind": "request",
+   "publisher": "New Jersey Office of GIS",
+   "keyless": true
+  },
+  "mapservices.nps.gov": {
+   "kind": "request",
+   "publisher": "National Park Service",
+   "keyless": true
+  },
+  "marine-api.open-meteo.com": {
+   "kind": "request",
+   "publisher": "Open-Meteo",
+   "keyless": true
+  },
+  "mcassessor.maricopa.gov": {
+   "kind": "link",
+   "publisher": "Maricopa County Assessor"
+  },
+  "mdgeodata.md.gov": {
+   "kind": "request",
+   "publisher": "Maryland Department of Planning (MD iMAP)",
+   "keyless": true
+  },
+  "meri.digitraffic.fi": {
+   "kind": "request",
+   "publisher": "Fintraffic (Digitraffic)",
+   "keyless": true
+  },
+  "msc.fema.gov": {
+   "kind": "link",
+   "publisher": "Federal Emergency Management Agency"
+  },
+  "msi.nga.mil": {
+   "kind": "request",
+   "publisher": "National Geospatial-Intelligence Agency (World Port Index)",
+   "keyless": true,
+   "keyParamNote": "the key= in the download URL is the file's path on msi.nga.mil, not a credential"
+  },
+  "nces.ed.gov": {
+   "kind": "request",
+   "publisher": "U.S. Department of Education (NCES)",
+   "keyless": true
+  },
+  "nid.sec.usace.army.mil": {
+   "kind": "link",
+   "publisher": "U.S. Army Corps of Engineers"
+  },
+  "nominatim.openstreetmap.org": {
+   "kind": "request",
+   "publisher": "OpenStreetMap Foundation (Nominatim)",
+   "keyless": true
+  },
+  "opensky-network.org": {
+   "kind": "request",
+   "publisher": "OpenSky Network",
+   "keyless": true,
+   "note": "Read anonymously by default; an optional OAuth client (OPENSKY_CLIENT_ID and OPENSKY_CLIENT_SECRET, see auth.opensky-network.org) raises the credit quota."
+  },
+  "openskynetwork.github.io": {
+   "kind": "link",
+   "publisher": "OpenSky Network"
+  },
+  "overpass-api.de": {
+   "kind": "request",
+   "publisher": "OpenStreetMap contributors (Overpass API)",
+   "keyless": true
+  },
+  "permits.ops.usace.army.mil": {
+   "kind": "request",
+   "publisher": "U.S. Army Corps of Engineers",
+   "keyless": true
+  },
+  "planetarycomputer.microsoft.com": {
+   "kind": "request",
+   "publisher": "Microsoft Planetary Computer",
+   "keyless": true
+  },
+  "portal.assessor.lacounty.gov": {
+   "kind": "link",
+   "publisher": "Los Angeles County Assessor"
+  },
+  "public.gis.lacounty.gov": {
+   "kind": "request",
+   "publisher": "Los Angeles County",
+   "keyless": true
+  },
+  "query.wikidata.org": {
+   "kind": "request",
+   "publisher": "Wikimedia Foundation (Wikidata Query Service)",
+   "keyless": true
+  },
+  "rapidapi.com": {
+   "kind": "link",
+   "publisher": "RapidAPI"
+  },
+  "raw.githubusercontent.com": {
+   "kind": "request",
+   "publisher": "Natural Earth (nvkelso/natural-earth-vector on GitHub)",
+   "keyless": true
+  },
+  "receiver.example": {
+   "kind": "identifier"
+  },
+  "registry.opendata.aws": {
+   "kind": "link",
+   "publisher": "Amazon Web Services"
+  },
+  "s3-us-west-2.amazonaws.com": {
+   "kind": "request",
+   "publisher": "Esri (World Imagery Wayback configuration)",
+   "keyless": true
+  },
+  "s3.amazonaws.com": {
+   "kind": "request",
+   "publisher": "Mapzen / Tilezen (Terrain Tiles on the AWS Registry of Open Data)",
+   "keyless": true
+  },
+  "schema.org": {
+   "kind": "identifier"
+  },
+  "sdmdataaccess.sc.egov.usda.gov": {
+   "kind": "request",
+   "publisher": "USDA Natural Resources Conservation Service",
+   "keyless": true
+  },
+  "sentinels.copernicus.eu": {
+   "kind": "link",
+   "publisher": "European Space Agency"
+  },
+  "services.arcgis.com": {
+   "kind": "request",
+   "publisher": "Esri ArcGIS Online hosted services (the publisher is the org id in the URL path; lib/provenance/sources.ts names each)",
+   "keyless": true
+  },
+  "services.arcgisonline.com": {
+   "kind": "request",
+   "publisher": "Esri (World Imagery tiles)",
+   "keyless": true
+  },
+  "services.nconemap.gov": {
+   "kind": "request",
+   "publisher": "North Carolina Center for Geographic Information and Analysis",
+   "keyless": true
+  },
+  "services1.arcgis.com": {
+   "kind": "request",
+   "publisher": "Esri ArcGIS Online hosted services (the publisher is the org id in the URL path; lib/provenance/sources.ts names each)",
+   "keyless": true
+  },
+  "services2.arcgis.com": {
+   "kind": "request",
+   "publisher": "Esri ArcGIS Online hosted services (the publisher is the org id in the URL path; lib/provenance/sources.ts names each)",
+   "keyless": true
+  },
+  "services3.arcgis.com": {
+   "kind": "request",
+   "publisher": "Esri ArcGIS Online hosted services (the publisher is the org id in the URL path; lib/provenance/sources.ts names each)",
+   "keyless": true
+  },
+  "services5.arcgis.com": {
+   "kind": "request",
+   "publisher": "Esri ArcGIS Online hosted services (the publisher is the org id in the URL path; lib/provenance/sources.ts names each)",
+   "keyless": true
+  },
+  "services6.arcgis.com": {
+   "kind": "request",
+   "publisher": "Esri ArcGIS Online hosted services (the publisher is the org id in the URL path; lib/provenance/sources.ts names each)",
+   "keyless": true
+  },
+  "services7.arcgis.com": {
+   "kind": "request",
+   "publisher": "Esri ArcGIS Online hosted services (the publisher is the org id in the URL path; lib/provenance/sources.ts names each)",
+   "keyless": true
+  },
+  "services8.arcgis.com": {
+   "kind": "request",
+   "publisher": "Esri ArcGIS Online hosted services (the publisher is the org id in the URL path; lib/provenance/sources.ts names each)",
+   "keyless": true
+  },
+  "services9.arcgis.com": {
+   "kind": "request",
+   "publisher": "Esri ArcGIS Online hosted services (the publisher is the org id in the URL path; lib/provenance/sources.ts names each)",
+   "keyless": true
+  },
+  "site.api.espn.com": {
+   "kind": "request",
+   "publisher": "ESPN (undocumented public scoreboard endpoint)",
+   "keyless": true
+  },
+  "spdx.org": {
+   "kind": "link",
+   "publisher": "SPDX"
+  },
+  "stream.aisstream.io": {
+   "kind": "request",
+   "publisher": "AISStream.io",
+   "keyless": false,
+   "keyIds": [
+    "AISSTREAM_KEY"
+   ],
+   "optional": true,
+   "note": "Global AIS over a websocket, used when a person pastes an AISStream key in Settings or when the operator sets AISSTREAM_KEY for the snapshot collector (app/api/series); Digitraffic covers the Baltic without one.",
+   "pendingCam": true
+  },
+  "t": {
+   "kind": "identifier"
+  },
+  "tfl.gov.uk": {
+   "kind": "link",
+   "publisher": "Transport for London"
+  },
+  "tie.digitraffic.fi": {
+   "kind": "request",
+   "publisher": "Fintraffic (Digitraffic)",
+   "keyless": true
+  },
+  "tigerweb.geo.census.gov": {
+   "kind": "request",
+   "publisher": "U.S. Census Bureau (TIGERweb)",
+   "keyless": true
+  },
+  "tile.googleapis.com": {
+   "kind": "request",
+   "publisher": "Google (Map Tiles API, Photorealistic 3D Tiles)",
+   "keyless": false,
+   "keyIds": [
+    "GOOGLE_MAPS_API_KEY"
+   ],
+   "optional": true,
+   "note": "Photorealistic 3D Tiles, off until a person pastes a Google Maps key in Settings; the globe draws without it."
+  },
+  "tiles.arcgis.com": {
+   "kind": "request",
+   "publisher": "Esri ArcGIS Online hosted services (the publisher is the org id in the URL path; lib/provenance/sources.ts names each)",
+   "keyless": true
+  },
+  "tiles.macrostrat.org": {
+   "kind": "request",
+   "publisher": "Macrostrat, University of Wisconsin-Madison",
+   "keyless": true
+  },
+  "tnmaccess.nationalmap.gov": {
+   "kind": "request",
+   "publisher": "U.S. Geological Survey (The National Map)",
+   "keyless": true
+  },
+  "usdmdataservices.unl.edu": {
+   "kind": "request",
+   "publisher": "National Drought Mitigation Center (U.S. Drought Monitor)",
+   "keyless": true
+  },
+  "water.noaa.gov": {
+   "kind": "link",
+   "publisher": "NOAA National Weather Service"
+  },
+  "waterdata.usgs.gov": {
+   "kind": "link",
+   "publisher": "U.S. Geological Survey"
+  },
+  "waterservices.usgs.gov": {
+   "kind": "request",
+   "publisher": "U.S. Geological Survey",
+   "keyless": true
+  },
+  "watersgeo.epa.gov": {
+   "kind": "request",
+   "publisher": "U.S. Environmental Protection Agency (NHDPlus)",
+   "keyless": true
+  },
+  "wayback.maptiles.arcgis.com": {
+   "kind": "request",
+   "publisher": "Esri (World Imagery Wayback)",
+   "keyless": true
+  },
+  "weathercam.digitraffic.fi": {
+   "kind": "request",
+   "publisher": "Fintraffic (Digitraffic)",
+   "keyless": true
+  },
+  "webcams.nyctmc.org": {
+   "kind": "request",
+   "publisher": "New York City Department of Transportation",
+   "keyless": true
+  },
+  "wildfirerisk.org": {
+   "kind": "link",
+   "publisher": "USDA Forest Service"
+  },
+  "wits.worldbank.org": {
+   "kind": "request",
+   "publisher": "World Bank (WITS)",
+   "keyless": true
+  },
+  "www.airnow.gov": {
+   "kind": "link",
+   "publisher": "U.S. EPA AirNow"
+  },
+  "www.arcgis.com": {
+   "kind": "link",
+   "publisher": "Esri"
+  },
+  "www.arxiviq.com": {
+   "kind": "request",
+   "publisher": "Embedding Atlas (this app's own deployment)",
+   "keyless": true
+  },
+  "www.atsdr.cdc.gov": {
+   "kind": "link",
+   "publisher": "CDC/ATSDR"
+  },
+  "www.bea.gov": {
+   "kind": "link",
+   "publisher": "U.S. Bureau of Economic Analysis"
+  },
+  "www.bia.gov": {
+   "kind": "link",
+   "publisher": "Bureau of Indian Affairs"
+  },
+  "www.bls.gov": {
+   "kind": "link",
+   "publisher": "U.S. Bureau of Labor Statistics"
+  },
+  "www.bts.gov": {
+   "kind": "link",
+   "publisher": "U.S. Bureau of Transportation Statistics"
+  },
+  "www.cdc.gov": {
+   "kind": "link",
+   "publisher": "Centers for Disease Control and Prevention"
+  },
+  "www.census.gov": {
+   "kind": "link",
+   "publisher": "U.S. Census Bureau"
+  },
+  "www.chicago.gov": {
+   "kind": "link",
+   "publisher": "City of Chicago"
+  },
+  "www.copyright.gov": {
+   "kind": "link",
+   "publisher": "U.S. Copyright Office"
+  },
+  "www.dallasfed.org": {
+   "kind": "link",
+   "publisher": "Federal Reserve Bank of Dallas"
+  },
+  "www.dallasopendata.com": {
+   "kind": "request",
+   "publisher": "City of Dallas",
+   "keyless": true
+  },
+  "www.digitraffic.fi": {
+   "kind": "link",
+   "publisher": "Fintraffic"
+  },
+  "www.drivebc.ca": {
+   "kind": "request",
+   "publisher": "B.C. Ministry of Transportation and Transit",
+   "keyless": true
+  },
+  "www.eia.gov": {
+   "kind": "request",
+   "publisher": "U.S. Energy Information Administration",
+   "keyless": true
+  },
+  "www.epa.gov": {
+   "kind": "link",
+   "publisher": "U.S. Environmental Protection Agency"
+  },
+  "www.ercot.com": {
+   "kind": "request",
+   "publisher": "Electric Reliability Council of Texas",
+   "keyless": true
+  },
+  "www.esri.com": {
+   "kind": "link",
+   "publisher": "Esri"
+  },
+  "www.federalreserve.gov": {
+   "kind": "link",
+   "publisher": "Federal Reserve System"
+  },
+  "www.fema.gov": {
+   "kind": "request",
+   "publisher": "Federal Emergency Management Agency (OpenFEMA)",
+   "keyless": true
+  },
+  "www.fisheries.noaa.gov": {
+   "kind": "link",
+   "publisher": "NOAA Fisheries"
+  },
+  "www.freddiemac.com": {
+   "kind": "link",
+   "publisher": "Freddie Mac"
+  },
+  "www.fws.gov": {
+   "kind": "link",
+   "publisher": "U.S. Fish and Wildlife Service"
+  },
+  "www.gdacs.org": {
+   "kind": "request",
+   "publisher": "European Commission Joint Research Centre (GDACS)",
+   "keyless": true
+  },
+  "www.gdeltproject.org": {
+   "kind": "link",
+   "publisher": "GDELT Project"
+  },
+  "www.gis.hctx.net": {
+   "kind": "request",
+   "publisher": "Harris County, Texas",
+   "keyless": true
+  },
+  "www.mrlc.gov": {
+   "kind": "link",
+   "publisher": "Multi-Resolution Land Characteristics Consortium"
+  },
+  "www.naturalearthdata.com": {
+   "kind": "link",
+   "publisher": "Natural Earth"
+  },
+  "www.ncei.noaa.gov": {
+   "kind": "request",
+   "publisher": "NOAA National Centers for Environmental Information",
+   "keyless": true
+  },
+  "www.nps.gov": {
+   "kind": "link",
+   "publisher": "National Park Service"
+  },
+  "www.nyc.gov": {
+   "kind": "link",
+   "publisher": "City of New York"
+  },
+  "www.openstreetmap.org": {
+   "kind": "link",
+   "publisher": "OpenStreetMap Foundation"
+  },
+  "www.sciencebase.gov": {
+   "kind": "link",
+   "publisher": "U.S. Geological Survey"
+  },
+  "www.sec.gov": {
+   "kind": "request",
+   "publisher": "U.S. Securities and Exchange Commission",
+   "keyless": true,
+   "note": "The SEC asks for a User-Agent with contact details; the EDGAR client sends exactly that (lib/companies/edgar.ts)."
+  },
+  "www.spc.noaa.gov": {
+   "kind": "request",
+   "publisher": "NOAA Storm Prediction Center",
+   "keyless": true
+  },
+  "www.spglobal.com": {
+   "kind": "link",
+   "publisher": "S&P Dow Jones Indices"
+  },
+  "www.spotrac.com": {
+   "kind": "request",
+   "publisher": "Spotrac",
+   "keyless": true
+  },
+  "www.swpc.noaa.gov": {
+   "kind": "link",
+   "publisher": "NOAA Space Weather Prediction Center"
+  },
+  "www.usa.gov": {
+   "kind": "link",
+   "publisher": "U.S. General Services Administration (USA.gov)"
+  },
+  "www.usace.army.mil": {
+   "kind": "link",
+   "publisher": "U.S. Army Corps of Engineers"
+  },
+  "www.usgs.gov": {
+   "kind": "link",
+   "publisher": "U.S. Geological Survey"
+  },
+  "www.w3.org": {
+   "kind": "identifier"
+  },
+  "www.waterdatafortexas.org": {
+   "kind": "request",
+   "publisher": "Texas Water Development Board",
+   "keyless": true
+  },
+  "www.weather.gov": {
+   "kind": "link",
+   "publisher": "NOAA National Weather Service"
+  },
+  "www.wikidata.org": {
+   "kind": "link",
+   "publisher": "Wikimedia Foundation"
+  },
+  "www.youtube-nocookie.com": {
+   "kind": "request",
+   "publisher": "YouTube (embedded player, privacy-enhanced host)",
+   "keyless": true
+  },
+  "www.youtube.com": {
+   "kind": "request",
+   "publisher": "YouTube (oEmbed)",
+   "keyless": true
+  },
+  "www.zillow.com": {
+   "kind": "link",
+   "publisher": "Zillow Research"
+  },
+  "www2.census.gov": {
+   "kind": "request",
+   "publisher": "U.S. Census Bureau",
+   "keyless": true
+  },
+  "www2.gov.bc.ca": {
+   "kind": "link",
+   "publisher": "Province of British Columbia"
+  }
+ },
+ "dynamic": [
+  {
+   "file": "lib/mcp/worldSchema.ts",
+   "why": "builds the ^https://<host>/ patterns of the published outputSchema from worldHosts.ts; nothing is requested"
+  },
+  {
+   "file": "lib/permits/npl.ts",
+   "why": "turns a website string the publisher put in a record into a link; the host comes from the record and is only shown"
+  },
+  {
+   "file": "lib/terrain/wayback.ts",
+   "why": "https://${WAYBACK_HOST}/... where WAYBACK_HOST is wayback.maptiles.arcgis.com, a constant in the same file"
+  }
+ ]
 }

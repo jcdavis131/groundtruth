@@ -1,18 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { LICENCE_TERMS, licenceTerm, lintLicences } from "./licenceTerms";
+import { LICENCE_TERMS, licenceTerm, lintLicences, type LicenceTerm } from "./licenceTerms";
 import { SOURCES } from "./sources";
 
 describe("licence vocabulary", () => {
-  it("every entry is keyed by its own id and links to its terms over https", () => {
-    for (const [key, term] of Object.entries(LICENCE_TERMS)) {
+  it("every entry is keyed by its own id and links to its terms over https, except the one that has none", () => {
+    for (const [key, term] of Object.entries(LICENCE_TERMS) as Array<[string, LicenceTerm]>) {
       expect(term.id, key).toBe(key);
-      expect(term.url.startsWith("https://"), key).toBe(true);
       expect(term.name.length, key).toBeGreaterThan(0);
+      if (term.kind === "unstated") expect(term.url, key).toBeUndefined();
+      else expect(term.url?.startsWith("https://"), key).toBe(true);
     }
+    expect(licenceTerm("publisher-terms-unstated")?.kind).toBe("unstated");
   });
-  it("named ids are lower-case so they can't be mistaken for SPDX ids", () => {
-    for (const term of Object.values(LICENCE_TERMS)) {
-      if (term.kind === "named") expect(term.id, term.id).toMatch(/^[a-z0-9][a-z0-9.-]*$/);
+  it("named and unstated ids are lower-case so they can't be mistaken for SPDX ids", () => {
+    for (const term of Object.values(LICENCE_TERMS) as LicenceTerm[]) {
+      if (term.kind !== "spdx") expect(term.id, term.id).toMatch(/^[a-z0-9][a-z0-9.-]*$/);
     }
   });
   it("looks an id up, and returns nothing for an unknown one", () => {
