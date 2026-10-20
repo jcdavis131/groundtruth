@@ -257,7 +257,7 @@ export function computeVitals(
     const count = measure === "all" ? total : (byLayer[measure] ?? 0);
     const noArea = normalise === "density" && !area;
     if (noArea) reasons.push("no area known for this unit, so no density");
-    const value = coverage !== "complete" || noArea ? null : normalise === "density" ? (count / area!) * 1000 : count;
+    const value = coverage !== "complete" ? null : normalise === "density" ? (area ? (count / area) * 1000 : 0) : count;
     out.set(node.id, {
       total,
       byLayer,
