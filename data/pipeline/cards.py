@@ -118,6 +118,8 @@ COLLECTIONS = {
         "label": dam_label,
         "state": named_state,
         "stateSource": "NID's STATE field (eye's details.state)",
+        # The publisher's own id for a row, kept so a later diff can pair rows across snapshots without eye's id.
+        "secondaryKey": {"publisherField": "NIDID", "detailKey": "NID id"},
         "withheld": [
             {
                 "field": "published name",
@@ -142,6 +144,7 @@ COLLECTIONS = {
         "nameRule": lambda details: "public-name",
         "state": schools_state,
         "stateSource": "the first two digits of NCES's county code CNTY (eye's details.county)",
+        "secondaryKey": {"publisherField": "NCESSCH", "detailKey": "NCES school id"},
         "withheld": [],
         "publisher": {
             "layer": NCES,
@@ -162,6 +165,7 @@ COLLECTIONS = {
         "nameRule": lambda details: "label-by-id",
         "state": named_state,
         "stateSource": "NPS's State field (eye's details.state)",
+        "secondaryKey": {"publisherField": "NRIS_Refnum", "detailKey": "nris refnum"},
         "withheld": [
             {
                 "field": "property name (as NPS lists it)",

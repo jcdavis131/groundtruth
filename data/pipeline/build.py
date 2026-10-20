@@ -12,7 +12,11 @@ For each collection:
   3. Dedupe by id (the first tile wins), keep a feature when its source's own state field names the region
      and its point lies inside or within the tolerance of the outline, and map it to record/1
      (data/SCHEMA.md, "From eye's LayerFeature").
-  4. Validate every record with data/schema/validate.mjs. Any failure stops the build.
+  4. Join counties (join.py): a record whose region config gives no countyFips (dams, NRHP listings) gets the
+     county polygon of TIGER/Line 2025 that contains its point (boundaries.py, one sha256-recorded download),
+     with the publisher's own county string joined by name as a cross-check; a record no polygon places and the
+     name rule can't place is listed in the manifest's joins[].unplaced with a reason. Then validate every record
+     with data/schema/validate.mjs. Any failure stops the build.
   5. Write <data-root>/snapshots/<snapshot-id>/records.parquet (GeoParquet) and manifest.json, ask the
      publisher's own layer for its count in the region (ArcGIS returnCountOnly, keyless) and for its ids
      (to name the gap), validate the manifest, copy it to data/manifests/<collection>/<snapshot-id>.json and
@@ -36,12 +40,14 @@ import urllib.parse
 from datetime import datetime, timezone
 from pathlib import Path
 
+import boundaries
 import cards
 import geo
+import join
 import read
 from net import Fetcher, sha256, utc_now
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 REPO = Path(__file__).resolve().parents[2]
 VALIDATE = REPO / "data" / "schema" / "validate.mjs"
 EMBEDDABLE = REPO / "data" / "schema" / "embeddable.mjs"
@@ -310,6 +316,16 @@ def count_and_gap(fx: Fetcher, cfg: dict, region: dict, records: list[dict], dro
     other_drops = sorted(fid for fid in dropped if fid not in theirs)
     if other_drops:
         parts.append(f"{len(other_drops)} feature(s) eye returned that this snapshot left out and the publisher doesn't file under the state either: " + ", ".join(f"{fid} ({dropped[fid]})" for fid in other_drops))
+    # The same finding as data: one item per publisher id that is not a record, with its reason, and the extra
+    # rows of repeated ids. validate.mjs checks value == recordCount + gapItems.length + duplicateRows.
+    dup_rows = sum(n - 1 for n in dups.values())
+    gap_items = sorted(({"id": eid, "reason": why} for why, ids in groups.items() for eid in ids), key=lambda g: g["id"])
+    if extra:
+        raise SystemExit(f"{len(extra)} record(s) here that the publisher's query under the state did not return: gapItems can't add up to its count")
+    if c["count"] != len(records) + len(gap_items) + dup_rows:
+        raise SystemExit(f"publisher counts {c['count']}, but {len(records)} records + {len(gap_items)} gap items + {dup_rows} repeated-id rows do not add up")
+    pc["gapItems"] = gap_items
+    pc["duplicateRows"] = dup_rows
     if parts or c["count"] != len(records):
         pc["gap"] = (
             f"The publisher counts {c['count']}; this snapshot holds {len(records)}. "
@@ -322,10 +338,27 @@ def count_and_gap(fx: Fetcher, cfg: dict, region: dict, records: list[dict], dro
 # ---------------------------------------------------------------- manifest
 
 def dump_manifest(m: dict) -> str:
-    """Pretty JSON with one request per line, so a manifest with thousands of tile requests stays readable."""
-    body = json.dumps({**m, "requests": "\0REQ\0"}, indent=2, ensure_ascii=False)
-    reqs = ",\n".join("    " + json.dumps(r, ensure_ascii=False) for r in m["requests"])
-    return body.replace('"\\u0000REQ\\u0000"', "[\n" + reqs + "\n  ]") + "\n"
+    """Pretty JSON with one entry per line for the long lists (requests, gap items, unplaced, disagreements), so a
+    manifest with thousands of entries stays readable."""
+    slots: list[tuple[str, list, str]] = []  # (sentinel, items, indent of the items)
+
+    def slot(items, indent: str):
+        if not items:
+            return items
+        s = f"\0L{len(slots)}\0"
+        slots.append((s, items, indent))
+        return s
+
+    top = {**m, "requests": slot(m["requests"], "    ")}
+    if "publisherCount" in top and top["publisherCount"].get("gapItems"):
+        top["publisherCount"] = {**top["publisherCount"], "gapItems": slot(top["publisherCount"]["gapItems"], "      ")}
+    if "joins" in top:
+        top["joins"] = [{**j, "unplaced": slot(j["unplaced"], "        "), "disagreements": slot(j["disagreements"], "        ")} for j in top["joins"]]
+    body = json.dumps(top, indent=2, ensure_ascii=False)
+    for s, items, indent in slots:
+        lines = ",\n".join(indent + json.dumps(i, ensure_ascii=False) for i in items)
+        body = body.replace(json.dumps(s), "[\n" + lines + "\n" + indent[:-2] + "]")
+    return body + "\n"
 
 
 def withheld_fields(cfg: dict, relabelled: int) -> list[dict]:
@@ -360,6 +393,13 @@ def build(collection: str, region: dict, data_root: Path, manifests: Path, git_s
     relabelled = to_record.relabelled
     if relabelled:
         log(f"{collection}: {relabelled} records eye named are labelled by id here (the builder's name rule is stricter than eye's answer)")
+
+    zip_path, bmeta = boundaries.ensure(data_root, offline)
+    n_counties = boundaries.load(con, zip_path, bbox=tuple(outline.bbox()))  # the state's counties all meet its widened extent
+    boundary = boundaries.boundary_block(bmeta)
+    records, joins_block = join.join_records(con, records, join.name_index(), boundary, region["stateName"])
+    log(f"{collection}: county join against {n_counties} {boundary['product']} polygons: {joins_block['placed']} placed {joins_block['methods']}, "
+        f"{len(joins_block['unplaced'])} unplaced, {len(joins_block['disagreements'])} polygon/publisher disagreements")
 
     work = data_root / "work"
     work.mkdir(parents=True, exist_ok=True)
@@ -406,6 +446,7 @@ def build(collection: str, region: dict, data_root: Path, manifests: Path, git_s
         "requests": fx.log,
         "recordCount": len(records),
         "publisherCount": publisher_count,
+        "joins": [joins_block],
         "files": [{"path": "records.parquet", "format": "geoparquet", "sha256": sha256(pq_bytes), "bytes": len(pq_bytes), "records": len(records)}],
         **({"withheldFields": withheld_fields(cfg, relabelled)} if cfg["withheld"] else {}),
         **embeddable(collection),
@@ -431,6 +472,9 @@ def build(collection: str, region: dict, data_root: Path, manifests: Path, git_s
         "network": fx.network,
         "cached": fx.cached,
         "transportErrors": fx.transport_errors,
+        "countyPlaced": joins_block["placed"],
+        "countyUnplaced": len(joins_block["unplaced"]),
+        "countyDisagreements": len(joins_block["disagreements"]),
         "dropped": len(dropped),
         "neighbours": neighbours,
         "sameTileRepeats": select.same_tile_repeats,

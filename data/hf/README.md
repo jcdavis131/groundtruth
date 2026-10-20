@@ -30,6 +30,18 @@ configs:
     data_files: snapshots/nrhp-listed.texas.2026-10-19/records.parquet
   - config_name: nrhp-listed.alabama.2026-10-19
     data_files: snapshots/nrhp-listed.alabama.2026-10-19/records.parquet
+  - config_name: nid-dams.texas.2026-10-20
+    data_files: snapshots/nid-dams.texas.2026-10-20/records.parquet
+  - config_name: nid-dams.alabama.2026-10-20
+    data_files: snapshots/nid-dams.alabama.2026-10-20/records.parquet
+  - config_name: nces-public-schools.texas.2026-10-20
+    data_files: snapshots/nces-public-schools.texas.2026-10-20/records.parquet
+  - config_name: nces-public-schools.alabama.2026-10-20
+    data_files: snapshots/nces-public-schools.alabama.2026-10-20/records.parquet
+  - config_name: nrhp-listed.texas.2026-10-20
+    data_files: snapshots/nrhp-listed.texas.2026-10-20/records.parquet
+  - config_name: nrhp-listed.alabama.2026-10-20
+    data_files: snapshots/nrhp-listed.alabama.2026-10-20/records.parquet
 ---
 
 # groundtruth snapshots

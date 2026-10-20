@@ -15,6 +15,9 @@
 //      in a label-by-id record's text, no withheld detail (a dam's published name), the count gap, embeddableFields
 //      and embeddableName as embeddable.mjs derives them from eye's embedFields.ts, and the listed files' bytes,
 //      sha256 and record counts.
+//      The joins block (data/SCHEMA.md, Joins): placed + unplaced = recordCount, the methods add up, the cross-check adds up
+//      and, with a jsonl file, every record without a countyFips has an unplaced entry and every unplaced id is a record.
+//      gapItems: the publisher's count is recordCount + gapItems.length + duplicateRows.
 // Each problem is {code, path, message}. Exit 0 when every input is valid, 1 otherwise.
 
 import { createHash } from "node:crypto";
@@ -258,9 +261,53 @@ export function validateManifest(m) {
   const pc = m.publisherCount;
   if (pc && Number.isInteger(pc.value) && Number.isInteger(m.recordCount) && pc.value !== m.recordCount && !pc.gap)
     out.push({ code: "gap", path: "/publisherCount/gap", message: `publisher counts ${pc.value}, snapshot holds ${m.recordCount}: say why in gap` });
+  // gapItems (added 2026-10-20): the publisher's count is the records, plus one item per publisher id that isn't one,
+  // plus the extra rows of ids the publisher repeats. The 2026-10-19 manifests carry the prose gap only and skip this.
+  if (pc && Array.isArray(pc.gapItems) && Number.isInteger(pc.value) && Number.isInteger(m.recordCount)) {
+    const dup = Number.isInteger(pc.duplicateRows) ? pc.duplicateRows : 0;
+    if (pc.value !== m.recordCount + pc.gapItems.length + dup)
+      out.push({ code: "gap", path: "/publisherCount/gapItems", message: `publisher counts ${pc.value}, but recordCount ${m.recordCount} + ${pc.gapItems.length} gapItems + ${dup} duplicate rows = ${m.recordCount + pc.gapItems.length + dup}` });
+    const seenGap = new Set();
+    pc.gapItems.forEach((g, i) => {
+      if (typeof g?.id === "string" && seenGap.has(g.id)) out.push({ code: "gap", path: `/publisherCount/gapItems/${i}/id`, message: `${g.id} listed twice` });
+      seenGap.add(g?.id);
+    });
+  }
+  out.push(...joinsProblems(m));
   if (("embeddableFields" in m) !== ("embeddableName" in m))
     out.push({ code: "embeddable", path: "embeddableFields" in m ? "/embeddableName" : "/embeddableFields", message: "embeddableFields and embeddableName come together" });
   out.push(...embeddableProblems(m));
+  return out;
+}
+
+
+/**
+ * The joins block's own arithmetic, without the files: every record is placed or listed unplaced, once; the
+ * methods add up to placed; the cross-check adds up and its disagreements are the listed ones.
+ */
+function joinsProblems(m) {
+  const out = [];
+  if (!Array.isArray(m.joins) || !Number.isInteger(m.recordCount)) return out;
+  m.joins.forEach((j, i) => {
+    const at = `/joins/${i}`;
+    if (!j || typeof j !== "object" || !Array.isArray(j.unplaced) || !Number.isInteger(j.placed)) return;
+    if (j.placed + j.unplaced.length !== m.recordCount)
+      out.push({ code: "joins", path: `${at}/placed`, message: `placed ${j.placed} + ${j.unplaced.length} unplaced is ${j.placed + j.unplaced.length}, recordCount is ${m.recordCount}: every record is placed or says why not` });
+    const seen = new Set();
+    j.unplaced.forEach((u, n) => {
+      if (typeof u?.id === "string" && seen.has(u.id)) out.push({ code: "joins", path: `${at}/unplaced/${n}/id`, message: `${u.id} listed unplaced twice` });
+      seen.add(u?.id);
+    });
+    const ms = j.methods && typeof j.methods === "object" ? Object.values(j.methods).reduce((s, x) => s + (Number.isInteger(x) ? x : 0), 0) : null;
+    if (ms !== null && ms !== j.placed) out.push({ code: "joins", path: `${at}/methods`, message: `methods add up to ${ms}, placed is ${j.placed}` });
+    const cc = j.crossCheck;
+    if (cc && Array.isArray(j.disagreements) && Number.isInteger(cc.disagree) && cc.disagree !== j.disagreements.length)
+      out.push({ code: "joins", path: `${at}/crossCheck/disagree`, message: `disagree ${cc.disagree}, but ${j.disagreements.length} disagreements are listed` });
+    if (cc && [cc.agree, cc.disagree].every(Number.isInteger)) {
+      const total = cc.agree + cc.disagree + (Number.isInteger(cc.unchecked) ? cc.unchecked : 0);
+      if (total !== m.recordCount) out.push({ code: "joins", path: `${at}/crossCheck`, message: `agree + disagree + unchecked is ${total}, recordCount is ${m.recordCount}` });
+    }
+  });
   return out;
 }
 
@@ -268,6 +315,7 @@ export function validateManifest(m) {
 export function verifyFiles(m, dir) {
   const out = [];
   const ids = new Set();
+  const withCounty = new Map();
   (m.files ?? []).forEach((f, i) => {
     const full = path.join(dir, f.path);
     if (!existsSync(full)) return out.push({ code: "file-missing", path: `/files/${i}`, message: `${f.path} not found` });
@@ -296,8 +344,24 @@ export function verifyFiles(m, dir) {
       if (r.snapshotId !== m.snapshotId) out.push({ code: "file-record", path: `/files/${i}`, message: `${f.path} line ${n + 1} belongs to ${r.snapshotId}` });
       if (ids.has(r.id)) out.push({ code: "file-record", path: `/files/${i}`, message: `${f.path} line ${n + 1} repeats id ${r.id}` });
       ids.add(r.id);
+      withCounty.set(r.id, typeof r.place?.countyFips === "string");
     });
   });
+  // The joins block against the records themselves (jsonl files; plain Node can't read Parquet, so
+  // data/pipeline/read.py makes the same check on a GeoParquet snapshot).
+  if (Array.isArray(m.joins) && (m.files ?? []).every((f) => f.format === "jsonl"))
+    m.joins.forEach((j, i) => {
+      const placedHere = [...withCounty.values()].filter(Boolean).length;
+      if (Number.isInteger(j.placed) && j.placed !== placedHere)
+        out.push({ code: "joins", path: `/joins/${i}/placed`, message: `placed is ${j.placed}, but ${placedHere} records carry a countyFips` });
+      const listed = new Set();
+      (j.unplaced ?? []).forEach((u, n) => {
+        listed.add(u.id);
+        if (!withCounty.has(u.id)) out.push({ code: "joins", path: `/joins/${i}/unplaced/${n}/id`, message: `${u.id} is not among the files' ids` });
+        else if (withCounty.get(u.id)) out.push({ code: "joins", path: `/joins/${i}/unplaced/${n}/id`, message: `${u.id} is listed unplaced but carries a countyFips` });
+      });
+      for (const [id, has] of withCounty) if (!has && !listed.has(id)) out.push({ code: "joins", path: `/joins/${i}/unplaced`, message: `${id} has no countyFips and no unplaced entry with a reason` });
+    });
   return out;
 }
 

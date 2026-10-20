@@ -18,6 +18,35 @@ const PRIVATE_DAM = "record/valid/nid-dams.texas-private.json";
 const PUBLIC_DAM = "record/valid/nid-dams.texas-public.json";
 const MANIFEST = "snapshots/nrhp-listed.austin-east.2026-10-18/manifest.json";
 
+/**
+ * A joins block that is consistent with the fixture snapshot MANIFEST names: every record placed or listed, the
+ * methods adding up. The invalid cases below break one thing in it. (The fixture records carry no countyFips, so
+ * every one is unplaced here, with the reason the builder would give.)
+ */
+export function goodJoins(m, base = MANIFEST) {
+  const recs = readFileSync(path.join(HERE, path.dirname(base), m.files[0].path), "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l));
+  const placed = recs.filter((r) => r.place.countyFips);
+  const unplaced = recs.filter((r) => !r.place.countyFips).map((r) => ({ id: r.id, reason: "no county polygon contains the point (TIGER/Line 2025); publisher county string " + JSON.stringify(r.details.county ?? null) }));
+  const methods = { "point-in-polygon": 0, "source-field": 0, "name-lookup": 0 };
+  for (const r of placed) methods[r.place.method]++;
+  return {
+    field: "place.countyFips",
+    boundary: {
+      publisher: "U.S. Census Bureau",
+      product: "TIGER/Line 2025 COUNTY",
+      vintage: "2025",
+      url: "https://www2.census.gov/geo/tiger/TIGER2025/COUNTY/tl_2025_us_county.zip",
+      sha256: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      retrievedAt: "2026-10-20T06:00:00.000Z",
+    },
+    methods,
+    crossCheck: { source: "details.county (publisher's county name, joined by the countyJoin name rule)", agree: 0, disagree: 0, unchecked: recs.length },
+    placed: placed.length,
+    unplaced,
+    disagreements: [],
+  };
+}
+
 export const CASES = {
   record: [
     { name: "missing-id", base: SCHOOL, expect: { code: "required", path: "/id" }, mutate: (r) => void delete r.id },
@@ -111,6 +140,36 @@ export const CASES = {
       base: MANIFEST,
       expect: { code: "embeddable", path: "/embeddableName" },
       mutate: (m) => void (m.embeddableName = "when-nameRule-public-name"),
+    },
+    // The joins block (added 2026-10-20): every record is placed or listed unplaced with a reason.
+    {
+      name: "joins-count-disagrees",
+      base: MANIFEST,
+      expect: { code: "joins", path: "/joins/0/placed" },
+      mutate: (m) => void (m.joins = [{ ...goodJoins(m), unplaced: goodJoins(m).unplaced.slice(1) }]),
+    },
+    // An unplaced entry for an id the snapshot's files don't hold (checked with the files).
+    {
+      name: "joins-unplaced-id-unknown",
+      base: MANIFEST,
+      withFiles: true,
+      expect: { code: "joins", path: "/joins/0/unplaced/0/id" },
+      mutate: (m) => {
+        const j = goodJoins(m);
+        j.unplaced[0] = { ...j.unplaced[0], id: "nrhp:pt:0000000" };
+        m.joins = [j];
+      },
+    },
+    // The publisher's count must equal the records, plus the gap items, plus the repeated-id rows.
+    {
+      name: "gap-items-count-disagrees",
+      base: MANIFEST,
+      expect: { code: "gap", path: "/publisherCount/gapItems" },
+      mutate: (m) => {
+        m.publisherCount.value = m.recordCount + 2;
+        m.publisherCount.gap = "The publisher counts two more than this snapshot holds: two rows are not records.";
+        m.publisherCount.gapItems = [{ id: "nrhp:pt:1", reason: "NPS STATUS Removed: not a current listing" }];
+      },
     },
   ],
 };

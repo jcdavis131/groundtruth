@@ -1,0 +1,24 @@
+{
+  "description": "Three real county polygons cut from Census TIGER/Line 2025 COUNTY, for data/pipeline/test_join.py. Nothing was drawn, simplified or edited: the coordinates are the file's, rounded to seven decimals (about 1 cm).",
+  "source": {
+    "publisher": "U.S. Census Bureau",
+    "product": "TIGER/Line 2025 COUNTY",
+    "url": "https://www2.census.gov/geo/tiger/TIGER2025/COUNTY/tl_2025_us_county.zip",
+    "retrievedAt": "2026-10-20T05:47:51.343Z",
+    "bytes": 83989800,
+    "sha256": "9c6e9d9076abce2670d1de255de3710c35ecca00a7005d88e012dec52d95f763"
+  },
+  "geoids": ["48039", "48141", "48321"],
+  "names": {"48039": "Brazoria", "48141": "El Paso", "48321": "Matagorda"},
+  "cut": "DuckDB 1.4.4 spatial: ST_Read('/vsizip/tl_2025_us_county.zip/tl_2025_us_county.shp', spatial_filter_box := a box around the counties) filtered to the three GEOIDs, written by COPY ... (FORMAT GDAL, DRIVER 'GeoJSON', COORDINATE_PRECISION=7).",
+  "subset": {
+    "file": "counties-subset.geojson",
+    "bytes": 292278,
+    "sha256": "38e9d2f20a4b0041449d4a35ae55635abbf3e2268fdae2f2b27a5a1574b98ed5"
+  },
+  "records": {
+    "file": "join-records.jsonl",
+    "from": "the 2026-10-19 Texas snapshots (nid-dams, nrhp-listed, nces-public-schools), records unmodified, 17 of them",
+    "sha256": "5360f772d5293e818303570cae79d843503c849a35acb633a89c3c3d96a6d312"
+  }
+}

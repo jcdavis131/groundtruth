@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import counties from "./data/counties.json";
+import cases from "./countyJoin.cases.json";
 import { SUCCESSORS, editDistance, joinName, nameIndex, nearName, norm, pointIn, pointInRings, polygon } from "./countyJoin";
 
 const ix = nameIndex(counties.rows);
@@ -87,5 +88,23 @@ describe("points", () => {
     expect(pointIn(polys, 5, 5)).toEqual(["A"]);
     expect(pointIn(polys, 15, 5)).toEqual(["B"]);
     expect(pointIn(polys, 25, 5)).toEqual([]);
+  });
+});
+
+// data/pipeline/test_join.py reads this same file for the Python port of the name rule (data/pipeline/join.py),
+// so the two implementations cannot drift.
+describe("the shared cases file", () => {
+  it("norm gives every expected string", () => {
+    for (const c of cases.norm) expect(norm(c.input), JSON.stringify(c.input)).toBe(c.expected);
+  });
+  it("joinName gives every expected placement, reason and candidate list", () => {
+    for (const c of cases.joinName) {
+      const r = joinName(ix, c.state, c.county);
+      expect({ geoid: r.geoid, reason: r.reason, candidates: r.candidates ? [...r.candidates].sort() : null }, JSON.stringify([c.state, c.county])).toEqual({
+        geoid: c.geoid,
+        reason: c.reason,
+        candidates: c.candidates,
+      });
+    }
   });
 });

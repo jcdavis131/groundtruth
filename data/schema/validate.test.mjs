@@ -7,7 +7,7 @@ import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { CASES, build, fileOf } from "./fixtures/make-invalid.mjs";
+import { CASES, build, fileOf, goodJoins } from "./fixtures/make-invalid.mjs";
 import { DETAILS_KEY, embeddableFor, withEmbeddable } from "./embeddable.mjs";
 import { MANIFEST_SCHEMA, PUBLIC_NAME_COLLECTIONS, RECORD_SCHEMA, damOwnerProblem, schemaErrors, validateManifest, validateRecord, verifyFiles } from "./validate.mjs";
 
@@ -58,7 +58,8 @@ for (const [kind, cases] of Object.entries(CASES)) {
     } catch {}
     check(text === build(kind, c), `${kind}/invalid/${c.name}.json matches make-invalid.mjs (run it to refresh)`);
     if (text === null) continue;
-    const errs = kind === "record" ? validateRecord(JSON.parse(text)) : validateManifest(JSON.parse(text));
+    const doc = JSON.parse(text);
+    const errs = kind === "record" ? validateRecord(doc) : [...validateManifest(doc), ...(c.withFiles ? verifyFiles(doc, path.dirname(path.join(FIX, c.base))) : [])];
     const hit = errs.some((e) => e.code === c.expect.code && e.path === c.expect.path);
     check(hit, `invalid ${kind} ${c.name} fails with ${c.expect.code} at ${c.expect.path}`, `got: ${show(errs) || "no errors"}`);
   }
@@ -230,6 +231,31 @@ try {
   bit = e.message;
 }
 check(bit !== null && /DETAILS_KEY/.test(bit), "a collection with no DETAILS_KEY table can't be given embeddable fields", bit ?? "no error");
+
+// The joins block and gapItems (added 2026-10-20): a consistent one passes; the 2026-10-19 manifests, which carry
+// neither, still pass; every snapshot built on or after 2026-10-20 carries both.
+const gj = goodJoins(m0, `snapshots/${snaps[0]}/manifest.json`);
+check(validateManifest({ ...m0, joins: [gj] }).length === 0 && verifyFiles({ ...m0, joins: [gj] }, sdir).length === 0, "a consistent joins block passes, with its files");
+check(validateManifest({ ...m0, joins: [{ ...gj, methods: { ...gj.methods, "point-in-polygon": 1 } }] }).some((e) => e.code === "joins" && e.path === "/joins/0/methods"), "methods that don't add up to placed fail with joins");
+check(validateManifest({ ...m0, joins: [{ ...gj, crossCheck: { ...gj.crossCheck, disagree: 1 } }] }).some((e) => e.code === "joins"), "a cross-check disagree count that isn't the listed disagreements fails with joins");
+check(validateManifest({ ...m0, joins: [{ ...gj, methods: { "point-in-polygon": 0, "source-field": 0, "name-lookup": 0, "guess": 1 } }] }).some((e) => e.code === "additional"), "a place method outside the enum fails in the joins methods");
+check(verifyFiles({ ...m0, joins: [{ ...gj, placed: 1, unplaced: gj.unplaced.slice(1), methods: { ...gj.methods, "name-lookup": 1 } }] }, sdir).some((e) => e.code === "joins"), "a placed count the records don't bear out fails with joins (files)");
+const gapOk = { ...m0, recordCount: m0.recordCount, publisherCount: { ...m0.publisherCount, value: m0.recordCount + 3, gap: "x", gapItems: [{ id: "a:1", reason: "removed" }], duplicateRows: 2 } };
+check(validateManifest(gapOk).length === 0, "gapItems plus duplicateRows that add up to the publisher's count pass");
+check(validateManifest({ ...gapOk, publisherCount: { ...gapOk.publisherCount, duplicateRows: 1 } }).some((e) => e.code === "gap" && e.path === "/publisherCount/gapItems"), "duplicateRows that don't add up fail with gap");
+check(validateManifest({ ...gapOk, publisherCount: { ...gapOk.publisherCount, gapItems: [{ id: "a:1", reason: "x" }, { id: "a:1", reason: "x" }], duplicateRows: 1 } }).some((e) => e.code === "gap"), "a repeated gap item id fails with gap");
+for (const p of holders) {
+  const m = json(p);
+  const day = m.snapshotId.split(".")[2];
+  const rel = path.relative(path.join(HERE, "..", ".."), p).replaceAll("\\", "/");
+  if (day >= "2026-10-20" && rel.startsWith("data/manifests/")) {
+    check(Array.isArray(m.joins) && m.joins.length === 1, `${rel} carries a joins block`);
+    check(Array.isArray(m.publisherCount.gapItems), `${rel} carries gapItems`);
+    check(validateManifest(m).length === 0, `${rel} is valid`, show(validateManifest(m)));
+    const j = m.joins?.[0];
+    if (j) check(j.placed + j.unplaced.length === m.recordCount && j.unplaced.every((u) => u.reason.length > 0), `${rel}: placed + unplaced = recordCount, and every unplaced record has a reason`);
+  }
+}
 
 // The evaluator refuses keywords it does not implement, so a schema can't claim more than is checked.
 let threw = false;

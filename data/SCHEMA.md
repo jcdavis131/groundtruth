@@ -40,7 +40,7 @@ One JSON object. In a snapshot file, it's one line of JSONL.
 | `nameRule` | yes | `public-name` means the record's published name. It's allowed only on a collection with a public-name rule: today `hifld-hospitals`, `nces-public-schools`, `nid-dams` and `padus-units`, the same list as eye's `PUBLIC_NAME_RULE`. `label-by-id` means a label built from the record's id and category (`NRHP 82004525 · building`, `Dam TX00028`), never a name that could be a person's. The rule is set per record, the way eye's `PUBLIC_NAME_RULE` sets it: a dam keeps its published name only when its owner type is Federal, State, Local Government, Public Utility or Tribal Government and so is every entry of NID's `OWNER_TYPES` list (`owner types`), so a dam that is Private anywhere, Not Listed, missing an owner type or carries any other value is `label-by-id` (a non-answer is unknown, not public), and its record text carries no `name:` segment; a PAD-US unit keeps it only on federal or state land (`Own_Type` FED or STAT) that is not an easement. |
 | `kind` | no | eye's sub-type (`high`, `building`). |
 | `geometry` | yes | GeoJSON geometry (RFC 7946): Point, MultiPoint, LineString, MultiLineString, Polygon or MultiPolygon. WGS84 degrees, longitude first. A height is kept only when the source measured one. |
-| `place` | yes | Place joins: `stateFips` and `stateUsps` (required, and they must agree), and `countyFips` when it can be derived (it must sit inside the state). `method` says how the join was made: `source-field` (the upstream's own code), `point-in-polygon` (the geometry tested against a named boundary file) or `name-lookup` (a place name matched to a code table). |
+| `place` | yes | Place joins: `stateFips` and `stateUsps` (required, and they must agree), and `countyFips` when it can be derived (it must sit inside the state). `method` says how the join was made: `source-field` (the upstream's own code), `point-in-polygon` (the geometry tested against a named boundary file) or `name-lookup` (a place name matched to a code table). From 2026-10-20 a dam's or NRHP listing's `countyFips` is written by `point-in-polygon` against TIGER/Line 2025 (see "Joins" below); a record no join could place has no `countyFips`, and the reason is in the manifest's `joins[].unplaced`, never on the record. |
 | `details` | yes | The source's own fields, as eye shows them on click, keyed by eye's labels. Values are strings, numbers or booleans. A field with no value is left out, and so is any field the manifest lists as withheld. It may be `{}`. |
 | `text` | no | The record text: eye's `recordText` (B0), which is the only text eye embeds. It starts with `collection: `. It's absent when the record has none. |
 | `provenance` | yes | Where the record came from (below). |
@@ -90,7 +90,7 @@ The day is the UTC date of `createdAt`. The commit that built it is in `builder.
 
 A snapshot is a folder holding `manifest.json` and the record files it lists. The fixtures use `records.jsonl`: records sorted by `id`, one JSON object per line, LF line endings, UTF-8. The pipeline's snapshots use `records.parquet` (GeoParquet; its columns are in [PIPELINE.md](PIPELINE.md)), and their folders live in the data root, outside git, with a copy of each manifest committed under `data/manifests/`.
 
-The `geoparquet` format, the `point-in-polygon` rule and the `region` request purpose were added to `manifest/1` on 2026-10-18 without a version bump, because each one only widens an enum (`files[].format`, `region.rule`, `requests[].purpose`) and every manifest that was valid before is still valid. The optional `embeddableFields` and `embeddableName` were added on 2026-10-19 under the same rule: a manifest without them is still valid. Every snapshot this repo holds carries them, and `validate.test.mjs` fails if one doesn't.
+The `geoparquet` format, the `point-in-polygon` rule and the `region` request purpose were added to `manifest/1` on 2026-10-18 without a version bump, because each one only widens an enum (`files[].format`, `region.rule`, `requests[].purpose`) and every manifest that was valid before is still valid. The optional `embeddableFields` and `embeddableName` were added on 2026-10-19 under the same rule: a manifest without them is still valid. `joins`, `publisherCount.gapItems` and `publisherCount.duplicateRows` were added on 2026-10-20 the same way. Every snapshot this repo holds carries the embeddable fields, and `validate.test.mjs` fails if one doesn't.
 
 ### The manifest
 
@@ -106,7 +106,8 @@ The `geoparquet` format, the `point-in-polygon` rule and the `region` request pu
 | `sources` | yes | Each `sourceId` in the records, with its `licence`. |
 | `requests` | yes | Every request the builder made, in order: `purpose` (`records`, `count`, `gap`, or `region` for the boundary a `point-in-polygon` rule tests against), `url`, `status`, `retrievedAt`, `bytes` and the `sha256` of the response body. |
 | `recordCount` | yes | Rows in the snapshot. Must equal the sum of `files[].records`. |
-| `publisherCount` | yes | The publisher's own count for the region: `value`, `method` (how it was asked for, in words), `url` and `countedAt`. When `value` differs from `recordCount`, `gap` is required and names the rows that aren't records and why. |
+| `publisherCount` | yes | The publisher's own count for the region: `value`, `method` (how it was asked for, in words), `url` and `countedAt`. When `value` differs from `recordCount`, `gap` is required and names the rows that aren't records and why. `gapItems` (optional, added 2026-10-20) is the same finding as data: `[{id, reason}]`, one per publisher id that isn't a record; `duplicateRows` is the number of extra rows of ids the publisher repeats. With `gapItems` present, `value` must equal `recordCount + gapItems.length + duplicateRows`. |
+| `joins` | no | How each joined field was filled (added 2026-10-20), so a trainer can filter on it. One entry, for `place.countyFips`: see "Joins". |
 | `files` | yes | Each file: `path` (relative, inside the snapshot folder), `format` (`jsonl`, or `geoparquet` for the files `data/pipeline` writes), `sha256` (64 lowercase hex characters), `bytes` and `records`. |
 | `withheldFields` | no | Source fields left out, each with `field` and `why`. Absent when none are withheld. |
 | `embeddableFields` | no | The `details` keys eye agrees to embed for this collection, in eye's order. Derived, never written by hand: see [What may be embedded](#what-may-be-embedded). Present together with `embeddableName`. |
@@ -125,6 +126,28 @@ The builders call it: `data/pipeline/build.py` and `schema/fixtures/build-fixtur
 
 When eye changes `EMBED_TEXT` for a snapshot collection, `embeddable.mjs` refuses until `DETAILS_KEY` is reviewed, and `validate.mjs` fails every manifest whose lists no longer match (code `embeddable`). Rebuilding or backfilling the manifests fixes it. A collection without a `DETAILS_KEY` table can't be built yet.
 
+### Joins
+
+`joins` (optional in `manifest/1`, added 2026-10-20; the 2026-10-19 manifests carry none) is how a joined field was filled. It has one entry today, for `place.countyFips`:
+
+| field | what it is |
+|---|---|
+| `field` | `place.countyFips` |
+| `boundary` | The file the polygons came from: `publisher`, `product`, `vintage`, `url`, the `sha256` of the downloaded bytes and `retrievedAt`. A point-in-polygon county is only as old as this file. |
+| `methods` | How many records got a county by each `place.method`: `point-in-polygon`, `source-field`, `name-lookup`. They add up to `placed`. |
+| `crossCheck` | A second, independent join compared with the polygon: the publisher's own county on the row (`source` says which field). `agree`, `disagree`, and `unchecked` (no polygon answer, or no county string the name rule could read). They add up to `recordCount`. |
+| `placed`, `unplaced` | `placed + unplaced.length` is `recordCount`. `unplaced` is `[{id, reason}]`: a record the join abstained on, with why. |
+| `disagreements` | `[{id, pip, name}]`: where the polygon and the publisher's county differ. The record keeps `pip`; `name` is the county the publisher's string (or, for schools, NCES's code) says. `crossCheck.disagree` is its length. |
+
+How a record is placed (`data/pipeline/join.py`):
+
+1. A record whose source already gives a county (schools: NCES's county code, `source-field`) keeps it. Its point is still tested against the polygons, and the two are compared in `crossCheck`.
+2. Otherwise the point is tested against the county polygons of the record's own state. Exactly one contains it: `countyFips` is that county, `method` is `point-in-polygon`. The publisher's county string is joined by name (a Python port of `apps/map/lib/places/countyJoin.ts`, both held to `apps/map/lib/places/countyJoin.cases.json`) and compared. When they differ the polygon wins and the pair goes into `disagreements`.
+3. No polygon contains the point (offshore, or on a state line): the name join is tried. If it places the record, `method` is `name-lookup`. If not, the record is unplaced, with the reason `no county polygon contains the point (TIGER/Line 2025); publisher county string "<value>" or absent`. A point inside more than one polygon is unplaced too.
+4. The nearest county is never used, and no point or code is invented. `place.method` on an unplaced record still says how its state was derived (`name-lookup`).
+
+Every `countyFips` written must be a geoid in `apps/map/lib/places/data/counties.json` (ACS2023, 3,222 rows); the builder stops when it isn't.
+
 ### Checks beyond the schema
 
 `validate.mjs` reports each problem as `{code, path, message}`. These codes come from rules JSON Schema can't express:
@@ -140,7 +163,8 @@ When eye changes `EMBED_TEXT` for a snapshot collection, `embeddable.mjs` refuse
 - `embeddable`: a manifest's `embeddableFields` or `embeddableName` differs from what `embeddable.mjs` derives from eye's `embedFields.ts`, or only one of the two is there.
 - `bbox`: the box isn't west < east and south < north.
 - `count`: `recordCount` doesn't match the files.
-- `gap`: the counts differ and `gap` doesn't say why.
+- `gap`: the counts differ and `gap` doesn't say why, or `gapItems` is present and `value` isn't `recordCount + gapItems.length + duplicateRows`, or a gap item id repeats.
+- `joins`: `placed + unplaced.length` isn't `recordCount`, the methods don't add up to `placed`, the cross-check doesn't add up or its `disagree` isn't the listed disagreements, an unplaced id repeats, or (with a jsonl file) an unplaced id isn't a record's, a record with no `countyFips` has no unplaced entry, or `placed` isn't the records carrying one. `data/pipeline/read.py` makes the same check on a GeoParquet snapshot.
 - `file-missing`, `file-bytes`, `file-sha`, `file-records`, `file-record`: a listed file is absent, its size, hash or line count differs from the manifest, or one of its lines isn't a valid record of this snapshot (including a repeated id).
 - `file-format`: a file listed as `geoparquet` doesn't start and end with Parquet's `PAR1` magic. Plain Node can't read Parquet, so for these files the validator checks bytes, sha256 and the magic only; `data/pipeline/read.py` checks the row count and every row when it reads one.
 
