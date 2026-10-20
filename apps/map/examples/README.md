@@ -40,7 +40,7 @@ It pulls the Texas counties into pandas, plots home-value yoy against wage yoy, 
 
 ## MCP server
 
-The API is also a [Model Context Protocol](https://modelcontextprotocol.io) server: 24 read-only tools (`water_report`, `market_report`, `areas`, `sectors`, `ports`, `gauges`, `series_get`, `screen`, `indicators`, `company`, ...), the docs and the OpenAPI document as resources, and four prompts (county due diligence, port congestion check, water stress brief, place brief). The full tool table is in [docs/MCP.md](../docs/MCP.md).
+The API is also a [Model Context Protocol](https://modelcontextprotocol.io) server: 38 read-only tools (`water_report`, `market_report`, `areas`, `sectors`, `ports`, `gauges`, `series_get`, `screen`, `indicators`, `company`, ...), the docs and the OpenAPI document as resources, and four prompts (county due diligence, port congestion check, water stress brief, place brief). The full tool table is in [docs/MCP.md](../docs/MCP.md).
 
 A fresh Claude Code session does not load tool descriptions up front; it loads tool names and the server's `instructions`, and fetches a description when it searches for the tool. This server therefore sends instructions (what it covers, when to search for its tools, the cite and missing rules) and marks `world_context` with `_meta["anthropic/alwaysLoad"]`, so that one tool's description is loaded at session start. In a session that has the server added, `claude -p` with a place question should show `mcp__eye__world_context` with its description and not as a bare name; the other tools stay deferred. [docs/MCP.md](../docs/MCP.md) has the details.
 
