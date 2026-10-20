@@ -2,6 +2,7 @@
 //   node data/schema/validate.test.mjs
 // Every valid fixture must pass; every invalid one must fail with the reason make-invalid.mjs gives it; the
 // invalid files must match their source; each snapshot's files must hash to what its manifest says.
+import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { copyFileSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -314,6 +315,15 @@ try {
 check(threw, "an unsupported schema keyword is an error, not ignored");
 for (const [n, s] of [["record", RECORD_SCHEMA], ["manifest", MANIFEST_SCHEMA]])
   check(s.$schema === "https://json-schema.org/draft/2020-12/schema", `${n}.schema.json declares JSON Schema 2020-12`);
+
+// The cadence table, the weekly freshness line and the changelog rule each have a test file of their own. They run
+// from here so the data.yml "schema and fixture tests" step covers them, the way scripts/guard.test.mjs runs
+// scripts/prereg-check.test.mjs. A failing file shows its FAIL lines below.
+for (const file of ["cadence.test.mjs", "freshness.test.mjs", "changelog.test.mjs"]) {
+  const r = spawnSync(process.execPath, [path.join(HERE, file)], { encoding: "utf8" });
+  const fails = `${r.stdout}${r.stderr}`.split("\n").filter((l) => /^FAIL|^\s+\S|passed, \d+ failed/.test(l) && !/ExperimentalWarning|trace-warnings/.test(l));
+  check(r.status === 0, `${file} passes`, fails.slice(0, 60).join("\n      "));
+}
 
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exitCode = failed ? 1 : 0;

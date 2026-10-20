@@ -4,6 +4,8 @@
 //   node data/schema/validate.mjs manifest <manifest.json> ...   (also checks the files it lists, next to it)
 //   node data/schema/validate.mjs diff <diff.json> ...   (a snapshot diff written by data/pipeline/diff.py)
 //   node data/schema/validate.mjs manifest --no-files <manifest.json> ...   (the manifest alone)
+//   node data/schema/validate.mjs cadence [--cadence FILE] [--manifests DIR]   (data/cadence.json against the committed manifests)
+//   node data/schema/validate.mjs changelog [--changelog FILE] [--manifests DIR]   (data/CHANGELOG.md against the committed manifests)
 //
 // Two layers of checks:
 //   1. The JSON Schema in record.schema.json / manifest.schema.json, read by a small evaluator for the subset
@@ -19,10 +21,13 @@
 //      The joins block (data/SCHEMA.md, Joins): placed + unplaced = recordCount, the methods add up, the cross-check adds up
 //      and, with a jsonl file, every record without a countyFips has an unplaced entry and every unplaced id is a record.
 //      gapItems: the publisher's count is recordCount + gapItems.length + duplicateRows.
+//   3. Across files (cadence, changelog): data/cadence.json has one row per committed collection, a number only from a
+//      stated cadence word that a quote carries; data/CHANGELOG.md has an entry for every committed manifest dated after
+//      2026-10-19, and each entry's counts agree with the two manifests. Code `cadence` and `changelog`.
 // Each problem is {code, path, message}. Exit 0 when every input is valid, 1 otherwise.
 
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { embeddableProblems } from "./embeddable.mjs";
@@ -31,6 +36,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const RECORD_SCHEMA = JSON.parse(readFileSync(path.join(HERE, "record.schema.json"), "utf8"));
 export const MANIFEST_SCHEMA = JSON.parse(readFileSync(path.join(HERE, "manifest.schema.json"), "utf8"));
 export const DIFF_SCHEMA = JSON.parse(readFileSync(path.join(HERE, "diff.schema.json"), "utf8"));
+export const CADENCE_SCHEMA = JSON.parse(readFileSync(path.join(HERE, "cadence.schema.json"), "utf8"));
 
 // ---------------------------------------------------------------- JSON Schema subset
 
@@ -401,16 +407,261 @@ export function verifyFiles(m, dir) {
   return out;
 }
 
+// ---------------------------------------------------------------- cadence table and changelog
+
+const DATA_DIR = path.join(HERE, "..");
+export const CADENCE_PATH = path.join(DATA_DIR, "cadence.json");
+export const CHANGELOG_PATH = path.join(DATA_DIR, "CHANGELOG.md");
+export const MANIFESTS_PATH = path.join(DATA_DIR, "manifests");
+
+/**
+ * The cadence words a row of data/cadence.json may state, and the days each stands for. A word joins by a reviewed
+ * change to this table, so a row can't turn "regularly" into a number.
+ */
+export const CADENCE_DAYS = { daily: 1, weekly: 7, annual: 365 };
+/** What counts as a quote carrying the stated word (case-insensitive patterns). */
+export const CADENCE_STEMS = {
+  daily: "\\bdaily\\b|\\bevery day\\b|\\beach day\\b",
+  weekly: "\\bweekly\\b|\\bevery week\\b|\\beach week\\b",
+  annual: "\\bannual(?:ly)?\\b|\\byearly\\b|\\bevery year\\b|\\beach year\\b",
+};
+
+/**
+ * Problems with the cadence table (cadence.schema.json, then the rules it can't say): every committed collection has
+ * one row and every row has a committed collection; a number agrees with the closed table for the stated word and a
+ * quote carries the word; a null row says why and states no word; no number sits beside a reason.
+ * `collections` is the list of collection ids that have a committed manifest.
+ */
+export function cadenceProblems(table, collections) {
+  const out = schemaErrors(table, CADENCE_SCHEMA);
+  if (typeOf(table) !== "object" || !Array.isArray(table.collections)) return out;
+  const bad = (p, message) => out.push({ code: "cadence", path: p, message });
+  const seen = new Set();
+  table.collections.forEach((r, i) => {
+    if (typeOf(r) !== "object") return;
+    const at = `/collections/${i}`;
+    if (typeof r.collection === "string") {
+      if (seen.has(r.collection)) bad(`${at}/collection`, `${r.collection} is listed twice`);
+      seen.add(r.collection);
+      if (!collections.includes(r.collection)) bad(`${at}/collection`, `${r.collection} has a row but no committed manifest`);
+    }
+    if (r.expectedDays === null) {
+      if ("statedCadence" in r) bad(`${at}/statedCadence`, `${r.collection} is null, so it states no cadence word`);
+      if (!("reason" in r)) bad(`${at}/reason`, `${r.collection} is null and needs a reason`);
+    } else if (Number.isInteger(r.expectedDays)) {
+      if ("reason" in r) bad(`${at}/reason`, `${r.collection} has a number, so it carries no null reason`);
+      if (!("statedCadence" in r)) bad(`${at}/statedCadence`, `${r.collection} has a number and needs the cadence word the publisher states`);
+      else if (CADENCE_DAYS[r.statedCadence] !== undefined) {
+        if (r.expectedDays !== CADENCE_DAYS[r.statedCadence])
+          bad(`${at}/expectedDays`, `${r.collection}: ${r.statedCadence} is ${CADENCE_DAYS[r.statedCadence]} days in the table, expectedDays says ${r.expectedDays}`);
+        const stem = new RegExp(CADENCE_STEMS[r.statedCadence], "i");
+        if (!(Array.isArray(r.sources) ? r.sources : []).some((s) => typeof s?.quote === "string" && stem.test(s.quote)))
+          bad(`${at}/sources`, `${r.collection}: no quote carries the stated cadence word "${r.statedCadence}"`);
+      }
+    }
+    (Array.isArray(r.sources) ? r.sources : []).forEach((s, n) => {
+      if (typeof s?.readAt === "string" && /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(s.readAt) && !realDate(s.readAt))
+        bad(`${at}/sources/${n}/readAt`, `${s.readAt} is not a calendar date`);
+    });
+  });
+  for (const c of collections) if (!seen.has(c)) bad("/collections", `${c} has a committed manifest but no row`);
+  return out;
+}
+
+/** The day after which every committed manifest needs an entry in data/CHANGELOG.md. */
+export const CHANGELOG_SINCE = "2026-10-19";
+
+const SNAPSHOT_ID = /^([a-z0-9]+(?:-[a-z0-9]+)*)\.([a-z0-9]+(?:-[a-z0-9]+)*)\.([0-9]{4}-[0-9]{2}-[0-9]{2})$/;
+
+/** [{snapshotId, recordCount}] for every <dir>/<collection>/<id>.json: what the cadence and changelog rules read. */
+export function readManifestSummaries(dir) {
+  const out = [];
+  for (const coll of readdirSync(dir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name).sort())
+    for (const f of readdirSync(path.join(dir, coll)).filter((n) => n.endsWith(".json")).sort()) {
+      const m = JSON.parse(readFileSync(path.join(dir, coll, f), "utf8"));
+      out.push({ snapshotId: m.snapshotId, recordCount: m.recordCount });
+    }
+  return out;
+}
+
+/**
+ * The entries of a changelog: each "## <heading>" line and the lines under it. Text before the first one is ignored,
+ * and so is anything inside a code fence (the head of the file shows the entry format in one).
+ */
+function changelogEntries(text) {
+  const entries = [];
+  let fenced = false;
+  for (const line of String(text).split("\n")) {
+    if (/^```/.test(line)) {
+      fenced = !fenced;
+      if (entries.length) entries.at(-1).lines.push(line);
+      continue;
+    }
+    const h = fenced ? null : /^## (.*?)\s*$/.exec(line);
+    if (h) entries.push({ id: h[1], lines: [] });
+    else if (entries.length) entries.at(-1).lines.push(line);
+  }
+  return entries;
+}
+
+/**
+ * Problems with data/CHANGELOG.md against the committed manifests (`manifests`: [{snapshotId, recordCount}]).
+ * Every manifest dated after CHANGELOG_SINCE has a "## <snapshot id>" entry, and every entry names a committed
+ * snapshot, once. A snapshot with a predecessor (the latest earlier day of the same collection and region) has the
+ * diff.py output against it: the Predecessor line names it, the Command names the pair and exited 0, Records are the
+ * two manifests' recordCount, the removal classes add up to Removed, Added minus Removed is the change in records,
+ * Changed plus Unchanged is the records present on both days, and Unknown removals is none or lists every unknown id.
+ * A snapshot without one says "none". This is arithmetic on committed files; that the counts reproduce from diff.py
+ * needs the snapshot files, which are not in git, so a reviewer runs diff.py.
+ */
+export function changelogProblems(manifests, text) {
+  const out = [];
+  const bad = (id, message) => out.push({ code: "changelog", path: `/${id}`, message });
+  const byId = new Map();
+  for (const m of manifests) {
+    const p = SNAPSHOT_ID.exec(m?.snapshotId ?? "");
+    if (p) byId.set(m.snapshotId, { snapshotId: m.snapshotId, recordCount: m.recordCount, collection: p[1], region: p[2], day: p[3] });
+  }
+  const predecessor = (m) => {
+    let best = null;
+    for (const o of byId.values()) if (o.collection === m.collection && o.region === m.region && o.day < m.day && (!best || o.day > best.day)) best = o;
+    return best;
+  };
+  const seen = new Set();
+  for (const e of changelogEntries(text)) {
+    if (seen.has(e.id)) {
+      bad(e.id, `${e.id} has an entry twice`);
+      continue;
+    }
+    seen.add(e.id);
+    const m = byId.get(e.id);
+    if (!m) bad(e.id, `${e.id} names no committed manifest`);
+    else entryProblems(m, predecessor(m), e.lines, bad);
+  }
+  for (const m of byId.values())
+    if (m.day > CHANGELOG_SINCE && !seen.has(m.snapshotId))
+      bad(m.snapshotId, `no entry for ${m.snapshotId}: a manifest dated after ${CHANGELOG_SINCE} needs a "## ${m.snapshotId}" entry in data/CHANGELOG.md (diff.py against its predecessor, or "none" for a first snapshot)`);
+  return out;
+}
+
+function entryProblems(m, pred, lines, bad) {
+  const id = m.snapshotId;
+  const f = new Map();
+  let unknownListed = 0;
+  let afterUnknown = false;
+  for (const line of lines) {
+    const kv = /^- ([A-Za-z][A-Za-z ]*): (.*)$/.exec(line);
+    if (kv) {
+      if (!f.has(kv[1])) f.set(kv[1], kv[2].trim());
+      afterUnknown = kv[1] === "Unknown removals";
+    } else if (afterUnknown && /^ {2}- \S+: \S/.test(line)) unknownListed++;
+  }
+  const line = (key) => {
+    if (!f.has(key)) bad(id, `the "${key}" line is missing`);
+    return f.get(key);
+  };
+  const pv = line("Predecessor");
+  if (pv === undefined) return;
+  if (!pred) {
+    if (!/^none\b/.test(pv)) bad(id, `${id} is the first snapshot of ${m.collection} for ${m.region}: it has no predecessor, but the Predecessor line names ${pv}`);
+    const rec = f.get("Records");
+    if (rec !== undefined && rec !== String(m.recordCount)) bad(id, `Records is ${rec}, the manifest holds ${m.recordCount}`);
+    return;
+  }
+  if (/^none\b/.test(pv)) return bad(id, `${id} has a predecessor (${pred.snapshotId}), but the Predecessor line says none`);
+  if (pv !== pred.snapshotId) bad(id, `the Predecessor line names ${pv}, the snapshot's predecessor is ${pred.snapshotId}`);
+  const cmd = line("Command");
+  if (cmd !== undefined) {
+    if (!cmd.includes(`diff.py ${pred.snapshotId} ${id}`)) bad(id, `Command does not name the pair: expected "diff.py ${pred.snapshotId} ${id}"`);
+    if (!/\bexit 0\b/.test(cmd)) bad(id, "Command does not record exit 0");
+  }
+  const num = (key) => {
+    const v = line(key);
+    if (v === undefined) return null;
+    if (!/^[0-9]+$/.test(v)) {
+      bad(id, `the "${key}" line is not a whole number: ${v}`);
+      return null;
+    }
+    return Number(v);
+  };
+  const rec = line("Records");
+  let from = null;
+  let to = null;
+  if (rec !== undefined) {
+    const r = /^([0-9]+) -> ([0-9]+)$/.exec(rec);
+    if (!r) bad(id, `the "Records" line is not "<from> -> <to>": ${rec}`);
+    else {
+      from = Number(r[1]);
+      to = Number(r[2]);
+      if (from !== pred.recordCount) bad(id, `Records starts at ${from}, the manifest of ${pred.snapshotId} holds ${pred.recordCount}`);
+      if (to !== m.recordCount) bad(id, `Records ends at ${to}, the manifest of ${id} holds ${m.recordCount}`);
+    }
+  }
+  const added = num("Added");
+  const changed = num("Changed");
+  const unchanged = num("Unchanged");
+  let removed = null;
+  let unknown = null;
+  const rv = line("Removed");
+  if (rv !== undefined) {
+    const r = /^([0-9]+) \(publisher-status ([0-9]+), our-rule ([0-9]+), id-churn ([0-9]+), unknown ([0-9]+)\)$/.exec(rv);
+    if (!r) bad(id, `the "Removed" line is not "<n> (publisher-status a, our-rule b, id-churn c, unknown d)": ${rv}`);
+    else {
+      removed = Number(r[1]);
+      unknown = Number(r[5]);
+      const sum = Number(r[2]) + Number(r[3]) + Number(r[4]) + Number(r[5]);
+      if (sum !== removed) bad(id, `Removed is ${removed}, but its classes add up to ${sum}`);
+    }
+  }
+  if (added !== null && removed !== null && from !== null && to !== null && added - removed !== to - from)
+    bad(id, `Added ${added} minus Removed ${removed} is ${added - removed}, but Records go ${from} -> ${to}`);
+  if (changed !== null && unchanged !== null && removed !== null && from !== null && changed + unchanged !== from - removed)
+    bad(id, `Changed ${changed} + Unchanged ${unchanged} is ${changed + unchanged}, but the records present on both days are ${from} - ${removed} removed = ${from - removed}`);
+  const uv = line("Unknown removals");
+  if (uv !== undefined && unknown !== null) {
+    if (unknown === 0 && uv !== "none") bad(id, `Unknown removals must say "none" when unknown is 0, it says ${uv}`);
+    else if (unknown > 0 && uv !== String(unknown)) bad(id, `Unknown removals says ${uv}, but the Removed line has unknown ${unknown}`);
+    else if (unknown > 0 && unknownListed !== unknown) bad(id, `Unknown removals lists ${unknownListed} ids, but unknown is ${unknown}: list each as "  - <id>: <why>"`);
+  }
+}
+
 // ---------------------------------------------------------------- CLI
+
+/** `cadence` and `changelog`: a file checked against the committed manifests (or another folder of them). */
+function crossFileMain(what, args) {
+  const opt = { "--manifests": MANIFESTS_PATH, [what === "cadence" ? "--cadence" : "--changelog"]: what === "cadence" ? CADENCE_PATH : CHANGELOG_PATH };
+  for (let i = 0; i < args.length; i += 2) {
+    if (args[i + 1] === undefined || !(args[i] in opt)) {
+      console.log(`usage: node data/schema/validate.mjs ${what} [--${what} FILE] [--manifests DIR]`);
+      return 2;
+    }
+    opt[args[i]] = path.resolve(args[i + 1]);
+  }
+  const file = opt[what === "cadence" ? "--cadence" : "--changelog"];
+  let errs;
+  try {
+    const manifests = readManifestSummaries(opt["--manifests"]);
+    errs = what === "cadence"
+      ? cadenceProblems(JSON.parse(readFileSync(file, "utf8")), [...new Set(manifests.map((m) => String(m.snapshotId).split(".")[0]))].sort())
+      : changelogProblems(manifests, readFileSync(file, "utf8"));
+  } catch (e) {
+    console.log(`FAIL  ${file}\n      read ${e.message}`);
+    return 1;
+  }
+  console.log(errs.length ? `FAIL  ${file}` : `ok    ${file}`);
+  for (const e of errs) console.log(`      ${e.code} ${e.path} ${e.message}`);
+  return errs.length ? 1 : 0;
+}
 
 function main(argv) {
   const [what, ...rest] = argv;
+  if (what === "cadence" || what === "changelog") return crossFileMain(what, rest);
   // --no-files: check a manifest alone, for the committed copies under data/manifests/ whose files live in the
   // data root, outside git.
   const noFiles = rest.includes("--no-files");
   const files = rest.filter((a) => a !== "--no-files");
   if (!["record", "manifest", "diff"].includes(what) || !files.length || (noFiles && what !== "manifest")) {
-    console.log("usage: node data/schema/validate.mjs record <file> ... | manifest [--no-files] <file> ... | diff <file> ...");
+    console.log("usage: node data/schema/validate.mjs record <file> ... | manifest [--no-files] <file> ... | diff <file> ... | cadence [--cadence FILE] [--manifests DIR] | changelog [--changelog FILE] [--manifests DIR]");
     return 2;
   }
   let bad = 0;

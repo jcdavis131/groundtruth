@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "cadence/1",
+  "about": "Per collection, how often the publisher says it releases new data, from the publisher's own page, with the sentence. A number appears only where a quote carries the stated cadence word; where the publisher states no interval the row is null with a reason. node data/schema/freshness.mjs reads this table against data/manifests/ and lists the collections whose newest snapshot is older than the interval. Read 2026-10-20; data/PIPELINE.md (Freshness) says how a row is added.",
+  "collections": [
+    {
+      "collection": "nces-public-schools",
+      "publisher": "National Center for Education Statistics (NCES)",
+      "statedCadence": "annual",
+      "expectedDays": 365,
+      "sources": [
+        {
+          "url": "https://nces.ed.gov/opengis/rest/services/K12_School_Locations/EDGE_ADMINDATA_PUBLICSCH_2425/MapServer/1?f=pjson",
+          "quote": "The National Center for Education Statistics' (NCES) Education Demographic and Geographic Estimate (EDGE) program develops annually updated point locations (latitude and longitude) for public elementary and secondary schools included in the NCES Common Core of Data (CCD).",
+          "readAt": "2026-10-20"
+        },
+        {
+          "url": "https://nces.ed.gov/ccd/",
+          "quote": "CCD is a comprehensive, annual, national database of all public elementary and secondary schools and school districts.",
+          "readAt": "2026-10-20"
+        }
+      ]
+    },
+    {
+      "collection": "nid-dams",
+      "publisher": "U.S. Army Corps of Engineers (USACE), National Inventory of Dams",
+      "expectedDays": null,
+      "reason": "publisher-cadence-unstated",
+      "sources": [
+        {
+          "url": "https://nid.sec.usace.army.mil/nid/",
+          "foundIn": "https://nid.sec.usace.army.mil/nid/app.8937938c751ef17785ce.js",
+          "quote": "Agencies now can update data in real time.",
+          "readAt": "2026-10-20"
+        }
+      ],
+      "note": "The page's Data Freshness text says agencies can update the inventory in real time and calls the annual national data call the way it used to work. That describes when agencies may submit, not a release interval for the public layer this pipeline reads, so no number of days follows from it."
+    },
+    {
+      "collection": "nrhp-listed",
+      "publisher": "National Park Service (NPS), National Register of Historic Places",
+      "expectedDays": null,
+      "reason": "publisher-cadence-unstated",
+      "sources": [
+        {
+          "url": "https://www.nps.gov/subjects/nationalregister/data-downloads.htm",
+          "quote": "A schedule of updates will be posted in the near future.",
+          "readAt": "2026-10-20"
+        }
+      ],
+      "note": "The sentence closes the page's Spatial Data (GIS) section, which describes the National Register spatial data made by NPS's Cultural Resources GIS program; the layer this pipeline reads (the nrhp_locations service on mapservices.nps.gov) names the same program as its source. The publisher says no schedule of updates is posted yet. NPS's Weekly List page (https://www.nps.gov/subjects/nationalregister/weekly-list.htm) lists the actions the Register takes each week; that is a list of actions, not a stated refresh interval for the spatial layer, so it is not used."
+    }
+  ]
+}
