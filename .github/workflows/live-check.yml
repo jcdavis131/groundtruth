@@ -10,7 +10,7 @@
 # reviewed in; until then the summary and the log are the record.
 #
 # Not a required check. A pull request that touches the check or this file gets a real run too, so a change
-# shows its output before it merges; a workflow_dispatch run needs this file on master.
+# shows its output before it merges. workflow_dispatch also runs from a branch before merge (run 39486747273 did); only the schedule waits for master.
 name: live-check
 
 on:
