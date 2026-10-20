@@ -12,7 +12,7 @@ on:
   push:
     branches: [master]
   schedule:
-    - cron: "17 6 * * 1" # weekly, Monday: only the hub-verify job runs then (it reports, never gates a PR)
+    - cron: "17 6 * * 1" # weekly, Monday: only the hub-verify job runs then (it reports, never gates a PR): the Hub's hashes, then the freshness line
   workflow_dispatch:
 
 permissions:
@@ -82,3 +82,8 @@ jobs:
           python-version: "3.11"
       - name: compare the Hub's stored hashes with the committed manifests (keyless; "not published yet" exits 0)
         run: python -I data/hf/verify.py
+      - name: freshness line (collections whose newest snapshot is older than the publisher's stated cadence in data/cadence.json; reports, never gates)
+        if: always()
+        run: |
+          node --version
+          node data/schema/freshness.mjs

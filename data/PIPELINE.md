@@ -153,6 +153,22 @@ data/.venv/Scripts/python data/pipeline/diff.py --probe [--offline] [--manifest 
 
 `--probe` re-fetches the id list of a manifest's first `gap` request (default: NRHP Alabama, 2026-10-19) with the same URL, at most two requests and one page, and reports OBJECTID churn against the sha-pinned body in `<data-root>/raw/`: `churn_rate = (ids only in one body) / (ids in either)`. `--offline` reads the cached body for both sides and reports 0.0. A cached body that no longer hashes to the manifest's sha256 is refused, and a fresh answer is cached in a temporary folder, never in the data root.
 
+## Changelog
+
+Every snapshot id dated after 2026-10-19 has an entry in [CHANGELOG.md](CHANGELOG.md): the `diff.py` output against its predecessor (the latest earlier day of the same collection and region), or a line saying it has none. Run `diff.py` with `--out` as above, write its counts into the entry in the form that file documents, and add the entry in the same pull request as the manifest. `node data/schema/validate.mjs changelog` (code `changelog`, run by `data/schema/validate.test.mjs` on every pull request) fails a manifest without its entry, and an entry whose lines disagree with the manifests: the wrong predecessor, record counts that are not the two manifests' `recordCount`, removal classes that do not add up, or unknown removals that are not listed. It cannot reproduce the counts from `diff.py`, because the snapshot files are in the data root and not in git, so a reviewer reruns the entry's Command.
+
+## Freshness
+
+[`cadence.json`](cadence.json) says, per collection, how often its publisher says it releases new data, with the publisher's page and the sentence. A row has a number only when a quote carries the cadence word the publisher uses, and the days come from a closed table in `validate.mjs` (`CADENCE_DAYS`: daily 1, weekly 7, annual 365). Where the publisher states no interval for the data the pipeline reads, `expectedDays` is `null` with the reason `publisher-cadence-unstated` and a note of what was read. A number is never guessed, and a statute, a catalogue entry or memory is not a publisher page.
+
+```
+node data/schema/freshness.mjs [--today YYYY-MM-DD] [--manifests DIR] [--cadence FILE]
+```
+
+For each collection it prints its newest committed snapshot (across regions), the age in days and the cadence, then `overdue: <collection> newest <day> cadence <days>` for each collection older than its cadence, or `none overdue`, then `unstated:` with the collections whose cadence is null. A null cadence is never overdue. It reports and exits 0 whatever it finds; it exits 2 only when it cannot read its inputs. The weekly `data` workflow runs it as a step of the `hub-verify` job (Mondays, and on `workflow_dispatch`). Because the newest snapshot of a collection decides, a region left behind while another is refreshed does not show in the overdue line; the `held:` line names the snapshot that decided.
+
+`node data/schema/validate.mjs cadence` (code `cadence`, run by `data/schema/validate.test.mjs`) fails a committed collection with no row, a row with no committed manifest, a number that disagrees with its cadence word or that no quote carries, and a null with no reason. To add a collection, read its publisher's own page, copy the sentence into a row, and leave the number `null` if there is no sentence that gives an interval.
+
 ## Pack raw/
 
 ```
