@@ -1,8 +1,9 @@
 # The map app's checks (apps/map, imported from gods-eye-view), run on every
 # pull request and push to master that touches apps/map: the collections
 # freeze check first (plain Node, no install, a second), then tsc --noEmit,
-# vitest and eslint on the files the pull request changed. Every step runs in
-# apps/map, the same as it did at eye's repo root.
+# vitest and eslint on the files the pull request changed, and a reporting-only
+# receipt coverage table (see the step). Every step runs in apps/map, the same
+# as it did at eye's repo root.
 #
 # Install is npm ci --ignore-scripts, then only the half of postinstall the
 # tests read: scripts/patch-knockout-csp.mjs, which security-headers.test.ts
@@ -81,6 +82,17 @@ jobs:
 
       - name: vitest
         run: npx vitest run
+
+      # Receipt coverage (apps/map/scripts/receipt-coverage.mjs): of the valued lines in the twelve recorded
+      # world_context fixtures, how many carry publisher + upstreamRecordUrl + retrievedAt. Prints n/N per fixture,
+      # the total and the uncovered lines by source. Reporting only, never gating: the exit code is 0 whatever the
+      # number is. When the total reaches 95 percent, add `--min 95` here to gate. What is counted is in
+      # apps/map/docs/MCP.md, "Receipt coverage". It runs even when an earlier step failed, so the number is
+      # printed on every pull request; a crash of the script itself still fails the job. Needs the zod that
+      # npm ci installed, and Node 22.18+ (setup-node above resolves 22 to the newest 22.x).
+      - name: receipt coverage
+        if: ${{ !cancelled() }}
+        run: node scripts/receipt-coverage.mjs
 
       # Changed files only, on every pull request: cheap, and it holds new code to
       # the rules. The whole-app run below covers changes that touch no source.

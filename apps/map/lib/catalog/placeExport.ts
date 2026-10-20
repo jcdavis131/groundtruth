@@ -55,6 +55,18 @@ const PUBLISHER: Record<PlaceExportId, SourceId> = {
 
 const TIGER_COUNTIES = "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2023/State_County/MapServer/13";
 
+/**
+ * Where each export's served `data` lists the publisher rows a county's count was computed from: NPL site ids,
+ * UST Finder county-row OBJECTIDs and FUDS property numbers, each keyed by county FIPS (the tests check that every
+ * county in `places` has an entry).
+ */
+export const PLACE_EXPORT_ROW_IDS: Record<PlaceExportId, string> = {
+  "npl-status": "data.siteIds",
+  "ust-releases-county": "data.sourceIds",
+  "ust-facilities-county": "data.sourceIds",
+  "fuds-properties": "data.propertyIds",
+};
+
 interface ExportMeta {
   source: { name: string; layer: string; fetchedAt: string; serviceDataLastEdit?: string };
   counties: { file: string; pulled: string };
@@ -63,7 +75,9 @@ interface ExportMeta {
 /**
  * Provenance read from the export file's own meta: the publisher's layer as fetched (fetchedAt, and the service's
  * own last-edit time as releasedAt when the file has one) and the county table the export joins to (its pull date).
- * Nothing is filled in: a file without a fetch time throws at load rather than serving a made-up one.
+ * The county counts are computed here, so that entry is an estimate and its `inputs` carry the receipt of each thing
+ * the count was computed from: the publisher's layer and the TIGERweb county rows, with where the reply lists the
+ * row ids. Nothing is filled in: a file without a fetch time throws at load rather than serving a made-up one.
  */
 function provenanceOf(id: PlaceExportId, d: { meta: object }): Provenance[] {
   const m = d.meta as ExportMeta;
@@ -77,6 +91,16 @@ function provenanceOf(id: PlaceExportId, d: { meta: object }): Provenance[] {
       ...(m.source.serviceDataLastEdit ? { releasedAt: m.source.serviceDataLastEdit } : {}),
       kind: "estimate",
       method: `county aggregate computed by the export script from ${m.source.name}`,
+      inputs: [
+        {
+          sourceId: PUBLISHER[id],
+          upstreamRecordUrl: m.source.layer,
+          retrievedAt: m.source.fetchedAt,
+          ...(m.source.serviceDataLastEdit ? { releasedAt: m.source.serviceDataLastEdit } : {}),
+          rowIdsAt: PLACE_EXPORT_ROW_IDS[id],
+        },
+        { sourceId: "census-tigerweb", upstreamRecordUrl: TIGER_COUNTIES, retrievedAt: m.counties.pulled, rowIdsAt: "data.places" },
+      ],
     },
     {
       source: source("census-tigerweb"),

@@ -138,6 +138,58 @@ The promise, and which part a test enforces:
 
 What this does not cover: the other tools relay a route's JSON as it is and publish no schema, so a route's own fields can change without a `SERVER_VERSION` change (each route's provenance names its source and release); the compat test does not read patterns or length limits; and the lock is append-only by convention, not by a check, so a reviewer reads its diff.
 
+## Estimates and their inputs
+
+`Provenance.kind` (`lib/provenance/types.ts`) says how a value was made: `published` is relayed as-is, `estimate` is computed here from published values, `snapshot` is our own observation of a live feed. A value computed here is an estimate and names what it was computed from: an optional `inputs` list on the entry, each input with `sourceId`, `upstreamRecordUrl`, `retrievedAt` and, where the publisher states one, `releasedAt`, and `rowIdsAt`, the path in the reply where the row ids are. The field is additive: no property was removed or retyped, and `tools/list` and the `world/2` `outputSchema` are unchanged, so `SERVER_VERSION` stays `0.4.0`.
+
+Served today: `place_export` (`GET /api/catalog?op=place-export`). Each export's county counts are one `estimate` entry whose `inputs` are the publisher's layer (its URL and fetch time, with `releasedAt` the service's last-edit time) and the TIGERweb county rows the export joins to. The row ids are in the reply: `data.siteIds` for `npl-status` (county to EPA site ids), `data.sourceIds` for the two UST exports (county to the UST Finder row's OBJECTID) and `data.propertyIds` for `fuds-properties`. The TIGERweb entry stays `published`: it is relayed as-is.
+
+Enforced by `lib/provenance/estimates.test.ts` (run by map-ci): an entry labelled `published` whose method says it was computed here (the words computed, aggregate, sum, count, derived), or that names `inputs`, is a finding, and so is an estimate with no inputs. The test walks every provenance entry in the twelve recorded `world_context` fixtures and every place-export reply, finds none, and shows the rule finds a planted violation and the mutation "label the county aggregate published". `lib/catalog/placeExport.test.ts` holds the inputs to the export file's own `meta`.
+
+What this does not cover, measured 2026-10-20:
+
+- 33 of the 313 valued lines in the recorded `world_context` fixtures are counts computed here: `nws-api` 12 (Severe or Extreme alerts touching the box), `usgs-earthquakes` 12 (M4.5+ in the past day), `hifld-hospitals` 5 and `usace-nid` 4 ("found"). The `world/2` schema allows `kind` only as `about-eye`, so they carry no label at all: not published, and not yet `estimate` with inputs. Labelling them adds an enum value to the published schema, which is a `SERVER_VERSION` bump, a CHANGELOG entry and a lock entry (see Versioning promise). Not done here.
+- Six provenance entries elsewhere are labelled `published` and describe values computed here: `lib/hazards/history.ts` lines 630 (FEMA declarations per year), 688 (SPC tornadoes per county per year) and 768 (NCEI storm reports per year per type), and `lib/releases/movers.ts` lines 166, 292 and 342 (changeAbs and changePct computed from two published months), the `kind` lines at e7ad197. Their routes are not in the recorded fixtures or place exports, so the test does not see them. Not changed here.
+- The words are a heuristic. A method that computes without saying so passes the word check; the `inputs` half of the rule and a reviewer cover that.
+
+## Receipt coverage
+
+How much of what `world_context` says a stranger can replay. `apps/map/scripts/receipt-coverage.mjs` counts it over the twelve recorded fixtures in `lib/mcp/__fixtures__/world/`, and the "receipt coverage" step of `.github/workflows/map-ci.yml` prints the table on every map pull request. It reports and does not gate: the exit code is 0 unless `--min <percent>` is given, then 1 when the total is below it. The bar for gating is 95 percent; the total is below it, so the step stays reporting only.
+
+What is counted:
+
+- A valued line is a `world_context` item whose `value` is not null.
+- A valued line is covered when it carries a `publisher`, an `upstreamRecordUrl` (https) and a `retrievedAt`. Covered means those three fields are there; it does not mean `scripts/cite-check.mjs` CONFIRMED the line.
+- Not in the count, and printed apart: null-valued lines (each carries a note saying why) and `kind: "about-eye"` lines (claims about eye's own catalogue, which have no publisher record by the `world/2` schema).
+- The input is the recorded fixtures, loaded by the loader cite-check uses. The number moves when a fixture is re-recorded or `lib/mcp/world.ts` changes what it emits, not when a publisher changes.
+
+`scripts/receipt-coverage.test.ts` fails when the newest dated heading below differs from what the script prints, so the number here is the script's. Newest first.
+
+### 2026-10-20: 246 of 313 valued lines (78.6%)
+
+```
+fixture                  covered/valued   share  about-eye  null
+austin_pt.json                    40/47   85.1%          0     1
+chugach_02063.json                14/19   73.7%          0     0
+collegeville_pa_pt.json           38/45   84.4%          0     2
+ct_09110.json                     18/21   85.7%          0     3
+denver_about.json                 13/15   86.7%          3     0
+mobile_01097.json                 20/27   74.1%          0     4
+nola_smallbox.json                33/41   80.5%          0     0
+ocean_atlantic.json                 0/4    0.0%          0     0
+petroleum_30069.json              13/19   68.4%          0     3
+pr_72127.json                     22/25   88.0%          0     0
+volusia_alert_pt.json             24/33   72.7%          0     0
+zero_declarations.json            11/17   64.7%          0     3
+total                           246/313   78.6%          3    16
+```
+
+Below the 95 percent bar, so reporting only. The 67 uncovered lines say why in their own notes ("no record-level URL: ..."):
+
+- 33 are counts computed here from a route's list, with no publisher URL for exactly this box (`nws-api` 12, `usgs-earthquakes` 12, `hifld-hospitals` 5, `usace-nid` 4). They need an `estimate` label with inputs (above) rather than a record URL.
+- 22 are release dates whose `upstreamUrl` is the publisher's own schedule (`usdm` 10, `zillow-zhvi` 7, `zillow-zori` 5).
+- 12 are Zillow values (`zillow-zhvi` 7, `zillow-zori` 5): Zillow publishes one CSV of every region, with no URL per region.
+
 ## Resources
 
 - `gev://openapi.json`: `public/openapi.json`, the OpenAPI 3 document for the HTTP routes.
