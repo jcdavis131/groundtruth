@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,6 +13,16 @@ import { WORLD_FIXTURES, worldItems } from "./worldItems";
 // (lib/cite/__fixtures__/publisher, written by scripts/publisher-record.mjs) and on tampered copies of them.
 
 let ITEMS: CiteItem[] = [];
+
+/**
+ * Sources with a matcher and no recorded publisher reply, and why. A source goes here only when the publisher would not
+ * answer when the replies were recorded (2026-10-20); `node scripts/publisher-record.mjs --from-fixtures --per-source 4`
+ * records them when it does, and the entry is then deleted. Its matcher is exercised on a hand-built body below instead,
+ * which proves the code path and nothing about the publisher's real shape.
+ */
+const UNRECORDED: Record<string, string> = {
+  "usace-nid": "geospatial.sec.usace.army.mil answered every record query with HTTP 200 and {\"error\":{\"code\":503,\"message\":\"Wait timeout for the request exceeded\"}} or a 60 to 280 s timeout on 2026-10-20 (the layer metadata page answered)",
+};
 
 beforeAll(async () => {
   const files = readdirSync(WORLD_FIXTURES).filter((f) => f.endsWith(".json")).sort();
@@ -90,7 +100,7 @@ describe("the verdicts, flipped one by one on recorded publisher replies", () =>
   it("1b. every JSON-bodied matcher flips to CONTRADICTED when the publisher's compared value changes", () => {
     const flipped: string[] = [];
     for (const sourceId of Object.keys(MATCHERS)) {
-      if (sourceId === "bls-qcew" || sourceId === "usdm") continue; // CSV: covered by their own cases
+      if (sourceId === "bls-qcew" || sourceId === "usdm" || sourceId in UNRECORDED) continue; // CSV: covered by their own cases; unrecorded: no reply to change
       const { item, rec } = confirmed(sourceId);
       const v = classify(item, toReply(rec));
       const pv = v.publisherValue;
@@ -308,13 +318,14 @@ describe("what the recorded fixtures cover", () => {
 
   it("every matcher has at least two recorded publisher records", () => {
     for (const s of Object.keys(MATCHERS)) {
-      expect(listRecorded(s).length, `${s}: recorded replies`).toBeGreaterThanOrEqual(2);
+      if (s in UNRECORDED) expect(listRecorded(s).length, `${s}: listed as unrecorded, so it has none (delete its entry once it does)`).toBe(0);
+      else expect(listRecorded(s).length, `${s}: recorded replies`).toBeGreaterThanOrEqual(2);
     }
   });
 
   it("every recorded reply carries its URL, retrievedAt and the body's sha256, and sits on its source's host", () => {
     const all = listRecorded();
-    expect(all.length).toBeGreaterThanOrEqual(2 * Object.keys(MATCHERS).length);
+    expect(all.length).toBeGreaterThanOrEqual(2 * (Object.keys(MATCHERS).length - Object.keys(UNRECORDED).length));
     for (const r of all) {
       const where = `${r.sourceId}/${r.recordId}`;
       expect(r.status, where).toBe(200);
@@ -337,6 +348,36 @@ describe("what the recorded fixtures cover", () => {
     const { verdicts } = runRecorded(ITEMS);
     const bad = verdicts.filter((v) => v.status === "UNREACHABLE" || v.status === "REFUSED");
     expect(bad.map((v) => `${v.status} ${v.sourceId} | ${v.fact}: ${v.reason}`)).toEqual([]);
+  });
+});
+
+describe("a matcher with no recorded reply, on a hand-built body (not a publisher record)", () => {
+  // Field names are the ones the record URL asks the NID layer for (outFields); the values are made up for this test.
+  const body = (over: Record<string, unknown> = {}) =>
+    JSON.stringify({ features: [{ attributes: { NIDID: "XX00001", NAME: "Test Dam", PRIMARY_OWNER_TYPE: "Local Government", OWNER_TYPES: "Local Government", HAZARD_POTENTIAL: "High", CONDITION_ASSESSMENT: "Fair", YEAR_COMPLETED: 1960, ...over } }] });
+  const item: CiteItem = {
+    fact: "dam",
+    value: "Test Dam",
+    code: "nid:XX00001",
+    note: "hazard potential High; condition Fair; completed 1960; owner type Local Government; within 0.1 degrees of the point",
+    sourceId: "usace-nid",
+    upstreamRecordUrl: "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer/0/query?where=NIDID%3D'XX00001'&outFields=NIDID,NAME,PRIMARY_OWNER_TYPE,OWNER_TYPES,HAZARD_POTENTIAL,CONDITION_ASSESSMENT,YEAR_COMPLETED&returnGeometry=false&f=json",
+    retrievedAt: "2026-10-19T00:00:00.000Z",
+  };
+  const r = (b: string): PublisherReply => ({ status: 200, body: b, fetchedAt: "2026-10-20T00:00:00.000Z" });
+
+  it("confirms, contradicts and reads an ArcGIS error as unscored", () => {
+    expect(classify(item, r(body())).status).toBe("CONFIRMED");
+    expect(classify(item, r(body({ HAZARD_POTENTIAL: "Low" }))).status).toBe("CONTRADICTED");
+    expect(classify(item, r(body({ YEAR_COMPLETED: 1961 }))).status).toBe("CONTRADICTED");
+    expect(classify(item, r('{"error":{"code":503,"message":"Wait timeout for the request exceeded","details":[]}}')).status).toBe("UNREACHABLE");
+    expect(classify(item, r('{"features":[]}')).status).toBe("CONTRADICTED");
+  });
+
+  it("a private dam labelled by id (null name, no NAME asked for) is compared on its other fields", () => {
+    const priv: CiteItem = { ...item, value: null, upstreamRecordUrl: (item.upstreamRecordUrl as string).replace("NIDID,NAME,", "NIDID,") };
+    const noName = JSON.stringify({ features: [{ attributes: { NIDID: "XX00001", PRIMARY_OWNER_TYPE: "Local Government", OWNER_TYPES: "Local Government", HAZARD_POTENTIAL: "High", CONDITION_ASSESSMENT: "Fair", YEAR_COMPLETED: 1960 } }] });
+    expect(classify(priv, r(noName)).status).toBe("CONFIRMED");
   });
 });
 
@@ -386,16 +427,24 @@ describe("the fetch layer", () => {
   });
 
   it("two requests to one host are a second apart even when they are asked for together", async () => {
-    const clock = fakeClock();
-    const gate = createGate(clock);
-    const stamps: number[] = [];
-    await Promise.all([1, 2, 3, 4].map(async () => (await gate("data.bls.gov"), stamps.push(clock.t))));
-    stamps.sort((a, b) => a - b);
-    for (let i = 1; i < stamps.length; i++) expect(stamps[i] - stamps[i - 1]).toBeGreaterThanOrEqual(MIN_GAP_MS);
-    // another host does not wait for it
-    const t0 = clock.t;
-    await gate("tigerweb.geo.census.gov");
-    expect(clock.t).toBe(t0);
+    vi.useFakeTimers();
+    try {
+      const clock: Clock = { now: () => Date.now(), sleep: (ms) => new Promise((r) => setTimeout(r, ms)) };
+      const gate = createGate(clock);
+      const stamps: number[] = [];
+      const all = Promise.all([1, 2, 3, 4].map(async () => (await gate("data.bls.gov"), stamps.push(Date.now()))));
+      // another host does not wait behind them
+      const other: number[] = [];
+      const o = gate("tigerweb.geo.census.gov").then(() => other.push(Date.now()));
+      const t0 = Date.now();
+      await vi.advanceTimersByTimeAsync(5000);
+      await Promise.all([all, o]);
+      expect(stamps.length).toBe(4);
+      for (let i = 1; i < stamps.length; i++) expect(stamps[i] - stamps[i - 1]).toBeGreaterThanOrEqual(MIN_GAP_MS);
+      expect(other[0]).toBe(t0);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("stops at the request cap: the rest are UNREACHABLE (unscored), never wrong", async () => {
