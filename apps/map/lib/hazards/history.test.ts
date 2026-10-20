@@ -479,6 +479,31 @@ describe("the answer", () => {
     expect(a.caveats[0]).toMatch(/A declaration is a federal decision, not a measure of damage/);
     expect(a.data.missing).toEqual([]);
   });
+  it("the per-year counts are estimates that name the publisher entry they were computed from; the values relayed as published stay published", () => {
+    const a = assembleHistory(travis());
+    const by = (id: string) => a.provenance.filter((p) => p.source.id === id);
+    // FEMA: distinct disaster numbers per year of declaration, computed from OpenFEMA's rows
+    expect(by("fema-openfema")).toHaveLength(1);
+    expect(by("fema-openfema")[0].kind).toBe("estimate");
+    expect(by("fema-openfema")[0].inputs).toEqual([{ sourceId: "fema-openfema", upstreamRecordUrl: "https://x", retrievedAt: "2026-10-17T21:00:00.000Z" }]);
+    expect(by("fema-openfema")[0].method).toMatch(/per year/);
+    for (const s of a.data.series.filter((x) => x.id.startsWith("fema:"))) expect(s.provenance.kind, s.id).toBe("estimate");
+    // SPC: distinct tornadoes per county per year, counted from SPC's all-tornadoes file at the bake
+    expect(by("noaa-spc")).toHaveLength(1);
+    expect(by("noaa-spc")[0].kind).toBe("estimate");
+    expect(by("noaa-spc")[0].inputs).toEqual([
+      { sourceId: "noaa-spc", upstreamRecordUrl: spc.meta.url, retrievedAt: by("noaa-spc")[0].retrievedAt, ...(spc.meta.lastModified ? { releasedAt: new Date(spc.meta.lastModified).toISOString() } : {}) },
+    ]);
+    expect(a.data.series.find((s) => s.id === "spc:tornadoes:48453")!.provenance.kind).toBe("estimate");
+    // USDM, Climate at a Glance and the landslide line are the publisher's own values, relayed
+    for (const id of ["usdm", "noaa-cag", "usgs-landslide-susc"]) {
+      expect(by(id).length, id).toBeGreaterThan(0);
+      for (const p of by(id)) {
+        expect(p.kind, id).toBe("published");
+        expect(p.inputs, id).toBeUndefined();
+      }
+    }
+  });
   it("years bounds every series to the last N calendar years; declarations caps the list, never the counts", () => {
     const a = assembleHistory(travis({ years: 5, declarationsCap: 3 }));
     for (const s of a.data.series) for (const p of s.points) expect(p.t, s.id).toBeGreaterThanOrEqual(yearT(2022));

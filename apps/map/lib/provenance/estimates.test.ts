@@ -46,6 +46,17 @@ describe("the rule, on planted entries", () => {
     }
   });
 
+  it("reads a per-period figure and a change as computed, in words or as a mover row names them; exchange and unchanged are not change", () => {
+    for (const m of ["per year: distinct disasterNumber by the year of declarationDate", "reports per year where CZ_TYPE = C", "counted per month", "per calendar quarter", "changeAbs = after - before", "changePct = (after - before) / before * 100", "percent change over the year", "the change from last month"]) {
+      expect(COMPUTED_METHOD.test(m), m).toBe(true);
+      expect(computedAsPublished([entry({ method: m })]), m).toHaveLength(1);
+    }
+    for (const m of ["exchange rate as published", "unchanged since the last release", "a perfect year", "per se", "interchange file"]) {
+      expect(COMPUTED_METHOD.test(m), m).toBe(false);
+      expect(computedAsPublished([entry({ method: m })]), m).toEqual([]);
+    }
+  });
+
   it("finds a published entry that names inputs, and lets an estimate name them", () => {
     expect(computedAsPublished([entry({ inputs: [input] })])).toHaveLength(1);
     expect(computedAsPublished([entry({ kind: "estimate", method: "sum of rows", inputs: [input] })])).toEqual([]);

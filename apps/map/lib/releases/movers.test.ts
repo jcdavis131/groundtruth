@@ -67,11 +67,14 @@ describe("zillowMovers", () => {
   it("counts yoy sign flips from the same series", () => {
     expect(r.signFlips).toEqual({ toPositive: 1, toNegative: 1 });
   });
-  it("tags provenance as published with the arithmetic in method", () => {
-    expect(r.provenance.kind).toBe("published");
+  it("tags provenance as an estimate that names the published columns it was computed from, with the arithmetic in method", () => {
+    expect(r.provenance.kind).toBe("estimate");
     expect(r.provenance.source.id).toBe("zillow-zhvi");
     expect(r.provenance.method).toMatch(/after - before/);
     expect(r.provenance.retrievedAt).toBe(T);
+    // the input carries the same retrieval time as the entry, and says where the reply lists each row's before and after
+    expect(r.provenance.inputs).toEqual([{ sourceId: "zillow-zhvi", retrievedAt: T, rowIdsAt: "data.up, data.down" }]);
+    expect(r.provenance.notes?.join(" ")).toMatch(/lists the n largest movers each way, each with the before and after it was computed from/);
     const zori = zillowMovers({ kind: "zoriCounty", asOf: "2026-07-31", rows: [] }, {});
     expect(zori.provenance.source.id).toBe("zillow-zori");
     expect(zori.unit).toBe("USD per month");
@@ -106,7 +109,9 @@ describe("qcewMovers", () => {
     expect(r.up[0].name).toBe("48001");
     expect(r.skipped).toBe(1);
     expect(r.provenance.seriesId).toBe("oty_emp_pct_chg");
+    // BLS publishes the over-the-year percent change and it is relayed as changePct: nothing is computed here
     expect(r.provenance.kind).toBe("published");
+    expect(r.provenance.inputs).toBeUndefined();
   });
   it("wage metric skips rows with no published change; minBefore floors the level", () => {
     const w = qcewMovers({ period: "2026 Q1", counties }, names, "avgWeeklyWage", { n: 5 });
@@ -143,6 +148,14 @@ describe("borderMovers", () => {
     expect(r.compared).toBe(2);
     expect(r.skipped).toBe(3);
     expect(r.provenance.source.id).toBe("bts-border");
+  });
+  it("the change is computed here, so provenance is an estimate that names BTS's monthly counts, at the entry's own retrieval time", () => {
+    const r = borderMovers({ asOf: "2026-06", rows }, "Trucks", { n: 3 });
+    expect(r.provenance.kind).toBe("estimate");
+    expect(r.provenance.inputs).toEqual([{ sourceId: "bts-border", retrievedAt: r.provenance.retrievedAt, rowIdsAt: "data.up, data.down" }]);
+    const stamped = borderMovers({ asOf: "2026-06", rows }, "Trucks", { retrievedAt: T });
+    expect(stamped.provenance.retrievedAt).toBe(T);
+    expect(stamped.provenance.inputs?.[0].retrievedAt).toBe(T);
   });
   it("other measures are empty when absent", () => {
     const r = borderMovers({ asOf: "2026-06", rows }, "Pedestrians");
@@ -181,6 +194,14 @@ describe("portMovers", () => {
     const t = portMovers({ year: 2025, ports }, "tonnage");
     expect(t.up.map((x) => x.id)).toEqual(["C4900"]);
     expect(t.unit).toBe("short tons");
+  });
+  it("the change is computed here, so provenance is an estimate that names BTS's annual volumes, at the entry's own retrieval time", () => {
+    const r = portMovers({ year: 2025, ports }, "container", { n: 5 });
+    expect(r.provenance.kind).toBe("estimate");
+    expect(r.provenance.inputs).toEqual([{ sourceId: "bts-ports", retrievedAt: r.provenance.retrievedAt, rowIdsAt: "data.up, data.down" }]);
+    const stamped = portMovers({ year: 2025, ports }, "container", { retrievedAt: T });
+    expect(stamped.provenance.retrievedAt).toBe(T);
+    expect(stamped.provenance.inputs?.[0].retrievedAt).toBe(T);
   });
 });
 
