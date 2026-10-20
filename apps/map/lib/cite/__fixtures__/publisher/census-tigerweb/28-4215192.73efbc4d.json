@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "28-4215192.73efbc4d",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/28/query?where=GEOID%3D'4215192'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:37:21.032Z",
+ "status": 200,
+ "bytes": 313,
+ "sha256": "8be86c0ce65f6ecd74019f6fe1d1ffdb478f9b5f09c7a3927c0979ca47a1ddb4",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"4215192\",\"NAME\":\"Collegeville borough\"}}]}"
+}

@@ -1,0 +1,11 @@
+{
+ "sourceId": "hifld-hospitals",
+ "recordId": "0020619468.2aab46b5",
+ "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6/query?where=ID%3D'0020619468'&outFields=*&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:38:22.633Z",
+ "status": 200,
+ "bytes": 5322,
+ "sha256": "1211bffddb03ef6c3fd9cae1dc6f0ad530b6f579a45aef5a201129d1b7817d54",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"objectIdFieldName\":\"FID\",\"uniqueIdField\":{\"name\":\"FID\",\"isSystemMaintained\":true},\"globalIdFieldName\":\"\",\"geometryType\":\"esriGeometryPoint\",\"spatialReference\":{\"wkid\":102100,\"latestWkid\":3857},\"features\":[{\"attributes\":{\"FID\":5004,\"ID\":\"0020619468\",\"NAME\":\"PHOENIXVILLE HOSPITAL\",\"ADDRESS\":\"140 NUTT ROAD\",\"CITY\":\"PHOENIXVILLE\",\"STATE\":\"PA\",\"ZIP\":\"19460\",\"ZIP4\":\"NOT AVAILABLE\",\"TELEPHONE\":\"(610) 983-1000\",\"TYPE\":\"GENERAL ACUTE CARE\",\"STATUS\":\"OPEN\",\"POPULATION\":144,\"COUNTY\":\"CHESTER\",\"COUNTYFIPS\":\"42029\",\"COUNTRY\":\"USA\",\"LATITUDE\":40.123789,\"LONGITUDE\":-75.515085,\"NAICS_CODE\":\"622110\",\"NAICS_DESC\":\"GENERAL MEDICAL AND SURGICAL HOSPITALS\",\"SOURCE\":\"http://sais.health.pa.gov/commonpoc/content/publiccommonpoc/normalSearch.asp\",\"SOURCEDATE\":1713484800000,\"VAL_METHOD\":\"IMAGERY\",\"VAL_DATE\":1389312000000,\"WEBSITE\":\"https://phoenixville.towerhealth.org\",\"STATE_ID\":\"420901\",\"ALT_NAME\":\"PHOENIXVILLE HOSPITAL\",\"ST_FIPS\":\"42\",\"OWNER\":\"NON-PROFIT\",\"TTL_STAFF\":-999,\"BEDS\":144,\"TRAUMA\":\"NOT AVAILABLE\",\"HELIPAD\":\"Y\"}}]}"
+}

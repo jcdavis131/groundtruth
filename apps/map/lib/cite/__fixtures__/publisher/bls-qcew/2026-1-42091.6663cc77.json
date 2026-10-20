@@ -1,0 +1,11 @@
+{
+ "sourceId": "bls-qcew",
+ "recordId": "2026-1-42091.6663cc77",
+ "url": "https://data.bls.gov/cew/data/api/2026/1/area/42091.csv",
+ "retrievedAt": "2026-10-20T05:37:33.565Z",
+ "status": 200,
+ "bytes": 346738,
+ "sha256": "e92249a8b65488dcf361b285baded6d475dd9a657891e16b1d461d9f0c3f5405",
+ "trimmed": "header and the own_code 0, industry_code 10 rows",
+ "body": "\"area_fips\",\"own_code\",\"industry_code\",\"agglvl_code\",\"size_code\",\"year\",\"qtr\",\"disclosure_code\",\"qtrly_estabs\",\"month1_emplvl\",\"month2_emplvl\",\"month3_emplvl\",\"total_qtrly_wages\",\"taxable_qtrly_wages\",\"qtrly_contributions\",\"avg_wkly_wage\",\"lq_disclosure_code\",\"lq_qtrly_estabs\",\"lq_month1_emplvl\",\"lq_month2_emplvl\",\"lq_month3_emplvl\",\"lq_total_qtrly_wages\",\"lq_taxable_qtrly_wages\",\"lq_qtrly_contributions\",\"lq_avg_wkly_wage\",\"oty_disclosure_code\",\"oty_qtrly_estabs_chg\",\"oty_qtrly_estabs_pct_chg\",\"oty_month1_emplvl_chg\",\"oty_month1_emplvl_pct_chg\",\"oty_month2_emplvl_chg\",\"oty_month2_emplvl_pct_chg\",\"oty_month3_emplvl_chg\",\"oty_month3_emplvl_pct_chg\",\"oty_total_qtrly_wages_chg\",\"oty_total_qtrly_wages_pct_chg\",\"oty_taxable_qtrly_wages_chg\",\"oty_taxable_qtrly_wages_pct_chg\",\"oty_qtrly_contributions_chg\",\"oty_qtrly_contributions_pct_chg\",\"oty_avg_wkly_wage_chg\",\"oty_avg_wkly_wage_pct_chg\"\n\"42091\",\"0\",\"10\",\"70\",\"0\",\"2026\",\"1\",\"\",29287,500707,497905,502556,13423486664,3641193848,139030113,2064,\"\",1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,\"\",361,1.2,3454,0.7,597,0.1,1363,0.3,484867700,3.7,29790109,0.8,13640859,10.9,68,3.4\n"
+}

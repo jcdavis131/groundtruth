@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "14-4808940.87790037",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/14/query?where=GEOID%3D'4808940'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:30:55.717Z",
+ "status": 200,
+ "bytes": 327,
+ "sha256": "fe6bc546f438c294acfc104a0e8a3396ccd7333de874a31c0b47255f56bd60c2",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"4808940\",\"NAME\":\"Austin Independent School District\"}}]}"
+}

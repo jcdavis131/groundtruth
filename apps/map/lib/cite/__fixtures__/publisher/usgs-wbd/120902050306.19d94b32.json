@@ -1,0 +1,11 @@
+{
+ "sourceId": "usgs-wbd",
+ "recordId": "120902050306.19d94b32",
+ "url": "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query?where=huc12%3D'120902050306'&outFields=huc12,name,tohuc&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:39:23.606Z",
+ "status": 200,
+ "bytes": 432,
+ "sha256": "0b3c82e503dfbe9e9f3fc35a607a6c6738f9a6838a7a04cbf437c8ae8623a3da",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"NAME\",\"features\":[{\"attributes\":{\"huc12\":\"120902050306\",\"name\":\"Town Lake-Colorado River\",\"tohuc\":\"120902050307\"}}]}"
+}

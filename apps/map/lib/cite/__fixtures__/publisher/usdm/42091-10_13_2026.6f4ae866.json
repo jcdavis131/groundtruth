@@ -1,0 +1,11 @@
+{
+ "sourceId": "usdm",
+ "recordId": "42091-10_13_2026.6f4ae866",
+ "url": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=42091&startdate=10/13/2026&enddate=10/13/2026&statisticsType=2",
+ "retrievedAt": "2026-10-20T05:37:33.380Z",
+ "status": 200,
+ "bytes": 177,
+ "sha256": "79ddd1d1cbced1b17faffdf148e965386d80e09717362749ebd0cf39a85a5ee8",
+ "trimmed": null,
+ "body": "MapDate,FIPS,County,State,None,D0,D1,D2,D3,D4,ValidStart,ValidEnd,StatisticFormatID\r\n20261013,42091,Montgomery County,PA,90.65,9.35,0.00,0.00,0.00,0.00,2026-10-13,2026-10-19,2\r\n"
+}

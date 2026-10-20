@@ -1,0 +1,11 @@
+{
+ "sourceId": "epa-ecoregions",
+ "recordId": "32.125b84df",
+ "url": "https://geodata.epa.gov/arcgis/rest/services/ORD/USEPA_Ecoregions_Level_III_and_IV/MapServer/11/query?where=US_L3CODE%3D'32'&outFields=US_L3CODE,US_L3NAME&returnGeometry=false&resultRecordCount=1&f=json",
+ "retrievedAt": "2026-10-20T05:30:57.350Z",
+ "status": 200,
+ "bytes": 359,
+ "sha256": "689d5a271802614806b0d4c8e695a80403ddf480070da150bb4bf677b4347dca",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"US_L3NAME\",\"features\":[{\"attributes\":{\"US_L3CODE\":\"32\",\"US_L3NAME\":\"Texas Blackland Prairies\"}}]}"
+}

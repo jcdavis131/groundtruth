@@ -1,0 +1,11 @@
+{
+ "sourceId": "usdm",
+ "recordId": "48453-10_13_2026.d3a73c12",
+ "url": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=48453&startdate=10/13/2026&enddate=10/13/2026&statisticsType=2",
+ "retrievedAt": "2026-10-20T05:31:02.901Z",
+ "status": 200,
+ "bytes": 174,
+ "sha256": "4119591c1ce26f558b3ffda455a10cdecf5b1fa79901409194a8a37c9f9bfbbc",
+ "trimmed": null,
+ "body": "MapDate,FIPS,County,State,None,D0,D1,D2,D3,D4,ValidStart,ValidEnd,StatisticFormatID\r\n20261013,48453,Travis County,TX,0.00,0.00,21.10,78.90,0.00,0.00,2026-10-13,2026-10-19,2\r\n"
+}

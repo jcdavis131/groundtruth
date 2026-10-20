@@ -1,0 +1,11 @@
+{
+ "sourceId": "hifld-hospitals",
+ "recordId": "0005219408.3c409e68",
+ "url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6/query?where=ID%3D'0005219408'&outFields=*&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:37:34.084Z",
+ "status": 200,
+ "bytes": 5326,
+ "sha256": "5ec9d61e6cb4573268c3fa2009c03be3a5c6180b297066e629e591c7913da32e",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"objectIdFieldName\":\"FID\",\"uniqueIdField\":{\"name\":\"FID\",\"isSystemMaintained\":true},\"globalIdFieldName\":\"\",\"geometryType\":\"esriGeometryPoint\",\"spatialReference\":{\"wkid\":102100,\"latestWkid\":3857},\"features\":[{\"attributes\":{\"FID\":4956,\"ID\":\"0005219408\",\"NAME\":\"EAGLEVILLE HOSPITAL\",\"ADDRESS\":\"100 EAGLEVILLE ROAD\",\"CITY\":\"EAGLEVILLE\",\"STATE\":\"PA\",\"ZIP\":\"19408\",\"ZIP4\":\"NOT AVAILABLE\",\"TELEPHONE\":\"(610) 635-7437\",\"TYPE\":\"REHABILITATION\",\"STATUS\":\"OPEN\",\"POPULATION\":83,\"COUNTY\":\"MONTGOMERY\",\"COUNTYFIPS\":\"42091\",\"COUNTRY\":\"USA\",\"LATITUDE\":40.15571194,\"LONGITUDE\":-75.4125307,\"NAICS_CODE\":\"622310\",\"NAICS_DESC\":\"REHABILITATION HOSPITALS (EXCEPT ALCOHOLISM, DRUG ADDICTION)\",\"SOURCE\":\"http://sais.health.pa.gov/commonpoc/content/publiccommonpoc/normalSearch.asp\",\"SOURCEDATE\":1713484800000,\"VAL_METHOD\":\"IMAGERY/OTHER\",\"VAL_DATE\":1391990400000,\"WEBSITE\":\"NOT AVAILABLE\",\"STATE_ID\":\"51001\",\"ALT_NAME\":\"EAGLEVILLE HOSPITAL\",\"ST_FIPS\":\"42\",\"OWNER\":\"NON-PROFIT\",\"TTL_STAFF\":-999,\"BEDS\":83,\"TRAUMA\":\"NOT AVAILABLE\",\"HELIPAD\":\"N\"}}]}"
+}

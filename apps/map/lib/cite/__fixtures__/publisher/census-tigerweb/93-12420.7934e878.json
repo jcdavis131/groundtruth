@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "93-12420.7934e878",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/93/query?where=GEOID%3D'12420'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:30:53.638Z",
+ "status": 200,
+ "bytes": 334,
+ "sha256": "7e2ff0714a704507341f36f3daa1a5be8a2c709ee98bc74cab7005f91b25af14",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"12420\",\"NAME\":\"Austin-Round Rock-San Marcos, TX Metro Area\"}}]}"
+}

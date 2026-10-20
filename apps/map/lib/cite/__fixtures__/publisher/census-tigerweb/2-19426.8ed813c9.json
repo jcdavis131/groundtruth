@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "2-19426.8ed813c9",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/2/query?where=GEOID%3D'19426'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:37:22.028Z",
+ "status": 200,
+ "bytes": 302,
+ "sha256": "f90106a5fe082a6eabad967c9f1a81cb25eb6ca329a865ed1f19585c2f4fb5ee",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"19426\",\"NAME\":\"ZCTA5 19426\"}}]}"
+}

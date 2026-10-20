@@ -1,0 +1,11 @@
+{
+ "sourceId": "fema-nfhl",
+ "recordId": "-97.743-30.267.1f1b34f7",
+ "url": "https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28/query?geometry=-97.743,30.267&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=FLD_AR_ID,FLD_ZONE,ZONE_SUBTY,SFHA_TF,DFIRM_ID&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:30:57.529Z",
+ "status": 200,
+ "bytes": 725,
+ "sha256": "6a7644cbed0b58debddc5735ed9b893d531c3c0e075b3aa473693960307cbaed",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"FLD_AR_ID\",\"features\":[{\"attributes\":{\"FLD_AR_ID\":\"48453C_1693\",\"FLD_ZONE\":\"X\",\"ZONE_SUBTY\":\"AREA OF MINIMAL FLOOD HAZARD\",\"SFHA_TF\":\"F\",\"DFIRM_ID\":\"48453C\"}}]}"
+}

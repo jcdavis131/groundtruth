@@ -1,0 +1,11 @@
+{
+ "sourceId": "census-tigerweb",
+ "recordId": "54-4810.35c72d4b",
+ "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/54/query?where=GEOID%3D'4810'&outFields=GEOID,NAME&returnGeometry=false&f=json",
+ "retrievedAt": "2026-10-20T05:30:56.735Z",
+ "status": 200,
+ "bytes": 315,
+ "sha256": "df150231695beb3505011f08033f09977de77ba6f138f095a00332c4df507222",
+ "trimmed": "dropped the ArcGIS schema listing (fields, fieldAliases)",
+ "body": "{\"displayFieldName\":\"BASENAME\",\"features\":[{\"attributes\":{\"GEOID\":\"4810\",\"NAME\":\"Congressional District 10\"}}]}"
+}
