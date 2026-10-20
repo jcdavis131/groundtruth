@@ -117,6 +117,25 @@ describe("/api/catalog?op=place-export", () => {
     }
   });
 
+  it("carries provenance for every export: the publisher's layer with its fetch and last-edit times, and the county table", async () => {
+    const want: Record<string, string> = { "npl-status": "epa-npl-status", "ust-releases-county": "epa-ust-finder", "ust-facilities-county": "epa-ust-finder", "fuds-properties": "usace-fuds" };
+    for (const id of PLACE_EXPORTS) {
+      const r = await get(`op=place-export&collection=${id}`);
+      const prov = (r.body as { provenance?: Array<{ source: { id: string }; retrievedAt: string; upstreamUrl?: string; releasedAt?: string; kind: string }> }).provenance ?? [];
+      const meta = (r.body.data as { meta: { source: { layer: string; fetchedAt: string; serviceDataLastEdit: string } } }).meta;
+      expect(prov.length, id).toBeGreaterThanOrEqual(1);
+      for (const p of prov) {
+        expect(p.source, id).toBeTruthy();
+        expect(Number.isNaN(Date.parse(p.retrievedAt)), `${id} retrievedAt`).toBe(false);
+      }
+      const pub = prov.find((p) => p.source.id === want[id]);
+      expect(pub, id).toBeTruthy();
+      expect(pub).toMatchObject({ upstreamUrl: meta.source.layer, retrievedAt: meta.source.fetchedAt, releasedAt: meta.source.serviceDataLastEdit, kind: "published" });
+      // The county table the export joins to is cited too, with its own pull date.
+      expect(prov.some((p) => p.source.id === "census-tigerweb"), id).toBe(true);
+    }
+  });
+
   it("serves meta.form for every export, from PLACE_EXPORT_FORM when the file has none (npl-county.json)", async () => {
     expect((nplFile.meta as { form?: string }).form).toBeUndefined();
     for (const id of PLACE_EXPORTS) {

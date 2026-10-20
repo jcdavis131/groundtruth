@@ -1228,7 +1228,7 @@ describe("world_context: water", () => {
     expect(JSON.stringify(w)).not.toContain("TX2270999");
     // Water system names are never copied.
     expect(JSON.stringify(r.payload)).not.toContain("CITY OF EXAMPLE");
-    expect(w[0].upstreamRecordUrl).toBe("https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0/query?where=PWSID%3D'TX2270001'&outFields=*&returnGeometry=false&f=json");
+    expect(w[0].upstreamRecordUrl).toBe("https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Water_System_Boundaries/FeatureServer/0/query?where=PWSID%3D'TX2270001'&outFields=PWSID,Population_Served_Count&returnGeometry=false&f=json");
     expect(w[2].upstreamRecordUrl).toMatch(/PFAS_Analytic_Tools_Layers\/FeatureServer\/1\/query\?where=F_PWS_ID%3D'TX2270001'%20AND%20UCMR_Cycle%3D'UCMR%205%20\(2023-2025\)'%20AND%20Contaminant%3D'PFOA'/);
     expect(w[1].note).toMatch(/^1 of 2 PFAS at or above/);
   });
