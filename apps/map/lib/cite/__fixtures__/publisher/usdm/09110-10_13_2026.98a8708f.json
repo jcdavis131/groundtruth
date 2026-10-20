@@ -1,0 +1,11 @@
+{
+ "sourceId": "usdm",
+ "recordId": "09110-10_13_2026.98a8708f",
+ "url": "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=09110&startdate=10/13/2026&enddate=10/13/2026&statisticsType=2",
+ "retrievedAt": "2026-10-20T05:47:04.257Z",
+ "status": 200,
+ "bytes": 184,
+ "sha256": "8591e12b4a5c606add51a47d6dbf9a3c8bba26299b5baf457658f772fe60727d",
+ "trimmed": null,
+ "body": "MapDate,FIPS,County,State,None,D0,D1,D2,D3,D4,ValidStart,ValidEnd,StatisticFormatID\r\n20261013,09110,Capitol Planning Region,CT,100.00,0.00,0.00,0.00,0.00,0.00,2026-10-13,2026-10-19,2\r\n"
+}
