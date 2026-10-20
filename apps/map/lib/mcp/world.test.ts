@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { errorResult, toCallResult, createServer } from "./server";
-import { toolByName, type FetchJson, type JsonObject, type ToolReply } from "./tools";
+import { ERROR_MAX_CHARS, toolByName, type FetchJson, type JsonObject, type ToolReply } from "./tools";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { BOUNDARY_CHANGED_SINCE_2010, femaCodes } from "../hazards/history";
@@ -1036,6 +1036,12 @@ describe("world_context: citations never borrow", () => {
     const sc = toCallResult(r).structuredContent;
     expect(sc).toMatchObject({ code: "upstream_failure" });
     expect(new TextEncoder().encode(JSON.stringify(sc)).length).toBeLessThanOrEqual(WORLD_MAX_BYTES);
+    // Claude Code shows the model a path, not the text, once a result passes 50,000 characters; an error is read in place.
+    expect((toCallResult(r).content as { text: string }[])[0].text.length).toBeLessThanOrEqual(ERROR_MAX_CHARS);
+    expect(JSON.stringify(sc).length).toBeLessThanOrEqual(ERROR_MAX_CHARS);
+    expect(sc).toMatchObject({ code: "upstream_failure", category: "unavailable", retryable: true, remediation: expect.any(String) });
+    // missing lists are what survives the trim: the reply still says what is missing
+    expect(Object.values((sc as { topics: Record<string, { missing?: unknown[] }> }).topics).some((t) => (t.missing?.length ?? 0) >= 1)).toBe(true);
   });
 });
 

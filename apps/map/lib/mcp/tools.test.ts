@@ -6,7 +6,9 @@ import { AjvJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/ajv
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { ERROR_ENVELOPE_SCHEMA, InvalidArguments } from "./errors";
 import { errorResult, toCallResult } from "./server";
-import { asObject, boundPayload, bypassAllowed, httpFetchJson, NOT_DEPLOYED_NOTE, qs, relay, SOVI_LINEAGE_NOTE, stripGeometry, toolByName, TOOLS, type FetchJson, type JsonReply } from "./tools";
+import { readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
+import { asObject, boundPayload, bypassAllowed, httpFetchJson, MAX_RESULT_CHARS, NOT_DEPLOYED_NOTE, qs, relay, SOVI_LINEAGE_NOTE, stripGeometry, toolByName, TOOLS, type FetchJson, type JsonReply } from "./tools";
 
 const validateEnvelope = new AjvJsonSchemaValidator().getValidator(ERROR_ENVELOPE_SCHEMA as never);
 
@@ -338,6 +340,40 @@ describe("stripGeometry / boundPayload", () => {
   it("appends to an existing note instead of replacing it", () => {
     const fc = { note: "upstream partial.", data: { type: "FeatureCollection", features: [{ geometry: { type: "Point" } }] } };
     expect(stripGeometry(fc).note).toMatch(/^upstream partial\. geometry omitted/);
+  });
+});
+
+describe("MAX_RESULT_CHARS stays under Claude Code's 50,000-character file cut", () => {
+  it("is 48,000, and boundPayload cuts to it by default with the number in the note", () => {
+    expect(MAX_RESULT_CHARS).toBe(48_000);
+    const out = boundPayload({ data: Array.from({ length: 2000 }, (_, i) => ({ i, pad: "y".repeat(100) })) });
+    expect(JSON.stringify(out).length).toBeLessThanOrEqual(MAX_RESULT_CHARS + 300); // the note is added after the size check
+    expect(String(out.note)).toMatch(/under 48000 characters/);
+  });
+
+  // Every route body recorded under __fixtures__/world is relayed whole at 48,000, except the ones named here,
+  // each of which is cut on purpose and has its own assertion below.
+  const FIXTURES = path.join(__dirname, "__fixtures__", "world");
+  const CUT = new Set(["ct_09110.json /api/infra?op=dams&bbox=-72.8259,41.567,-72.3259,42.067"]);
+  const bodies: Array<[string, Record<string, unknown>]> = [];
+  for (const f of readdirSync(FIXTURES).filter((x) => x.endsWith(".json")).sort()) {
+    const rec = JSON.parse(readFileSync(path.join(FIXTURES, f), "utf8")) as { routes: Record<string, { body: unknown }> };
+    for (const [route, r] of Object.entries(rec.routes)) bodies.push([f + " " + route, asObject(r.body)]);
+  }
+
+  it("keeps every recorded route body whole except the ones named as cut", () => {
+    expect(bodies.length).toBeGreaterThan(50);
+    for (const [label, body] of bodies) if (!CUT.has(label)) expect(boundPayload(body), label).toBe(body);
+  });
+
+  it("cuts the one recorded body that is over the limit, and says how many items were kept", () => {
+    for (const label of CUT) {
+      const body = bodies.find(([l]) => l === label)![1];
+      expect(JSON.stringify(body).length, label).toBeGreaterThan(MAX_RESULT_CHARS);
+      const out = boundPayload(body);
+      expect(out, label).not.toBe(body);
+      expect(String(out.note)).toMatch(/truncated to the first \d+ of \d+ items to stay under 48000 characters/);
+    }
   });
 });
 
