@@ -54,16 +54,12 @@ check(g.status === 1, "no hash fails");
 
 // Plan time comes from the run folder's own run-*.log timestamps, not from older setup files beside them.
 const logged = runFolder({ "freeze.py": "2026-10-19T19:16:54Z", "run-t1-C.log": "2026-10-19T20:30:00Z", "run-t3-C.log": "2026-10-19T20:40:00Z" });
-writeFileSync(path.join(logged, "run-t1-C.log"), "2026-10-19T19:19:18Z C county_history {}
-2026-10-19T19:19:20Z C x {}
-");
-writeFileSync(path.join(logged, "run-t3-C.log"), "2026-10-19T19:19:22Z C world_context {}
-");
+writeFileSync(path.join(logged, "run-t1-C.log"), "2026-10-19T19:19:18Z C county_history {}\n2026-10-19T19:19:20Z C x {}\n");
+writeFileSync(path.join(logged, "run-t3-C.log"), "2026-10-19T19:19:22Z C world_context {}\n");
 const h = run("--hash", HASH, "--run", logged, "--comments", fixture);
 check(h.status === 0 && h.stdout.includes("2026-10-19T19:19:18Z"), `setup file older than the hash beside later plan logs: default passes from run-*.log${h.status ? ": " + h.stdout : ""}`);
 const lateLogged = runFolder({ "freeze.py": "2026-10-19T19:00:00Z", "run-t1-C.log": "2026-10-19T20:00:00Z" });
-writeFileSync(path.join(lateLogged, "run-t1-C.log"), "2026-10-19T19:10:00Z C a {}
-");
+writeFileSync(path.join(lateLogged, "run-t1-C.log"), "2026-10-19T19:10:00Z C a {}\n");
 check(run("--hash", HASH, "--run", lateLogged, "--comments", fixture).status === 1, "a log line earlier than the hash comment fails");
 const i = run("--hash", HASH, "--run", logged, "--comments", fixture, "--first-plan", "2026-10-19T19:19:18Z");
 check(i.status === 0 && /operator-supplied/.test(i.stdout), "--first-plan prints that it was operator-supplied");
