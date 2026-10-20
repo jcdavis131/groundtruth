@@ -8,9 +8,12 @@
 //      baseline reply: top-level keys, each topic's keys and item count, and
 //      coverageStatus. Values may differ; shape may not.
 // It prints "live-check: N assertions, M failed" and exits 1 on any failure.
+// Before the checks it prints one run-id line, "live-check-run: <origin>
+// ref=<ref|none> at=<ISO time>", which a merge's ledger row records.
 //
 //   node scripts/live-check.mjs <origin> [--cookie-jar <file>] [--bypass-header]
 //        [--baseline <file | origin>] [--record-baseline <file>]
+//        [--ref <deployment id | head sha>]
 //
 // --cookie-jar     a Netscape cookie-jar file (curl -c); its cookies for the
 //                  origin's host ride on every request (the share-link cookie).
@@ -23,6 +26,9 @@
 //                  (production serves master).
 // --record-baseline  fetch world_context from <origin> and write its shape to
 //                  the file, with the origin and time, then exit.
+// --ref            what this run checked, printed in the run-id line (the
+//                  preview's deployment id, dpl_..., or the PR head sha);
+//                  "none" when not given.
 //
 // Plain node, no dependencies. docs/PREVIEW-CHECK.md says how the loop runs it.
 import fs from "node:fs";
@@ -102,7 +108,7 @@ async function worldReply(origin, headers) {
 }
 
 /**
- * Run the checks. opts: origin, baseline (a shape object), cookieHeader, bypassSecret, log.
+ * Run the checks. opts: origin, ref (deployment id or head sha, printed in the run-id line), baseline (a shape object), cookieHeader, bypassSecret, log.
  * Returns { assertions, failures, exitCode }.
  */
 export async function liveCheck(opts) {
@@ -118,6 +124,9 @@ export async function liveCheck(opts) {
     log(`${ok ? "ok  " : "FAIL"} ${name}${!ok && detail ? ": " + detail : ""}`);
     if (!ok) failures.push(`${name}${detail ? ": " + detail : ""}`);
   };
+
+  // The run id: the one line a merge's ledger row records.
+  log(`live-check-run: ${origin} ref=${opts.ref || "none"} at=${new Date().toISOString()}`);
 
   // 1. front door
   try {
@@ -171,9 +180,10 @@ async function main(argv) {
   const jar = take("--cookie-jar");
   const baselineArg = take("--baseline");
   const record = take("--record-baseline");
+  const ref = take("--ref");
   const useBypass = args.includes("--bypass-header");
   const origin = args.find((a) => /^https?:\/\//.test(a));
-  if (!origin) { console.error("usage: node scripts/live-check.mjs <origin> [--cookie-jar <file>] [--bypass-header] [--baseline <file|origin>] [--record-baseline <file>]"); return 2; }
+  if (!origin) { console.error("usage: node scripts/live-check.mjs <origin> [--cookie-jar <file>] [--bypass-header] [--baseline <file|origin>] [--record-baseline <file>] [--ref <deployment id or head sha>]"); return 2; }
   const host = new URL(origin).hostname;
   const cookieHeader = jar ? cookieHeaderFor(fs.readFileSync(jar, "utf8"), host) : "";
   if (jar && !cookieHeader) console.error(`warning: the cookie jar has no cookie for ${host}`);
@@ -201,7 +211,7 @@ async function main(argv) {
     const j = JSON.parse(fs.readFileSync(file, "utf8"));
     baseline = j.shape ?? j;
   }
-  const r = await liveCheck({ origin, baseline, cookieHeader, bypassSecret: useBypass ? secret : "" });
+  const r = await liveCheck({ origin, baseline, cookieHeader, bypassSecret: useBypass ? secret : "", ref });
   return r.exitCode;
 }
 
