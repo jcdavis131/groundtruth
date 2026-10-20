@@ -61,11 +61,16 @@ jobs:
   mutations:
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    env:
-      RULE_MUT_DIR: ${{ runner.temp }}/rule-mutations
-      RULE_MUT_OUT: ${{ runner.temp }}/rule-mutations/rule-mutations.md
-      RULE_MUT_JSON: ${{ runner.temp }}/rule-mutations/rule-mutations.json
     steps:
+      # The runner context is not available in a job-level env, so the paths are set here for the later steps.
+      - name: where the kill table goes
+        run: |
+          {
+            echo "RULE_MUT_DIR=$RUNNER_TEMP/rule-mutations"
+            echo "RULE_MUT_OUT=$RUNNER_TEMP/rule-mutations/rule-mutations.md"
+            echo "RULE_MUT_JSON=$RUNNER_TEMP/rule-mutations/rule-mutations.json"
+          } >> "$GITHUB_ENV"
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
