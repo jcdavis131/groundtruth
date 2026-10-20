@@ -131,16 +131,23 @@ def main(argv=None) -> int:
                 kind, val = join.publisher_county(r, region_name)
                 theirs[r["id"]] = join.join_name(ix, {"alabama": "AL", "texas": "TX"}[region], val)["geoid"] if kind == "name" else (val if kind == "code" else None)
             geoms = {i: (x, y) for i, _, x, y in pts}
-            con.execute("CREATE OR REPLACE TEMP TABLE q AS SELECT * FROM (VALUES " + ",".join(f"('{i}',{x!r},{y!r},{('NULL' if theirs[i] is None else repr(theirs[i]))})" for i, (x, y) in geoms.items()) + ") t(id,x,y,theirs)")
-            d_theirs = {i: d for i, d in con.execute("SELECT q.id, ST_Distance(c.geom, ST_Point(q.x, q.y)) FROM q JOIN county_2025 c ON c.GEOID = q.theirs").fetchall()}
-            d_any = {i: d for i, d in con.execute("SELECT q.id, min(ST_Distance(c.geom, ST_Point(q.x, q.y))) FROM q JOIN county_2025 c ON starts_with(c.GEOID, ?) GROUP BY q.id", [fips]).fetchall()}
             pip = {i: (h[0] if len(h) == 1 else None) for i, h in hits.items()}
             ids = sorted(rec)
             smp = sample_ids(ids)
             sample_all[name] = smp
-            # C2 misses and near-tolerance unplaced ids also get a TIGERweb answer, outside the sample.
             c2_miss = [i for i in ids if pip[i] and theirs[i] and pip[i] != theirs[i]]
-            near_unplaced = [i for i in ids if not hits[i] and d_any.get(i, 1e9) <= TOLERANCE_DEG]
+            unplaced_ids = [i for i in ids if not hits[i]]
+            # Distances are only needed for the misses (to the publisher's county) and the unplaced (to any county of the
+            # state), so only those points go in: a distance from every point to every county ran the box out of RAM.
+            need = sorted(set(c2_miss) | set(unplaced_ids))
+            d_theirs: dict[str, float] = {}
+            d_any: dict[str, float] = {}
+            if need:
+                con.execute("CREATE OR REPLACE TEMP TABLE q AS SELECT * FROM (VALUES " + ",".join(f"('{i}',{geoms[i][0]!r},{geoms[i][1]!r},{('NULL' if theirs[i] is None else repr(theirs[i]))})" for i in need) + ") t(id,x,y,theirs)")
+                d_theirs = {i: d for i, d in con.execute("SELECT q.id, ST_Distance(c.geom, ST_Point(q.x, q.y)) FROM q JOIN county_2025 c ON c.GEOID = q.theirs").fetchall()}
+                d_any = {i: d for i, d in con.execute("SELECT q.id, min(ST_Distance(c.geom, ST_Point(q.x, q.y))) FROM q JOIN county_2025 c ON starts_with(c.GEOID, ?) GROUP BY q.id", [fips]).fetchall()}
+            # C2 misses and near-tolerance unplaced ids also get a TIGERweb answer, outside the sample.
+            near_unplaced = [i for i in unplaced_ids if d_any.get(i, 1e9) <= TOLERANCE_DEG]
             ask = sorted(set(smp) | set(c2_miss) | set(near_unplaced))
             if a.dry_run:
                 # No TIGERweb request and no class: only what the polygons and the publisher's county already say.
@@ -191,7 +198,7 @@ def main(argv=None) -> int:
                 c2["scored"] += 1
                 cls = classify_miss(theirs=theirs[i], pip=pip[i], other_dist=d_theirs.get(i), tigerweb=g, tigerweb_known=True, in_file=theirs[i] in in_file, c1=False)
                 c2["misses"][cls].append({"id": i, "pip": pip[i], "publisher": theirs[i], "tigerweb": g, "distToPublisherCounty": d_theirs.get(i)})
-            unplaced = [i for i in ids if not hits[i]]
+            unplaced = unplaced_ids
             tol = {"T": [], "X": []}
             for i in unplaced:
                 (tol["T"] if d_any.get(i, 1e9) <= TOLERANCE_DEG else tol["X"]).append({"id": i, "nearestPolygonDeg": d_any.get(i), "tigerweb": (tw.get(i) or (None, None))[1], "tigerwebAnswered": (tw.get(i) or (None, None))[0]})
