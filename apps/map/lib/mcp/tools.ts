@@ -54,6 +54,11 @@ export interface ToolDef {
   title: string;
   description: string;
   inputSchema: z.ZodObject<z.ZodRawShape>;
+  /**
+   * Extra MCP `_meta` for tools/list. Only world_context sets it, to { "anthropic/alwaysLoad": true }:
+   * Claude Code (2.1.x) defers tool descriptions until a tool search, and this key loads one upfront.
+   */
+  meta?: Record<string, unknown>;
   /** Validate `input` against `inputSchema` (throws ZodError) and call the route. */
   run(input: unknown, ctx: ToolCtx): Promise<ToolReply>;
 }
@@ -61,8 +66,15 @@ export interface ToolDef {
 /** Added to the payload when a route answers 404: the server this MCP points at is older than the tool list. */
 export const NOT_DEPLOYED_NOTE = "this route is not deployed on this server";
 
-/** Character budget for one tool result before feature lists are halved (LLM context is the scarce resource). */
-export const MAX_RESULT_CHARS = 400_000;
+/**
+ * Character budget for one tool result before feature lists are halved (LLM context is the scarce resource).
+ * Claude Code writes a text result over 50,000 characters to a file and shows the model a path, so a
+ * relay stays under that.
+ */
+export const MAX_RESULT_CHARS = 48_000;
+
+/** Character budget for one isError reply: an error is read in place, and its envelope fields must survive. */
+export const ERROR_MAX_CHARS = 10_000;
 
 /** Default base URL for the stdio server and the Python client; the HTTP route uses its own origin. */
 export const DEFAULT_BASE_URL = "http://localhost:3000";
@@ -148,6 +160,56 @@ export function boundPayload(payload: JsonObject, maxChars = MAX_RESULT_CHARS): 
     size = JSON.stringify(out).length;
   }
   return addNote(out, `truncated to the first ${keep} of ${total} items to stay under ${maxChars} characters; narrow the box or call the HTTP route for the full set.`);
+}
+
+const ENVELOPE_KEYS = new Set(["error", "code", "category", "retryable", "remediation"]);
+
+function isObj(v: unknown): v is JsonObject {
+  return !!v && typeof v === "object" && !Array.isArray(v);
+}
+
+function clipStrings(v: unknown, n: number, top = false): unknown {
+  if (typeof v === "string") return v.length > n ? v.slice(0, n - 1) + "\u2026" : v;
+  if (Array.isArray(v)) return v.map((x) => clipStrings(x, n));
+  if (isObj(v)) return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, top && ENVELOPE_KEYS.has(k) && k !== "error" ? x : clipStrings(x, n)]));
+  return v;
+}
+
+/**
+ * Keep an isError reply under maxChars (ERROR_MAX_CHARS) without losing what the caller needs to act:
+ * the envelope fields (error, code, category, retryable, remediation) are never dropped. The cut order is
+ * the same idea as world.ts's byte cap: the lists that repeat themselves go first, down to one entry each
+ * (each topic's missing, then each topic's coverage basis, then the top-level basis), then long strings are
+ * clipped, and only then is anything taken out whole. A reply already under the budget comes back as is.
+ * A trimmed reply says so in `note`.
+ */
+export function boundErrorPayload(payload: JsonObject, maxChars = ERROR_MAX_CHARS): JsonObject {
+  const size = (p: JsonObject) => JSON.stringify(p).length;
+  if (size(payload) <= maxChars) return payload;
+  const out = addNote(structuredClone(payload), `reply trimmed to fit ${maxChars} characters: lists cut to their first entries and long text clipped; the first entries and the envelope fields are kept.`);
+  const topics = isObj(out.topics) ? Object.values(out.topics).filter(isObj) : [];
+  const groups: Array<() => unknown[][]> = [
+    () => topics.map((t) => t.missing).filter(Array.isArray),
+    () => topics.map((t) => (isObj(t.coverageStatus) ? t.coverageStatus.basis : undefined)).filter(Array.isArray),
+    () => (isObj(out.coverageStatus) && Array.isArray(out.coverageStatus.basis) ? [out.coverageStatus.basis] : []),
+  ];
+  for (const lists of groups) {
+    for (;;) {
+      if (size(out) <= maxChars) return out;
+      const longest = lists().reduce<unknown[] | null>((best, l) => (l.length > 1 && (!best || l.length > best.length) ? l : best), null);
+      if (!longest) break;
+      longest.pop();
+    }
+  }
+  let cur: JsonObject = out;
+  for (const n of [400, 200, 100]) {
+    cur = clipStrings(cur, n, true) as JsonObject;
+    if (size(cur) <= maxChars) return cur;
+  }
+  // Still too large: keep the envelope, the place and the note, and say what was dropped.
+  const kept: JsonObject = {};
+  for (const [k, v] of Object.entries(cur)) if (ENVELOPE_KEYS.has(k) || k === "place" || k === "note") kept[k] = v;
+  return addNote(kept, "topics dropped to fit; call again with fewer topics or a smaller box.");
 }
 
 interface RelayOptions {
@@ -286,6 +348,7 @@ function defineTool<S extends z.ZodRawShape>(def: {
   title: string;
   description: string;
   inputSchema: z.ZodObject<S>;
+  meta?: Record<string, unknown>;
   handler: (input: z.infer<z.ZodObject<S>>, ctx: ToolCtx) => Promise<ToolReply>;
 }): ToolDef {
   return {
@@ -293,6 +356,7 @@ function defineTool<S extends z.ZodRawShape>(def: {
     title: def.title,
     description: def.description,
     inputSchema: def.inputSchema as unknown as z.ZodObject<z.ZodRawShape>,
+    ...(def.meta ? { meta: def.meta } : {}),
     // async so a ZodError (or a handler's own check) rejects instead of throwing before a promise exists.
     run: async (input, ctx) => def.handler(def.inputSchema.parse(input ?? {}), ctx),
   };
@@ -724,8 +788,9 @@ export const TOOLS: ToolDef[] = [
   defineTool({
     name: "world_context",
     title: "Cited world context for a place, before you act",
+    meta: { "anthropic/alwaysLoad": true },
     description:
-      `One small bundle for an agent about to do anything place-related: pass exactly one of lon+lat, fips (5-digit county, or a state as 2 digits or SS000) or bbox (at most ${WORLD_MAX_BOX_DEG} degrees a side). Returns place (kind, name, countyFips, stateFips, point and its basis, searchBox; a county's point is Census's internal point from eye's county table, cited with its TIGERweb record) and topics: identity always (county, state, CBSA metro code, city, tract, ZCTA from Census TIGERweb), then fabric (time zone, NWS office, HUC-12 and where it drains, FEMA flood zone and NFIP community, school and congressional district, ecoregion, 3DEP elevation), hazards (FEMA NRI rating, expected annual loss and top hazards; newest FEMA declarations; this week's Drought Monitor; Severe/Extreme NWS alerts and quakes touching the place now), economy (BLS QCEW jobs and weekly wage, withheld as null not 0; Zillow home value and rent; population as FEMA's NRI row carries it), vulnerability (CDC/ATSDR SVI and FEMA's NRI social vulnerability, side by side), institutions (hospitals and dams in the search box, named only where the record's card allows; public companies by ticker and CIK; CMS star ratings as CMS's own items), water (the EPA community water system whose service area holds the point, by PWSID, and its UCMR 5 PFAS status and detections in ng/L), freshness (next scheduled releases of the sources cited; a schedule page that refuses automated clients is said to) and, with about, collections (catalog_search). Each item: fact, value, unit, period, note, sourceId, publisher, upstreamUrl, upstreamRecordUrl (the publisher's own keyless URL for exactly that record; where none exists the note says "no record-level URL"), retrievedAt, link (the eye route that reproduces it) and, for claims about eye's own catalogue, kind "about-eye". Cite upstreamRecordUrl (or upstreamUrl) for the fact, and use link to reproduce it. topics[t].missing lists what is absent and why; coverageStatus is partial whenever anything is missing, cut by max_records (default ${WORLD_DEFAULT_RECORDS}, max ${WORLD_MAX_RECORDS}) or cut to the ${WORLD_MAX_BYTES}-byte cap (truncated says how many). A sub-route that fails costs only its own items; the call errors only when nothing answered. Composes this server's own routes; no new upstream.`,
+      `Call this before you act on a place (answering about it, planning for it, or saying something is or is not there), and cite upstreamRecordUrl for every fact you use. One small bundle: pass exactly one of lon+lat, fips (5-digit county, or a state as 2 digits or SS000) or bbox (at most ${WORLD_MAX_BOX_DEG} degrees a side). Returns place (kind, name, countyFips, stateFips, point and its basis, searchBox; a county's point is Census's internal point from eye's county table, cited with its TIGERweb record) and topics: identity always (county, state, CBSA metro code, city, tract, ZCTA from Census TIGERweb), then fabric (time zone, NWS office, HUC-12 and where it drains, FEMA flood zone and NFIP community, school and congressional district, ecoregion, 3DEP elevation), hazards (FEMA NRI rating, expected annual loss and top hazards; newest FEMA declarations; this week's Drought Monitor; Severe/Extreme NWS alerts and quakes touching the place now), economy (BLS QCEW jobs and weekly wage, withheld as null not 0; Zillow home value and rent; population as FEMA's NRI row carries it), vulnerability (CDC/ATSDR SVI and FEMA's NRI social vulnerability, side by side), institutions (hospitals and dams in the search box, named only where the record's card allows; public companies by ticker and CIK; CMS star ratings as CMS's own items), water (the EPA community water system whose service area holds the point, by PWSID, and its UCMR 5 PFAS status and detections in ng/L), freshness (next scheduled releases of the sources cited; a schedule page that refuses automated clients is said to) and, with about, collections (catalog_search). Each item: fact, value, unit, period, note, sourceId, publisher, upstreamUrl, upstreamRecordUrl (the publisher's own keyless URL for exactly that record; where none exists the note says "no record-level URL"), retrievedAt, link (the eye route that reproduces it) and, for claims about eye's own catalogue, kind "about-eye". Cite upstreamRecordUrl (or upstreamUrl) for the fact, and use link to reproduce it. topics[t].missing lists what is absent and why; coverageStatus is partial whenever anything is missing, cut by max_records (default ${WORLD_DEFAULT_RECORDS}, max ${WORLD_MAX_RECORDS}) or cut to the ${WORLD_MAX_BYTES}-byte cap (truncated says how many). A sub-route that fails costs only its own items; the call errors only when nothing answered. Composes this server's own routes; no new upstream.`,
     inputSchema: z
       .object({
         lon: lon.optional(),
