@@ -31,6 +31,17 @@ const nonEmpty = { type: "string", minLength: 1 } as const;
 
 const NO_RECORD_NOTE = "no record-level URL: \\S";
 
+/**
+ * `^https://<host>/` from a RECORD_HOSTS regex. The test checks each record URL against the full
+ * pattern (host and service path); the published schema keeps to the host, so a publisher moving a
+ * layer on its own host does not turn every reply into an internal_error.
+ */
+function hostPattern(id: string, host: RegExp): string {
+  const m = /^\^https:\\\/\\\/(.+?)\\\//.exec(host.source);
+  if (!m) throw new Error(`RECORD_HOSTS[${id}] does not start with ^https://<host>/`);
+  return `^https://${m[1]}/`;
+}
+
 const ITEM_SCHEMA = {
   type: "object",
   required: ["fact", "value", "sourceId", "publisher", "upstreamUrl", "retrievedAt", "link"],
@@ -61,7 +72,7 @@ const ITEM_SCHEMA = {
     // a record URL is on the cited publisher's own host
     ...Object.entries(RECORD_HOSTS).map(([id, host]) => ({
       if: { properties: { sourceId: { const: id } }, required: ["sourceId"] },
-      then: { properties: { upstreamRecordUrl: { pattern: host.source } } },
+      then: { properties: { upstreamRecordUrl: { pattern: hostPattern(id, host) } } },
     })),
     // claims about eye's own catalogue are marked, and have no publisher record
     { if: { properties: { sourceId: { const: "eye-catalog" } }, required: ["sourceId"] }, then: { required: ["kind"] } },

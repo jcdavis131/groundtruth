@@ -315,7 +315,7 @@ describe("world_context: shape", () => {
     expect(topicsOf(r).freshness.items.map((i) => i.value)).toEqual(["Zillow ZHVI (monthly)", "QCEW 2026 Q2"]);
     // Three FEMA declarations shown of four: the cut is reported, not hidden.
     expect(topicsOf(r).hazards.items.filter((i) => i.fact === "FEMA declaration")).toHaveLength(3);
-    expect(topicsOf(r).hazards.coverageStatus!.basis).toContain("FEMA declarations: the latest 3 distinct shown, any date (FEMA files 4 rows for this county; a disaster can have one row per designated area)");
+    expect(topicsOf(r).hazards.coverageStatus!.basis.map((b) => b.text)).toContain("FEMA declarations: the latest 3 distinct shown, any date (FEMA files 4 rows for this county; a disaster can have one row per designated area)");
     expect(r.payload.coverageStatus).toMatchObject({ status: "partial" });
   });
 
@@ -378,7 +378,7 @@ describe("world_context: shape", () => {
     // A search route that sends no provenance gives no collection item, only the reason.
     const bare = await run({ lon: -97.74, lat: 30.27, topics: ["collections"], about: "dams near the river" }, { "/api/catalog?op=search": { ...CATALOG, provenance: [] } }).reply;
     expect(topicsOf(bare).collections.items).toEqual([]);
-    expect(topicsOf(bare).collections.missing).toContainEqual({ what: "collections", reason: "eye-catalog: the route sent no provenance for it, so nothing from it is shown" });
+    expect(topicsOf(bare).collections.missing).toContainEqual(expect.objectContaining({ what: "collections", reason: "eye-catalog: the route sent no provenance for it, so nothing from it is shown" }));
   });
 
   it("goes through the MCP server as a normal tool result", async () => {
@@ -567,7 +567,7 @@ describe("world_context: identity gaps", () => {
     const rural = fabricWith([node("county", "48453", "Travis County, TX"), node("state", "48", "Texas")]);
     for (const input of [{ fips: "48453", topics: ["economy"] }, { lon: -97.74, lat: 30.27, topics: ["economy"] }]) {
       const r = await run(input, { "/api/fabric?op=stack": rural }).reply;
-      expect(topicsOf(r).identity.missing).toContainEqual({ what: "metro area (CBSA)", reason: expect.stringMatching(/^none: this county is in no metropolitan or micropolitan statistical area/) });
+      expect(topicsOf(r).identity.missing).toContainEqual(expect.objectContaining({ what: "metro area (CBSA)", reason: expect.stringMatching(/^none: this county is in no metropolitan or micropolitan statistical area/) }));
       expect(facts(r, "identity")).not.toContain("metro or micro area (CBSA)");
     }
   });
@@ -575,14 +575,14 @@ describe("world_context: identity gaps", () => {
   it("a point with no county under it records the gap with the fabric's reason", async () => {
     const sea = fabricWith([], { coverage: "Outside the United States only the country is known here" });
     const r = await run({ lon: -173.97, lat: 52.87, topics: ["economy"] }, { "/api/fabric?op=stack": sea }).reply;
-    expect(topicsOf(r).identity.missing).toContainEqual({ what: "county, state and metro area (CBSA)", reason: expect.stringMatching(/no county polygon at this point: it is offshore or outside the US \(the fabric says: Outside/) });
+    expect(topicsOf(r).identity.missing).toContainEqual(expect.objectContaining({ what: "county, state and metro area (CBSA)", reason: expect.stringMatching(/no county polygon at this point: it is offshore or outside the US \(the fabric says: Outside/) }));
   });
 
   it("does not claim 'no CBSA' when TIGERweb itself failed", async () => {
     const down = fabricWith([node("timezone", "America/Chicago")], { failed: [{ source: "census-tigerweb", error: "TIGERweb 503" }] });
     const r = await run({ lon: -97.74, lat: 30.27, topics: ["economy"] }, { "/api/fabric?op=stack": down }).reply;
     const m = topicsOf(r).identity.missing!;
-    expect(m).toContainEqual({ what: "county, state and metro area (CBSA)", reason: "Census TIGERweb failed on this call (/api/fabric failed[]: TIGERweb 503)" });
+    expect(m).toContainEqual(expect.objectContaining({ what: "county, state and metro area (CBSA)", reason: "Census TIGERweb failed on this call (/api/fabric failed[]: TIGERweb 503)" }));
     expect(m.some((x) => /^none:/.test(x.reason))).toBe(false);
   });
 });
@@ -973,7 +973,7 @@ describe("world_context: invariant over recorded live replies", () => {
     const rec = recorded.find(([k]) => k === "ct_09110")![1];
     const r = await runRecorded(rec);
     expect(facts(r, "hazards").some((f) => /FEMA declaration/.test(f))).toBe(false);
-    expect(topicsOf(r).hazards.missing).toContainEqual({ what: "FEMA declarations", reason: expect.stringMatching(/FEMA lists Connecticut under its 8 legacy counties \(09001-09015\), not the planning regions \(09110-09190\).*\(join:legacy_ct_counties\)/) });
+    expect(topicsOf(r).hazards.missing).toContainEqual(expect.objectContaining({ what: "FEMA declarations", reason: expect.stringMatching(/FEMA lists Connecticut under its 8 legacy counties \(09001-09015\), not the planning regions \(09110-09190\).*\(join:legacy_ct_counties\)/) }));
     expect(JSON.stringify(topicsOf(r).hazards.missing)).not.toMatch(/"reason":"join:/);
   });
 
@@ -981,9 +981,9 @@ describe("world_context: invariant over recorded live replies", () => {
     const rec = recorded.find(([k]) => k === "pr_72127")![1];
     const r = await runRecorded(rec);
     expect(JSON.stringify(allItems(r))).not.toMatch(/Insufficient Data|Data Unavailable/);
-    expect(topicsOf(r).hazards.missing).toContainEqual({ what: "FEMA NRI overall risk rating", reason: expect.stringMatching(/"Insufficient Data" here, which is not a rating/) });
-    expect(topicsOf(r).vulnerability.missing).toContainEqual({ what: "FEMA NRI social vulnerability", reason: expect.stringMatching(/"Data Unavailable"/) });
-    expect(topicsOf(r).hazards.missing).toContainEqual({ what: "NOAA Climate at a Glance (tavg)", reason: "NOAA Climate at a Glance (tavg) does not publish Puerto Rico (source:not_published_for_puerto_rico)" });
+    expect(topicsOf(r).hazards.missing).toContainEqual(expect.objectContaining({ what: "FEMA NRI overall risk rating", reason: expect.stringMatching(/"Insufficient Data" here, which is not a rating/) }));
+    expect(topicsOf(r).vulnerability.missing).toContainEqual(expect.objectContaining({ what: "FEMA NRI social vulnerability", reason: expect.stringMatching(/"Data Unavailable"/) }));
+    expect(topicsOf(r).hazards.missing).toContainEqual(expect.objectContaining({ what: "NOAA Climate at a Glance (tavg)", reason: "NOAA Climate at a Glance (tavg) does not publish Puerto Rico (source:not_published_for_puerto_rico)" }));
   });
 
   it("NOLA small box: only the parishes whose outlines touch it, Orleans first", async () => {
@@ -1003,12 +1003,12 @@ describe("world_context: citations never borrow", () => {
     const r = await run({ fips: "48453", topics: ["hazards"] }, { "/api/hazards?op=history": ct }).reply;
     expect(allItems(r).filter((i) => /FEMA declaration/.test(i.fact))).toEqual([]);
     expect(allItems(r).every((i) => i.sourceId !== "usdm" || i.fact.startsWith("U.S. Drought Monitor"))).toBe(true);
-    expect(topicsOf(r).hazards.missing).toContainEqual({ what: "FEMA declarations", reason: expect.stringMatching(/^fema-openfema: the route lists it as missing: FEMA lists Connecticut/) });
+    expect(topicsOf(r).hazards.missing).toContainEqual(expect.objectContaining({ what: "FEMA declarations", reason: expect.stringMatching(/^fema-openfema: the route lists it as missing: FEMA lists Connecticut/) }));
     // Only provenance absent (FEMA not named missing): still missing, never a 0.
     const bare = { ...HISTORY, data: { ...HISTORY.data, declarations: [] }, provenance: HISTORY.provenance.filter((p) => p.source.id === "usdm") };
     const r2 = await run({ fips: "48453", topics: ["hazards"] }, { "/api/hazards?op=history": bare }).reply;
     expect(allItems(r2).some((i) => i.value === 0 && /FEMA/.test(i.fact))).toBe(false);
-    expect(topicsOf(r2).hazards.missing).toContainEqual({ what: "FEMA declarations", reason: "fema-openfema: the route sent no provenance for it, so nothing from it is shown" });
+    expect(topicsOf(r2).hazards.missing).toContainEqual(expect.objectContaining({ what: "FEMA declarations", reason: "fema-openfema: the route sent no provenance for it, so nothing from it is shown" }));
   });
 
   it("a legacy Connecticut county FIPS points to the planning regions", async () => {
@@ -1026,7 +1026,7 @@ describe("world_context: citations never borrow", () => {
     expect(hz.find((i) => i.fact.startsWith("M4.5+ earthquakes"))).toMatchObject({ value: 1, sourceId: "usgs-earthquakes" });
     const r2 = await run({ lon: -97.74, lat: 30.27, topics: ["hazards"] }, { "/api/live": { ...LIVE, data: { ...LIVE.data, unmapped: 2 } } }).reply;
     expect(topicsOf(r2).hazards.items.some((i) => i.fact.startsWith("Severe or Extreme NWS alerts"))).toBe(false);
-    expect(topicsOf(r2).hazards.missing).toContainEqual({ what: "count of Severe or Extreme NWS alerts touching the box now", reason: expect.stringMatching(/^2 alerts in the national list could not be outlined/) });
+    expect(topicsOf(r2).hazards.missing).toContainEqual(expect.objectContaining({ what: "count of Severe or Extreme NWS alerts touching the box now", reason: expect.stringMatching(/^2 alerts in the national list could not be outlined/) }));
   });
 
   it("an error reply stays under the cap with its envelope fields", async () => {
@@ -1070,7 +1070,7 @@ describe("world_context: FEMA zeros, duplicates and the cut order", () => {
     const noRows = { ...HISTORY, data: { ...HISTORY.data, declarations: [], missing: [] } };
     const r2 = await run({ fips: "48453", topics: ["hazards"] }, { "/api/hazards?op=history": noRows }).reply;
     expect(topicsOf(r2).hazards.items.some((i) => i.fact === "FEMA declarations listed")).toBe(false);
-    expect(topicsOf(r2).hazards.missing).toContainEqual({ what: "FEMA declarations", reason: expect.stringMatching(/did not report reading zero rows/) });
+    expect(topicsOf(r2).hazards.missing).toContainEqual(expect.objectContaining({ what: "FEMA declarations", reason: expect.stringMatching(/did not report reading zero rows/) }));
   });
 
   it("each disaster once (Kusilvak's DR-4893 has one row per designated area); the list says latest, any date; a legacy row is marked", async () => {
@@ -1080,7 +1080,7 @@ describe("world_context: FEMA zeros, duplicates and the cut order", () => {
     const ds = topicsOf(r).hazards.items.filter((i) => i.fact === "FEMA declaration");
     expect(ds.map((i) => i.code)).toEqual(["DR-4893", "DR-4533", "DR-3446"]);
     expect(ds[1].note).toMatch(/filed by FEMA under the former county code 02270/);
-    expect(topicsOf(r).hazards.coverageStatus!.basis).toContain("FEMA declarations: the latest 3 distinct shown, any date (FEMA files 14 rows for this county; a disaster can have one row per designated area)");
+    expect(topicsOf(r).hazards.coverageStatus!.basis.map((b) => b.text)).toContain("FEMA declarations: the latest 3 distinct shown, any date (FEMA files 14 rows for this county; a disaster can have one row per designated area)");
   });
 
   it("Hoonah-Angoon: rows FEMA files under another code for an area lying here say the count may be short, and the declarations stay cited", async () => {
@@ -1205,7 +1205,7 @@ describe("world_context: a county is centred on Census's internal point", () => 
     const f = router();
     const r = await worldContext(toolByName("world_context")!.inputSchema.parse({ fips: "48453", topics: ["institutions"] }) as never, { fetchJson: f.fetchJson });
     expect((r.payload.place as JsonObject).point).toBeNull();
-    expect(topicsOf(r).identity.missing).toContainEqual({ what: "the county's point", reason: expect.stringMatching(/without eye's county table/) });
+    expect(topicsOf(r).identity.missing).toContainEqual(expect.objectContaining({ what: "the county's point", reason: expect.stringMatching(/without eye's county table/) }));
     expect(f.calls.some((c) => c.startsWith("/api/infra"))).toBe(false);
   });
 });
@@ -1250,7 +1250,7 @@ describe("world_context: water", () => {
     const unknown = { ...f0, properties: { ...f0.properties, extra: { ...f0.properties.extra, state: "unknown", results: [] } } };
     const r = await run({ lon: -97.74, lat: 30.27, topics: ["water"] }, water({ data: { type: "FeatureCollection", features: [unknown] } })).reply;
     expect(topicsOf(r).water.items.map((i) => i.fact)).toEqual(["community water system serving the point (EPA service area)"]);
-    expect(topicsOf(r).water.missing).toContainEqual({ what: "UCMR 5 PFAS results for TX2270001", reason: expect.stringMatching(/unknown, never 'not detected'/) });
+    expect(topicsOf(r).water.missing).toContainEqual(expect.objectContaining({ what: "UCMR 5 PFAS results for TX2270001", reason: expect.stringMatching(/unknown, never 'not detected'/) }));
     // UCMR 5 results without EPA's results provenance: no status, a missing entry.
     const noPat = await run({ lon: -97.74, lat: 30.27, topics: ["water"] }, water({ provenance: WATER.provenance.filter((p) => p.source.id !== "epa-ucmr5-pat") })).reply;
     expect(topicsOf(noPat).water.items.map((i) => i.fact)).toEqual(["community water system serving the point (EPA service area)"]);
