@@ -99,9 +99,12 @@ describe("the index palettes under colour-vision deficiency", () => {
       });
     }
   }
-  // Measured, not gated: FEMA's rating colours (green to red) lose their order under protan and deutan
-  // (CIE L* rises from Relatively Low to Relatively Moderate), and the HUD housing and USFS WRC bins
-  // fall under CIEDE2000 10 between some neighbours. Changing a published palette is not this PR's
-  // brief; the numbers are in its description.
-  it.todo("FEMA NRI rating colours keep their lightness order under protan and deutan");
+  // Measured, not gated: FEMA's rating colours (green to red) have no single lightness order from Very Low
+  // to Very High even under normal vision. CIE L* (Very Low to Very High): normal 70.2, 74.9, 72.2, 56.6,
+  // 40.0; protan 72.8, 76.2, 67.4, 48.4, 30.9; deutan 68.3, 74.1, 74.9, 61.1, 44.6; tritan 70.3, 74.3,
+  // 69.9, 55.8, 42.7. Very Low to Relatively Low rises under normal vision and all three deficiencies;
+  // Relatively Low to Relatively Moderate rises only under deutan (74.1 to 74.9) and falls under protan
+  // (76.2 to 67.4). The HUD housing and USFS WRC bins fall under CIEDE2000 10 between some neighbours.
+  // Changing a published palette is not this PR's brief; the numbers are in its description.
+  it.todo("FEMA NRI rating colours keep one lightness order from Very Low to Very High (measured: they do not, even under normal vision)");
 });
