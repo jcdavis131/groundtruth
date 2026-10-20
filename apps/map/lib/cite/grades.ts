@@ -31,7 +31,7 @@ export function inTableFacts(grades: unknown): GradeFact[] {
   const plans = isObj(grades) && Array.isArray(grades.result) ? grades.result : [];
   const out: GradeFact[] = [];
   for (const p of plans) {
-    const facts = isObj(p) && isObj(p.final) && Array.isArray(p.final.facts) ? p.final.facts : [];
+    const facts = isObj(p) && isObj(p.g1) && Array.isArray(p.g1.facts) ? p.g1.facts : [];
     for (const f of facts) {
       if (!isObj(f) || f.citeType !== "upstream_publisher" || typeof f.link !== "string") continue;
       const link = f.link;
