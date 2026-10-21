@@ -546,6 +546,32 @@ describe("docs/MCP.md stays in sync with the manifest", () => {
     expect(m![1].trim()).toBe(toolTable());
   });
 
+  // GitHub drops a bare tag it does not know from a table cell (a row holding <where> renders without it), so the
+  // table writes each one in backticks. scripts/guard.mjs (rule `angle`) fails a bare token in any tracked .md row.
+  it("writes a bare angle token in a description inside backticks, and leaves code spans, escapes and autolinks as they are", () => {
+    const entry = {
+      name: "demo",
+      title: "Demo",
+      description:
+        "query: '<where> [SORT field [ASC|DESC]]' with <id> and <fips>; kept: `<code>` and \\<esc\\>; 1 < 2, a<=b, <https://example.gov/x>, `a`<pad>, <pad2>`b`",
+      inputSchema: { type: "object", properties: {} },
+      alwaysLoad: false,
+    };
+    const row = toolTable([entry]).split("\n")[2];
+    expect(row).toBe(
+      "| `demo` | (none) | query: '`<where>` [SORT field [ASC\\|DESC]]' with `<id>` and `<fips>`; kept: `<code>` and \\<esc\\>; 1 < 2, a<=b, <https://example.gov/x>, `a` `<pad>`, `<pad2>` `b` |",
+    );
+  });
+
+  it("leaves no bare angle token in any cell of the real table", () => {
+    const rows = toolTable().split("\n").slice(2);
+    expect(rows).toHaveLength(TOOLS.length);
+    // A different reading from the emitter's, on purpose: drop every backslash pair and every single-backtick span, then look for a tag.
+    const tag = /<[A-Za-z][A-Za-z0-9._-]*(?:\s[^<>]*)?\/?>/;
+    const bare = rows.filter((row) => tag.test(row.replace(/\\[\s\S]|`[^`]*`/g, " "))).map((row) => row.slice(0, 40));
+    expect(bare).toEqual([]);
+  });
+
   it("documents the server instructions, the alwaysLoad flag and every prompt", async () => {
     const md = await readFile(path.join(process.cwd(), "docs", "MCP.md"), "utf8");
     expect(md).toContain("instructions");

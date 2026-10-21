@@ -361,6 +361,85 @@ check(ro1.status === 0, "a row that is neither Checked nor Tested is not judged"
 const ro2 = run(repo({ ...base, "AGENTS.md": table(["Checked with eye", "eye: `lib/search/x.ts`. Here, `scripts/a.mjs`", "Checked here"]) }));
 check(ro2.status === 0, "a Checked row keeps its at-least-one-tracked-path reading");
 
+// angle: GitHub drops a bare tag it does not know from a table cell (a row holding <outdir> renders without it),
+// keeps <br>, and reads a code span only after it has split the row into cells on unescaped pipes. The rule judges
+// table rows of tracked .md files: lines whose first non-blank character is a pipe. A bare token in prose is out of scope.
+// Fixtures are throwaway repos holding one doc.md; its first data row is line 5.
+const tbl = (...cells) => "# t\n\n| a | b |\n|---|---|\n" + cells.map((c) => `| ${c} | x |\n`).join("");
+const angleAt = (out, at) => out.split("\n").find((l) => new RegExp(`^angle\\s+${esc(at)}(\\s|$)`).test(l)) ?? null;
+const angleToks = (out, at) => /^angle\s+\S+\s+(.*?)\s+GitHub drops/.exec(angleAt(out, at) ?? "")?.[1].split("  ") ?? null;
+const angleOk = (what, ...cells) => {
+  const r = run(repo({ "doc.md": tbl(...cells) }));
+  check(r.status === 0, `angle: ${what} passes${r.status ? ": " + r.stdout.trim() : ""}`);
+};
+const angleBad = (what, want, ...cells) => {
+  const r = run(repo({ "doc.md": tbl(...cells) }));
+  const got = angleToks(r.stdout, "doc.md:5");
+  check(r.status === 1 && JSON.stringify(got) === JSON.stringify(want), `angle: ${what} fails naming doc.md:5 and ${want.join(" ")}${got && JSON.stringify(got) !== JSON.stringify(want) ? " (named " + got.join(" ") + ")" : ""}`);
+};
+angleBad("a bare token", ["<outdir>"], "quote: <outdir>");
+angleOk("a token in backticks", "quote: `<outdir>`");
+angleOk("a backslash-escaped token", "x \\<outdir\\> y");
+angleOk("autolinks (a scheme, mailto, an email address)", "see <https://example.gov/x>", "see <mailto:a@b.gov>", "see <a@b.gov>");
+angleOk("<br>, <br/>, <br /> and <BR>, which GitHub keeps in a cell", "first<br>second", "first<br/>second", "first<br />second", "first<BR>second");
+angleOk("comparisons and arrows that are not tags", "a < b and c <= d", "x -> y => z", "<3 and 1<2>0");
+angleBad("a span that crosses a pipe (cells split first)", ["<x>"], "open `<x> | close`");
+angleBad("two tokens on one row, named together", ["<one>", "<two>"], "run <one> then <two>");
+angleBad("a token beside <br>, which is not named", ["<y>"], "a<br>b <y>");
+angleBad("a tag with attributes", ['<div class="a">'], 'see <div class="a"> here');
+angleBad("a token after an unmatched backtick", ["<x>"], "a ` <x> b");
+angleOk("a double-backtick span holding one backtick", "``a ` b <x>`` c");
+angleBad("a token after an escaped pipe (still the same cell)", ["<x>"], "a \\| <x> end");
+angleOk("a code span holding an escaped pipe", "`a \\| <x>` end");
+{
+  const r = run(repo({ "doc.md": "# t\n\n  | a | b |\n  |---|---|\n  | <x> | y |\n" }));
+  check(r.status === 1 && JSON.stringify(angleToks(r.stdout, "doc.md:5")) === '["<x>"]', "angle: a row indented two spaces is judged");
+}
+{
+  const r = run(repo({ "doc.md": tbl("one <a>", "two <b>") }));
+  check(JSON.stringify(angleToks(r.stdout, "doc.md:5")) === '["<a>"]' && JSON.stringify(angleToks(r.stdout, "doc.md:6")) === '["<b>"]' && (r.stdout.match(/^angle /gm) ?? []).length === 2,
+    "angle: two rows give two findings, one line each");
+  check(/backticks/.test(angleAt(r.stdout, "doc.md:5") ?? ""), "angle: the finding says to write the token in backticks");
+}
+{
+  const r = run(repo({ "doc.md": "A bare <outdir> in prose, `<x>` too.\n\n- a list item <item>\n\nA paragraph | with <pipes> | inside.\n" }));
+  check(r.status === 0, `angle: a bare token in prose, a list or a line that does not start with a pipe passes (out of scope)${r.status ? ": " + r.stdout.trim() : ""}`);
+}
+{
+  const r = run(repo({ "doc.md": "# t\r\n\r\n| a | b |\r\n|---|---|\r\n| <outdir> | x |\r\n" }));
+  check(JSON.stringify(angleToks(r.stdout, "doc.md:5")) === '["<outdir>"]', "angle: a CRLF file is read, the token has no carriage return and the line is right");
+  const r2 = run(repo({ "doc.md": "# t\r\n\r\n| a | b |\r\n|---|---|\r\n| `<outdir>` | x |\r\n" }));
+  check(angleAt(r2.stdout, "doc.md:5") === null && flags(r2.stdout, "crlf", "doc.md"), "angle: a CRLF file with the token in backticks passes angle (crlf still fails it)");
+}
+for (const [what, body] of [
+  ["a backtick fence", "# t\n\n```\n| a | b |\n| <x> | y |\n```\n"],
+  ["a tilde fence", "# t\n\n~~~md\n| <x> | y |\n~~~\n"],
+  ["a fence an inner shorter fence line does not close", "# t\n\n````\n| a | b |\n```\n| <x> | y |\n````\n"],
+  ["a fence left open to the end of the file", "# t\n\n```\n| <x> | y |\n"],
+]) {
+  const r = run(repo({ "doc.md": body }));
+  check(r.status === 0, `angle: a table row in ${what} is code and passes${r.status ? ": " + r.stdout.trim() : ""}`);
+}
+{
+  const r = run(repo({ "doc.md": "```md\n| <in> | y |\n```\n\n| a | b |\n|---|---|\n| <after> | x |\n" }));
+  check(JSON.stringify(angleToks(r.stdout, "doc.md:7")) === '["<after>"]' && angleAt(r.stdout, "doc.md:2") === null, "angle: the row after a closed fence is judged, the one inside is not");
+  const r2 = run(repo({ "doc.md": "```a``` text\n| <q> | y |\n" }));
+  check(JSON.stringify(angleToks(r2.stdout, "doc.md:2")) === '["<q>"]', "angle: a line that opens with three backticks and has more on it is not a fence");
+}
+check(run(repo({ "notes.txt": "| <x> | y |\n", "page.html": "| <x> | y |\n" })).status === 0, "angle: only .md files are judged");
+{
+  const body = tbl("quote: <outdir>");
+  const waived = run(repo({ "doc.md": body, "guard.allow.json": allowJson("doc.md", sha(body)) }));
+  check(waived.status === 0, `angle: a waived file (guard.allow.json, its reviewed sha256) passes${waived.status ? ": " + waived.stdout.trim() : ""}`);
+  const changed = run(repo({ "doc.md": body + "| more |\n", "guard.allow.json": allowJson("doc.md", sha(body)) }));
+  check(changed.status === 1 && flags(changed.stdout, "allow", "doc.md") && angleAt(changed.stdout, "doc.md:5") !== null, "angle: a waived file whose bytes changed fails on the hash and on the token");
+  const other = run(repo({ "doc.md": body, "other.md": body, "guard.allow.json": allowJson("doc.md", sha(body)) }));
+  check(other.status === 1 && angleAt(other.stdout, "other.md:5") !== null && angleAt(other.stdout, "doc.md:5") === null, "angle: a waiver covers its own file only");
+  const crlf = tbl("quote: <outdir>").replace(/\n/g, "\r\n");
+  const wcrlf = run(repo({ "doc.md": crlf, "guard.allow.json": allowJson("doc.md", sha(crlf)) }));
+  check(wcrlf.status === 1 && flags(wcrlf.stdout, "crlf", "doc.md") && angleAt(wcrlf.stdout, "doc.md:5") === null, "angle: the waiver covers angle only (a waived file still fails crlf)");
+}
+
 // prereg-check has its own self-test; guard.yml runs this file, so run it from here too.
 const pre = spawnSync(process.execPath, [path.join(path.dirname(guard), "prereg-check.test.mjs")], { encoding: "utf8" });
 process.stdout.write(pre.stdout);
