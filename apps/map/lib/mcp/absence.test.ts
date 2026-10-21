@@ -34,12 +34,13 @@ const EXPECTED: Record<AbsenceCode, { fhir: string | null; action: string; retry
   timeout: { fhir: "temp-unknown", action: "retry", retryable: true },
   no_citation: { fhir: null, action: "none", retryable: false },
   about_eye: { fhir: "not-applicable", action: "none", retryable: false },
+  stale: { fhir: null, action: "none", retryable: false },
 };
 
 describe("absence codes", () => {
-  it("are the closed list of 14, each with an action, a retry answer and its nearest FHIR data-absent-reason", () => {
+  it("are the closed list of 15, each with an action, a retry answer and its nearest FHIR data-absent-reason", () => {
     expect(Object.keys(ABSENCE_CODES)).toEqual(Object.keys(EXPECTED));
-    expect(Object.keys(ABSENCE_CODES)).toHaveLength(14);
+    expect(Object.keys(ABSENCE_CODES)).toHaveLength(15);
     for (const [code, want] of Object.entries(EXPECTED)) {
       const got = ABSENCE_CODES[code as AbsenceCode];
       expect(got.fhir, `${code}: FHIR code`).toBe(want.fhir);
@@ -81,6 +82,35 @@ describe("absence codes", () => {
     for (const k of ["join:area_not_placed", "join:boundary_changed_since_2010", "join:filed_under_other_code", "join:legacy_ct_counties", "join:multi_county", "join:ncei_areas_not_counties", "join:no_source_row", "join:unplaced_property_in_state", "source:failed", "source:not_in_release", "source:not_published_for_puerto_rico", "source:null_in_county_layer"]) {
       expect(ROUTE_REASON_CODE[k], `${k} is mapped`).toBeDefined();
     }
+  });
+});
+
+// ---- stale: a snapshot older than its publisher's cadence ------------------------------------------------------
+// Added with server 0.6.0. The assertions read ABSENCE_CODES through a loose type on purpose, so they say what the
+// code is without depending on the compiler's view of the closed list.
+describe("the stale code", () => {
+  const spec = (ABSENCE_CODES as unknown as Record<string, { action: string; retryable: boolean; fhir: string | null; means: string } | undefined>).stale;
+  const entry = (over: Record<string, unknown> = {}) => ({ what: "bls-qcew freshness", code: "stale", reason: "U.S. Bureau of Labor Statistics releases quarterly; eye serves a snapshot from 2026-05-01", action: "none", ...over });
+
+  it("is in the closed list: nothing asked of the reader, not retryable, no FHIR data-absent-reason (the item keeps its value), and a means sentence that says the item is still shown", () => {
+    expect(spec, "ABSENCE_CODES.stale").toBeDefined();
+    expect(spec!.action).toBe("none");
+    expect(spec!.retryable).toBe(false);
+    // FHIR's data-absent-reason set is for a value that is missing; a stale item keeps its value, so no member of it is true
+    expect(spec!.fhir).toBeNull();
+    expect(spec!.means).toMatch(/still shown/);
+    expect(spec!.means).toMatch(/does not say the value is wrong/);
+  });
+
+  it("ABSENCE_SCHEMA accepts it with action none and rejects it with any other action; a basis line may carry it", () => {
+    expect(validateEntry(entry()).errorMessage).toBeUndefined();
+    expect(validateEntry(entry()).valid).toBe(true);
+    for (const action of ["retry", "narrow", "abstain", "redirect"]) expect(validateEntry(entry({ action })).valid, `stale with action ${action}`).toBe(false);
+    expect(validateBasis({ code: "stale", text: "bls-qcew freshness: a snapshot older than its cadence" }).valid).toBe(true);
+  });
+
+  it("absence() builds it with the code's own action", () => {
+    expect(absence("bls-qcew freshness", "stale" as string as AbsenceCode, "why")).toEqual({ what: "bls-qcew freshness", code: "stale", reason: "why", action: "none" });
   });
 });
 

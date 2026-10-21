@@ -15,7 +15,7 @@ import { envelopeForStatus, envelopeForThrown, InvalidArguments } from "./errors
 import { boundErrorPayload, NOT_DEPLOYED_NOTE, TOOLS, type FetchJson, type ToolCtx, type ToolDef, type ToolReply } from "./tools";
 
 export const SERVER_NAME = "embedding-atlas-mcp-server";
-export const SERVER_VERSION = "0.5.0";
+export const SERVER_VERSION = "0.6.0";
 
 /**
  * The origin this server answers on in production. public/openapi.json names it as servers[0] and
@@ -44,6 +44,8 @@ export interface ServerOptions {
   fetchJson: FetchJson;
   /** The county table's Census internal point by FIPS (world_context's place.point for a county). */
   countyPoint?: ToolCtx["countyPoint"];
+  /** The release calendar's entry for a source id (world_context's cadence, and what is stale). Omitted over stdio. */
+  releaseCadence?: ToolCtx["releaseCadence"];
   /** Directory whose *.md files become gev://docs/<name> resources. Missing dir = no doc resources. */
   docsDir?: string;
   /** Path of the OpenAPI document served as gev://openapi.json. */
@@ -280,7 +282,7 @@ function publishOutputSchemas(server: McpServer, schemas: Map<string, Record<str
  */
 export function createServer(opts: ServerOptions): McpServer {
   const server = new McpServer({ name: SERVER_NAME, version: SERVER_VERSION }, { instructions: INSTRUCTIONS });
-  const ctx: ToolCtx = { fetchJson: opts.fetchJson, ...(opts.countyPoint ? { countyPoint: opts.countyPoint } : {}) };
+  const ctx: ToolCtx = { fetchJson: opts.fetchJson, ...(opts.countyPoint ? { countyPoint: opts.countyPoint } : {}), ...(opts.releaseCadence ? { releaseCadence: opts.releaseCadence } : {}) };
   envelopeSdkErrors(server);
 
   const tools = opts.tools ?? TOOLS;

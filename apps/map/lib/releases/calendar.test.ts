@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  cadenceOf,
   effectivePrecision,
   findEntry,
   isoDate,
@@ -159,5 +160,28 @@ describe("upcomingReleases", () => {
   it("accepts a custom entry list", () => {
     const list = upcomingReleases("2026-09-01", "2026-09-30", [{ id: "x", sourceId: "fred", title: "x", cadence: "weekly", rule: "weekly:MON", precision: "official" }]);
     expect(list.map((o) => o.window.nominal)).toEqual(["2026-09-07", "2026-09-14", "2026-09-21", "2026-09-28"]);
+  });
+});
+
+describe("cadenceOf: what world_context states as an item's cadence", () => {
+  it("is the entry's cadence word and id, with the precision its rule can claim, and null for a source the calendar has no entry for", () => {
+    expect(cadenceOf("bls-qcew")).toEqual({ kind: "quarterly", precision: "approximate", source: "bls-qcew" });
+    expect(cadenceOf("zillow-zhvi")).toEqual({ kind: "monthly", precision: "approximate", source: "zillow-zhvi" });
+    expect(cadenceOf("usdm")).toEqual({ kind: "weekly", precision: "official", source: "usdm" });
+    expect(cadenceOf("usgs-water")).toEqual({ kind: "continuous", precision: "official", source: "usgs-water" });
+    for (const none of ["fema-nri", "census-tigerweb", "sec-edgar", "eye-catalog"]) expect(cadenceOf(none), none).toBeNull();
+    // fred is many series with many cadences: a lookup by the source alone makes no claim
+    expect(cadenceOf("fred")).toBeNull();
+  });
+
+  it("agrees with every calendar entry looked up by its id, and never calls an approximate rule official", () => {
+    for (const e of RELEASE_CALENDAR) {
+      const c = cadenceOf(e.id)!;
+      expect(c, e.id).not.toBeNull();
+      expect(c.kind, e.id).toBe(e.cadence);
+      expect(c.source, e.id).toBe(e.id);
+      expect(c.precision, e.id).toBe(effectivePrecision(e));
+      if (parseRule(e.rule).approximate) expect(c.precision, `${e.id}: an approximate rule`).toBe("approximate");
+    }
   });
 });

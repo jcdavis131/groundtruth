@@ -11,6 +11,9 @@
 // publisher's own suppression flag (BLS QCEW's jobs.suppressed). Anything eye cannot tell
 // apart defaults to `failed` (a call that did not give the answer) or `not_asked` (a topic
 // the caller's input did not ask for), never to a claim about what a publisher holds.
+// `stale` is the one code that sits beside a value that is shown: it is set only by arithmetic
+// on a source's own snapshotAt and the cadence of its release-calendar entry (STALE_AFTER_DAYS
+// in ./world), never from a guess about the publisher, and it withholds nothing.
 //
 // The outside vocabulary is HL7 FHIR's data-absent-reason value set, shown for each code in
 // `fhir` (null where FHIR has no such notion). SDMX's OBS_STATUS types the same idea for
@@ -28,7 +31,7 @@ export interface AbsenceSpec {
    * retry     the same call can succeed later unchanged
    * narrow    change the request (a county FIPS or a point, a smaller box, fewer topics, another max_records)
    * redirect  the value is filed somewhere else; `to` names where when the route says
-   * none      nothing is asked of you and no absence is claimed; the entry says why nothing is shown
+   * none      nothing is asked of you and no absence is claimed; the entry says why nothing is shown, or (stale) what to know about what is
    */
   action: AbsenceAction;
   /** True only when the same call can succeed later unchanged; agrees with ERROR_CODES for failed and timeout. */
@@ -54,6 +57,8 @@ export const ABSENCE_CODES = {
   timeout: { action: "retry", retryable: true, fhir: "temp-unknown", means: "A route or its upstream did not answer in time; nothing is known about the value." },
   no_citation: { action: "none", retryable: false, fhir: null, means: "The route sent no provenance for this source, so nothing from it is shown; this does not say the value is absent." },
   about_eye: { action: "none", retryable: false, fhir: "not-applicable", means: "A claim about eye's own catalogue has no upstream to cite; it is not a claim about the world." },
+  // fhir is null on purpose. HL7's data-absent-reason set (temp-unknown included) says why a value is missing; a stale item keeps its value.
+  stale: { action: "none", retryable: false, fhir: null, means: "The snapshot eye serves for this source is older than its publisher's release cadence, so a newer release probably exists upstream; the item is still shown, and this does not say the value is wrong." },
 } as const satisfies Record<string, AbsenceSpec>;
 
 export type AbsenceCode = keyof typeof ABSENCE_CODES;

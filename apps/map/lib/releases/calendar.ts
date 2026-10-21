@@ -550,3 +550,14 @@ export function upcomingReleases(from: Date | number | string, to: Date | number
 export function findEntry(sourceId: string, seriesId?: string, entries: ReleaseEntry[] = RELEASE_CALENDAR): ReleaseEntry | undefined {
   return entries.find((e) => e.id === sourceId) ?? entries.find((e) => e.sourceId === sourceId && (seriesId ? e.seriesId === seriesId : !e.seriesId));
 }
+
+/**
+ * What world_context states as an item's `cadence` (lib/mcp/world.ts): the calendar entry for a source id, as its cadence word,
+ * the precision its rule can honestly claim (effectivePrecision, so an approximate rule is never reported official) and the
+ * entry's id; null when the calendar has no entry for the source. The Next route injects this as ctx.releaseCadence, because
+ * lib/mcp compiles alone and cannot import this file.
+ */
+export function cadenceOf(sourceId: string, entries: ReleaseEntry[] = RELEASE_CALENDAR): { kind: Cadence; precision: Precision; source: string } | null {
+  const entry = findEntry(sourceId, undefined, entries);
+  return entry ? { kind: entry.cadence, precision: effectivePrecision(entry), source: entry.id } : null;
+}

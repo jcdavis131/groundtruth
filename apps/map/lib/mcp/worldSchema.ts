@@ -12,6 +12,10 @@
 //     names its inputs: each with the source, the eye route whose reply held the rows and that source's own
 //     retrieval time. Only an estimate has inputs. Added to world/2 after its baseline, and additive: an enum
 //     value, a property, and rules that apply only to the new value (CHANGELOG.md, 0.5.0);
+//   - snapshotAt says when the data eye serves for the item's source was fixed (a date or a UTC datetime, as the route or
+//     bundle wrote it), or is null with the reason in the note; cadence is the release calendar's entry for the
+//     publisher (kind, precision, entry id) or null. Both optional, added with 0.6.0 and additive: two properties and a
+//     rule that applies only to a null snapshotAt (CHANGELOG.md, 0.6.0); the absence code `stale` came with them;
 //   - a topic with missing[] entries has a coverageStatus; a reply that was cut (truncated) has one;
 //   - missing[] entries and coverageStatus.basis lines are the typed ones of ./absence;
 //   - coverageStatus.status is "partial" and nothing else ("complete" would be a claim eye cannot make).
@@ -37,6 +41,21 @@ const NO_RECORD_NOTE = "no record-level URL: \\S";
 
 /** A retrieval time as every item and input states it: ISO 8601 in UTC, ending Z. */
 const RETRIEVED_AT = "^\\d{4}-\\d{2}-\\d{2}T[0-9:.]+Z$";
+
+/** A snapshot date as a route or a bundle writes it: a day, or a UTC datetime (the SEC bundle's `pulled` is a bare day, and is not padded). */
+const SNAPSHOT_AT = "^\\d{4}-\\d{2}-\\d{2}(T[0-9:.]+Z)?$";
+
+/** The release calendar's entry for an item's publisher (lib/releases/calendar.ts: Cadence, Precision, the entry's id). */
+const CADENCE_SCHEMA = {
+  type: "object",
+  required: ["kind", "precision", "source"],
+  properties: {
+    kind: { type: "string", enum: ["continuous", "daily", "weekly", "monthly", "quarterly", "annual"] },
+    precision: { type: "string", enum: ["official", "approximate"] },
+    source: nonEmpty,
+  },
+  additionalProperties: false,
+} as const;
 
 /**
  * `^https://<host>/` from a RECORD_HOSTS regex, plus the organisation id segment on a shared ArcGIS
@@ -90,6 +109,8 @@ const ITEM_SCHEMA = {
     upstreamUrl: { type: "string", pattern: "^https?://" },
     upstreamRecordUrl: { type: "string", pattern: "^https://" },
     retrievedAt: { type: "string", pattern: RETRIEVED_AT },
+    snapshotAt: { type: ["string", "null"], pattern: SNAPSHOT_AT },
+    cadence: { anyOf: [{ type: "null" }, CADENCE_SCHEMA] },
     link: { type: "string", pattern: "^https?://" },
     kind: { type: "string", enum: ["about-eye", "estimate"] },
     inputs: { type: "array", minItems: 1, items: INPUT_SCHEMA },
@@ -98,6 +119,8 @@ const ITEM_SCHEMA = {
   allOf: [
     // null, never a placeholder: and the item says why
     { if: { properties: { value: { type: "null" } }, required: ["value"] }, then: { required: ["note"] } },
+    // no snapshot date: and the item says why, as it does for a null value
+    { if: { properties: { snapshotAt: { type: "null" } }, required: ["snapshotAt"] }, then: { required: ["note"] } },
     // a value withheld by the publisher's own flag is null
     { if: { required: ["absence"] }, then: { required: ["value"], properties: { value: { type: "null" } } } },
     // no publisher record: the note says why

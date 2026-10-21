@@ -6,12 +6,12 @@ import { errorResult, toCallResult, createServer } from "./server";
 import { ABSENCE_CODES, codeForRouteEntry, ROUTE_REASON_CODE, type AbsenceCode } from "./absence";
 import { WORLD_OUTPUT_SCHEMA, WORLD_SCHEMA_VERSION } from "./worldSchema";
 import { RECORD_HOSTS } from "./worldHosts";
-import { ERROR_MAX_CHARS, toolByName, type FetchJson, type JsonObject, type ToolReply } from "./tools";
+import { ERROR_MAX_CHARS, toolByName, type FetchJson, type JsonObject, type ToolCtx, type ToolReply } from "./tools";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { BOUNDARY_CHANGED_SINCE_2010, femaCodes } from "../hazards/history";
 import { countyByFips, countyPoint } from "../places/registry";
-import { RELEASE_CALENDAR } from "../releases/calendar";
+import { effectivePrecision, findEntry, RELEASE_CALENDAR } from "../releases/calendar";
 import { MISSING_NAMES, REASONS, ringsContain, ringsTouchBox, SCHEDULE_BLOCKED_NOTE, waterBox, WORLD_MAX_BYTES, worldContext, type WorldItem, type WorldSection } from "./world";
 
 // Fixtures trimmed from real replies of www.arxiviq.com on 2026-10-18 (shapes only; values shortened).
@@ -1706,5 +1706,307 @@ describe("world_context: counts computed here are estimates with inputs", () => 
     own!.kind = "estimate";
     own!.inputs = [{ sourceId: "eye-catalog", route: "http://t/api/catalog", retrievedAt: T }];
     expect(validateWorld(p).valid, "a claim about eye's catalogue cannot be relabelled an estimate").toBe(false);
+  });
+});
+
+// ---- freshness: snapshotAt, cadence and the stale absence code ---------------------------------------------------
+//
+// Server 0.6.0 (additive within world/2). Every item says when the data eye serves was fixed (snapshotAt) and, where
+// the release calendar has an entry for its publisher, how often that publisher releases (cadence). A source whose
+// snapshot is older than its cadence window carries a typed `stale` absence entry in its topic, once; the item keeps
+// its data, because stale is a label and not a withholding. The calendar reaches world.ts through ctx.releaseCadence
+// (lib/mcp compiles alone and cannot import lib/releases), and "now" through the opts seam, so no replay depends on
+// the wall clock. These tests read the new fields through loose types on purpose: they say what the reply must
+// carry, not what the compiler happens to know.
+describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
+  type Cad = { kind: string; precision: string; source: string };
+  type Fresh = WorldItem & { snapshotAt?: string | null; cadence?: Cad | null };
+  type Lookup = (sourceId: string) => Cad | null;
+  const DAY = 86_400_000;
+  const NOW = Date.parse(T);
+  /** The calendar as the route injects it: the entry for a source id, with the precision the rule can honestly claim. */
+  const calendarLookup: Lookup = (id) => {
+    const e = findEntry(id);
+    return e ? { kind: e.cadence, precision: effectivePrecision(e), source: e.id } : null;
+  };
+  /**
+   * The age table, days a snapshot may be old before its source is stale, written here a second time so the test does
+   * not share the code's copy. A continuous source is never stale by age and has no row.
+   */
+  const WINDOW: Record<string, number> = { annual: 366, quarterly: 100, monthly: 35, weekly: 10, daily: 2 };
+
+  function runFresh(input: unknown, over: Record<string, Answer> = {}, o: { now?: number; lookup?: Lookup | null } = {}) {
+    const f = router(over);
+    const parsed = toolByName("world_context")!.inputSchema.parse(input) as never;
+    const ctx = { fetchJson: f.fetchJson, countyPoint, ...(o.lookup === null ? {} : { releaseCadence: o.lookup ?? calendarLookup }) } as unknown as ToolCtx;
+    return { f, reply: worldContext(parsed, ctx, { now: o.now ?? NOW } as unknown as { stepMs?: number }) };
+  }
+
+  /** /api/screen's reply with some sources' retrievedAt moved: the county economy row, whose sources have calendar entries. */
+  const screenAt = (at: Record<string, string>): JsonObject => {
+    const s = screenRow();
+    return { ...s, provenance: s.provenance.map((p) => ({ ...p, retrievedAt: at[p.source.id] ?? p.retrievedAt })) };
+  };
+  const ECONOMY = { fips: "48453", topics: ["economy"] };
+  const iso = (daysAgo: number) => new Date(NOW - daysAgo * DAY).toISOString();
+  const staleOf = (r: ToolReply) =>
+    Object.entries(topicsOf(r)).flatMap(([topic, sec]) => (sec.missing ?? []).filter((m) => String(m.code) === "stale").map((m) => `${topic}: ${m.what}`));
+
+  /**
+   * Everything wrong with a reply's freshness: an item whose snapshotAt is older than its cadence window (the table
+   * above, the test's own) with no stale entry for its source in its topic. This is the acceptance: a reply whose
+   * snapshot age exceeds its declared cadence without a stale code fails.
+   */
+  function staleProblems(payload: JsonObject, now: number): string[] {
+    const out: string[] = [];
+    for (const [topic, sec] of Object.entries(payload.topics as Record<string, WorldSection>)) {
+      for (const it of sec.items as Fresh[]) {
+        if (!it.cadence || !it.snapshotAt) continue;
+        const days = WINDOW[it.cadence.kind];
+        if (days === undefined || now - Date.parse(it.snapshotAt) <= days * DAY) continue;
+        const flagged = (sec.missing ?? []).some((m) => String(m.code) === "stale" && m.what === `${it.sourceId} freshness`);
+        if (!flagged) out.push(`${topic}: ${it.sourceId} snapshot ${it.snapshotAt} is older than its ${it.cadence.kind} window (${days} days) and carries no stale entry`);
+      }
+    }
+    return out;
+  }
+
+  it("a source older than its cadence window carries one stale entry in its topic, with the publisher, the cadence and the snapshot date, and keeps its items", async () => {
+    const old = iso(171); // quarterly: stale after 100 days
+    const r = await runFresh(ECONOMY, { "/api/screen?kind=county": screenAt({ "bls-qcew": old, "zillow-zhvi": iso(9), "zillow-zori": iso(9) }) }).reply;
+    const eco = topicsOf(r).economy;
+    // Two items cite BLS QCEW (employment and wage); the topic says so once.
+    expect((eco.missing ?? []).filter((m) => String(m.code) === "stale")).toEqual([
+      { what: "bls-qcew freshness", code: "stale", action: "none", reason: expect.stringMatching(new RegExp(`^U\\.S\\. Bureau of Labor Statistics releases quarterly; eye serves a snapshot from ${old.replace(/\./g, "\\.")}.*100 days`)) },
+    ]);
+    expect(eco.coverageStatus!.basis).toContainEqual({ code: "stale", text: expect.stringMatching(/^bls-qcew freshness: /) });
+    // stale is a label, not a withholding: the items are there, with the date and the cadence beside the value
+    const emp = eco.items.find((i) => i.fact.startsWith("covered employment")) as Fresh;
+    expect(emp).toMatchObject({ value: 812345, snapshotAt: old, cadence: { kind: "quarterly", precision: "approximate", source: "bls-qcew" } });
+    expect(eco.items.some((i) => i.fact.startsWith("average weekly wage"))).toBe(true);
+    // the fresh monthly sources are not flagged, and nothing else in the reply is
+    expect(staleOf(r)).toEqual(["economy: bls-qcew freshness"]);
+    expect(validateWorld(toCallResult(r).structuredContent).errorMessage).toBeUndefined();
+  });
+
+  it("a fresh source has no stale entry: the same reply with a recent snapshot has none anywhere", async () => {
+    const r = await runFresh(ECONOMY, { "/api/screen?kind=county": screenAt({ "bls-qcew": iso(99), "zillow-zhvi": iso(34), "zillow-zori": iso(34) }) }).reply;
+    expect(staleOf(r)).toEqual([]);
+    const emp = topicsOf(r).economy.items.find((i) => i.fact.startsWith("covered employment")) as Fresh;
+    expect(emp.cadence).toEqual({ kind: "quarterly", precision: "approximate", source: "bls-qcew" });
+    expect(emp.snapshotAt).toBe(iso(99));
+    expect(validateWorld(toCallResult(r).structuredContent).errorMessage).toBeUndefined();
+  });
+
+  it("for every cadence kind a snapshot exactly on the window is not stale and one minute past it is; a continuous source is never stale by age", async () => {
+    const staleCount = async (kind: string, ageMs: number) => {
+      const at = new Date(NOW - ageMs).toISOString();
+      const lookup: Lookup = (id) => (id === "bls-qcew" ? { kind, precision: "approximate", source: "test-entry" } : null);
+      const r = await runFresh(ECONOMY, { "/api/screen?kind=county": screenAt({ "bls-qcew": at }) }, { lookup }).reply;
+      return staleOf(r).length;
+    };
+    for (const [kind, days] of Object.entries(WINDOW)) {
+      expect(await staleCount(kind, days * DAY), `${kind}: exactly ${days} days old`).toBe(0);
+      expect(await staleCount(kind, days * DAY + 60_000), `${kind}: one minute past ${days} days`).toBe(1);
+    }
+    expect(await staleCount("continuous", 3650 * DAY), "continuous, ten years old").toBe(0);
+  });
+
+  it("the committed age table is annual 366, quarterly 100, monthly 35, weekly 10, daily 2, and covers every cadence the calendar uses but continuous", async () => {
+    const mod = (await import("./world")) as unknown as Record<string, unknown>;
+    expect(mod.STALE_AFTER_DAYS).toEqual(WINDOW);
+    const kinds = new Set(RELEASE_CALENDAR.map((e) => e.cadence as string));
+    for (const k of kinds) if (k !== "continuous") expect(Object.keys(WINDOW), `calendar cadence ${k}`).toContain(k);
+  });
+
+  it("an audit of the reply fails one whose snapshot age passes its cadence window without a stale code, and passes the reply the tool built", async () => {
+    const r = await runFresh(ECONOMY, { "/api/screen?kind=county": screenAt({ "bls-qcew": iso(171) }) }).reply;
+    const aged = allItems(r).filter((i) => {
+      const f = i as Fresh;
+      return f.cadence && f.snapshotAt && NOW - Date.parse(f.snapshotAt) > WINDOW[f.cadence.kind] * DAY;
+    });
+    expect(aged.length, "the reply has items past their window, so the audit has something to find").toBe(2);
+    expect(staleProblems(r.payload, NOW)).toEqual([]);
+
+    // the mutant: the reply as it would be if the tool dropped the stale entry
+    const without = structuredClone(r.payload) as { topics: Record<string, WorldSection> };
+    without.topics.economy.missing = (without.topics.economy.missing ?? []).filter((m) => String(m.code) !== "stale");
+    const problems = staleProblems(without as unknown as JsonObject, NOW);
+    expect(problems).toHaveLength(2);
+    for (const p of problems) expect(p).toMatch(/economy: bls-qcew snapshot .* older than its quarterly window \(100 days\) and carries no stale entry/);
+
+    // a stale entry under another code does not count
+    const wrong = structuredClone(r.payload) as { topics: Record<string, WorldSection> };
+    for (const m of wrong.topics.economy.missing ?? []) if (String(m.code) === "stale") (m as { code: string }).code = "failed";
+    expect(staleProblems(wrong as unknown as JsonObject, NOW)).toHaveLength(2);
+  });
+
+  it("over the twelve recorded replies, with the calendar injected: none is stale on the day they were recorded, some are a year on, the audit finds no gap in either, and every reply stays whole", async () => {
+    const run = (rec: Recorded, now: number) =>
+      worldContext(toolByName("world_context")!.inputSchema.parse(rec.input) as never, { fetchJson: replay(rec), countyPoint, releaseCadence: calendarLookup } as unknown as ToolCtx, { now } as unknown as { stepMs?: number });
+    const sameDay = Date.parse("2026-10-19T12:00:00Z");
+    const yearOn = Date.parse("2027-10-19T12:00:00Z");
+    let staleYearOn = 0;
+    for (const [label, rec] of recorded) {
+      const plain = await runRecorded(rec);
+      const day = await run(rec, sameDay);
+      expect(staleOf(day), `${label} on the day`).toEqual([]);
+      expect(staleProblems(day.payload, sameDay), `${label} on the day`).toEqual([]);
+      // the new fields cost bytes; every recorded reply must still fit whole under the cap
+      expect(day.payload.truncated, `${label}: cut to the byte cap`).toBeUndefined();
+      expect(allItems(day).length, `${label}: items`).toBe(allItems(plain).length);
+      expect(new TextEncoder().encode(JSON.stringify(day.payload)).length, `${label}: bytes`).toBeLessThan(WORLD_MAX_BYTES);
+
+      const later = await run(rec, yearOn);
+      expect(staleProblems(later.payload, yearOn), `${label} a year on`).toEqual([]);
+      expect(validateWorld(toCallResult(later).structuredContent).errorMessage, `${label} a year on`).toBeUndefined();
+      staleYearOn += staleOf(later).length;
+    }
+    expect(staleYearOn, "a year on, the calendar-backed sources are past their windows").toBeGreaterThan(5);
+  });
+
+  it("every item carries snapshotAt, and a live source's is the retrievedAt its route sent", async () => {
+    const r = await runFresh({ lon: -97.74, lat: 30.27 }).reply;
+    const items = allItems(r) as Fresh[];
+    expect(items.length).toBeGreaterThan(20);
+    for (const i of items) expect("snapshotAt" in i, `${i.sourceId}: ${i.fact}`).toBe(true);
+    // bundles and eye's own catalogue are dated by their own record (below); the release items are computed per call
+    const notLive = new Set(["sec-edgar", "cms-provider-data", "eye-catalog"]);
+    const live = items.filter((i) => !notLive.has(i.sourceId) && i.fact !== "next scheduled release");
+    expect(live.length).toBeGreaterThan(15);
+    for (const i of live) expect(i.snapshotAt, `${i.sourceId}: ${i.fact}`).toBe(i.retrievedAt);
+  });
+
+  it("the SEC bundle's snapshotAt is its own pulled date as written, never the reply's time; a bundle that is a committed fixture has none, and says why", async () => {
+    const sec = { source: src("sec-edgar", "U.S. Securities and Exchange Commission", "https://www.sec.gov/"), kind: "published" };
+    // no retrievedAt on the provenance entry: the item's retrievedAt falls back to the reply's generatedAt, which is not a snapshot date
+    const full = { ...COMPANIES, generatedAt: T, pulled: "2026-10-01", bundle: { companies: 6000, geocoded: 5900, withFacts: 5000 }, provenance: [sec] };
+    const r = await runFresh({ fips: "48453", topics: ["institutions"] }, { "/api/companies": full }).reply;
+    const co = topicsOf(r).institutions.items.find((i) => i.sourceId === "sec-edgar") as Fresh;
+    expect(co.retrievedAt).toBe(T);
+    expect(co.snapshotAt).toBe("2026-10-01");
+
+    const fixture = { ...COMPANIES, generatedAt: T, provenance: [sec] };
+    const f = await runFresh({ fips: "48453", topics: ["institutions"] }, { "/api/companies": fixture }).reply;
+    const row = topicsOf(f).institutions.items.find((i) => i.sourceId === "sec-edgar") as Fresh;
+    expect(row.snapshotAt).toBeNull();
+    expect(row.note).toMatch(/no snapshot date: .*pulled: null/);
+    expect(validateWorld(toCallResult(f).structuredContent).errorMessage).toBeUndefined();
+  });
+
+  it("a source whose bundle records no build date, and eye's own catalogue, have a null snapshotAt with the reason in the note", async () => {
+    const r = await runFresh({ lon: -97.74, lat: 30.27, topics: ["institutions", "collections"], about: "dams near the river" }).reply;
+    const items = allItems(r) as Fresh[];
+    const cms = items.find((i) => i.fact === "CMS overall hospital star rating")!;
+    expect(cms.snapshotAt).toBeNull();
+    expect(cms.note).toMatch(/no snapshot date: .*no build date/);
+    const own = items.find((i) => i.sourceId === "eye-catalog")!;
+    expect(own.snapshotAt).toBeNull();
+    expect(own.note).toMatch(/no snapshot date: .*catalogue/);
+    // the reason is on the item, so the published schema asks for a note beside any null snapshotAt
+    expect(validateWorld(toCallResult(r).structuredContent).errorMessage).toBeUndefined();
+  });
+
+  it("the CMS-to-HIFLD bundle's own meta records no build date, which is what makes its null snapshotAt true", () => {
+    const meta = (JSON.parse(readFileSync(path.resolve(__dirname, "../infra/data/cms-hospitals.json"), "utf8")) as { meta: Record<string, unknown> }).meta;
+    // cmsModified and hifldDataLastEdit are the publishers' dates; none of these keys would be the bundle's own
+    expect(Object.keys(meta).filter((k) => /^(pulled|baked|bakedOn|builtAt|builtOn|generatedAt|createdAt|retrievedAt|fetchedAt|asOf)$/i.test(k))).toEqual([]);
+  });
+
+  it("a provenance entry with no retrievedAt gives a null snapshotAt, not the reply's generatedAt the item's retrievedAt falls back to", async () => {
+    const bare = { ...NRI, generatedAt: T, provenance: [{ source: src("fema-nri", "Federal Emergency Management Agency", "https://www.fema.gov/"), kind: "published", upstreamUrl: "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0" }] };
+    const r = await runFresh({ fips: "48453", topics: ["hazards"] }, { "/api/hazards?op=nri": bare }).reply;
+    const rating = topicsOf(r).hazards.items.find((i) => i.fact === "FEMA NRI overall risk rating") as Fresh;
+    expect(rating.retrievedAt).toBe(T);
+    expect(rating.snapshotAt).toBeNull();
+    expect(rating.note).toMatch(/no snapshot date: the route sent no retrievedAt/);
+  });
+
+  it("a county's place.point carries the county table's own pulled date as snapshotAt", async () => {
+    const pulled = countyPoint("48453")!.pulled;
+    expect(pulled).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    const r = await runFresh(ECONOMY).reply;
+    expect((r.payload.place as { point: JsonObject }).point).toMatchObject({ sourceId: "census-tigerweb", retrievedAt: pulled, snapshotAt: pulled });
+  });
+
+  it("cadence names the calendar entry where the publisher has one, is null where it has none, and is absent from a server given no calendar", async () => {
+    const r = await runFresh({ fips: "48453", topics: ["economy", "hazards"] }).reply;
+    const items = allItems(r) as Fresh[];
+    const by = (fact: string) => items.find((i) => i.fact.startsWith(fact))!;
+    expect(by("typical home value").cadence).toEqual({ kind: "monthly", precision: "approximate", source: "zillow-zhvi" });
+    expect(by("U.S. Drought Monitor this week").cadence).toEqual({ kind: "weekly", precision: "official", source: "usdm" });
+    expect(by("FEMA NRI overall risk rating").cadence).toBeNull();
+    expect(by("FEMA declaration").cadence).toBeNull();
+    // every item says one or the other; a null is only ever a publisher the calendar has no entry for
+    for (const i of items) {
+      expect("cadence" in i, `${i.sourceId}: ${i.fact}`).toBe(true);
+      if (i.cadence === null) expect(findEntry(i.sourceId), `${i.sourceId} has a calendar entry, so cadence cannot be null`).toBeUndefined();
+    }
+    // no calendar given (stdio, and every older caller): no claim either way
+    const bare = await runFresh({ fips: "48453", topics: ["economy", "hazards"] }, {}, { lookup: null }).reply;
+    for (const i of allItems(bare)) expect("cadence" in i, `${i.sourceId}: ${i.fact}`).toBe(false);
+    expect(staleOf(bare)).toEqual([]);
+  });
+
+  it("the reply's note says once what snapshotAt, a null cadence and stale mean", async () => {
+    const r = await runFresh(ECONOMY).reply;
+    const note = String(r.payload.note);
+    expect(note).toMatch(/snapshotAt/);
+    expect(note).toMatch(/cadence is null/);
+    expect(note).toMatch(/release calendar/);
+    expect(note).toMatch(/stale/);
+  });
+
+  describe("the published outputSchema", () => {
+    type Pay = { topics: Record<string, { items: Array<Record<string, unknown>>; missing?: Array<Record<string, unknown>> }> };
+    const pay = async (): Promise<Pay> => structuredClone((await runFresh(ECONOMY, { "/api/screen?kind=county": screenAt({ "bls-qcew": iso(171) }) }).reply).payload) as unknown as Pay;
+
+    it("accepts a stale entry, a date or a datetime snapshotAt, a cadence and a null of either", async () => {
+      const p = await pay();
+      expect(p.topics.economy.missing!.some((m) => m.code === "stale")).toBe(true);
+      expect(validateWorld(p).errorMessage).toBeUndefined();
+      const first = p.topics.economy.items[0];
+      first.snapshotAt = "2026-10-01";
+      expect(validateWorld(p).errorMessage, "a bare date").toBeUndefined();
+      first.snapshotAt = null;
+      first.note = "no snapshot date: a test";
+      first.cadence = null;
+      expect(validateWorld(p).errorMessage, "both null, with a note").toBeUndefined();
+    });
+
+    it("rejects a cadence of an unknown kind or precision or without its entry id, and a snapshotAt that is not a date", async () => {
+      const p = await pay();
+      const first = p.topics.economy.items[0];
+      for (const bad of [{ kind: "hourly", precision: "approximate", source: "x" }, { kind: "monthly", precision: "exact", source: "x" }, { kind: "monthly", precision: "approximate" }]) {
+        first.cadence = bad;
+        const v = validateWorld(p);
+        expect(v.valid, JSON.stringify(bad)).toBe(false);
+        expect(v.errorMessage).toContain("cadence");
+      }
+      first.cadence = null;
+      for (const bad of ["yesterday", "2026-10-01T00:00:00+00:00", 20261001]) {
+        first.snapshotAt = bad;
+        const v = validateWorld(p);
+        expect(v.valid, JSON.stringify(bad)).toBe(false);
+        expect(v.errorMessage).toContain("snapshotAt");
+      }
+    });
+
+    it("rejects a null snapshotAt with no note, the way it rejects a null value with none", async () => {
+      const p = await pay();
+      const first = p.topics.economy.items[0];
+      first.snapshotAt = null;
+      delete first.note;
+      const v = validateWorld(p);
+      expect(v.valid).toBe(false);
+      expect(v.errorMessage).toContain("note");
+    });
+
+    it("rejects a stale entry whose action is not none", async () => {
+      const p = await pay();
+      const entry = p.topics.economy.missing!.find((m) => m.code === "stale")!;
+      entry.action = "retry";
+      expect(validateWorld(p).valid).toBe(false);
+    });
   });
 });
