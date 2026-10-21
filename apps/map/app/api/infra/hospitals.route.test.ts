@@ -10,6 +10,7 @@ import box from "@/lib/infra/fixtures/hosp-box-austin.json";
 import ri0 from "@/lib/infra/fixtures/hosp-national-ri-p0.json";
 import ri1 from "@/lib/infra/fixtures/hosp-national-ri-p1.json";
 import ri2 from "@/lib/infra/fixtures/hosp-national-ri-p2.json";
+import committedBake from "@/lib/infra/data/cms-hospitals.json";
 
 vi.mock("@/lib/server/cache", () => ({
   cached: async <T,>(_k: string, _ttl: number, produce: () => Promise<T>) => ({ value: await produce(), age: 0, hit: false }),
@@ -34,7 +35,7 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
-type Body = { data: { features?: Array<{ properties: { id: string; details: Record<string, string> } }>; columns?: string[]; rows?: unknown[][] }; national: boolean; status: string; count: number; truncated: boolean; caveats: string[]; provenance: Array<{ source: { id: string } }> };
+type Body = { data: { features?: Array<{ properties: { id: string; details: Record<string, string> } }>; columns?: string[]; rows?: unknown[][] }; national: boolean; status: string; count: number; truncated: boolean; caveats: string[]; provenance: Array<{ source: { id: string }; period?: string }> };
 async function get(qs: string) {
   const res = await GET(new NextRequest(`http://localhost/api/infra?${qs}`));
   return { status: res.status, body: (await res.json()) as Body };
@@ -73,6 +74,16 @@ describe("op=hospitals", () => {
     expect(body.caveats.join(" ")).toMatch(/a match whose HIFLD name or type marks a tenant of another hospital is refused/);
     expect(body.caveats.join(" ")).not.toMatch(/never gets its host's rating/);
     expect(calls).toHaveLength(1);
+  });
+
+  it("the CMS provenance period is the sentence world_context reads, with the date of the committed bake (meta.cmsModified), not a second typed copy of it", async () => {
+    answer = (u) => (u.startsWith(H) ? box : null);
+    const { body } = await get("op=hospitals&bbox=-97.8,30.2,-97.65,30.4");
+    const cms = body.provenance.find((p) => p.source.id === "cms-provider-data")!;
+    const modified = (committedBake as unknown as { meta: { cmsModified: string } }).meta.cmsModified;
+    expect(modified).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(cms.period).toMatch(/^dataset modified \d{4}-\d{2}-\d{2}$/);
+    expect(cms.period).toBe(`dataset modified ${modified}`);
   });
 
   it("a wide box: every hospital nationally with the short record, paged until FEMA says the answer is whole", async () => {
