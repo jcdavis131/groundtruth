@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "record/1",
+  "id": "nba:fixture-1",
+  "collection": "athletes",
+  "layer": "athletes",
+  "name": "Athlete nba:fixture-1",
+  "nameRule": "label-by-id",
+  "kind": "NBA",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -97.7431,
+      30.2672
+    ]
+  },
+  "place": {
+    "stateFips": "48",
+    "stateUsps": "TX",
+    "method": "name-lookup"
+  },
+  "details": {
+    "league": "NBA",
+    "team": "Fixture City Testers",
+    "team city": "Fixture City",
+    "arena": "Fixture Arena",
+    "season": "2025-26",
+    "school": "Fixture State University",
+    "birth city": "Fixture Town",
+    "birth region": "Fixture Region",
+    "birth country": "Fixture Country",
+    "mascot": "Fixture the Tester"
+  },
+  "provenance": {
+    "sourceId": "test-fixture",
+    "sourceName": "Test fixture, not a real record",
+    "publisher": "groundtruth test fixture (data/schema/fixtures/person)",
+    "licence": "none: a test fixture with no upstream",
+    "upstreamUrl": "https://github.com/jcdavis131/groundtruth/blob/master/data/athletes/fixtures/athlete.fixture.json",
+    "retrievedAt": "2026-10-20T00:00:00.000Z",
+    "kind": "snapshot",
+    "notes": [
+      "Fictional athlete, team, arena, school and birthplace, in the style of data/athletes/fixtures/athlete.fixture.json. The point is arbitrary and names no arena. Labelled by id because athletes are not in PUBLIC_NAME_COLLECTIONS."
+    ]
+  },
+  "snapshotId": "athletes.fixture.2026-10-20"
+}

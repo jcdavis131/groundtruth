@@ -16,6 +16,7 @@ const SCHOOL = "record/valid/nces-public-schools.austin-east.json";
 const HISTORIC = "record/valid/nrhp-listed.austin-east.json";
 const PRIVATE_DAM = "record/valid/nid-dams.texas-private.json";
 const PUBLIC_DAM = "record/valid/nid-dams.texas-public.json";
+const ATHLETE = "person/athletes.fixture.json"; // fictional, in a person-typed collection (person-fields.json)
 const MANIFEST = "snapshots/nrhp-listed.austin-east.2026-10-18/manifest.json";
 
 /**
@@ -109,6 +110,10 @@ export const CASES = {
       expect: { code: "snapshot", path: "/snapshotId" },
       mutate: (r) => void (r.snapshotId = r.snapshotId.replace(/^[^.]+/, "nrhp-listed")),
     },
+    // A person-typed collection (person-fields.json) never carries a birth date, a home address, or any field off its list.
+    { name: "person-birth-date", base: ATHLETE, expect: { code: "person-fields", path: "/details/birth_date" }, mutate: (r) => void (r.details.birth_date = "2000-01-01") },
+    { name: "person-home-address", base: ATHLETE, expect: { code: "person-fields", path: "/details/home address" }, mutate: (r) => void (r.details["home address"] = "1 Fixture Lane") },
+    { name: "person-field-off-list", base: ATHLETE, expect: { code: "person-fields", path: "/details/mascot" }, mutate: (r) => void (r.details.mascot = "Fixture the Tester") },
     // eye's HUD source string is not a record field: provenance carries the source.
     { name: "unknown-field", base: HISTORIC, expect: { code: "additional", path: "/source" }, mutate: (r) => void (r.source = "NPS National Register") },
   ],
