@@ -415,10 +415,10 @@ check(threw, "an unsupported schema keyword is an error, not ignored");
 for (const [n, s] of [["record", RECORD_SCHEMA], ["manifest", MANIFEST_SCHEMA]])
   check(s.$schema === "https://json-schema.org/draft/2020-12/schema", `${n}.schema.json declares JSON Schema 2020-12`);
 
-// The cadence table, the weekly freshness line and the changelog rule each have a test file of their own. They run
-// from here so the data.yml "schema and fixture tests" step covers them, the way scripts/guard.test.mjs runs
-// scripts/prereg-check.test.mjs. A failing file shows its FAIL lines below.
-for (const file of ["cadence.test.mjs", "freshness.test.mjs", "changelog.test.mjs"]) {
+// The cadence table, the weekly freshness line, the changelog rule and the licences table each have a test file of
+// their own. They run from here so the data.yml "schema and fixture tests" step covers them, the way
+// scripts/guard.test.mjs runs scripts/prereg-check.test.mjs. A failing file shows its FAIL lines below.
+for (const file of ["cadence.test.mjs", "freshness.test.mjs", "changelog.test.mjs", "licenses.test.mjs"]) {
   const r = spawnSync(process.execPath, [path.join(HERE, file)], { encoding: "utf8" });
   const fails = `${r.stdout}${r.stderr}`.split("\n").filter((l) => /^FAIL|^\s+\S|passed, \d+ failed/.test(l) && !/ExperimentalWarning|trace-warnings/.test(l));
   check(r.status === 0, `${file} passes`, fails.slice(0, 60).join("\n      "));
