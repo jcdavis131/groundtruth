@@ -8,6 +8,9 @@
 // What it reads: a small lexer that knows line and block comments, quoted strings, template literals (with their
 // ${...} parts) and regex literals, so a brace or a quote inside text cannot hide an entry or move its edges. It
 // finds each `kind: "published"` property, the object literal around it, and that object's top-level properties.
+// What follows the closing quote, past whitespace and comments, decides entry or type (afterValue() below): a comma, a
+// closing brace, `as`, `as const`, `satisfies T`, `||` or `&&` is an entry (the last two refused by judgeSite, since the
+// value is whatever the expression gives); a lone `|` or `&`, a `;` or the next interface member is a type.
 // What it cannot see, and the test says so: a published entry built by spreading another object (`...base`), a kind
 // held in a variable, and a method that is not a literal (reported as methodIsDynamic, which the test refuses).
 // Relative imports only, so a plain-Node script can load it (scripts/cite-load.mjs registers the resolve hook).
@@ -26,6 +29,8 @@ export interface PublishedSite {
   methodIsDynamic: boolean;
   /** The object names `inputs`: an entry that says what it was computed from. */
   hasInputs: boolean;
+  /** The value continues as an expression (`kind: "published" || "estimate"`, `&& x`): what it labels is whatever that gives, not the literal. */
+  kindIsExpression: boolean;
 }
 
 export interface SourceScan {
@@ -47,8 +52,9 @@ interface Hit {
   /** Index of the `{` of the innermost brace around it, or -1. */
   object: number;
   /**
-   * The first character after the string that is neither whitespace nor part of a comment, or "as" when a type
-   * assertion (`as const`, `as T`, `satisfies T`) follows: only an expression can carry one, so the string is a value.
+   * The first character after the string that is neither whitespace nor part of a comment, "as" when a type
+   * assertion (`as const`, `as T`, `satisfies T`) follows, or "expr" when `||` or `&&` follows: only an expression can
+   * carry any of those, so the string is a value.
    */
   after: string;
 }
@@ -68,9 +74,12 @@ const ASSERTION = /^(?:as|satisfies)\b(?!\s*[:?])/;
 
 /**
  * What follows the value that ends at index k: the first character past whitespace and line and block comments, or
- * "as" when a type assertion follows. `kind: "published" as const,`, `kind: "published" satisfies Kind,` and a last
- * property with a trailing comment (`kind: "published" // note` then `}`) are entries; reading only the next
- * character filed all three as type members, where nothing judges them.
+ * "as" when a type assertion follows, or "expr" when `||` or `&&` follows. `kind: "published" as const,`,
+ * `kind: "published" satisfies Kind,` and a last property with a trailing comment (`kind: "published" // note` then
+ * `}`) are entries; reading only the next character filed all three as type members, where nothing judges them.
+ * `|` and `&` alone are a union and an intersection (a type); doubled they are expressions. So `kind: "published" ||
+ * "estimate",` is an entry (tsc accepts it, and the type stays "published"); the raw-text check in
+ * provenance-kinds.test.ts must not take the doubled form for a type either.
  */
 function afterValue(src: string, from: number): string {
   const n = src.length;
@@ -86,6 +95,7 @@ function afterValue(src: string, from: number): string {
     } else break;
   }
   if (k >= n) return "";
+  if ((src[k] === "|" || src[k] === "&") && src[k + 1] === src[k]) return "expr";
   return ASSERTION.test(src.slice(k, k + 12)) ? "as" : src[k];
 }
 
@@ -301,7 +311,7 @@ export function scanSource(src: string, file = ""): SourceScan {
   const { objects, hits } = lex(src);
   const out: SourceScan = { sites: [], typeMembers: 0 };
   for (const h of hits) {
-    if (h.after !== "," && h.after !== "}" && h.after !== "as") {
+    if (h.after !== "," && h.after !== "}" && h.after !== "as" && h.after !== "expr") {
       out.typeMembers++;
       continue;
     }
@@ -324,13 +334,14 @@ export function scanSource(src: string, file = ""): SourceScan {
     }
     const before = src.slice(Math.max(0, h.object - 120), h.object);
     const sid = /source\(\s*["'`]([^"'`]+)["'`]\s*\)\s*,\s*$/.exec(before);
-    out.sites.push({ file, line: src.slice(0, h.at).split("\n").length, sourceId: sid ? sid[1] : null, method, methodIsDynamic, hasInputs });
+    out.sites.push({ file, line: src.slice(0, h.at).split("\n").length, sourceId: sid ? sid[1] : null, method, methodIsDynamic, hasInputs, kindIsExpression: h.after === "expr" });
   }
   return out;
 }
 
 /** Why a published site breaks the rule ("published = relayed as-is"), or null when it does not. */
 export function judgeSite(s: PublishedSite): string | null {
+  if (s.kindIsExpression) return "its kind is an expression (|| or && after the literal), so what it labels is whatever that gives, not the literal published";
   if (s.hasInputs) return "it names inputs, so it was computed from them and is not relayed as-is";
   if (s.methodIsDynamic) return "its method is not a literal, so the words in it cannot be read";
   if (s.method !== null && COMPUTED_METHOD.test(s.method)) return `its method says it was computed here: "${s.method.replace(/\s+/g, " ").slice(0, 110)}"`;

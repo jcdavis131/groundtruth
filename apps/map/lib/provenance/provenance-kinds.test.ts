@@ -22,6 +22,17 @@ import { judgeSite, literalText, scanSource, type PublishedSite, type SourceScan
 // form are below. Still not seen, and said so in docs/MCP.md: a spread, a kind held in a variable, a quoted key
 // ("kind": "published"), a parenthesised or backticked value, a ternary, and a method written `"..." as const` (read as
 // not a literal, so refused).
+//
+// Round 3 (review of aa34a59). One residual of the same class: `kind: "published" || "estimate",` and `&&` were filed
+// as a type member by the lexer (it returned the `|` or `&`) and counted type-like by writtenPublished() below (it
+// took any `|` or `&` for a union or an intersection), so entries 0 / type members 1 / misread null: balanced and
+// unjudged, and tsc accepts both (the type stays "published"; eslint-config-next does not enable
+// no-constant-binary-expression). Now `||` and `&&` are an expression: the lexer files an entry with kindIsExpression,
+// judgeSite refuses it, and writtenPublished() counts `|` and `&` as a type position only when the next character is
+// not the same. Refused on purpose, not judged: `as const` or `satisfies T` on the line after the value is a clean entry
+// that writtenPublished() reads as the next interface member, so the file is refused (none in the tree). Shared with
+// the forms above and not covered: `| 0`, `& 1` and a newline then `in obj` after the value read as types to both
+// readings; tsc refuses them (reported by the round-2 reviewer; tsc is not run on them here).
 
 const MAP = fileURLToPath(new URL("../../", import.meta.url));
 
@@ -55,6 +66,15 @@ describe("the scanner, on planted source", () => {
       const [site] = sitesIn(entry(JSON.stringify(m)));
       expect(judgeSite(site), m).toBeNull();
     }
+  });
+
+  it("also flags a relayed method whose prose merely uses the word (a false positive: fail closed, and the reviewed list below is where it goes)", () => {
+    // `counts?` and `changes?` are words a publisher's own description uses too; the rule cannot tell, so it refuses and a reviewer lists the entry
+    for (const m of ["the station count the publisher lists, relayed as is", "the publisher changes this list each release; relayed as is"]) {
+      expect(judgeSite(sitesIn(entry(JSON.stringify(m)))[0]), m).toMatch(/its method says it was computed here/);
+    }
+    // the one reviewed exception is such a case: BLS publishes the over-the-year percent change itself
+    expect(COMPUTED_METHOD.test("changePct is BLS's published over-the-year percent change")).toBe(true);
   });
 
   it("an entry with no method, or an estimate or a snapshot that says it computed, is not a finding", () => {
@@ -172,8 +192,9 @@ describe("the scanner, on a published value followed by something other than a c
 
 /**
  * `kind: "published"` written as code in one source text, and how many of those read as a type there: followed, past
- * whitespace and comments, by `|`, `&` or `;`, or by the next member of an interface on a later line. This does not use
- * the lexer, so it can check the lexer's classification instead of repeating it.
+ * whitespace and comments, by `|` or `&` (alone: `||` and `&&` are expressions) or `;`, or by the next member of an
+ * interface on a later line. This does not use the lexer, so it can check the lexer's classification instead of
+ * repeating it.
  */
 function writtenPublished(src: string): { all: number; typeLike: number } {
   // a match on a comment line is not code
@@ -198,7 +219,9 @@ function writtenPublished(src: string): { all: number; typeLike: number } {
       } else break;
     }
     const ch = k < code.length ? code[k] : "";
-    if (ch !== "" && ("|&;".includes(ch) || (newline && /[A-Za-z_$]/.test(ch)))) typeLike++;
+    // `|` and `&` are a union and an intersection only alone; `||` and `&&` are expressions (tsc accepts them after a string)
+    const typeOperator = (ch === "|" || ch === "&") && code[k + 1] !== ch;
+    if (ch !== "" && (typeOperator || ch === ";" || (newline && /[A-Za-z_$]/.test(ch)))) typeLike++;
   }
   return { all, typeLike };
 }
@@ -213,15 +236,17 @@ function misread(src: string, scan: SourceScan): string | null {
 
 describe("the loses-none check does not trust the lexer's own classification", () => {
   it("a form filed as a type member that is not written like a type is refused, whatever the lexer made of it", () => {
-    // what 7fdac06's lexer did with each of these: no entry, one type member, and raw == entries + type members balanced
-    for (const line of ['kind: "published" as const,', 'kind: "published" satisfies Kind,', 'kind: "published" // note']) {
+    // what 7fdac06's lexer did with each of the first three, and aa34a59's with the last two: no entry, one type member,
+    // and raw == entries + type members balanced. The scan is handed in, so this holds whatever the lexer does today.
+    for (const line of ['kind: "published" as const,', 'kind: "published" satisfies Kind,', 'kind: "published" // note', 'kind: "published" || "estimate",', 'kind: "published" && "published",']) {
       const src = `export const a = provenance(source("x"), {\n  method: "sum of rows",\n  ${line}\n});`;
       expect(misread(src, { sites: [], typeMembers: 1 }), line).toMatch(/1 read as type members, but 0 sit where a type is written/);
     }
   });
 
   it("a form the lexer cannot place is filed as a type member and refused by the check, not passed", () => {
-    for (const line of ['kind: "published".toString(),', 'kind: "published" + "",', 'kind: "published" ?? "x",', 'kind: "published"!,', 'kind: "published" || "estimate",', 'kind: "published" && "published",']) {
+    // `||` and `&&` were on this list in the red commit 6ee0cfa; the lexer now reads them as entries, tested below
+    for (const line of ['kind: "published".toString(),', 'kind: "published" + "",', 'kind: "published" ?? "x",', 'kind: "published"!,']) {
       const src = `export const a = provenance(source("x"), {\n  method: "sum of rows",\n  ${line}\n});`;
       const scan = scanSource(src, "planted.ts");
       expect(scan.sites, line).toEqual([]);
@@ -240,6 +265,52 @@ describe("the loses-none check does not trust the lexer's own classification", (
 
   it("a written kind the lexer never saw is still counted as lost", () => {
     expect(misread('const a = { kind: "published", method: "x" };', { sites: [], typeMembers: 0 })).toMatch(/1 written, 0 entries and 0 type members read/);
+  });
+});
+
+describe("a published value that continues as an expression, and the forms this check refuses on purpose", () => {
+  /** An object literal with a clean method, so any refusal below comes from the kind alone. */
+  const wrap = (lines: string[]) => `export const a = provenance(source("x"), {\n${lines.map((l) => `  ${l}`).join("\n")}\n});\n`;
+  const CLEAN = 'method: "as published",';
+
+  it("kind: \"published\" || \"estimate\", and && are entries whose kind is an expression, and judgeSite refuses them", () => {
+    for (const line of ['kind: "published" || "estimate",', 'kind: "published" && "published",', 'kind: "published"||"estimate",', 'kind: "published" /* c */ && "published",']) {
+      const src = wrap([CLEAN, line]);
+      const scan = scanSource(src, "planted.ts");
+      expect(scan.typeMembers, line).toBe(0);
+      expect(scan.sites, line).toHaveLength(1);
+      expect(scan.sites[0].kindIsExpression, line).toBe(true);
+      expect(judgeSite(scan.sites[0]), line).toMatch(/its kind is an expression/);
+      // both readings agree it is not a type: one entry, no type member, and nothing written like a type
+      expect(misread(src, scan), line).toBeNull();
+    }
+  });
+
+  it("a plain entry, as const and satisfies are not expressions; a union or an intersection is still a type", () => {
+    for (const line of ['kind: "published",', 'kind: "published" as const,', 'kind: "published" satisfies Kind,']) {
+      const [site, ...rest] = scanSource(wrap([CLEAN, line]), "planted.ts").sites;
+      expect(rest, line).toEqual([]);
+      expect(site.kindIsExpression, line).toBe(false);
+      expect(judgeSite(site), line).toBeNull();
+    }
+    for (const src of ['export interface P {\n  kind: "published" | "estimate";\n}', 'export type K = { kind: "published"|"estimate" };', 'export type K = { kind: "published" & Tagged };', 'export type K = {\n  kind: "published"\n    | "estimate";\n};']) {
+      const scan = scanSource(src, "planted.ts");
+      expect(scan.sites, src).toEqual([]);
+      expect(scan.typeMembers, src).toBe(1);
+      expect(misread(src, scan), src).toBeNull();
+    }
+  });
+
+  it("as const or satisfies on the line after the value is a clean entry that the raw-text check refuses (fail closed)", () => {
+    for (const next of ["as const,", "satisfies Kind,"]) {
+      const src = wrap(["kind: \"published\"", next, CLEAN]);
+      const scan = scanSource(src, "planted.ts");
+      expect(scan.typeMembers, next).toBe(0);
+      expect(scan.sites, next).toHaveLength(1);
+      expect(judgeSite(scan.sites[0]), next).toBeNull();
+      // the raw text reads the next line's first word as the next interface member, so the two readings disagree and the file is refused
+      expect(misread(src, scan), next).toMatch(/0 read as type members, but 1 sit where a type is written/);
+    }
   });
 });
 
