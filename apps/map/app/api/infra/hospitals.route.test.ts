@@ -35,7 +35,7 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
-type Body = { data: { features?: Array<{ properties: { id: string; details: Record<string, string> } }>; columns?: string[]; rows?: unknown[][] }; national: boolean; status: string; count: number; truncated: boolean; caveats: string[]; provenance: Array<{ source: { id: string }; period?: string }> };
+type Body = { data: { features?: Array<{ properties: { id: string; details: Record<string, string> } }>; columns?: string[]; rows?: unknown[][] }; national: boolean; status: string; count: number; truncated: boolean; caveats: string[]; provenance: Array<{ source: { id: string }; period?: string; retrievedAt?: string }> };
 async function get(qs: string) {
   const res = await GET(new NextRequest(`http://localhost/api/infra?${qs}`));
   return { status: res.status, body: (await res.json()) as Body };
@@ -84,6 +84,18 @@ describe("op=hospitals", () => {
     expect(modified).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(cms.period).toMatch(/^dataset modified \d{4}-\d{2}-\d{2}$/);
     expect(cms.period).toBe(`dataset modified ${modified}`);
+  });
+
+  // For the committed bake, whichever the file records: its own build time where it has one, else the typed literal. The
+  // committed file has none today (baked 2026-10-17 and 2026-10-18, hour unrecorded), so this is the literal; a re-bake
+  // that writes meta.builtAt moves the reply with it and this case stays green. The mocked bakes that show the
+  // derivation are in hospitals.cms-period.route.test.ts.
+  it("the CMS provenance retrievedAt is the committed bake's build time where it records one, else the typed 2026-10-17 literal", async () => {
+    answer = (u) => (u.startsWith(H) ? box : null);
+    const { body } = await get("op=hospitals&bbox=-97.8,30.2,-97.65,30.4");
+    const cms = body.provenance.find((p) => p.source.id === "cms-provider-data")!;
+    const builtAt = (committedBake as unknown as { meta: { builtAt?: string } }).meta.builtAt;
+    expect(cms.retrievedAt).toBe(builtAt ?? "2026-10-17T00:00:00.000Z");
   });
 
   it("a wide box: every hospital nationally with the short record, paged until FEMA says the answer is whole", async () => {

@@ -158,6 +158,12 @@ export interface CmsBake {
     unattachedByCmsType: Record<string, number>;
     ratings: Record<string, number>;
     sha256: { cms: string | null; hifld: string | null };
+    /**
+     * When scripts/bake-cms-hospitals.mjs wrote this file after reading the answers (ISO 8601 UTC). Absent from a bake
+     * that predates the field, and from a rebuild from saved answers that was not told when they were read: the key is
+     * omitted, never null, never a guess.
+     */
+    builtAt?: string;
     generatedBy: string;
   };
   columns: typeof CMS_COLUMNS;
@@ -246,7 +252,7 @@ export function cmsRating(v: unknown): number | null {
 export function bakeCms(
   cms: readonly CmsRow[],
   hifld: readonly HifldJoinRow[],
-  info: { cmsModified: string | null; hifldDataLastEdit: string | null; sha256?: { cms: string | null; hifld: string | null } },
+  info: { cmsModified: string | null; hifldDataLastEdit: string | null; sha256?: { cms: string | null; hifld: string | null }; builtAt?: string | null },
 ): CmsBake {
   const ci = new Map<string, CmsRow[]>();
   const hi = new Map<string, HifldJoinRow[]>();
@@ -360,6 +366,7 @@ export function bakeCms(
       unattachedByCmsType: sortKeys(unattached),
       ratings: sortKeys(ratings),
       sha256: info.sha256 ?? { cms: null, hifld: null },
+      ...(info.builtAt ? { builtAt: info.builtAt } : {}),
       generatedBy: "scripts/bake-cms-hospitals.mjs",
     },
     columns: CMS_COLUMNS,

@@ -481,15 +481,26 @@ async function opHospitals(bbox: Bbox, status: HospitalStatus): Promise<OpResult
     async () => {
       const f = await boxQuery(box, { name: "hifld-hospitals", url: HOSPITALS_URL, gate: HOSPITALS_GATE.gate, where: hospitalWhere(status), outFields: HOSPITAL_FIELDS.join(","), orderBy: "FID" });
       const cms = await cmsBake();
-      return { features: buildHospitals(f.features as Row[], false, { rows: cms.rows, modified: cms.meta.cmsModified }), truncated: truncated(f), cmsModified: cms.meta.cmsModified };
+      return { features: buildHospitals(f.features as Row[], false, { rows: cms.rows, modified: cms.meta.cmsModified }), truncated: truncated(f), cmsModified: cms.meta.cmsModified, cmsBuiltAt: cms.meta.builtAt ?? null };
     },
     INFRA_DEADLINE,
   );
-  return hospitalsResult(fc(r.value.features), r.value.features.length, r.value.truncated, r.age, false, box, status, r.value.cmsModified);
+  return hospitalsResult(fc(r.value.features), r.value.features.length, r.value.truncated, r.age, false, box, status, r.value.cmsModified, r.value.cmsBuiltAt);
 }
 
-/** `cmsModified` is the baked join's own meta.cmsModified (box tier only); the CMS provenance period is built from it, never typed beside it. */
-function hospitalsResult(data: unknown, count: number, cut: boolean, age: number, national: boolean, box: Bbox, status: HospitalStatus, cmsModified: string | null = null): OpResult {
+/**
+ * The CMS entry's retrievedAt where the committed bake records no meta.builtAt: the day of the first bake (2026-10-17;
+ * re-baked 2026-10-18, hour unrecorded by either). The committed bake has no builtAt, so this is what the route sends until a
+ * re-bake writes one; from then on retrievedAt is that bake's own build time and this literal is not read.
+ */
+const CMS_RETRIEVED_FALLBACK = "2026-10-17T00:00:00.000Z";
+
+/**
+ * `cmsModified` and `cmsBuiltAt` are the baked join's own meta.cmsModified and meta.builtAt (box tier only): the CMS
+ * provenance period is built from the first, never typed beside it, and the entry's retrievedAt is the second where the bake
+ * records one (CMS_RETRIEVED_FALLBACK where it does not).
+ */
+function hospitalsResult(data: unknown, count: number, cut: boolean, age: number, national: boolean, box: Bbox, status: HospitalStatus, cmsModified: string | null = null, cmsBuiltAt: string | null = null): OpResult {
   const caveats = [
     HOSPITALS_CAVEAT,
     "Beds and trauma levels are as published; -999 beds and 'NOT AVAILABLE' are shown as not published, never 0. Names and addresses are institutions' as their licensing sources publish them; no telephone, staff or patient field is requested.",
@@ -520,7 +531,7 @@ function hospitalsResult(data: unknown, count: number, cut: boolean, age: number
               seriesId: "Hospital General Information (xubh-q36u): hospital_overall_rating and its footnote, hospital_type, hospital_ownership, emergency_services, birthing-friendly; joined to HIFLD by street address + ZIP, one to one only, exactly or in a second pass with a PO box or drawer removed, ordinal street words as numbers and U S as US (lib/infra/data/cms-hospitals.json)",
               upstreamUrl: CMS_QUERY,
               ...(cmsModified ? { period: `dataset modified ${cmsModified}` } : {}),
-              retrievedAt: "2026-10-17T00:00:00.000Z",
+              retrievedAt: cmsBuiltAt ?? CMS_RETRIEVED_FALLBACK,
               method: "baked by scripts/bake-cms-hospitals.mjs; a key shared by two hospitals on either side is never attached, and a match whose HIFLD name or type marks a tenant of another hospital is refused (tenantConflict)",
               notes: ["Centers for Medicare & Medicaid Services, Care Compare (Hospital General Information); no licence stated"],
             }),
