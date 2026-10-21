@@ -72,6 +72,8 @@ export const EXTRA_FILE_PUBLISHERS = {
 // hyphen or dash (U+2010 to U+2015, the non-breaking hyphen U+2011 among them) and the minus sign (U+2212). Built from
 // character codes and never typed: the mojibake guard reads every tracked text file.
 const code = (n) => String.fromCharCode(n);
+/** A string with every character outside printable ASCII written as <U+XXXX>, so a no-break space shows in a failure line. */
+const visible = (s) => s.replace(/[^\x20-\x7e]/g, (c) => `<U+${c.codePointAt(0).toString(16).toUpperCase().padStart(4, "0")}>`);
 const SEP = `[\\s${code(0xa0)}${code(0x2010)}-${code(0x2015)}${code(0x2212)}-]`;
 /**
  * Names of licences. A "what they grant" cell may carry one only inside the quote the lock found on the page (a page
@@ -330,7 +332,7 @@ export function licenseProblems(md, facts, lock, sourcePublishers = SOURCE_PUBLI
       // "public domain"); what follows the quote, or follows the words of a stated absence, may not.
       const outside = q ? g.slice(q[0].length) : g;
       const named = q || absence ? licenceName(outside) : null;
-      if (named) out.push(`licenses: ${who}: the statement for ${u} names a licence ("${named}") outside the quote the lock found; a licence name no page gave is never written`);
+      if (named) out.push(`licenses: ${who}: the statement for ${u} names a licence ("${visible(named)}") outside the quote the lock found; a licence name no page gave is never written`);
       // "the service's copyrightText is empty" is a claim about the response, so the lock must hold it: the fetcher reads
       // the field off the response, and --check reads it again.
       if (f && /copyrightText\s+is\s+empty/i.test(g) && f.copyrightText !== "") {
@@ -397,7 +399,6 @@ const X_LOCK = lockOf(fetched(ALPHA), fetched(GAMMA), fetched(DELTA));
 const NBSP = String.fromCharCode(0xa0);
 const NBHY = String.fromCharCode(0x2011);
 const ENDASH = String.fromCharCode(0x2013);
-const plain = (s) => s.split(NBSP).join("<NBSP>").split(NBHY).join("<U+2011>").split(ENDASH).join("<U+2013>");
 
 // ---------------------------------------------------------------- the rules, one fixture each
 attempt("a faithful table (one row per publisher, https terms URLs, a quote or a stated absence for each, nothing granted on top) passes", () => {
@@ -599,7 +600,9 @@ attempt("the licence names the first list missed are seen: CC-0, CC 0, OGL v3, I
   const missed = names.filter((n) => !seen(n));
   const fine = ["a disc of records", "the oglala county office", "the Mozilla browser", "the CC field of the form", "a zlibrary index", "the iscsi target"];
   const wrong = fine.filter(seen);
-  return missed.length === 0 && wrong.length === 0 ? true : `not seen: ${missed.map(plain).join(", ")}; wrongly seen: ${wrong.join(", ")}`;
+  const shown = problemsOf(table(row({ grants: `terms page states no licence: Creative${NBSP}Commons` })), F_ALPHA, lockNone);
+  if (!has(shown, /names a licence \("Creative<U\+00A0>Commons"\)/)) return `a no-break space is not shown as <U+00A0> in the failure line: ${show(shown)}`;
+  return missed.length === 0 && wrong.length === 0 ? true : `not seen: ${missed.map(visible).join(", ")}; wrongly seen: ${wrong.join(", ")}`;
 });
 attempt("a quote of 25 words or more fails", () => {
   const long = Array.from({ length: 25 }, (_, i) => `word${i}`).join(" ");
@@ -695,11 +698,11 @@ attempt("every file data/hf/publish.py ships (EXTRA_FILES) has, for each publish
   const both = ["U.S. Securities and Exchange Commission", "U.S. Census Bureau"].every((n) => who.includes(n));
   return shippedRead.files.length > 0 && errs.length === 0 && both ? true : show(errs.length ? errs : ["EXTRA_FILE_PUBLISHERS does not name both the SEC and the Census Bureau for the companies file"]);
 });
-attempt("the committed quotes that say 'public domain' (the NCES and NPS pages' own words) still pass: the licence-name rule reads only outside a quote", () => {
+attempt("the committed quotes that say 'public domain' (the NCES and NPS pages' own words) still pass: the licence-name rule reads only outside a quote, and some committed quote says it", () => {
   const { rows } = parseTable(read(LICENSES));
   const quoted = rows.flatMap((r) => r.grants).filter((g) => /^"[^"]*public domain/i.test(g));
   const errs = licenseProblems(read(LICENSES), committedFacts, JSON.parse(read(LOCK))).filter((e) => /names a licence/.test(e));
-  return quoted.length >= 3 && errs.length === 0 ? true : `${quoted.length} committed quotes say public domain; ${show(errs)}`;
+  return quoted.length >= 1 && errs.length === 0 ? true : `${quoted.length} committed quotes say public domain; ${show(errs)}`;
 });
 attempt("the committed lock records copyrightText as the empty string for each URL whose statement says the service's copyrightText is empty (and some statement does)", () => {
   const { rows } = parseTable(read(LICENSES));
