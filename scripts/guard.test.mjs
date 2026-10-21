@@ -293,7 +293,8 @@ const evalClean = repo({
 const rc = run(evalClean);
 check(rc.status === 0, `eval code, docs and look-alike names pass${rc.status ? ": " + rc.stdout.trim() : ""}`);
 
-// rules: a "Checked here" row of AGENTS.md's table must name a tracked path and an existing workflow file.
+// rules: a "Checked here" row of AGENTS.md's table must name at least one path, every path it names must be tracked,
+// and each workflow file it names must exist.
 const table = (...rows) =>
   "# Rules\n\n## Record rules and what enforces them\n\nProse mentioning `scripts/nope.mjs` and `.github/workflows/nope.yml` is not judged.\n\n| Rule | Enforced by | Status |\n|---|---|---|\n" +
   rows.map((r) => `| ${r.join(" | ")} |`).join("\n") + "\n\nAfter the table.\n";
@@ -315,7 +316,7 @@ check(rr5.status === 0, "a repo with no AGENTS.md is not judged");
 
 // rules, Tested rows: a row whose Status starts "Tested" (and says here) gets the path and workflow check and
 // nothing else. Every path-looking token it names must resolve to a tracked file, and it must name at least one;
-// it is not asked to name a mutant. A Checked row keeps its looser "at least one tracked path" reading.
+// it is not asked to name a mutant. A Checked row gets the same path reading (see "rules, Checked rows" below).
 const tested = (rule, by, status = "Tested here, no rule mutant yet") => [rule, by, status];
 const rt0 = run(repo({ ...base, "AGENTS.md": table(tested("Tested ok", "`scripts/a.mjs`, run by `.github/workflows/w.yml`")) }));
 check(rt0.status === 0, `a Tested row naming tracked paths and an existing workflow, and no mutant, passes${rt0.status ? ": " + rt0.stdout.trim() : ""}`);
@@ -357,9 +358,28 @@ const ro0 = run(repo({ ...base, "AGENTS.md": table(tested("In eye", "eye: `lib/s
 check(ro0.status === 0, "a row Tested elsewhere (in eye) is not judged against this repo");
 const ro1 = run(repo({ ...base, "AGENTS.md": table(tested("Not tested", "`scripts/missing.mjs`", "Review only")) }));
 check(ro1.status === 0, "a row that is neither Checked nor Tested is not judged");
-// The Checked reading is unchanged: some tracked path is enough, so a Checked row can still cite eye paths beside its own.
-const ro2 = run(repo({ ...base, "AGENTS.md": table(["Checked with eye", "eye: `lib/search/x.ts`. Here, `scripts/a.mjs`", "Checked here"]) }));
-check(ro2.status === 0, "a Checked row keeps its at-least-one-tracked-path reading");
+
+// rules, Checked rows: a row whose Status starts "Checked" and says here is read like a Tested row for paths.
+// Every path-looking word in its backticks must be tracked (a bare basename counts only when exactly one tracked
+// file carries it) and every workflow it names must exist. It is still asked to name a mutant, but by
+// scripts/rules-table.test.mjs, not by guard. eye's paths are written without backticks, so they are not read.
+const checked = (rule, by) => [rule, by, "Checked here"];
+const rk0 = run(repo({ ...base, "scripts/b.mjs": "// b\n", "AGENTS.md": table(checked("Both tracked", "`scripts/a.mjs`, `node scripts/b.mjs --flag`, run by `.github/workflows/w.yml`")) }));
+check(rk0.status === 0, `a Checked row naming only tracked paths passes${rk0.status ? ": " + rk0.stdout.trim() : ""}`);
+const rk1 = run(repo({ ...base, "AGENTS.md": table(checked("Half stale", "`scripts/a.mjs`, `scripts/stale.mjs`")) }));
+check(rk1.status === 1 && flags(rk1.stdout, "rules", "AGENTS.md:9") && /stale\.mjs/.test(rk1.stdout) && !/scripts\/a\.mjs/.test(rk1.stdout),
+  "a Checked row naming one tracked path and one untracked path fails, and names only the untracked one");
+const rk2 = run(repo({ ...base, "apps/dup.mjs": "// 1\n", "scripts/dup.mjs": "// 2\n", "AGENTS.md": table(checked("Dup", "`scripts/a.mjs`, `dup.mjs`")) }));
+check(rk2.status === 1 && flags(rk2.stdout, "rules", "AGENTS.md:9") && /apps\/dup\.mjs/.test(rk2.stdout) && /scripts\/dup\.mjs/.test(rk2.stdout),
+  "a Checked row with a bare basename that matches two tracked files fails and names both");
+const rk3 = run(repo({ ...base, "AGENTS.md": table(checked("No wf", "`scripts/a.mjs`, run by `.github/workflows/ghost.yml`")) }));
+check(rk3.status === 1 && flags(rk3.stdout, "rules", "AGENTS.md:9") && /workflow .*ghost\.yml/.test(rk3.stdout) && (rk3.stdout.match(/ghost\.yml/g) ?? []).length === 1,
+  "a Checked row naming a missing workflow fails, once");
+const rk4 = run(repo({ ...base, "AGENTS.md": table(checked("Checked with eye", "eye: lib/search/x.ts. Here, `scripts/a.mjs`")) }));
+check(rk4.status === 0, `a Checked row cites eye's paths without backticks beside its own and passes${rk4.status ? ": " + rk4.stdout.trim() : ""}`);
+const rk5 = run(repo({ ...base, "AGENTS.md": table(checked("Eye in backticks", "eye: `lib/search/x.ts`. Here, `scripts/a.mjs`")) }));
+check(rk5.status === 1 && flags(rk5.stdout, "rules", "AGENTS.md:9") && /lib\/search\/x\.ts/.test(rk5.stdout) && !/scripts\/a\.mjs/.test(rk5.stdout),
+  "a Checked row that puts an eye path in backticks fails, and names only that path");
 
 // angle: GitHub drops a bare tag it does not know from a table cell (a row holding <outdir> renders without it),
 // keeps <br>, and reads a code span only after it has split the row into cells on unescaped pipes. The rule judges

@@ -36,11 +36,12 @@
 //              the header marker the eval kit puts in its gold, key and split files. The sealed files live outside
 //              the repo until scoring is done (writeups PREREG-TEMPLATE rule 6); code such as eval/split.mjs is
 //              not flagged.
-//   rules      a "Checked here" row of AGENTS.md's rules table names no tracked path or a missing workflow file.
-//              A "Tested here" row is held to a stricter reading of the same thing: it names at least one path,
-//              every path it names is tracked, and every workflow it names exists. A bare basename (no directory)
-//              counts when it matches exactly one tracked file; two matches or none is a finding. No mutant is
-//              asked of a Tested row (scripts/rules-table.test.mjs reads Checked rows only).
+//   rules      a "Checked here" or "Tested here" row of AGENTS.md's rules table that names no path, names a path
+//              that is not tracked, or names a workflow that does not exist. Both kinds are read the same way:
+//              every path-looking word in the backticks of the Enforced-by cell is judged, and a path that is not
+//              in this repo (eye's) is written without backticks. A bare basename (no directory) counts when it
+//              matches exactly one tracked file; two matches or none is a finding. A mutant is asked of a Checked
+//              row only, and by scripts/rules-table.test.mjs, not here.
 //   angle      a bare tag-looking token (<word>, <word attr="x">, <word/>) in a table row of a tracked .md file. GitHub drops
 //              a tag it does not know from a cell (a row holding <outdir> renders without it) and keeps <br>. A row is a line
 //              whose first non-blank character is a pipe. The row is split into cells on unescaped pipes first, because
@@ -250,13 +251,14 @@ function pathWords(by) {
   return [...new Set(words.filter((w) => PATH_WORD.test(w) && (w.includes("/") || FILE_EXT.test(w))))];
 }
 
-// The findings for one "Tested here" row (without the "rules    AGENTS.md:N  " prefix): it must name at least
-// one path, and every path it names must resolve. A word with a directory resolves only to that exact tracked
-// path; a bare basename also resolves to the one tracked file of that name, and is a finding when two or none
-// carry it. A workflow, found by either route, must exist in the working tree.
-function testedFindings(label, by, root, tracked, byName) {
+// The findings for one "Checked here" or "Tested here" row (without the "rules    AGENTS.md:N  " prefix); kind
+// is the word its Status starts with. It must name at least one path, and every path it names must resolve. A
+// word with a directory resolves only to that exact tracked path; a bare basename also resolves to the one
+// tracked file of that name, and is a finding when two or none carry it. A workflow, found by either route,
+// must exist in the working tree.
+function pathFindings(kind, label, by, root, tracked, byName) {
   const words = pathWords(by);
-  if (!words.length) return [`"${label}" is marked Tested but names no path`];
+  if (!words.length) return [`"${label}" is marked ${kind} but names no path`];
   const out = [];
   for (const w of words) {
     let at = w;
@@ -276,13 +278,14 @@ function testedFindings(label, by, root, tracked, byName) {
   return out;
 }
 
-// rules: AGENTS.md's "Record rules and what enforces them" table. Every row whose Status starts with
-// "Checked" and says "here" (this repo enforces it) must name at least one tracked path in its "Enforced by"
-// cell, and each workflow file it names must be tracked under .github/workflows. A row whose Status starts with
-// "Tested" and says "here" (a test enforces it, no mutant yet) is held to the path and workflow check alone,
-// and to a stricter reading of it: see testedFindings. The two differ on purpose. A Checked row may cite eye's
-// paths beside its own (it needs one tracked path), where a Tested row must not name a path that is not here.
-// Reads the table, not the prose around it. A repo with no AGENTS.md has no table and is not judged.
+// rules: AGENTS.md's "Record rules and what enforces them" table. Every row whose Status starts with "Checked"
+// or "Tested" and says "here" (this repo enforces it) is held to one path and workflow reading, see
+// pathFindings: it must name at least one path in the backticks of its "Enforced by" cell, every path-looking
+// word there must be tracked (a bare basename only when exactly one tracked file carries it), and each workflow
+// it names must exist. The two kinds differ in what else is asked, and not here: a Checked row must also name a
+// mutant its tests kill, which scripts/rules-table.test.mjs reads and this case does not. A path that is not in
+// this repo, eye's among them, is written without backticks (AGENTS.md says so), so it is not read. Reads the
+// table, not the prose around it. A repo with no AGENTS.md has no table and is not judged.
 function rulesFindings(root, tracked) {
   const f = path.join(root, "AGENTS.md");
   if (!existsSync(f)) return [];
@@ -306,15 +309,9 @@ function rulesFindings(root, tracked) {
     }
     const [rule, by, status] = cells;
     const label = rule.slice(0, 50);
-    if (/^Tested/.test(status) && /\bhere\b/i.test(status)) {
-      for (const msg of testedFindings(label, by, root, tracked, byName)) out.push(`rules    AGENTS.md:${i + 1}  ${msg}`);
-      continue;
-    }
-    if (!/^Checked/.test(status) || !/\bhere\b/i.test(status)) continue;
-    const named = [...by.matchAll(/`([^`]+)`/g)].map((m) => m[1].trim().split(/\s+/)[0]).filter((s) => /^[\w@.\-/]+\.\w+$/.test(s));
-    if (!named.some((p) => tracked.has(p))) out.push(`rules    AGENTS.md:${i + 1}  "${label}" is marked Checked but names no tracked path`);
-    for (const p of named.filter((s) => /\.ya?ml$/.test(s) && s.includes(".github/workflows/")))
-      if (!tracked.has(p) || !existsSync(path.join(root, p))) out.push(`rules    AGENTS.md:${i + 1}  "${label}" names workflow ${p}, which does not exist`);
+    const kind = /^(Checked|Tested)/.exec(status)?.[1];
+    if (!kind || !/\bhere\b/i.test(status)) continue;
+    for (const msg of pathFindings(kind, label, by, root, tracked, byName)) out.push(`rules    AGENTS.md:${i + 1}  ${msg}`);
   }
   if (!rows) out.push("rules    AGENTS.md  the table has no rows");
   return out;
