@@ -605,6 +605,8 @@ attempt("extraFilesOf fails by name when the closing bracket is followed by anyt
     'EXTRA_FILES = ["a"]; EXTRA_FILES += ["b"]\n',
     'EXTRA_FILES = ["a"]\nEXTRA_FILES = ["b"]\n',
     'EXTRA_FILES = ["a"]\nEXTRA_FILES[:] = ["b"]\n',
+    'EXTRA_FILES: list[str] = ["a"]\nif c: EXTRA_FILES += ["b"]\n',
+    'EXTRA_FILES: list[str] = ["a"]\nx = 1; EXTRA_FILES.append("b")\n',
   ];
   const wrong = [];
   for (const [py, want] of good) {
