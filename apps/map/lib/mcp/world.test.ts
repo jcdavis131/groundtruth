@@ -1866,7 +1866,8 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
       // the new fields cost bytes; every recorded reply must still fit whole under the cap
       expect(day.payload.truncated, `${label}: cut to the byte cap`).toBeUndefined();
       expect(allItems(day).length, `${label}: items`).toBe(allItems(plain).length);
-      expect(new TextEncoder().encode(JSON.stringify(day.payload)).length, `${label}: bytes`).toBeLessThan(WORLD_MAX_BYTES);
+      // the cap's own comment promises room for a point with more fabric: Austin, the largest, leaves 1,317 bytes on the day
+      expect(new TextEncoder().encode(JSON.stringify(day.payload)).length, `${label}: bytes, with 1,000 to spare`).toBeLessThan(WORLD_MAX_BYTES - 1000);
 
       const later = await run(rec, yearOn);
       expect(staleProblems(later.payload, yearOn), `${label} a year on`).toEqual([]);
@@ -2101,50 +2102,6 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
       // 2026-09-30 is 38 days before this, past Zillow's 35-day window; the snapshot (the fetch) is 20 days old
       const later = await runFresh(ECONOMY, { "/api/screen?kind=county": screen }, { now: NOW + 20 * DAY }).reply;
       expect(staleOf(later)).toEqual([]);
-    });
-
-    it("TEMP (removed in the next commit): print the recorded replies' sizes", async () => {
-      const periods: Record<string, string> = { "hifld-hospitals": "data last edited 2026-04-22", "cms-provider-data": "dataset modified 2026-07-22" };
-      const size = (v: unknown) => new TextEncoder().encode(JSON.stringify(v)).length;
-      const lines: string[] = [];
-      for (const [label, rec] of recorded) {
-        const mk =
-          (patch: boolean): FetchJson =>
-          async (p) => {
-            const r = rec.routes[p];
-            if (!r) return { status: 500, body: { error: `not recorded: ${p}` }, url: "http://t" + p };
-            const body = structuredClone(r.body) as JsonObject;
-            if (patch && p.startsWith("/api/infra?op=hospitals")) {
-              body.dataLastEdited = "2026-04-22";
-              for (const pr of (body.provenance as Array<{ source: { id: string }; period?: string }>) ?? []) if (periods[pr.source.id]) pr.period = periods[pr.source.id];
-            }
-            return { status: r.status, body, url: "http://t" + p };
-          };
-        const go = (patch: boolean, at = "2026-10-19T12:00:00Z") => worldContext(toolByName("world_context")!.inputSchema.parse(rec.input) as never, { fetchJson: mk(patch), countyPoint, releaseCadence: calendarLookup } as unknown as ToolCtx, { now: Date.parse(at) } as unknown as { stepMs?: number });
-        const a = await go(false);
-        const b = await go(true);
-        const c = structuredClone(a.payload) as unknown as { topics: Record<string, { items: Array<Record<string, unknown>> }> };
-        let nulls = 0;
-        for (const sec of Object.values(c.topics)) for (const it of sec.items) if (it.publishedAt === null) { nulls++; it.note = [it.note, "no publisher date stated"].filter(Boolean).join("; "); }
-        const dated = (allItems(b) as Fresh[]).filter((i) => typeof i.publishedAt === "string").length;
-        lines.push(`SIZES ${label} as-recorded ${size(a.payload)} items ${allItems(a).length} dropped ${(a.payload.truncated as { droppedItems?: number } | undefined)?.droppedItems ?? 0} | stated ${size(b.payload)} dated ${dated} dropped ${(b.payload.truncated as { droppedItems?: number } | undefined)?.droppedItems ?? 0} | per-item-reason ${size(c)} nulls ${nulls}`);
-      }
-      // a year on: what the stale entries cost now, and what they would cost with the 0.6.0 basis lines (the sentence three times)
-      for (const [label, rec] of recorded) {
-        const rn = async (at: string) =>
-          worldContext(toolByName("world_context")!.inputSchema.parse(rec.input) as never, { fetchJson: replay(rec), countyPoint, releaseCadence: calendarLookup } as unknown as ToolCtx, { now: Date.parse(at) } as unknown as { stepMs?: number });
-        const day = await rn("2026-10-19T12:00:00Z");
-        const later = await rn("2027-10-19T12:00:00Z");
-        const old = structuredClone(later.payload) as unknown as { topics: Record<string, { missing?: Array<{ what: string; code: string; reason: string }>; coverageStatus?: { basis: Array<{ code: string; text: string }> } }>; coverageStatus?: { basis: Array<{ code: string; text: string }> } };
-        for (const [topic, sec] of Object.entries(old.topics))
-          for (const m of sec.missing ?? [])
-            if (m.code === "stale") {
-              for (const l of sec.coverageStatus?.basis ?? []) if (l.code === "stale" && l.text === m.what) l.text = `${m.what}: ${m.reason}`;
-              for (const l of old.coverageStatus?.basis ?? []) if (l.code === "stale" && l.text === `${topic}: ${m.what}`) l.text = `${topic}: ${m.what}: ${m.reason}`;
-            }
-        lines.push(`YEARON ${label} day ${size(day.payload)} yearOn ${size(later.payload)} stale ${staleOf(later).length} dropped ${(later.payload.truncated as { droppedItems?: number } | undefined)?.droppedItems ?? 0} | with the 0.6.0 basis lines ${size(old)}`);
-      }
-      console.info(lines.join(String.fromCharCode(10)));
     });
 
     it("a source with no publisher date is compared by its snapshot, and the reason says so", async () => {
