@@ -268,8 +268,8 @@ const facts = (sources, joins = []) => ({
 });
 const FIX_PUBLISHERS = { "alpha-src": "Alpha Agency", "beta-src": "Beta Bureau" };
 const F_ALPHA = facts([["alpha-things", "alpha-src"]]);
-/** licenseProblems with the fixtures' own source -> publisher table. */
-const problemsOf = (md, f, lock, sp = FIX_PUBLISHERS) => licenseProblems(md, f, lock, sp);
+/** licenseProblems with the fixtures' own source -> publisher table and the fixtures' own shipped-file -> publishers table. */
+const problemsOf = (md, f, lock, sp = FIX_PUBLISHERS, xp = XPUB) => licenseProblems(md, f, lock, sp, xp);
 const show = (errs) => (errs.length > 6 ? `${errs.slice(0, 6).join("; ")}; and ${errs.length - 6} more` : errs.join("; ") || "no problems");
 const has = (errs, re) => errs.some((e) => re.test(e));
 // A collection with two sources and two publishers, and a third publisher whose boundaries it joins (the Census shape).
@@ -279,6 +279,21 @@ const SHARED_LOCK = lockOf(fetched(ALPHA), fetched(BETA));
 const JOINED = facts([["alpha-things", "alpha-src"]], [["alpha-things", "Gamma Bureau"]]);
 const gammaRow = (o = {}) => row({ publisher: "Gamma Bureau", collections: "none", also: "the join of `alpha-things`", urls: GAMMA, ...o });
 const JOINED_LOCK = lockOf(fetched(ALPHA), fetched(GAMMA));
+// A file the Hugging Face dataset ships that no manifest lists (the SEC and Census shape): two publishers draw on it, and
+// facts.shipped is what data/hf/publish.py's EXTRA_FILES says. Non-ASCII characters are built, never typed (the mojibake
+// guard reads every tracked text file).
+const XFILE = "extras/alpha-full.json";
+const DELTA = "https://example.org/delta/terms";
+const XPUB = { [XFILE]: ["Gamma Bureau", "Delta Office"] };
+const F_X = { ...F_ALPHA, shipped: [XFILE] };
+const alsoFile = "the file `" + XFILE + "`";
+const gammaX = (o = {}) => gammaRow({ also: alsoFile, ...o });
+const deltaX = (o = {}) => row({ publisher: "Delta Office", collections: "none", also: alsoFile, urls: DELTA, ...o });
+const X_LOCK = lockOf(fetched(ALPHA), fetched(GAMMA), fetched(DELTA));
+const NBSP = String.fromCharCode(0xa0);
+const NBHY = String.fromCharCode(0x2011);
+const ENDASH = String.fromCharCode(0x2013);
+const plain = (s) => s.split(NBSP).join("<NBSP>").split(NBHY).join("<U+2011>").split(ENDASH).join("<U+2013>");
 
 // ---------------------------------------------------------------- the rules, one fixture each
 attempt("a faithful table (one row per publisher, https terms URLs, a quote or a stated absence for each, nothing granted on top) passes", () => {
@@ -288,7 +303,7 @@ attempt("a faithful table (one row per publisher, https terms URLs, a quote or a
     urls: `${BETA}<br>https://example.org/beta/data?f=json`,
     grants: `"${Q}" (said of the Beta site)<br>terms page states no licence: the service's copyrightText is empty`,
   });
-  const lock = lockOf(fetched(ALPHA), fetched(BETA), absent("https://example.org/beta/data?f=json"), fetched(GAMMA));
+  const lock = lockOf(fetched(ALPHA), fetched(BETA), absent("https://example.org/beta/data?f=json", { copyrightText: "" }), fetched(GAMMA));
   const f = facts([["alpha-things", "alpha-src"], ["beta-things", "beta-src"]], [["alpha-things", "Gamma Bureau"]]);
   const errs = problemsOf(table(row(), beta, gammaRow()), f, lock);
   return errs.length === 0 ? true : show(errs);
@@ -342,7 +357,34 @@ attempt("a row with no collection must say none, and every row says what it is a
     ? true
     : `blank: ${show(blank)}; none: ${show(noneOk)}; empty also: ${show(noAlso)}`;
 });
-attempt("manifestFacts reads sources and joins from every manifest of a collection, and reports a source with no sourceId, a join with no publisher and a collection that names no source", () => {
+attempt("a faithful table with a shipped file that two publishers are drawn from (rows naming it under Also used for) passes", () => {
+  const errs = problemsOf(table(row(), gammaX(), deltaX()), F_X, X_LOCK);
+  return errs.length === 0 ? true : show(errs);
+});
+attempt("a publisher of a shipped file whose row is gone fails, naming the file and the publisher (the SEC row dropped with its lock entry)", () => {
+  const noDelta = problemsOf(table(row(), gammaX()), F_X, lockOf(fetched(ALPHA), fetched(GAMMA)));
+  const noGamma = problemsOf(table(row(), deltaX()), F_X, lockOf(fetched(ALPHA), fetched(DELTA)));
+  return has(noDelta, /Delta Office has no publisher row, and data\/hf\/publish\.py ships extras\/alpha-full\.json/) &&
+    has(noGamma, /Gamma Bureau has no publisher row, and data\/hf\/publish\.py ships extras\/alpha-full\.json/)
+    ? true
+    : `Delta dropped: ${show(noDelta)}; Gamma dropped: ${show(noGamma)}`;
+});
+attempt("a publisher's row that does not name the shipped file under Also used for fails, naming the file and the publisher, and another row naming it does not stand in", () => {
+  const blank = problemsOf(table(row(), gammaX(), deltaX({ also: "nothing" })), F_X, X_LOCK);
+  const elsewhere = problemsOf(table(row(), gammaX(), deltaX({ also: "the file `extras/other.json`" })), F_X, X_LOCK);
+  const inCollections = problemsOf(table(row(), gammaX(), deltaX({ collections: "`" + XFILE + "`", also: "nothing" })), F_X, X_LOCK);
+  const re = /the row for Delta Office does not name extras\/alpha-full\.json under "Also used for", and data\/hf\/publish\.py ships that file/;
+  return has(blank, re) && has(elsewhere, re) && has(inCollections, re) ? true : `blank: ${show(blank)}; other file: ${show(elsewhere)}; in Collections: ${show(inCollections)}`;
+});
+attempt("a file data/hf/publish.py ships that EXTRA_FILE_PUBLISHERS has no line for fails, naming the file; so does a line for a file it no longer ships", () => {
+  const unknown = problemsOf(table(row(), gammaX(), deltaX()), { ...F_ALPHA, shipped: [XFILE, "extras/beta-full.json"] }, X_LOCK);
+  const stale = problemsOf(table(row(), gammaX(), deltaX()), { ...F_ALPHA, shipped: [] }, X_LOCK);
+  return has(unknown, /data\/hf\/publish\.py ships extras\/beta-full\.json \(EXTRA_FILES\) and EXTRA_FILE_PUBLISHERS .* has no publisher for it/) &&
+    has(stale, /EXTRA_FILE_PUBLISHERS names extras\/alpha-full\.json, which data\/hf\/publish\.py's EXTRA_FILES does not ship/)
+    ? true
+    : `unknown file: ${show(unknown)}; stale line: ${show(stale)}`;
+});
+attempt("manifestFacts reads sources and joins from every manifest of a collection,and reports a source with no sourceId, a join with no publisher and a collection that names no source", () => {
   const dir = mkdtempSync(path.join(tmpdir(), "licenses-test-"));
   try {
     const put = (c, f, o) => {
@@ -412,6 +454,18 @@ attempt("the licence names are seen in their usual spellings, and ordinary remar
   const wrong = fine.filter((n) => has(problemsOf(table(row({ grants: `terms page states no licence: ${n}` })), F_ALPHA, lockNone), /names a licence/));
   return missed.length === 0 && wrong.length === 0 ? true : `not seen: ${missed.join(", ")}; wrongly seen: ${wrong.join(", ")}`;
 });
+attempt("the licence names the first list missed are seen: CC-0, CC 0, OGL v3, ISC, EUPL, WTFPL, Zlib, Mozilla Public, and a no-break space, a non-breaking hyphen or an en dash where the list has a space or a hyphen", () => {
+  const lockNone = lockOf(absent(ALPHA));
+  const seen = (s) => has(problemsOf(table(row({ grants: `terms page states no licence: ${s}` })), F_ALPHA, lockNone), /names a licence/);
+  const names = [
+    "CC-0", "CC 0", "OGL v3", "OGL", "ISC", "EUPL 1.2", "WTFPL", "Zlib", "Mozilla Public License 2.0",
+    `Creative${NBSP}Commons`, `CC${NBHY}BY`, `CC${NBHY}0`, `CC${ENDASH}BY`, `Open${NBSP}Data${NBSP}Commons`, `Public${NBHY}Domain`, `Open${NBHY}Government${NBHY}Licence`, `Mozilla${NBSP}Public`,
+  ];
+  const missed = names.filter((n) => !seen(n));
+  const fine = ["a disc of records", "the oglala county office", "the Mozilla browser", "the CC field of the form", "a zlibrary index", "the iscsi target"];
+  const wrong = fine.filter(seen);
+  return missed.length === 0 && wrong.length === 0 ? true : `not seen: ${missed.map(plain).join(", ")}; wrongly seen: ${wrong.join(", ")}`;
+});
 attempt("a quote of 25 words or more fails", () => {
   const long = Array.from({ length: 25 }, (_, i) => `word${i}`).join(" ");
   const errs = problemsOf(table(row({ grants: `"${long}"` })), F_ALPHA, lockOf(fetched(ALPHA, { quote: long, quoteWords: 25 })));
@@ -436,6 +490,16 @@ attempt("a terms URL with no 200 in the lock fails", () => {
 attempt("a stated absence the lock does not back fails", () => {
   const errs = problemsOf(table(row({ grants: "terms page states no licence" })), F_ALPHA, lockOf(absent(ALPHA, { matches: 3 })));
   return has(errs, /does not show .* free of licence words/) ? true : show(errs);
+});
+attempt("a statement that the service's copyrightText is empty needs the lock to record copyrightText as the empty string", () => {
+  const url = "https://example.org/beta/data?f=json";
+  const md = table(row({ urls: url, grants: "terms page states no licence: the service's copyrightText is empty" }));
+  const held = problemsOf(md, F_ALPHA, lockOf(absent(url, { copyrightText: "" })));
+  const re = /the statement for https:\/\/example\.org\/beta\/data\?f=json says the service's copyrightText is empty, but the lock does not record copyrightText as the empty string/;
+  const none = problemsOf(md, F_ALPHA, lockOf(absent(url)));
+  const full = problemsOf(md, F_ALPHA, lockOf(absent(url, { copyrightText: "Alpha 2026" })));
+  const nul = problemsOf(md, F_ALPHA, lockOf(absent(url, { copyrightText: null })));
+  return held.length === 0 && has(none, re) && has(full, re) && has(nul, re) ? true : `recorded empty: ${show(held)}; not recorded: ${show(none)}; non-empty: ${show(full)}; null: ${show(nul)}`;
 });
 attempt("a publisher listed twice fails", () => {
   const errs = problemsOf(table(row(), row()), F_ALPHA, goodLock());
@@ -481,6 +545,20 @@ attempt("every publisher a manifest's joins[].boundary names has a row that name
   const { rows } = parseTable(read(LICENSES));
   const errs = joinProblems(rows, committed);
   return errs.length === 0 ? true : show(errs);
+});
+attempt("the committed quotes that say 'public domain' (the NCES and NPS pages' own words) still pass: the licence-name rule reads only outside a quote", () => {
+  const { rows } = parseTable(read(LICENSES));
+  const quoted = rows.flatMap((r) => r.grants).filter((g) => /^"[^"]*public domain/i.test(g));
+  const errs = licenseProblems(read(LICENSES), committed, JSON.parse(read(LOCK))).filter((e) => /names a licence/.test(e));
+  return quoted.length >= 3 && errs.length === 0 ? true : `${quoted.length} committed quotes say public domain; ${show(errs)}`;
+});
+attempt("the committed lock records copyrightText as the empty string for each URL whose statement says the service's copyrightText is empty (and some statement does)", () => {
+  const { rows } = parseTable(read(LICENSES));
+  const lock = JSON.parse(read(LOCK));
+  const urls = rows.flatMap((r) => r.urls.filter((u, i) => /copyrightText\s+is\s+empty/i.test(r.grants[i] ?? "")));
+  const bad = urls.filter((u) => lock.fetches.find((f) => f.url === u)?.copyrightText !== "");
+  if (urls.length === 0) return "no statement in data/LICENSES.md says copyrightText is empty: the USACE clause the lock holds is gone or reworded";
+  return bad.length === 0 ? true : `the lock does not record copyrightText as "" for: ${bad.join(" ")}`;
 });
 attempt("data/LICENSES.md and data/licenses.lock.json name the same terms URLs", () => {
   const { rows } = parseTable(read(LICENSES));
