@@ -26,6 +26,7 @@ import path from "node:path";
 import { createServer, describeServer } from "@/lib/mcp/server";
 import { httpFetchJson, type ProtectionBypass } from "@/lib/mcp/tools";
 import { countyPoint } from "@/lib/places/registry";
+import { cadenceOf } from "@/lib/releases/calendar";
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -118,6 +119,7 @@ export async function POST(req: Request) {
   const server = createServer({
     fetchJson: httpFetchJson(baseUrl(req), fetch, undefined, protectionBypass(req)),
     countyPoint,
+    releaseCadence: (sourceId) => cadenceOf(sourceId),
     docsDir: path.join(process.cwd(), "docs"),
     openapiPath: path.join(process.cwd(), "public", "openapi.json"),
   });

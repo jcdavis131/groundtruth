@@ -34,12 +34,13 @@ const EXPECTED: Record<AbsenceCode, { fhir: string | null; action: string; retry
   timeout: { fhir: "temp-unknown", action: "retry", retryable: true },
   no_citation: { fhir: null, action: "none", retryable: false },
   about_eye: { fhir: "not-applicable", action: "none", retryable: false },
+  stale: { fhir: null, action: "none", retryable: false },
 };
 
 describe("absence codes", () => {
-  it("are the closed list of 14, each with an action, a retry answer and its nearest FHIR data-absent-reason", () => {
+  it("are the closed list of 15, each with an action, a retry answer and its nearest FHIR data-absent-reason", () => {
     expect(Object.keys(ABSENCE_CODES)).toEqual(Object.keys(EXPECTED));
-    expect(Object.keys(ABSENCE_CODES)).toHaveLength(14);
+    expect(Object.keys(ABSENCE_CODES)).toHaveLength(15);
     for (const [code, want] of Object.entries(EXPECTED)) {
       const got = ABSENCE_CODES[code as AbsenceCode];
       expect(got.fhir, `${code}: FHIR code`).toBe(want.fhir);

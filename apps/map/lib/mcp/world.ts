@@ -25,6 +25,11 @@
 //     dams found, companies in the bundle) is kind "estimate": the publisher states no such
 //     number. It names its inputs (the source, the route whose reply held the rows, that
 //     source's own retrieval time) where another item has a record URL, and says so in its note.
+//   - Every item says when the data eye serves for its source was fixed (snapshotAt: the retrievedAt its
+//     route sent, or a bundle's own recorded date; null, with the reason in the note, where none is
+//     recorded) and, where eye's release calendar has an entry for the publisher, how often it releases
+//     (cadence). A source whose snapshot is older than its cadence allows (STALE_AFTER_DAYS) is listed in
+//     its topic's missing with the code `stale`, once; its items are still shown. Stale is a label.
 //   - Missing is absent with a reason (topics[t].missing), never a placeholder;
 //     a value BLS withheld is null with the reason, not 0. Every missing entry also
 //     carries a code and the action the agent may take (./absence): not_published and
@@ -48,7 +53,7 @@
 import { absence, codeForRouteEntry, type AbsenceCode, type AbsenceEntry, type BasisLine } from "./absence";
 import type { CoverageStatus } from "./coverage";
 import { envelopeForStatus } from "./errors";
-import type { JsonObject, JsonReply, ToolCtx, ToolReply } from "./tools";
+import type { JsonObject, JsonReply, ReleaseCadence, ToolCtx, ToolReply } from "./tools";
 import { WORLD_SCHEMA_VERSION } from "./worldSchema";
 
 /** Topics a caller can ask for. identity is always included. */
@@ -94,6 +99,18 @@ export interface WorldItem {
   /** The publisher's own keyless URL for exactly this record; absent when none exists (the note says so). */
   upstreamRecordUrl?: string;
   retrievedAt: string;
+  /**
+   * When the data eye serves for this source was fixed: the retrievedAt its route sent, or for a bundle its own recorded
+   * date (the SEC bundle's `pulled`), as written (a date or a UTC datetime). null where none is recorded, and the reason
+   * ends the note ("no snapshot date: ..."). Never the reply's own time.
+   */
+  snapshotAt?: string | null;
+  /**
+   * How often the publisher releases, from eye's release calendar (kind, whether the date is official or approximate, the
+   * calendar entry's id). null where the calendar has no entry for the publisher (that says nothing about how often it
+   * releases). Absent when this server was given no calendar.
+   */
+  cadence?: ReleaseCadence | null;
   link: string;
   /**
    * "about-eye": a claim about eye's own catalogue, not about the world; it has no upstream to confirm.
@@ -136,6 +153,8 @@ interface Got {
   reason?: string;
   /** Why the call has no body: timeout (a deadline or an HTTP 408/504), else failed. Set whenever reason is. */
   code?: AbsenceCode;
+  /** The release calendar's lookup (ctx.releaseCadence), carried so cite() can state a source's cadence. Absent when the server has none. */
+  cadenceOf?: ToolCtx["releaseCadence"];
 }
 
 /** The absence code of a call that did not answer. */
@@ -180,6 +199,7 @@ function round(n: number, places = 2): number {
 /** Fetch one route with a deadline; never throws. */
 function fetcher(ctx: ToolCtx, stepMs: number) {
   const memo = new Map<string, Promise<Got>>();
+  const cadenceOf = ctx.releaseCadence ? { cadenceOf: ctx.releaseCadence } : {};
   const one = async (path: string): Promise<Got> => {
     let timer: ReturnType<typeof setTimeout> | undefined;
     const deadline = new Promise<"timeout">((res) => {
@@ -187,17 +207,17 @@ function fetcher(ctx: ToolCtx, stepMs: number) {
     });
     try {
       const r = await Promise.race([ctx.fetchJson(path), deadline]);
-      if (r === "timeout") return { ok: false, status: 504, body: {}, url: path, reason: `no answer within ${stepMs / 1000} s`, code: "timeout" };
+      if (r === "timeout") return { ok: false, status: 504, body: {}, url: path, reason: `no answer within ${stepMs / 1000} s`, code: "timeout", ...cadenceOf };
       const reply = r as JsonReply;
       const body = obj(reply.body);
       if (reply.status >= 400) {
         const err = typeof body.error === "string" ? body.error : "";
         const reason = reply.status === 404 && err === "non-JSON reply" ? "this route is not deployed on this server" : `HTTP ${reply.status}${err ? ": " + err.slice(0, 160) : ""}`;
-        return { ok: false, status: reply.status, body, url: reply.url, reason, code: reply.status === 408 || reply.status === 504 ? "timeout" : "failed" };
+        return { ok: false, status: reply.status, body, url: reply.url, reason, code: reply.status === 408 || reply.status === 504 ? "timeout" : "failed", ...cadenceOf };
       }
-      return { ok: true, status: reply.status, body, url: reply.url };
+      return { ok: true, status: reply.status, body, url: reply.url, ...cadenceOf };
     } catch (err) {
-      return { ok: false, status: 0, body: {}, url: path, reason: err instanceof Error ? err.message.slice(0, 160) : String(err).slice(0, 160), code: err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError") ? "timeout" : "failed" };
+      return { ok: false, status: 0, body: {}, url: path, reason: err instanceof Error ? err.message.slice(0, 160) : String(err).slice(0, 160), code: err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError") ? "timeout" : "failed", ...cadenceOf };
     } finally {
       if (timer) clearTimeout(timer);
     }
@@ -284,6 +304,45 @@ interface Cite {
   upstreamUrl: string;
   retrievedAt: string;
   link: string;
+  /** When the data behind this citation was fixed, or why no date is recorded. Not copied onto the item as it is: item() states snapshotAt and the reason. */
+  snap: Snap;
+  /** The release calendar's entry for this source; null when it has none; undefined (not stated) when the server has no calendar. */
+  cadence?: ReleaseCadence | null;
+}
+
+/** The date the data behind a citation was fixed (as the route or bundle wrote it), or null and why not. */
+interface Snap {
+  at: string | null;
+  why?: string;
+}
+
+/** A date or a UTC datetime, the two ways a route or a bundle writes when something was fixed. */
+const SNAP_DATE = /^\d{4}-\d{2}-\d{2}(T[0-9:.]+Z)?$/;
+
+/**
+ * Sources whose rows eye serves from a file committed in the repo (a bundle, or its own catalogue), and what the route's
+ * reply says about when that file was built. A source not listed is a live or cached route: its snapshot is the
+ * retrievedAt its provenance entry states. A bundle that records no build date has none here; the route may type one in its
+ * own code (app/api/infra/route.ts does for CMS) and that is not the bundle's record. world.test.ts holds the CMS claim to
+ * the bundle's own meta.
+ */
+const BUNDLES: Record<string, (body: JsonObject) => Snap> = {
+  // companies route: `pulled` is the date of a full EDGAR pull, null for the committed hand-checked fixture
+  "sec-edgar": (body) => {
+    const pulled = str(body.pulled);
+    return pulled && SNAP_DATE.test(pulled) ? { at: pulled } : { at: null, why: "the SEC bundle is a committed fixture (pulled: null)" };
+  },
+  "cms-provider-data": () => ({ at: null, why: "the CMS-to-HIFLD bundle records no build date" }),
+  "eye-catalog": () => ({ at: null, why: "eye's own catalogue is code, not a dated pull" }),
+};
+
+function snapOf(got: Got, id: string, p: Prov): Snap {
+  const bundle = Object.prototype.hasOwnProperty.call(BUNDLES, id) ? BUNDLES[id] : undefined;
+  if (bundle) return bundle(got.body);
+  // The provenance entry's own retrievedAt; never the fallback cite() uses for an item's retrievedAt (the reply's time).
+  const at = typeof p.retrievedAt === "string" ? p.retrievedAt : "";
+  if (SNAP_DATE.test(at)) return { at };
+  return { at: null, why: at ? `the route's retrievedAt (${at.slice(0, 40)}) is not an ISO 8601 UTC date` : "the route sent no retrievedAt for it" };
 }
 
 /** Why a source has no citation on this call: the route lists it missing, or sent no provenance for it. */
@@ -304,7 +363,7 @@ function cite(got: Got, id: string, pick?: (p: Prov) => boolean): Cite | NoCite 
   if (!p || !publisher) return { none: id, reason: `${id}: the route sent no provenance for it, so nothing from it is shown`, code: id === "eye-catalog" ? "about_eye" : "no_citation" };
   const upstreamUrl = (typeof p.upstreamUrl === "string" && p.upstreamUrl) || (typeof src.url === "string" && src.url) || got.url;
   const retrievedAt = (typeof p.retrievedAt === "string" && p.retrievedAt) || (typeof got.body.generatedAt === "string" && got.body.generatedAt) || new Date().toISOString();
-  return { sourceId: id, publisher, upstreamUrl, retrievedAt, link: got.url };
+  return { sourceId: id, publisher, upstreamUrl, retrievedAt, link: got.url, snap: snapOf(got, id, p), ...(got.cadenceOf ? { cadence: got.cadenceOf(id) } : {}) };
 }
 
 function isCite(c: Cite | NoCite): c is Cite {
@@ -332,7 +391,12 @@ function item(c: Cite | NoCite, fact: string, value: WorldItem["value"], extra: 
   const { record, ...rest } = extra;
   if (typeof record !== "string") rest.note = [rest.note, `no record-level URL: ${record.noRecord}`].filter(Boolean).join("; ");
   for (const [k, v] of Object.entries(rest)) if (v !== undefined && v !== null && v !== "") (out as unknown as JsonObject)[k] = v;
-  Object.assign(out, c);
+  const { snap, cadence, ...cited } = c;
+  Object.assign(out, cited);
+  // Set outside the loop above, which drops null: a null snapshotAt is the claim "none recorded", with its reason in the note.
+  out.snapshotAt = snap.at;
+  if (cadence !== undefined) out.cadence = cadence;
+  if (snap.at === null) out.note = [out.note, `no snapshot date: ${snap.why ?? "none is recorded for this source"}`].filter(Boolean).join("; ");
   if (typeof record === "string") out.upstreamRecordUrl = record;
   if (rest.kind) {
     // Keep kind next to the link, and inputs after it: they qualify the whole item.
@@ -461,9 +525,29 @@ function scheduleBlocked(url: string | null): boolean {
   return !!url && SCHEDULE_BLOCKED_PREFIXES.some((p) => url.startsWith(p));
 }
 
+/**
+ * How old a snapshot may be, in days, before its source is stale, by the cadence of its release-calendar entry: one period of
+ * the cadence and a few days' grace for a release that runs late (annual 366, a year with a leap day; quarterly 100 against
+ * a quarter's 91; monthly 35 against 31; weekly 10 against 7; daily 2). The cadence is the publisher's, as the calendar
+ * records it; the grace is eye's. A snapshot exactly that old is not stale; one older is. `continuous` has no row: a source
+ * that releases continuously is never stale by age. Committed here and held by world.test.ts ("the committed age table ..."),
+ * which keeps its own copy.
+ */
+export const STALE_AFTER_DAYS = { annual: 366, quarterly: 100, monthly: 35, weekly: 10, daily: 2 } as const;
+
+const DAY_MS = 86_400_000;
+
+/** How far past its window a snapshot is, or null when it is within it (or has no window, or is not a date). */
+export function staleBy(snapshotAt: string, kind: string, now: number): { ageDays: number; limit: number } | null {
+  if (!Object.prototype.hasOwnProperty.call(STALE_AFTER_DAYS, kind)) return null;
+  const limit = STALE_AFTER_DAYS[kind as keyof typeof STALE_AFTER_DAYS];
+  const age = (now - Date.parse(snapshotAt)) / DAY_MS;
+  return Number.isFinite(age) && age > limit ? { ageDays: Math.floor(age), limit } : null;
+}
+
 /** What the reply says about every item, once (not per item, for the byte cap). */
 export const WORLD_REPLY_NOTE =
-  "Cite upstreamRecordUrl for a fact (the publisher's own URL for that exact record), or upstreamUrl where an item's note says it has no record-level URL; `link` is the eye route that reproduces it. kind about-eye marks a claim about eye's own catalogue, not about the world. kind estimate marks a count eye computed from a route's list, not a number the publisher states; its inputs name the source, the route and when that source was retrieved. Missing is listed with its reason, never filled in. Names appear only on places, hospitals and non-private dams.";
+  "Cite upstreamRecordUrl for a fact (the publisher's own URL for that exact record), or upstreamUrl where an item's note says it has no record-level URL; `link` is the eye route that reproduces it. kind about-eye marks a claim about eye's own catalogue, not about the world. kind estimate marks a count eye computed from a route's list, not a number the publisher states; its inputs name the source, the route and when that source was retrieved. Missing is listed with its reason, never filled in. snapshotAt is when the data eye serves for that source was fixed: the retrievedAt its route sent, or a bundle's own recorded date; null, with the reason in the note, where none is recorded. cadence is the publisher's release cadence from eye's release calendar; cadence is null where the calendar has no entry for the publisher (that says nothing about how often it releases) and absent when this server has no calendar. A source whose snapshotAt is older than its cadence allows is listed in missing as stale; its items are still shown. Names appear only on places, hospitals and non-private dams.";
 
 function section(): Section {
   return { items: [], cut: [] };
@@ -749,18 +833,26 @@ interface Resolved {
   box: Box | null;
 }
 
-/** place.point as sent: a county's point carries its own Census citation, record-level. */
-function pointOut(p: Resolved["point"]): JsonObject | null {
+/**
+ * place.point as sent: a county's point carries its own Census citation, record-level. The county table is a bundle with a
+ * recorded pull date (`pulled`), which is both when it was retrieved and its snapshot; with none recorded, snapshotAt is null
+ * and the basis says so.
+ */
+function pointOut(p: Resolved["point"], cadenceOf?: ToolCtx["releaseCadence"]): JsonObject | null {
   if (!p) return null;
   const { census, ...rest } = p;
   if (!census) return rest;
+  const dated = !!census.pulled && SNAP_DATE.test(census.pulled);
   return {
     ...rest,
+    ...(dated ? {} : { basis: `${rest.basis}; the county table records no pull date, so snapshotAt is null` }),
     sourceId: "census-tigerweb",
     publisher: "U.S. Census Bureau",
     upstreamUrl: TIGER_ACS2023_COUNTIES,
     upstreamRecordUrl: `${TIGER_ACS2023_COUNTIES}/query?where=${enc(`GEOID='${census.geoid}'`)}&outFields=GEOID,NAME,INTPTLAT,INTPTLON&returnGeometry=false&f=json`,
     ...(census.pulled ? { retrievedAt: census.pulled } : {}),
+    snapshotAt: dated ? census.pulled : null,
+    ...(cadenceOf ? { cadence: cadenceOf("census-tigerweb") } : {}),
   };
 }
 
@@ -768,8 +860,8 @@ function bytes(v: unknown): number {
   return new TextEncoder().encode(JSON.stringify(v)).length;
 }
 
-/** Build the bundle. Pure over ctx.fetchJson; `stepMs` is a test seam. */
-export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { stepMs?: number } = {}): Promise<ToolReply> {
+/** Build the bundle. Pure over ctx.fetchJson; `stepMs` and `now` (epoch ms, what a snapshot's age is measured to) are test seams. */
+export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { stepMs?: number; now?: number } = {}): Promise<ToolReply> {
   const get = fetcher(ctx, opts.stepMs ?? WORLD_STEP_MS);
   const max = input.max_records ?? WORLD_DEFAULT_RECORDS;
   const topics = new Set<WorldTopic>(input.topics ?? WORLD_TOPICS.filter((t) => t !== "collections" || input.about));
@@ -1336,7 +1428,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
       for (const x of capList(s, "next releases", rel, max)) {
         const w = obj(x.window);
         const sid = String(x.sourceId);
-        const it = item({ sourceId: sid, publisher: publishers.get(sid)!, upstreamUrl: str(x.scheduleUrl) ?? cal.url, retrievedAt: typeof cal.body.generatedAt === "string" ? cal.body.generatedAt : new Date().toISOString(), link: cal.url }, "next scheduled release", str(x.title), {
+        const it = item({ sourceId: sid, publisher: publishers.get(sid)!, upstreamUrl: str(x.scheduleUrl) ?? cal.url, retrievedAt: typeof cal.body.generatedAt === "string" ? cal.body.generatedAt : new Date().toISOString(), link: cal.url, snap: { at: null, why: "this window is worked out from eye's calendar rules on each call" }, ...(ctx.releaseCadence ? { cadence: ctx.releaseCadence(sid) } : {}) }, "next scheduled release", str(x.title), {
           period: str(w.nominal) ?? undefined,
           note: [str(x.precision) ? `${str(x.precision)} date` : null, str(w.earliest) && str(w.latest) ? `window ${str(w.earliest)} to ${str(w.latest)}` : null, scheduleBlocked(str(x.scheduleUrl)) ? SCHEDULE_BLOCKED_NOTE : null].filter(Boolean).join("; "),
           record: noRecord("upstreamUrl is the publisher's own schedule for this release"),
@@ -1344,6 +1436,19 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
         push(s, it);
       }
     } else if (cal) miss(s, "next releases", cal.reason ?? "failed", codeOf(cal));
+  }
+
+  // ---- stale: a snapshot older than its publisher's cadence allows is labelled, once per topic and source; the items stay ----
+  const now = opts.now ?? Date.now();
+  for (const sec of Object.values(S)) {
+    const said = new Set<string>();
+    for (const it of sec.items) {
+      if (said.has(it.sourceId) || !it.cadence || !it.snapshotAt) continue;
+      const late = staleBy(it.snapshotAt, it.cadence.kind, now);
+      if (!late) continue;
+      said.add(it.sourceId);
+      miss(sec, `${it.sourceId} freshness`, `${it.publisher} releases ${it.cadence.kind}; eye serves a snapshot from ${it.snapshotAt} (${late.ageDays} days old; stale after ${late.limit} days)`, "stale");
+    }
   }
 
   // ---- assemble, cap, report coverage ----
@@ -1360,7 +1465,7 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     countyFips: r.countyFips,
     stateFips: r.stateFips,
     ...(r.usps ? { usps: r.usps } : {}),
-    point: pointOut(r.point),
+    point: pointOut(r.point, ctx.releaseCadence),
     ...(r.kind === "bbox" || r.kind === "point" || r.kind === "county" ? { searchBox: r.box } : {}),
   };
   // An error reply is decided before the cap, so the cap is measured on what the client gets:

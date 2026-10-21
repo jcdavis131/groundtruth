@@ -32,6 +32,17 @@ export interface CountyPoint {
   pulled: string | null;
 }
 
+/**
+ * How often a publisher releases, as eye's release calendar (lib/releases/calendar.ts) states it for one source id: the
+ * calendar's cadence word, whether its date is the publisher's own or inferred, and the id of the calendar entry.
+ */
+export interface ReleaseCadence {
+  kind: "continuous" | "daily" | "weekly" | "monthly" | "quarterly" | "annual";
+  precision: "official" | "approximate";
+  /** The calendar entry's id ("bls-qcew"). */
+  source: string;
+}
+
 export interface ToolCtx {
   fetchJson: FetchJson;
   /**
@@ -40,6 +51,13 @@ export interface ToolCtx {
    * Next route and scripts/mcp-stdio.mjs both pass it from lib/places/data/counties.json.
    */
   countyPoint?: (fips: string) => CountyPoint | null;
+  /**
+   * The release calendar's entry for a source id, or null when the calendar has none. Injected, not imported, for the
+   * same reason as countyPoint: lib/releases/calendar.ts imports "@/..." and this directory compiles alone. The Next
+   * route passes it; scripts/mcp-stdio.mjs does not, so over stdio a world_context item has no `cadence` and nothing is
+   * called stale. A server that passes none makes no claim about cadence either way.
+   */
+  releaseCadence?: (sourceId: string) => ReleaseCadence | null;
 }
 
 export type JsonObject = Record<string, unknown>;
