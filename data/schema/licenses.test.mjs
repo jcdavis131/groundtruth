@@ -544,6 +544,51 @@ attempt("extraFilesOf reads EXTRA_FILES from publish.py's literal (one line, man
   }
   return wrong.length === 0 ? true : wrong.join(" | ");
 });
+attempt("extraFilesOf fails by name when the closing bracket is followed by anything but a comment (+, *, a call, a subscript, ;, a line continuation) or EXTRA_FILES is assigned or changed again (indented, after if x: or after ;), and still reads a trailing comment, trailing blanks, CRLF and plain reads of the name", () => {
+  const good = [
+    ['EXTRA_FILES = ["a"]  # the companies file, not + ["b"] and not EXTRA_FILES += x\n', "a"],
+    ['EXTRA_FILES = ["a"]   \t \n', "a"],
+    ['EXTRA_FILES = ["a"]\r\nx = 1\r\n', "a"],
+    ['EXTRA_FILES = ["a"]', "a"],
+    ["# EXTRA_FILES.extend(x) is not a change\nEXTRA_FILES = [\n    \"a\",\n    \"b\",\n]  # end\n", "a b"],
+    ['EXTRA_FILES = ["a"]\ndef plan(\n    extra: list[str] = EXTRA_FILES,\n):\n    for f in EXTRA_FILES:\n        print(f, len(EXTRA_FILES))\n', "a"],
+  ];
+  const trailing = [
+    ['EXTRA_FILES = ["a"] + ["b"]\n', /closing "\]" is followed by "\+"/],
+    ['EXTRA_FILES = ["a"] + OTHER\n', /closing "\]" is followed by "\+"/],
+    ['EXTRA_FILES = ["a"] * 2\n', /closing "\]" is followed by "\*"/],
+    ['EXTRA_FILES = ["a"].copy()\n', /closing "\]" is followed by "\."/],
+    ['EXTRA_FILES = ["a"] if X else []\n', /closing "\]" is followed by "i"/],
+    ['EXTRA_FILES = ["a"][0:1]\n', /closing "\]" is followed by "\["/],
+    ['EXTRA_FILES = ["a"]; EXTRA_FILES += ["b"]\n', /closing "\]" is followed by ";"/],
+    ['EXTRA_FILES = ["a"] \\\n    + ["b"]\n', /closing "\]" is followed by "\\"/],
+    ['EXTRA_FILES = [\n    "a",\n] + ["b"]\n', /closing "\]" is followed by "\+"/],
+    ['EXTRA_FILES = ["a"] + ["b"]', /closing "\]" is followed by "\+"/],
+  ];
+  const again = [
+    'EXTRA_FILES = ["a"]\nif cond:\n    EXTRA_FILES += ["b"]\n',
+    'EXTRA_FILES = ["a"]\nif cond:\n    EXTRA_FILES.extend(["b"])\n',
+    'EXTRA_FILES = ["a"]\nif cond:\n\tEXTRA_FILES.append("b")\n',
+    'EXTRA_FILES = ["a"]\nif cond: EXTRA_FILES += ["b"]\n',
+    'EXTRA_FILES = ["a"]\nx = 1; EXTRA_FILES.append("b")\n',
+    'EXTRA_FILES = ["a"]\nEXTRA_FILES = ["b"]\n',
+    'EXTRA_FILES = ["a"]\nEXTRA_FILES[:] = ["b"]\n',
+  ];
+  const wrong = [];
+  for (const [py, want] of good) {
+    const r = extraFilesOf(py);
+    if (r.problems.length || r.files.join(" ") !== want) wrong.push(`${JSON.stringify(py.slice(0, 50))} should read ${want}: ${r.files.join(" ")} ${r.problems.join(";")}`);
+  }
+  for (const [py, re] of trailing) {
+    const r = extraFilesOf(py);
+    if (r.files.length || !re.test(r.problems.join(";"))) wrong.push(`${JSON.stringify(py.slice(0, 50))} should fail ${re}: ${r.files.join(" ")} ${r.problems.join(";") || "no problem"}`);
+  }
+  for (const py of again) {
+    const r = extraFilesOf(py);
+    if (r.files.length || !/assigned more than once/.test(r.problems.join(";"))) wrong.push(`${JSON.stringify(py.slice(0, 50))} should fail as assigned or changed again: ${r.files.join(" ")} ${r.problems.join(";") || "no problem"}`);
+  }
+  return wrong.length === 0 ? true : wrong.join(" | ");
+});
 attempt("a terms URL that is not https fails, naming the publisher", () => {
   const url = "http://example.org/alpha/terms";
   const errs = problemsOf(table(row({ urls: url })), F_ALPHA, lockOf(fetched(url)));
@@ -690,6 +735,27 @@ attempt("every publisher a manifest's joins[].boundary names has a row that name
 attempt("data/hf/publish.py ships at least one file beyond the manifests (EXTRA_FILES reads as a plain list), and EXTRA_FILE_PUBLISHERS has publishers for each", () => {
   const noLine = shippedRead.files.filter((f) => !EXTRA_FILE_PUBLISHERS[f]?.length);
   return shippedRead.problems.length === 0 && shippedRead.files.length > 0 && noLine.length === 0 ? true : `${shippedRead.files.length} files read from EXTRA_FILES; ${show(shippedRead.problems)}; no publisher line for: ${noLine.join(" ")}`;
+});
+attempt("the committed data/hf/publish.py with each of five escaping forms applied to EXTRA_FILES (+ a second list, + a name, * 2, an indented +=, an indented .extend) fails extraFilesOf by name", () => {
+  const py = read(PUBLISH_PY);
+  const clean = extraFilesOf(py);
+  if (clean.problems.length || clean.files.length === 0) return `the committed file does not read cleanly first: ${clean.files.length} files; ${clean.problems.join(";")}`;
+  const literal = /^(EXTRA_FILES\s*(?::[^=\n]+)?=\s*\[[^\]]*\])/m;
+  if (!literal.test(py)) return "the committed publish.py has no EXTRA_FILES = [...] statement to apply the forms to";
+  const forms = [
+    ["+ a second list", py.replace(literal, '$1 + ["companies/other.json"]'), /closing "\]" is followed by "\+"/],
+    ["+ a name", py.replace(literal, "$1 + OTHER"), /closing "\]" is followed by "\+"/],
+    ["* 2", py.replace(literal, "$1 * 2"), /closing "\]" is followed by "\*"/],
+    ["an indented +=", `${py}\nif True:\n    EXTRA_FILES += ["companies/other.json"]\n`, /assigned more than once/],
+    ["an indented .extend", `${py}\nif True:\n    EXTRA_FILES.extend(["companies/other.json"])\n`, /assigned more than once/],
+  ];
+  const wrong = [];
+  for (const [name, text, re] of forms) {
+    const r = extraFilesOf(text);
+    if (text === py) wrong.push(`${name}: the form did not change the file`);
+    else if (r.files.length || !re.test(r.problems.join(";"))) wrong.push(`${name} should fail ${re}: ${r.files.join(" ")} ${r.problems.join(";") || "no problem"}`);
+  }
+  return wrong.length === 0 ? true : wrong.join(" | ");
 });
 attempt("every file data/hf/publish.py ships (EXTRA_FILES) has, for each publisher EXTRA_FILE_PUBLISHERS gives it, a row that names the file under Also used for, and the SEC and Census rows are among them", () => {
   const { rows } = parseTable(read(LICENSES));
