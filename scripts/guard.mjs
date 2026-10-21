@@ -41,11 +41,24 @@
 //              every path it names is tracked, and every workflow it names exists. A bare basename (no directory)
 //              counts when it matches exactly one tracked file; two matches or none is a finding. No mutant is
 //              asked of a Tested row (scripts/rules-table.test.mjs reads Checked rows only).
+//   angle      a bare tag-looking token (<word>, <word attr="x">, <word/>) in a table row of a tracked .md file. GitHub drops
+//              a tag it does not know from a cell (a row holding <outdir> renders without it) and keeps <br>. A row is a line
+//              whose first non-blank character is a pipe. The row is split into cells on unescaped pipes first, because
+//              GitHub does that before it reads a code span (a span cannot cross a pipe), and then each cell is read with
+//              its code spans and backslash-escaped punctuation blanked. A token inside a code span, an escaped \<x\>, an
+//              autolink (<https://...>, <mailto:...>, <a@b.c>: a colon or an at-sign is not part of a tag name) and a
+//              <br> (<br/>, <br />, any case; by name) pass; every other tag fails, known HTML tags included, because this
+//              check keeps no list of what GitHub allows. The finding is one line per row naming file:line and every token.
+//              Fenced code blocks are skipped. Waived like mojibake, by a guard.allow.json entry for the exact bytes. Scope:
+//              table rows only. A bare token in prose, a closing tag, and a table inside a blockquote are not judged.
+//              The MCP doc table (apps/map/docs/MCP.md) is generated, and its emitter (toolTable in
+//              apps/map/lib/mcp/server.ts) writes the same kind of token in backticks; it reads cells the way this rule does
+//              (lib/mcp compiles alone, so the scan is written twice), and this rule runs over the file it writes.
 // Exit 0 when clean, 1 with one line per finding. No file is exempt, the guard's own included: its
 // patterns and test fixtures are written so they never match themselves.
 //
 // An intended large or model file (a model the browser loads, a baked bundle) is allowed only by its
-// exact bytes: guard.allow.json lists {path, sha256, reason}, and the size, weights and mojibake rules are
+// exact bytes: guard.allow.json lists {path, sha256, reason}, and the size, weights, mojibake and angle rules are
 // waived for a file whose sha256 matches. The other content scans still run on it. Changed bytes fail again until the new
 // hash is reviewed in; an entry whose file is gone fails too.
 import { createHash } from "node:crypto";
@@ -122,6 +135,99 @@ function mojibake(text) {
   const more = lines.size - 1;
   return `line ${first[0]}: ${codes}${more ? ` (+${more} more line${more > 1 ? "s" : ""})` : ""}`;
 }
+
+// ---- angle ----------------------------------------------------------------------------------------------------
+// A tag-looking token: "<", a letter, name characters, then optional whitespace and anything but < or > (attributes), an
+// optional "/" and ">". A colon or an at-sign after the name ends the match, so <https://x> and <a@b.c> are not tokens.
+// Group 1 is the tag name.
+const ANGLE_TAG = /<([A-Za-z][A-Za-z0-9._-]*)(?:\s[^<>]*)?\/?>/g;
+const ASCII_PUNCT = /[!-\/:-@[-`{-~]/;
+const FENCE = /^\s*(`{3,}|~{3,})(.*)$/;
+const ANGLE_MSG = "GitHub drops a bare tag it does not know and keeps <br>; write the token in backticks or escape it";
+
+// The cell with its code spans and its backslash-escaped punctuation blanked to spaces (same length, so an offset in the
+// result is an offset in the cell). One left-to-right pass: a backslash escapes the ASCII punctuation after it, and a run
+// of n backticks opens a span that the next run of exactly n backticks closes; a run with no closer is literal text.
+function blankSpans(cell) {
+  const out = cell.split("");
+  let i = 0;
+  while (i < cell.length) {
+    if (cell[i] === "\\" && i + 1 < cell.length && ASCII_PUNCT.test(cell[i + 1])) {
+      out[i] = out[i + 1] = " ";
+      i += 2;
+    } else if (cell[i] === "`") {
+      let n = 1;
+      while (cell[i + n] === "`") n++;
+      let close = -1;
+      for (let j = i + n; j < cell.length; ) {
+        if (cell[j] !== "`") {
+          j++;
+          continue;
+        }
+        let m = 1;
+        while (cell[j + m] === "`") m++;
+        if (m === n) {
+          close = j;
+          break;
+        }
+        j += m;
+      }
+      if (close < 0) {
+        i += n;
+      } else {
+        for (let k = i; k < close + n; k++) out[k] = " ";
+        i = close + n;
+      }
+    } else i++;
+  }
+  return out.join("");
+}
+
+// The cells of a table row, split on pipes that no backslash escapes, before any code span is read (GitHub's order). A
+// backslash before a pipe escapes it whatever precedes the backslash: GitHub reads `a \\| <x>` as one cell.
+function tableCells(line) {
+  const t = line.replace(/^\s*\|/, "");
+  const cells = [];
+  let cur = "";
+  for (let i = 0; i < t.length; i++) {
+    if (t[i] === "\\" && t[i + 1] === "|") {
+      cur += "\\|";
+      i++;
+    } else if (t[i] === "|") {
+      cells.push(cur);
+      cur = "";
+    } else cur += t[i];
+  }
+  cells.push(cur);
+  return cells;
+}
+
+// [line number, tokens] for each table row of a Markdown text that holds a bare tag other than <br>. Fenced code blocks
+// are skipped (a backtick fence's info string holds no backtick; a fence closes on a run of the same mark at least as long,
+// and an unclosed one runs to the end, as in CommonMark). CRLF lines are read as LF.
+function angleRows(text) {
+  const out = [];
+  let fence = null;
+  text.split(/\r?\n/).forEach((line, i) => {
+    const f = FENCE.exec(line);
+    if (fence) {
+      if (f && f[1][0] === fence[0] && f[1].length >= fence.length && !f[2].trim()) fence = null;
+      return;
+    }
+    if (f && !(f[1][0] === "`" && f[2].includes("`"))) {
+      fence = f[1];
+      return;
+    }
+    if (!/^\s*\|/.test(line)) return;
+    const toks = [];
+    for (const cell of tableCells(line))
+      for (const m of blankSpans(cell).matchAll(ANGLE_TAG))
+        if (m[1].toLowerCase() !== "br") toks.push(cell.slice(m.index, m.index + m[0].length));
+    if (toks.length) out.push([i + 1, toks]);
+  });
+  return out;
+}
+// ---- end angle ------------------------------------------------------------------------------------------------
 
 function textOf(buf) {
   if (buf[0] === 0xff && buf[1] === 0xfe) return buf.subarray(2).toString("utf16le");
@@ -250,6 +356,8 @@ for (const f of files) {
   if (text.includes("\r")) findings.push(`crlf     ${f}`);
   const garbled = pinned ? null : mojibake(text);
   if (garbled) findings.push(`mojibake ${f}  ${garbled}`);
+  if (!pinned && /\.md$/i.test(f))
+    for (const [n, toks] of angleRows(text)) findings.push(`angle    ${f}:${n}  ${toks.map((t) => (t.length > 60 ? t.slice(0, 57) + "..." : t)).join("  ")}  ${ANGLE_MSG}`);
   const m = [...text.matchAll(new RegExp(HOME_PATH.source, "gi"))].find(
     (h) => /^[A-Za-z]:/.test(h[0]) || GITBASH_CASE.test(h[0]),
   );
