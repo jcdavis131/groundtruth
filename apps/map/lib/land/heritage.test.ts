@@ -43,7 +43,8 @@ describe("National Heritage Areas", () => {
     expect(areas).toHaveLength(62);
     const br = areas.find((a) => a.properties.name === "Blue Ridge National Heritage Area")!;
     expect(String(br.properties.details?.["about (NPS)"])).toContain("three separate continents—North America");
-    for (const a of areas) expect(String(a.properties.details?.["about (NPS)"] ?? "")).not.toMatch(/â€|Ã|�/);
+    // Written as escapes: the repo guard's mojibake rule forbids raw misdecoded glyphs in tracked text, and the escapes keep this regex's meaning.
+    for (const a of areas) expect(String(a.properties.details?.["about (NPS)"] ?? "")).not.toMatch(/\u00E2\u20AC|\u00C3|\uFFFD/);
   });
 });
 
