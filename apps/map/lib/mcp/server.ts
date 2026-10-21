@@ -15,7 +15,7 @@ import { envelopeForStatus, envelopeForThrown, InvalidArguments } from "./errors
 import { boundErrorPayload, NOT_DEPLOYED_NOTE, TOOLS, type FetchJson, type ToolCtx, type ToolDef, type ToolReply } from "./tools";
 
 export const SERVER_NAME = "embedding-atlas-mcp-server";
-export const SERVER_VERSION = "0.5.0";
+export const SERVER_VERSION = "0.6.0";
 
 /**
  * The origin this server answers on in production. public/openapi.json names it as servers[0] and

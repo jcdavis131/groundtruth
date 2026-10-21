@@ -93,6 +93,52 @@
     "world_context": "b96b81c14b8752c12a92944a19a58357f7cbd907bc35f32ef5174f1292d137f3",
     "openapi": "d94e9fe9e001df73a7280da314032f2f9454c74791b8eea4666da0284eb1b12a"
    }
+  },
+  {
+   "serverVersion": "0.6.0",
+   "date": "2026-10-21",
+   "toolsListSha256": "74c8ec9034192c1b8e245b23c93f32e11d0b9151ed2902986fc3c9dd5b98a60a",
+   "outputSchemaSha256": "04f3bc85c9583d8ad759f09d78ce7fa8ad3a810f35ed54fa0073419ddbf8bf3c",
+   "tools": {
+    "water_report": "a849e6809136e4dc478f6e72c90f92f6432e2fac9264e83644628d7c0760e164",
+    "market_report": "efe87b6f91fa80ac204e18d563ab653ee76ec98eeb0ab3a374ffbf8e3c9dcdd2",
+    "areas": "e1a497c33ab1e727901204a70d6507d333aeb0880c520393f91a12f308dc4b43",
+    "sectors": "ee353cbde22fdd144ebf464f1a01a257d94caa2f1fcaf4448a20c7095b84fc3e",
+    "ports": "cde5036cebf488b9b8122aaec09d2e569d458f26a39db79effa1a945a5da6b32",
+    "border_crossings": "9abc9718dc3595f517b2cf7df40fcf635f3503191ea56940adb11d00aa578aed",
+    "countries": "13e4e03a5a0c35b8283e35b4fac56d1ad6b14c1b68dd3bc453ddba9b819ef9e3",
+    "trade_partners": "acd49c2c4e39ff9bca8bf48eb3c86bd5bf6520dbfb76d7cf19218c6e3481bbd4",
+    "pulse": "bae9bde2a2a2fac7b138480e2f3f4cae2d279b41638e00ba58e66faa4b545f29",
+    "gauges": "2f2ee30fd49551d2a0f46a9ed5a67e6f00f115dd5acad8b1ab314ed080f83c4a",
+    "gauge_history": "e839182d50df4b16ab60ea08a489f394d4a9cc049f708dd991591198f2047033",
+    "series_list": "8f3b377909ed2d6a08f8d7ffae599c32e81becef914fce3d85bcd0e6e60d5815",
+    "series_get": "ddeb3c355436c90fccb695b1728b2bbc6c065c9b05ea54358dc98fa7167c4cd3",
+    "screen": "789651958d0ea932c53ee0ba6ff0c6759581eaa172937b66a94125bbd1b91384",
+    "indicators": "25b410e9bca4751a049479522d6da475d526652b8440c46a57830d4a3196c99a",
+    "indicator_history": "7d7e6d4bd66f02c0ad912e9ee0ae8adf2a6c6a6b69b423bd242f39f347f59be1",
+    "release_calendar": "166bd2fd10a09dc775c76edd14c383cdd4480f28f24d8f24701b95047b5cc3ac",
+    "movers": "9b0535786228c787af81fd8a0c7680b5ca76f63a93923dfed508f8ec842a534c",
+    "county_history": "20f272c88be6908d744bc8aae978c548ead2f4c836990dea6a0b345324fe8fa3",
+    "company": "2ce63c54ef347e806365b75924ea658060995bfdce2db33341e9facd261867fc",
+    "companies_near": "6657ff189f17a5e16cc3a48b255f352178a08e75080a330bb1dfd0dff23698c1",
+    "banks": "3d34aa86ff26985c99a1df8420adfa4b20177856c6120b5098dae179287df706",
+    "federal_spending": "5e4b37b097f91dafb8e626d45aa2f1605bc83273f4703b0de99c48055302c149",
+    "place_fabric": "4c4d41ea23e72d052f1d2ce500bb6d72231f33c2ae07aa66fca0f241198be82d",
+    "place_compare": "3c4f10c4a8fde8ad0cdab77f960e220386cd7dfd8834d7265aa1012e9b00d8b1",
+    "construct_field": "f21e0f69af4eb0da90293f4eb01fd92297cf98bd9eddbc54430c66e9653e57e3",
+    "downstream": "0f862e9909222d99e70759d9500b9fc21166e42ae2619c0a5aee2e8a4e3cd540",
+    "upstream": "730ac4536be77475c32ae0d11a0db05c754fa0241766f454fb85b942b8be4649",
+    "flow_normals": "84a84b68f37e724041a05391501a335d229d61a91976d31a300f4dbe49f0bff7",
+    "water_trace": "56bca918fd9ced46d9c0e9a0e4af0e04fb7d2ea8f0bd06dd9f386abbf5a8ece4",
+    "risk_index": "210fe0709e81ad06e6d299a12d760bddc18b34bcef1e5f4a1d537f0529cf7f53",
+    "social_vulnerability": "69770fca5300e99c4579ce4741d4ab1ac99c6d945e7be0474e3a57890ef9d7e9",
+    "broadband_availability": "cec358c80fee89892a42c5487ac071ac12a92c34a46d50a6f3016af7d316d7ac",
+    "live_events": "f68b6df7257eebd669a03ffa8d0cae085adc88d25d243f5d995234fb7ef7f58f",
+    "catalog_search": "3713f7561a94ab2cd858434f654ad0cb6e8ebdfb44f0bdbfa8b00da6bbd91f1f",
+    "place_export": "572cc899cc70a17d20d1b93d6ad02e303cee4bcf29dccf97134e6e5c5a7d371a",
+    "world_context": "9c8f784e597838c5bb0e2e06cb95f22becfadabae075dc3f7ce7775b71bc4131",
+    "openapi": "d94e9fe9e001df73a7280da314032f2f9454c74791b8eea4666da0284eb1b12a"
+   }
   }
  ]
 }
