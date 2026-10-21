@@ -1,0 +1,47 @@
+# The multi-tower trainer's own test (apps/map/ml/multitower/test_train_write_artifacts.py): train.py is
+# run as a subprocess against a temp data root holding a tiny shape fixture and sentinel "live" artifacts.
+# Without --write-artifacts the sha256 of every file and directory under the root must be the same
+# afterwards; with it the five model files are rewritten and nothing else. Lesson 2026-08-06
+# (a measuring run must not overwrite the shipped model).
+#
+# This is the one workflow that installs numpy and pandas (data.yml installs duckdb only; eval.yml and
+# guard.yml are standard library only). The pins are the versions the trainer ran under when this was
+# written (numpy 1.24.3, pandas 2.0.1, with the four packages pandas needs: python-dateutil 2.8.2,
+# pytz 2023.3, tzdata 2023.3, six 1.16.0); PyPI has a cp311 manylinux x86_64 wheel for numpy and
+# pandas at those versions, neither yanked. Plain "python -I" on the test file, as data.yml and
+# guard.yml run their Python tests ("python -I -m unittest <path>" cannot import a test by path
+# under -I). No network after the install, no secrets, nothing pushed.
+name: ml
+
+on:
+  pull_request:
+    paths:
+      - "apps/map/ml/**"
+      - "apps/map/dataops/**"
+      - ".github/workflows/ml.yml"
+  push:
+    branches: [master]
+    paths:
+      - "apps/map/ml/**"
+      - "apps/map/dataops/**"
+      - ".github/workflows/ml.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  ml-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+      - name: install the trainer's dependencies, pinned
+        run: python -m pip install numpy==1.24.3 pandas==2.0.1 python-dateutil==2.8.2 pytz==2023.3 tzdata==2023.3 six==1.16.0
+      - name: train.py writes nothing without --write-artifacts, and the five model files with it
+        run: python -I apps/map/ml/multitower/test_train_write_artifacts.py -v
