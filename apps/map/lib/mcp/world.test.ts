@@ -1738,7 +1738,7 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
    * The age table, days a snapshot may be old before its source is stale, written here a second time so the test does
    * not share the code's copy. A continuous source is never stale by age and has no row.
    */
-  const WINDOW: Record<string, number> = { annual: 366, quarterly: 100, monthly: 35, weekly: 10, daily: 2 };
+  const WINDOW: Record<string, number> = { annual: 366, quarterly: 100, monthly: 35, weekly: 12, daily: 2 };
 
   function runFresh(input: unknown, over: Record<string, Answer> = {}, o: { now?: number; lookup?: Lookup | null } = {}) {
     const f = router(over);
@@ -1823,7 +1823,7 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
     expect(await staleCount("continuous", 3650 * DAY), "continuous, ten years old").toBe(0);
   });
 
-  it("the committed age table is annual 366, quarterly 100, monthly 35, weekly 10, daily 2, and covers every cadence the calendar uses but continuous", async () => {
+  it("the committed age table is annual 366, quarterly 100, monthly 35, weekly 12, daily 2, and covers every cadence the calendar uses but continuous", async () => {
     const mod = (await import("./world")) as unknown as Record<string, unknown>;
     expect(mod.STALE_AFTER_DAYS).toEqual(WINDOW);
     const kinds = new Set(RELEASE_CALENDAR.map((e) => e.cadence as string));
@@ -1965,6 +1965,8 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
     const note = String(r.payload.note);
     expect(note).toMatch(/snapshotAt/);
     expect(note).toMatch(/publishedAt/);
+    expect(note, "the three sources whose route states the publisher's date").toMatch(/three sources only (hifld-hospitals, cms-provider-data, usdm/);
+    expect(note, "what eye declines to read as a publisher's date").toMatch(/declines pull dates and periods/);
     expect(note).toMatch(/absent where the calendar has no entry/);
     expect(note).not.toMatch(/cadence is null/);
     expect(note).toMatch(/release calendar/);
@@ -2074,20 +2076,30 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
       expect(pubs(now).some((p) => p.endsWith("| null"))).toBe(true);
     });
 
-    it("stale compares the publisher's date when the item has one: a map more than 10 days old is stale although the snapshot is newer, and the reason says whose date it used", async () => {
+    it("stale compares the publisher's date when the item has one: a map more than 12 days old is stale although the snapshot is newer, and the reason says whose date it used", async () => {
       const week = (at: string) => runFresh(HAZARDS, {}, { now: Date.parse(at) }).reply;
       // the map is dated 2026-10-13; the snapshot (retrievedAt) is 2026-10-18T12:00Z
-      expect(staleOf(await week("2026-10-23T00:00:00Z")), "exactly 10 days after the map date").toEqual([]);
-      const past = await week("2026-10-23T00:01:00Z");
-      expect(staleOf(past), "a minute past 10 days").toEqual(["hazards: usdm freshness"]);
-      const later = await week("2026-10-24T12:00:00Z"); // the snapshot is 6.0 days old and fresh; only the map date is past its window
+      expect(staleOf(await week("2026-10-25T00:00:00Z")), "exactly 12 days after the map date").toEqual([]);
+      const past = await week("2026-10-25T00:01:00Z");
+      expect(staleOf(past), "a minute past 12 days").toEqual(["hazards: usdm freshness"]);
+      const later = await week("2026-10-26T12:00:00Z"); // the snapshot is 8.0 days old and fresh; only the map date is past its window
       const entry = (topicsOf(later).hazards.missing ?? []).find((m) => String(m.code) === "stale")!;
       expect(entry).toMatchObject({ what: "usdm freshness", code: "stale", action: "none" });
-      expect(String(entry.reason)).toBe("National Drought Mitigation Center releases weekly; its own date for this data is 2026-10-13 (11 days old; stale after 10 days)");
+      expect(String(entry.reason)).toBe("National Drought Mitigation Center releases weekly; its own date for this data is 2026-10-13 (13 days old; stale after 12 days)");
       // the item keeps its data
       expect((allItems(later) as Fresh[]).some((i) => i.fact.startsWith("U.S. Drought Monitor this week"))).toBe(true);
-      expect(staleProblems(later.payload, Date.parse("2026-10-24T12:00:00Z"))).toEqual([]);
+      expect(staleProblems(later.payload, Date.parse("2026-10-26T12:00:00Z"))).toEqual([]);
       expect(validateWorld(toCallResult(later).structuredContent).errorMessage).toBeUndefined();
+    });
+
+    it("the current Drought Monitor map is never stale: the map dated Tuesday the 13th is still the newest at 12:30Z on the 22nd (9.5 days old), and a county reading cached for a day plus the edge's two hours is not stale either, nor is a Monitor released a day late", async () => {
+      const week = (at: string) => runFresh(HAZARDS, {}, { now: Date.parse(at) }).reply;
+      for (const at of [
+        "2026-10-22T12:30:00Z", // the Thursday release, 9.5 days after the map date
+        "2026-10-23T00:00:00Z", // 10.0 days: the old table's line, which it had not yet passed
+        "2026-10-23T14:30:00Z", // 10.6 days: a reading cached at the release, a day of route cache and two hours at the edge later (stale under the old 10)
+        "2026-10-24T12:00:00Z", // 11.5 days: a release a day and a half late, still unpublished (stale under the old 10)
+      ]) expect(staleOf(await week(at)), at).toEqual([]);
     });
 
     it("the screen route's period for BLS QCEW and Zillow is the period the value describes, not a release date: publishedAt stays null, and 38 days on a month-end value is not stale for it", async () => {
@@ -2111,7 +2123,7 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
       expect(String(entry.reason)).not.toMatch(/its own date/);
     });
 
-    it("over the twelve recorded replies, the Drought Monitor carries the map date its route recorded and nothing else is dated; the map goes stale by that date 11 days on, and on no recorded day", async () => {
+    it("over the twelve recorded replies, the Drought Monitor carries the map date its route recorded and nothing else is dated; the map goes stale by that date 13 days on, and on no recorded day", async () => {
       const calendar = (rec: Recorded, now: number) =>
         worldContext(toolByName("world_context")!.inputSchema.parse(rec.input) as never, { fetchJson: replay(rec), countyPoint, releaseCadence: calendarLookup } as unknown as ToolCtx, { now } as unknown as { stepMs?: number });
       let withItem = 0;
@@ -2127,9 +2139,9 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
         expect(staleOf(day), `${label} on the day it was recorded`).toEqual([]);
         // a route can list USDM as missing even when it sent a map, and then the tool shows no Drought Monitor item
         const hasItem = (allItems(day) as Fresh[]).some((i) => i.fact.startsWith("U.S. Drought Monitor this week"));
-        const eleven = await calendar(rec, Date.parse("2026-10-24T12:00:00Z"));
-        expect(staleOf(eleven).filter((s) => s.endsWith("usdm freshness")), label).toHaveLength(hasItem ? 1 : 0);
-        expect(staleProblems(eleven.payload, Date.parse("2026-10-24T12:00:00Z")), label).toEqual([]);
+        const later = await calendar(rec, Date.parse("2026-10-26T12:00:00Z"));
+        expect(staleOf(later).filter((s) => s.endsWith("usdm freshness")), label).toHaveLength(hasItem ? 1 : 0);
+        expect(staleProblems(later.payload, Date.parse("2026-10-26T12:00:00Z")), label).toEqual([]);
         if (hasItem) withItem++;
       }
       expect(withItem, "recorded replies that show a Drought Monitor item").toBeGreaterThan(8);
