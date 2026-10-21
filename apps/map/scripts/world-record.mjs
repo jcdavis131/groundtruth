@@ -24,6 +24,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { pick, prov } from "./world-record-trim.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const [name, inputJson, baseArg] = process.argv.slice(2);
@@ -78,8 +79,6 @@ const place = reply.payload.place ?? {};
 
 // ---- trimming -------------------------------------------------------------------
 
-const pick = (o, keys) => Object.fromEntries(keys.filter((k) => o && o[k] !== undefined).map((k) => [k, o[k]]));
-const prov = (list) => (Array.isArray(list) ? list.map((x) => ({ source: pick(x.source ?? {}, ["id", "publisher", "url"]), ...pick(x, ["upstreamUrl", "retrievedAt"]) })) : list);
 const box = Array.isArray(place.searchBox) ? place.searchBox : null;
 const touches = (b) => box && Array.isArray(b) && b.length === 4 && box[0] <= b[2] && box[2] >= b[0] && box[1] <= b[3] && box[3] >= b[1];
 const inside = (lon, lat) => box && lon >= box[0] && lon <= box[2] && lat >= box[1] && lat <= box[3];

@@ -75,6 +75,7 @@ describe("scripts/mcp-stdio.mjs, started as a client starts it, against a record
   let api: Server;
   let child: ChildProcessWithoutNullStreams;
   const requested: string[] = [];
+  let recorded: Map<string, { status: number; body: unknown }>;
   const stderr: string[] = [];
   const junk: string[] = [];
   let init: Rpc;
@@ -85,7 +86,7 @@ describe("scripts/mcp-stdio.mjs, started as a client starts it, against a record
   beforeAll(async () => {
     dir = await mkdtemp(path.join(os.tmpdir(), "gev-mcp-stdio-"));
     fixture = JSON.parse(await readFile(FIXTURE, "utf8")) as Recorded;
-    const recorded = new Map(Object.entries(fixture.routes).map(([k, v]) => [target(k), v]));
+    recorded = new Map(Object.entries(fixture.routes).map(([k, v]) => [target(k), v]));
     api = createServer((req, res) => {
       requested.push(req.url ?? "");
       const hit = recorded.get(target(req.url ?? "/"));
@@ -185,6 +186,14 @@ describe("scripts/mcp-stdio.mjs, started as a client starts it, against a record
     expect(items().length).toBeGreaterThan(20);
     expect(requested.some((u) => u.startsWith("/api/hazards?op=history")), `requests: ${requested.join(" ")}`).toBe(true);
     expect(requested.some((u) => u.startsWith("/api/releases?op=calendar"))).toBe(true);
+  });
+
+  // The local server answers a route the recording lacks with a 500 "not recorded", and world_context carries on without
+  // that route's items, so the other cases would not notice the child asking for one. This one does.
+  it("every request the child made hit a route the recording holds: none was answered as unrecorded", () => {
+    expect(requested.length, "the child asked the API at all").toBeGreaterThan(0);
+    const unrecorded = requested.filter((u) => !recorded.has(target(u)));
+    expect(unrecorded, `routes the recording lacks (all requests: ${requested.join(" ")})`).toEqual([]);
   });
 
   it("an item carries its publisher's cadence from the release calendar the script hands createServer, and one from a source with no calendar entry carries none", () => {

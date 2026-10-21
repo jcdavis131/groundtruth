@@ -15,7 +15,7 @@ import raptSlice from "./fixtures/rapt-tx.slice.json";
 import committed from "./data/cms-hospitals.json";
 import box from "./fixtures/hosp-box-austin.json";
 import { bakeCms, cmsDetails, cmsExtra, cmsPageUrl, cmsRating, CMS_DENY, CMS_PROPERTIES, joinKey, mailFreeKey, nameOverlap, normAddress, tenantConflict, type CmsBake, type CmsRow, type HifldJoinRow } from "./cms";
-import { buildHospitals } from "./hospitals";
+import { buildHospitals, HOSPITALS_DATA_EDIT } from "./hospitals";
 
 const cms = (cmsSlice as { results: CmsRow[] }).results;
 const hifld = (raptSlice as { features: Array<{ attributes: HifldJoinRow }> }).features.map((f) => f.attributes);
@@ -138,6 +138,19 @@ describe("the join", () => {
     expect(derived.note).toMatch(/^DERIVED/);
     expect(derived.bake).toEqual(JSON.parse(JSON.stringify(bake)));
   });
+  // meta.builtAt is when scripts/bake-cms-hospitals.mjs wrote the file, after reading the answers. The key is written
+  // only when the script is given an instant, so a bake without one (the committed file, a rebuild from saved answers)
+  // is byte-for-byte what it was before the field existed, and carries no null in its place.
+  it("writes the instant the script gives it as meta.builtAt, and no builtAt key at all when it is given none", () => {
+    const at = "2026-10-21T12:34:56.789Z";
+    const stamped = bakeCms(cms, hifld, { ...info, builtAt: at });
+    expect(stamped.meta.builtAt).toBe(at);
+    expect(Object.keys(bake.meta)).not.toContain("builtAt");
+    expect(Object.keys(bakeCms(cms, hifld, { ...info, builtAt: null }).meta)).not.toContain("builtAt");
+    // Nothing else moves: the rows and every other meta field are the unstamped bake's.
+    expect(stamped.rows).toEqual(bake.rows);
+    expect({ ...stamped.meta, builtAt: undefined }).toEqual({ ...bake.meta, builtAt: undefined });
+  });
 });
 
 describe("the click", () => {
@@ -250,5 +263,21 @@ describe("the committed bake (2026-10-17, re-baked 2026-10-18 with tenantConflic
     expect(m.cmsModified).toBe("2026-07-22");
     expect(m.hifldDataLastEdit).toBe("2026-04-22");
     expect(m.sha256.cms).toMatch(/^[0-9a-f]{64}$/);
+  });
+  // Not a check against the FEMA layer: neither number is read from it here. HOSPITALS_DATA_EDIT is a constant typed from
+  // the layer's editingInfo.dataLastEditDate on 2026-10-16; the bake's meta.hifldDataLastEdit is the layer's own reading as
+  // scripts/bake-cms-hospitals.mjs took it two days later. A re-bake that finds the layer edited since turns this red, which
+  // is the cue to read the layer and move the constant; it cannot say which copy is right.
+  it("HOSPITALS_DATA_EDIT and the committed bake's meta.hifldDataLastEdit are the same date (this ties two repo copies together, not either to the FEMA layer)", () => {
+    expect(m.hifldDataLastEdit).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(HOSPITALS_DATA_EDIT).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(HOSPITALS_DATA_EDIT).toBe(m.hifldDataLastEdit);
+  });
+  // The committed file was baked on 2026-10-17 and re-baked on 2026-10-18, and nothing records the hour, so it carries no
+  // builtAt (see the figures case above). Whatever a later bake writes must be an instant.
+  it("meta.builtAt, where the bake records one, is an ISO 8601 UTC instant (the committed bake predates the field and has none)", () => {
+    if (m.builtAt === undefined) return;
+    expect(m.builtAt).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+    expect(new Date(m.builtAt).toISOString()).toBe(m.builtAt);
   });
 });
