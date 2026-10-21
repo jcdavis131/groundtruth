@@ -1575,3 +1575,136 @@ describe("world_context: outputSchema", () => {
     expect((res.structuredContent as { schemaVersion: string }).schemaVersion).toBe("world/2");
   });
 });
+
+// ---- counts computed here are estimates, and say what from -------------------------------------
+//
+// A count of a route's list inside a box is computed by this tool: the publisher states no such number. It is labelled
+// kind "estimate" and names its inputs (the source, the eye route whose reply held the rows, and that source's own
+// retrieval time). Reading the lines by hand found four builders in world.ts (NWS alerts, USGS quakes, hospitals and
+// dams found, the SEC bundle); the fixture walk below finds a builder written in the same style without trusting that.
+
+describe("world_context: counts computed here are estimates with inputs", () => {
+  const at = (id: string, publisher: string, retrievedAt: string, upstreamUrl?: string) => ({ ...prov(id, publisher, upstreamUrl), retrievedAt });
+  // one retrieval time per source, so an input that borrowed the reply's time or a neighbour's shows
+  const TIME = { nws: "2026-10-18T12:00:01.000Z", usgs: "2026-10-18T12:00:02.000Z", hospitals: "2026-10-18T12:00:03.000Z", dams: "2026-10-18T12:00:04.000Z", sec: "2026-10-18T12:00:05.000Z" };
+  const empty = { type: "FeatureCollection", features: [] };
+  const OVER: Record<string, Answer> = {
+    "/api/live": { ...LIVE, provenance: [at("nws-api", "NOAA National Weather Service", TIME.nws, "https://api.weather.gov/alerts/active?status=actual&severity=Extreme,Severe"), at("usgs-earthquakes", "U.S. Geological Survey", TIME.usgs)] },
+    "/api/infra?op=hospitals": { ...HOSPITALS, data: empty, provenance: [at("hifld-hospitals", "Homeland Infrastructure Foundation-Level Data", TIME.hospitals, "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/Hospitals_RAPT/FeatureServer/6")] },
+    "/api/infra?op=dams": { ...DAMS, data: empty, provenance: [at("usace-nid", "U.S. Army Corps of Engineers", TIME.dams, "https://geospatial.sec.usace.army.mil/x/NID/FeatureServer/0")] },
+    "/api/companies": { ...COMPANIES, pulled: "2026-10-01", bundle: { companies: 6000, geocoded: 5900, withFacts: 5000 }, data: empty, provenance: [at("sec-edgar", "U.S. Securities and Exchange Commission", TIME.sec)] },
+  };
+  const COUNTS: Array<[string, string, string]> = [
+    ["Severe or Extreme NWS alerts touching the box now", "nws-api", TIME.nws],
+    ["M4.5+ earthquakes in the past day touching the box", "usgs-earthquakes", TIME.usgs],
+    ["hospitals found", "hifld-hospitals", TIME.hospitals],
+    ["dams found", "usace-nid", TIME.dams],
+    ["public companies in eye's SEC bundle headquartered in the county", "sec-edgar", TIME.sec],
+  ];
+  const loose = (r: ToolReply) => allItems(r) as unknown as Array<Record<string, unknown>>;
+  const reply = async (name: string): Promise<Loose> => structuredClone((await runRecorded(recorded.find(([k]) => k === name)![1])).payload) as Loose;
+
+  it("each of the five count builders labels its item an estimate that names the route and the source's own retrieval time", async () => {
+    const r = await run({ lon: -97.74, lat: 30.27, topics: ["hazards", "institutions"] }, OVER).reply;
+    for (const [fact, sourceId, retrievedAt] of COUNTS) {
+      const it = loose(r).find((i) => i.fact === fact);
+      expect(it, fact).toBeDefined();
+      expect(it!.sourceId, fact).toBe(sourceId);
+      expect(it!.retrievedAt, fact).toBe(retrievedAt);
+      expect(it!.kind, `${fact}: a count computed here is not the publisher's number`).toBe("estimate");
+      expect(it!.inputs, fact).toEqual([{ sourceId, route: it!.link, upstreamRecordUrl: it!.upstreamUrl, retrievedAt }]);
+      // unchanged: nobody publishes a URL for this box, and the note still says so
+      expect(it!.upstreamRecordUrl, fact).toBeUndefined();
+      expect(String(it!.note), fact).toMatch(/no record-level URL: a count/);
+    }
+    expect(validateWorld(toCallResult(r).structuredContent).errorMessage).toBeUndefined();
+  });
+
+  it("the reply says once what an estimate is", async () => {
+    const r = await run({ lon: -97.74, lat: 30.27, topics: ["hazards"] }).reply;
+    expect(String(r.payload.note)).toMatch(/kind estimate/);
+    expect(String(r.payload.note)).toMatch(/about-eye/);
+  });
+
+  it("no item that says its record URL is missing because it is a count lacks the label, in any of the twelve recorded replies (33 of them)", async () => {
+    let counted = 0;
+    for (const [label, rec] of recorded) {
+      for (const it of loose(await runRecorded(rec))) {
+        if (!/no record-level URL: a count\b/.test(String(it.note ?? ""))) continue;
+        counted++;
+        const where = `${label}: ${String(it.fact)}`;
+        expect(it.kind, where).toBe("estimate");
+        const inputs = it.inputs as Array<Record<string, unknown>> | undefined;
+        expect(inputs, where).toHaveLength(1);
+        expect(inputs![0], where).toMatchObject({ sourceId: it.sourceId, route: it.link, retrievedAt: it.retrievedAt });
+      }
+    }
+    expect(counted).toBe(33);
+  });
+
+  it("tamper: an estimate with no inputs fails and the error names inputs; so do an empty list and an input with no route or no time", async () => {
+    const fresh = async () => {
+      const p = await reply("austin_pt");
+      const item = Object.values(p.topics)
+        .flatMap((s) => s.items)
+        .find((i) => i.fact === "Severe or Extreme NWS alerts touching the box now");
+      if (!item) throw new Error("austin_pt has no NWS count item");
+      return { p, item, input: () => (item.inputs as Array<Record<string, unknown>>)[0] };
+    };
+    const ok = await fresh();
+    expect(ok.item.kind).toBe("estimate");
+    expect(validateWorld(ok.p).errorMessage).toBeUndefined();
+
+    const a = await fresh();
+    delete a.item.inputs;
+    const noInputs = validateWorld(a.p);
+    expect(noInputs.valid).toBe(false);
+    expect(noInputs.errorMessage).toContain("inputs");
+
+    const b = await fresh();
+    b.item.inputs = [];
+    expect(validateWorld(b.p).valid, "an estimate names at least one input").toBe(false);
+
+    const c = await fresh();
+    delete c.input().route;
+    const noRoute = validateWorld(c.p);
+    expect(noRoute.valid).toBe(false);
+    expect(noRoute.errorMessage).toContain("route");
+
+    const d = await fresh();
+    d.input().retrievedAt = "2026-10-18T12:00:00+02:00";
+    const noZ = validateWorld(d.p);
+    expect(noZ.valid).toBe(false);
+    expect(noZ.errorMessage).toContain("retrievedAt");
+  });
+
+  it("tamper: inputs on an item that is not an estimate fail, and so does a kind the enum does not hold", async () => {
+    const p = await reply("austin_pt");
+    const item = Object.values(p.topics)
+      .flatMap((s) => s.items)
+      .find((i) => i.fact === "Severe or Extreme NWS alerts touching the box now");
+    expect(item?.kind).toBe("estimate");
+    const inputs = item!.inputs;
+    delete item!.kind;
+    const bare = validateWorld(p);
+    expect(bare.valid, "inputs without kind estimate").toBe(false);
+    expect(bare.errorMessage).toContain("kind");
+    item!.kind = "published";
+    expect(validateWorld(p).valid, "published is not a kind this schema holds").toBe(false);
+    item!.kind = "estimate";
+    item!.inputs = inputs;
+    expect(validateWorld(p).errorMessage).toBeUndefined();
+  });
+
+  it("widening kind loosened nothing: eye's own catalogue is still about-eye and nothing else", async () => {
+    const p = await reply("denver_about");
+    const own = Object.values(p.topics)
+      .flatMap((s) => s.items)
+      .find((i) => i.sourceId === "eye-catalog");
+    expect(own?.kind).toBe("about-eye");
+    expect(validateWorld(p).errorMessage).toBeUndefined();
+    own!.kind = "estimate";
+    own!.inputs = [{ sourceId: "eye-catalog", route: "http://t/api/catalog", retrievedAt: T }];
+    expect(validateWorld(p).valid, "a claim about eye's catalogue cannot be relabelled an estimate").toBe(false);
+  });
+});

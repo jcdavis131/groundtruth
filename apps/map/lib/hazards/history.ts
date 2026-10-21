@@ -626,11 +626,13 @@ export function assembleHistory(i: HistoryInputs): HistoryAnswer {
       missing.push({ source: "FEMA legacy-code rows", reason: "join:filed_under_other_code", detail: `${e.area} (${e.disasters.join(", ")}), filed under ${e.oldFips}: ${e.why}. Not attached here, so this county's declarations may be short by ${e.disasters.length}. Basis: ${e.basis}` });
       caveats.push(`This county's FEMA declarations may be short: ${e.disasters.join(", ")} ${e.disasters.length === 1 ? "designates" : "designate"} ${e.area}, which lies in this county, but FEMA files that area under ${e.oldFips}; they are listed in missing, not attached.`);
     }
+    // The per-year counts are ours, computed from OpenFEMA's rows: an estimate that names the rows' source and fetch.
     const prov = provenance(source("fema-openfema"), {
-      kind: "published",
+      kind: "estimate",
       seriesId: `DisasterDeclarationsSummaries v2, ${femaFilter(i.fips)}`,
       upstreamUrl: i.fema.url,
       retrievedAt: i.fema.retrievedAt,
+      inputs: [{ sourceId: "fema-openfema", upstreamRecordUrl: i.fema.url, retrievedAt: i.fema.retrievedAt }],
       method: "per year: distinct disasterNumber by the year of declarationDate (UTC), one series per declarationType",
       notes: [FEMA_CREDIT],
     });
@@ -684,12 +686,16 @@ export function assembleHistory(i: HistoryInputs): HistoryAnswer {
   }
 
   // SPC (bake)
+  // The per-county per-year counts are ours, counted from SPC's all-tornadoes file at the bake: an estimate that names that file.
+  const spcAt = `${BAKED_ON}T00:00:00.000Z`;
+  const spcReleased = i.spc.meta.lastModified ? new Date(i.spc.meta.lastModified).toISOString() : undefined;
   const spcProv = provenance(source("noaa-spc"), {
-    kind: "published",
+    kind: "estimate",
     seriesId: "1950-2025_all_tornadoes.csv, distinct tornadoes per county per year (lib/hazards/data/spc-tornado-county.json)",
     upstreamUrl: i.spc.meta.url,
-    retrievedAt: `${BAKED_ON}T00:00:00.000Z`,
-    releasedAt: i.spc.meta.lastModified ? new Date(i.spc.meta.lastModified).toISOString() : undefined,
+    retrievedAt: spcAt,
+    releasedAt: spcReleased,
+    inputs: [{ sourceId: "noaa-spc", upstreamRecordUrl: i.spc.meta.url, retrievedAt: spcAt, ...(spcReleased ? { releasedAt: spcReleased } : {}) }],
     method: "distinct tornadoes per year naming the county in f1..f4 of any of their rows (state segments and continuation rows past four counties included; the whole-track summaries of multi-state tornadoes skipped); baked by scripts/bake-hazard-history.mjs",
   });
   asOf.spc = String(i.spc.meta.lastYear ?? "");
@@ -764,11 +770,13 @@ export function assembleStorms(
   // Every type with a report in the county, and the three main types always (so a blank year is said even with no report).
   const shown = a.types.filter((t) => t.points.length || (STORM_MAIN_TYPES as readonly string[]).includes(t.type));
   const storms: StormsAnswer = { ...a, types: shown.map((t) => ({ ...t, points: t.points.filter(([y]) => y >= cutYear), blank: t.blank.filter(([y]) => y >= cutYear) })).map((t) => ({ ...t, total: t.points.reduce((x, [, n]) => x + n, 0) })) };
+  // The per-year per-type counts are ours, counted from NCEI's county-coded rows at the bake: an estimate that names the files' directory.
   const prov = provenance(source("ncei-storm-events"), {
-    kind: "published",
+    kind: "estimate",
     seriesId: `Storm Events details files ${meta.firstYear}-${meta.lastYear}, county-coded rows per year per event type, Tornado excluded (lib/hazards/data/storm-events/${i.fips.slice(0, 2)}.json)`,
     upstreamUrl: meta.dir,
     retrievedAt: p.retrievedAt,
+    inputs: [{ sourceId: "ncei-storm-events", upstreamRecordUrl: meta.dir, retrievedAt: p.retrievedAt }],
     period: meta.lastYearMonth ? `${meta.firstYear}-01 to ${meta.lastYearMonth.slice(0, 4)}-${meta.lastYearMonth.slice(4)}` : undefined,
     method: `reports per year where CZ_TYPE = C, EVENT_TYPE is not Tornado, and the county code and CZ_NAME agree with the county; a type's year is null ("zone-coded") where ${Math.round(STORM_ZONE_SHARE_MAX * 100)} % or more of its rows nationally were zone-coded; baked by scripts/bake-storm-events.mjs from ${meta.files.length} files (c stamps and sha256 in meta.json)`,
     notes: [meta.credit],

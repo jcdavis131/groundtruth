@@ -4,7 +4,7 @@
 //
 // Two ways an entry is caught:
 //   - kind "published" with a method that says it was computed (whole words: computed, aggregate, sum, count,
-//     derived and their inflections; "county" and "summary" are not "count" and "sum");
+//     derived, per year, change and their inflections; "county" and "summary" are not "count" and "sum");
 //   - kind "published" with `inputs`: an entry that names what it was computed from is not relayed as-is.
 // The words are a heuristic and a method that computes without saying so ("changeAbs = after - before") passes;
 // the second way and a reviewer cover that. Nothing here reads the network or the clock. Relative imports only,
@@ -12,8 +12,12 @@
 
 import type { Provenance } from "./types";
 
-/** Method text that says a value was computed here. Whole words, so "county" and "summary" do not match. */
-export const COMPUTED_METHOD = /\b(compute[sd]?|computing|computation|aggregate[sd]?|aggregating|aggregation|sums?|summed|summing|counts?|counted|counting|derive[sd]?|deriving|calculate[sd]?|calculating)\b/i;
+/**
+ * Method text that says a value was computed here. Whole words, so "county" and "summary" do not match. Besides the
+ * verbs (computed, aggregate, sum, count, derived, calculated) it reads the shapes a per-period figure takes: "per
+ * year" (also month, quarter, week, day) and a change, in words or as the changeAbs / changePct a mover row names.
+ */
+export const COMPUTED_METHOD = /\b(compute[sd]?|computing|computation|aggregate[sd]?|aggregating|aggregation|sums?|summed|summing|counts?|counted|counting|derive[sd]?|deriving|calculate[sd]?|calculating|per[ -](?:calendar )?(?:year|month|quarter|week|day)|changes?|change(?:Abs|Pct))\b/i;
 
 export interface EstimateFinding {
   /** Where the entry sits in the value that was walked, e.g. `provenance[1]`. */

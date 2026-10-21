@@ -3,8 +3,12 @@
 // parsed tables from lib/economy/sources.ts; no network, no store, no Cesium.
 //
 // Every row carries the two published values it was computed from. The
-// difference and percent are ours (simple subtraction / division) and the
-// provenance says so in `method`; the values themselves stay "published".
+// difference and percent are ours (simple subtraction / division), so the
+// provenance of Zillow, border and ports movers is an "estimate": its `inputs`
+// name the table the values were read from, `rowIdsAt` says where the reply
+// lists each row's before and after, and `method` has the arithmetic. BLS QCEW
+// is the exception: BLS publishes the over-the-year percent change and the row
+// relays it, so that provenance stays "published".
 // Rows with a missing or zero `before` cannot have a percent and are left
 // out of the ranked lists but counted in `skipped`.
 
@@ -61,6 +65,10 @@ export interface MoverOptions {
 }
 
 const clampN = (n: number | undefined) => Math.max(1, Math.min(200, Math.floor(n ?? 20)));
+
+/** Where a movers reply lists the rows (each with the before and after its change was computed from), as a path into the reply body. */
+const MOVER_ROWS_AT = "data.up, data.down";
+const MOVER_NOTE = "changeAbs and changePct are computed here for every compared row; the reply lists the n largest movers each way, each with the before and after it was computed from.";
 
 /** Rank rows by percent change; ties are broken by id so output is stable. */
 export function rank(rows: MoverRow[], n: number): { up: MoverRow[]; down: MoverRow[] } {
@@ -151,6 +159,7 @@ export function zillowMovers(table: { kind: string; asOf: string; rows: Iterable
   }
   const { up, down } = rank(rows, n);
   const sourceId = table.kind.startsWith("zori") ? "zillow-zori" : "zillow-zhvi";
+  const at = opts.retrievedAt ?? new Date().toISOString();
   return {
     table: "zillow",
     metric: table.kind,
@@ -163,10 +172,12 @@ export function zillowMovers(table: { kind: string; asOf: string; rows: Iterable
     skipped,
     signFlips: { toPositive, toNegative },
     provenance: provenance(source(sourceId), {
-      kind: "published",
+      kind: "estimate",
       seriesId: table.kind,
       period,
-      retrievedAt: opts.retrievedAt,
+      retrievedAt: at,
+      inputs: [{ sourceId, retrievedAt: at, rowIdsAt: MOVER_ROWS_AT }],
+      notes: [MOVER_NOTE],
       method: "before and after are Zillow's published month columns; changeAbs = after - before; changePct = (after - before) / |before| * 100; sign flips compare (month - same month a year earlier) for the two newest months",
     }),
   };
@@ -278,6 +289,7 @@ export function borderMovers(data: { asOf: string; rows: Iterable<CrossingRow> }
     rows.push(r);
   }
   const { up, down } = rank(rows, n);
+  const at = opts.retrievedAt ?? new Date().toISOString();
   return {
     table: "border",
     metric: measure,
@@ -289,10 +301,12 @@ export function borderMovers(data: { asOf: string; rows: Iterable<CrossingRow> }
     compared: rows.length,
     skipped,
     provenance: provenance(source("bts-border"), {
-      kind: "published",
+      kind: "estimate",
       seriesId: measure,
       period,
-      retrievedAt: opts.retrievedAt,
+      retrievedAt: at,
+      inputs: [{ sourceId: "bts-border", retrievedAt: at, rowIdsAt: MOVER_ROWS_AT }],
+      notes: [MOVER_NOTE],
       method: "before and after are BTS monthly counts for the port and measure; changeAbs = after - before; changePct = (after - before) / before * 100. Ports whose newest month is not the table's newest month are skipped.",
     }),
   };
@@ -328,6 +342,7 @@ export function portMovers(data: { year: number; ports: Iterable<{ stats: PortSt
     rows.push(r);
   }
   const { up, down } = rank(rows, n);
+  const at = opts.retrievedAt ?? new Date().toISOString();
   return {
     table: "ports",
     metric,
@@ -339,10 +354,12 @@ export function portMovers(data: { year: number; ports: Iterable<{ stats: PortSt
     compared: rows.length,
     skipped,
     provenance: provenance(source("bts-ports"), {
-      kind: "published",
+      kind: "estimate",
       seriesId: metric,
       period,
-      retrievedAt: opts.retrievedAt,
+      retrievedAt: at,
+      inputs: [{ sourceId: "bts-ports", retrievedAt: at, rowIdsAt: MOVER_ROWS_AT }],
+      notes: [MOVER_NOTE],
       method: "before and after are BTS annual TOTAL volumes for the port; changeAbs = after - before; changePct = (after - before) / before * 100. Ports without both years are skipped.",
     }),
   };

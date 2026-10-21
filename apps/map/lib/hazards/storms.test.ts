@@ -84,6 +84,14 @@ describe("assembleStorms", () => {
     expect(a.series.some((s) => s.id === "se:hail:48453")).toBe(true);
     expect(a.caveats.join(" ")).toMatch(/Tornadoes are counted from SPC/);
   });
+  it("the per-year per-type counts are an estimate that names the Storm Events files they were computed from", () => {
+    const a = assembleStorms({ fips: "48453", now: Date.UTC(2026, 9, 17), years: null, storms: ok }, geo);
+    expect(a.provenance).toHaveLength(1);
+    expect(a.provenance[0].kind).toBe("estimate");
+    expect(a.provenance[0].inputs).toEqual([{ sourceId: "ncei-storm-events", upstreamRecordUrl: meta.dir, retrievedAt: "2026-10-17T00:00:00.000Z" }]);
+    expect(a.series.length).toBeGreaterThan(0);
+    for (const s of a.series) expect(s.provenance.kind, s.id).toBe("estimate");
+  });
   it("says a type's total covers county-coded reports in drawn years only, and names the types whose blank years leave it short", () => {
     // The committed Texas shard: Travis has Flood reports, and Flood's 1996 is blank (zone-coded).
     const full = { value: { meta, shard: shardTx as unknown as StormShard }, retrievedAt: "2026-10-17T00:00:00.000Z", url: meta.dir };
