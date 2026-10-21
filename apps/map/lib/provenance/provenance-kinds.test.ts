@@ -221,7 +221,7 @@ describe("the loses-none check does not trust the lexer's own classification", (
   });
 
   it("a form the lexer cannot place is filed as a type member and refused by the check, not passed", () => {
-    for (const line of ['kind: "published".toString(),', 'kind: "published" + "",', 'kind: "published" ?? "x",', 'kind: "published"!,']) {
+    for (const line of ['kind: "published".toString(),', 'kind: "published" + "",', 'kind: "published" ?? "x",', 'kind: "published"!,', 'kind: "published" || "estimate",', 'kind: "published" && "published",']) {
       const src = `export const a = provenance(source("x"), {\n  method: "sum of rows",\n  ${line}\n});`;
       const scan = scanSource(src, "planted.ts");
       expect(scan.sites, line).toEqual([]);
