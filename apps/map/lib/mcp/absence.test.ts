@@ -84,6 +84,35 @@ describe("absence codes", () => {
   });
 });
 
+// ---- stale: a snapshot older than its publisher's cadence ------------------------------------------------------
+// Added with server 0.6.0. The assertions read ABSENCE_CODES through a loose type on purpose, so they say what the
+// code is without depending on the compiler's view of the closed list.
+describe("the stale code", () => {
+  const spec = (ABSENCE_CODES as unknown as Record<string, { action: string; retryable: boolean; fhir: string | null; means: string } | undefined>).stale;
+  const entry = (over: Record<string, unknown> = {}) => ({ what: "bls-qcew freshness", code: "stale", reason: "U.S. Bureau of Labor Statistics releases quarterly; eye serves a snapshot from 2026-05-01", action: "none", ...over });
+
+  it("is in the closed list: nothing asked of the reader, not retryable, no FHIR data-absent-reason (the item keeps its value), and a means sentence that says the item is still shown", () => {
+    expect(spec, "ABSENCE_CODES.stale").toBeDefined();
+    expect(spec!.action).toBe("none");
+    expect(spec!.retryable).toBe(false);
+    // FHIR's data-absent-reason set is for a value that is missing; a stale item keeps its value, so no member of it is true
+    expect(spec!.fhir).toBeNull();
+    expect(spec!.means).toMatch(/still shown/);
+    expect(spec!.means).toMatch(/does not say the value is wrong/);
+  });
+
+  it("ABSENCE_SCHEMA accepts it with action none and rejects it with any other action; a basis line may carry it", () => {
+    expect(validateEntry(entry()).errorMessage).toBeUndefined();
+    expect(validateEntry(entry()).valid).toBe(true);
+    for (const action of ["retry", "narrow", "abstain", "redirect"]) expect(validateEntry(entry({ action })).valid, `stale with action ${action}`).toBe(false);
+    expect(validateBasis({ code: "stale", text: "bls-qcew freshness: a snapshot older than its cadence" }).valid).toBe(true);
+  });
+
+  it("absence() builds it with the code's own action", () => {
+    expect(absence("bls-qcew freshness", "stale" as string as AbsenceCode, "why")).toEqual({ what: "bls-qcew freshness", code: "stale", reason: "why", action: "none" });
+  });
+});
+
 describe("ABSENCE_SCHEMA", () => {
   const entry = () => absence("FEMA declarations", "join_gap", "the route reports a boundary gap");
 
