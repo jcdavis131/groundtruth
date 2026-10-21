@@ -44,6 +44,6 @@ describe("scripts/mcp-calendar.mjs: the release calendar the stdio server passes
     const script = await readFile(path.resolve(__dirname, "mcp-stdio.mjs"), "utf8");
     expect(script).toContain('from "./mcp-calendar.mjs"');
     expect(script).toContain("emitCalendar(ts, calendarSrc, calendarOut)");
-    expect(script).toMatch(/createServer\(\{[^}]*releaseCadence: \(sourceId\) => cadenceOf\(sourceId\)/s);
+    expect(script).toMatch(/createServer\(\{[^}]*releaseCadence: \(sourceId\) => cadenceOf\(sourceId\)/);
   });
 });
