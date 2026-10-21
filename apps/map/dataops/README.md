@@ -43,7 +43,7 @@ python3 dataops/dataops.py frame multitower_daily # the aligned join
 python3 dataops/dataops.py status                 # freshness of everything
 ```
 
-npm shortcuts: `npm run data:ops -- <args>`, `npm run ml:train`,
+npm shortcuts: `npm run data:ops -- <args>`, `npm run ml:train` (a dry run: it writes nothing without `-- --write-artifacts`),
 `npm run ml:forecast -- --site-bundle`.
 
 ## Frame rules (binding)

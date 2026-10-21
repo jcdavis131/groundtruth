@@ -6,8 +6,8 @@
 #
 # This is the one workflow that installs numpy and pandas (data.yml installs duckdb only; eval.yml and
 # guard.yml are standard library only). The pins are the versions the trainer ran under when this was
-# written (numpy 1.24.3, pandas 2.0.1, with the four packages pandas needs: python-dateutil 2.8.2,
-# pytz 2023.3, tzdata 2023.3, six 1.16.0); PyPI has a cp311 manylinux x86_64 wheel for numpy and
+# written (numpy 1.24.3, pandas 2.0.1, which requires python-dateutil 2.8.2, pytz 2023.3, tzdata 2023.3
+# and numpy; six 1.16.0 is python-dateutil's requirement); PyPI has a cp311 manylinux x86_64 wheel for numpy and
 # pandas at those versions, neither yanked. Plain "python -I" on the test file, as data.yml and
 # guard.yml run their Python tests ("python -I -m unittest <path>" cannot import a test by path
 # under -I). No network after the install, no secrets, nothing pushed.
