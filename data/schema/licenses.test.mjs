@@ -20,8 +20,11 @@
 // shipped file. data/hf/publish.py's EXTRA_FILES says what is shipped; EXTRA_FILE_PUBLISHERS below says whose data each
 // file is drawn from; for every publisher of every shipped file, a row must exist and name the file under "Also used
 // for". A shipped file with no line in EXTRA_FILE_PUBLISHERS fails, and so does a line for a file no longer shipped.
-// publish.py is Python, so EXTRA_FILES is read by scanning its literal (extraFilesOf), not by importing it; a literal that
-// is not a plain list of quoted strings fails by name rather than reading as empty.
+// publish.py is Python, so EXTRA_FILES is read by scanning its one `EXTRA_FILES = [...]` statement (extraFilesOf), not by
+// importing the file. The scan fails by name, rather than reading an empty list, when that statement is not a list of
+// plain quoted strings ending its line (or a comment), or when the name is assigned or changed again anywhere in the file.
+// It does not follow the list under another name (an alias, plan()'s extra argument, globals()) or see another module
+// change it: a scan of one statement, not a proof of what is shipped.
 //
 // A "what they grant" statement that says the service's copyrightText is empty (the USACE FeatureServer row) is held to
 // the lock: the lock entry must record copyrightText as the empty string, which licenses_fetch.py reads off the response.
@@ -216,19 +219,42 @@ export function joinProblems(rows, facts) {
   return out;
 }
 
+// Where the name is assigned or changed in place, anywhere on a line: the name, then = or an augmented assignment, a
+// method call or a subscript. == is not one, and neither is a plain read (in EXTRA_FILES, = EXTRA_FILES, len(EXTRA_FILES)).
+const CHANGES_EXTRA_FILES = /\bEXTRA_FILES\b[ \t]*(?:(?:\/\/|\*\*|<<|>>|[-+*\/%&|^@])?=(?!=)|\.|\[)/g;
+
+/** Whether idx sits after a # on its line (a # inside quotes does not count). */
+function inComment(src, idx) {
+  let quote = "";
+  for (const ch of src.slice(src.lastIndexOf("\n", idx - 1) + 1, idx)) {
+    if (quote) {
+      if (ch === quote) quote = "";
+    } else if (ch === '"' || ch === "'") quote = ch;
+    else if (ch === "#") return true;
+  }
+  return false;
+}
+
 /**
- * The strings of EXTRA_FILES in data/hf/publish.py: { files, problems }. publish.py is Python, so this scans its literal
- * and does not import it. Anything but a plain list of quoted strings (a missing assignment, a second assignment or +=,
- * a concatenation, an f-string, a name, a comprehension, an escape, an unclosed list) is a problem that names it, with no
- * files, so a reformat of publish.py cannot make the check read an empty list and pass.
+ * The strings of EXTRA_FILES in data/hf/publish.py: { files, problems }. publish.py is Python, so this scans one statement
+ * and does not import the file. It takes a single `EXTRA_FILES = [...]` (a type annotation is fine) whose list holds only
+ * plain quoted strings and whose closing "]" is followed by nothing but blanks or a # comment to the end of its line. It
+ * fails, naming the problem and returning no files, so that a reformat of publish.py cannot make the check read an empty
+ * list and pass, on: no such statement; a right-hand side that is not a list; inside the list a string with an escape, a
+ * line break or triple quotes, an f-string, a name, a comprehension, a stray comma or an unclosed list; anything after the
+ * closing "]" (+, *, a method call, a subscript, ";" or a line continuation); and the name assigned or changed again
+ * anywhere (a second assignment, +=, .extend(...) or another method call or subscript, at any indentation, after an
+ * "if x:" or after a ";"). It does not see: the list reached under another name (an alias, plan()'s extra argument,
+ * globals(), setattr, exec), another module changing it, or code that ships a file without naming EXTRA_FILES.
  */
 export function extraFilesOf(py) {
   const none = { files: [], problems: [] };
   const fail = (m) => ({ ...none, problems: [`licenses: ${m}`] });
-  const starts = [...py.matchAll(/^EXTRA_FILES\b/gm)];
+  const starts = [...py.matchAll(/^[ \t]*EXTRA_FILES\b/gm)];
   if (starts.length === 0) return fail("data/hf/publish.py has no EXTRA_FILES assignment, so the files the Hugging Face dataset ships beyond the manifests cannot be read");
-  if (starts.length > 1) return fail("EXTRA_FILES in data/hf/publish.py is assigned more than once (a second assignment or +=), so its files cannot be read as one list literal");
-  const head = /^EXTRA_FILES\s*(?::[^=\n]+)?=\s*\[/m.exec(py);
+  const changes = [...py.matchAll(CHANGES_EXTRA_FILES)].filter((m) => !inComment(py, m.index));
+  if (starts.length > 1 || changes.length > 1) return fail("EXTRA_FILES in data/hf/publish.py is assigned more than once or changed in place (a second assignment, +=, .extend(...) or another method call, at any indentation, after an if x: or after a ;), so its files cannot be read as one list literal");
+  const head = /^[ \t]*EXTRA_FILES[ \t]*(?::[^=\n]+)?=\s*\[/m.exec(py);
   if (!head) return fail("EXTRA_FILES in data/hf/publish.py is not a list literal (EXTRA_FILES = [...]), so its files cannot be read");
   const bad = (why) => fail(`EXTRA_FILES in data/hf/publish.py is not a plain list of string literals (${why}), so the files the Hugging Face dataset ships cannot be read`);
   const files = [];
@@ -236,7 +262,12 @@ export function extraFilesOf(py) {
   let comma = false; // a string was just read, so a comma or the end must come next
   while (i < py.length) {
     const c = py[i];
-    if (c === "]") return { files, problems: [] };
+    if (c === "]") {
+      const eol = py.indexOf("\n", i);
+      const rest = py.slice(i + 1, eol < 0 ? py.length : eol).replace(/\r$/, "");
+      if (!/^[ \t]*(?:#[^\n]*)?$/.test(rest)) return bad(`the closing "]" is followed by "${visible([...rest].find((x) => x !== " " && x !== "\t"))}" instead of the end of the line or a comment`);
+      return { files, problems: [] };
+    }
     if (/\s/.test(c)) i++;
     else if (c === "#") while (i < py.length && py[i] !== "\n") i++;
     else if (c === ",") {
@@ -513,7 +544,7 @@ attempt("manifestFacts reads sources and joins from every manifest of a collecti
     rmSync(dir, { recursive: true, force: true });
   }
 });
-attempt("extraFilesOf reads EXTRA_FILES from publish.py's literal (one line, many lines with comments, single quotes, a type annotation) and fails by name on anything but a plain list of quoted strings", () => {
+attempt("extraFilesOf reads EXTRA_FILES from publish.py's literal (one line, many lines with comments, single quotes, a type annotation) and fails by name on the shapes it does not take (no assignment, a tuple, a name, an f-string, an escape, triple quotes, a stray comma, an unclosed list, a second assignment)", () => {
   const good = [
     ['x = 1\nEXTRA_FILES = ["a/b.json"]\ny = 2\n', "a/b.json"],
     ["EXTRA_FILES: list[str] = [\n    \"a/b.json\",  # the companies file ]\n    'c/d.json',\n]\n", "a/b.json c/d.json"],
@@ -560,7 +591,7 @@ attempt("extraFilesOf fails by name when the closing bracket is followed by anyt
     ['EXTRA_FILES = ["a"].copy()\n', /closing "\]" is followed by "\."/],
     ['EXTRA_FILES = ["a"] if X else []\n', /closing "\]" is followed by "i"/],
     ['EXTRA_FILES = ["a"][0:1]\n', /closing "\]" is followed by "\["/],
-    ['EXTRA_FILES = ["a"]; EXTRA_FILES += ["b"]\n', /closing "\]" is followed by ";"/],
+    ['EXTRA_FILES = ["a"]; x = 1\n', /closing "\]" is followed by ";"/],
     ['EXTRA_FILES = ["a"] \\\n    + ["b"]\n', /closing "\]" is followed by "\\"/],
     ['EXTRA_FILES = [\n    "a",\n] + ["b"]\n', /closing "\]" is followed by "\+"/],
     ['EXTRA_FILES = ["a"] + ["b"]', /closing "\]" is followed by "\+"/],
@@ -571,6 +602,7 @@ attempt("extraFilesOf fails by name when the closing bracket is followed by anyt
     'EXTRA_FILES = ["a"]\nif cond:\n\tEXTRA_FILES.append("b")\n',
     'EXTRA_FILES = ["a"]\nif cond: EXTRA_FILES += ["b"]\n',
     'EXTRA_FILES = ["a"]\nx = 1; EXTRA_FILES.append("b")\n',
+    'EXTRA_FILES = ["a"]; EXTRA_FILES += ["b"]\n',
     'EXTRA_FILES = ["a"]\nEXTRA_FILES = ["b"]\n',
     'EXTRA_FILES = ["a"]\nEXTRA_FILES[:] = ["b"]\n',
   ];

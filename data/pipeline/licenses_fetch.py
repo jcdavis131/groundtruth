@@ -277,12 +277,13 @@ def examine(target: dict, got: dict) -> dict:
     return out
 
 
-def ok(entry: dict, target: dict | None = None) -> bool:
+def ok(entry: dict, target: dict) -> bool:
+    """Whether the entry checks out for its target. The target is required: the emptyField requirement comes from it."""
     if entry["status"] != 200:
         return False
     if entry["kind"] == "quote":
         return entry["quoteFound"] is True and entry["quoteWords"] < 25
-    field = (target or {}).get("emptyField")
+    field = target.get("emptyField")
     if field and entry.get(field) != "":
         return False
     return entry["matches"] == 0 and entry["textChars"] > 0
