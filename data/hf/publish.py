@@ -40,7 +40,7 @@ DEFAULT_REPO_ID = "jcdavis210/groundtruth-snapshots"
 # Files that no manifest lists, relative to the data root. Each must have a sidecar <path>.sha256 whose first
 # word is the hex digest, and each is a full-format companies bundle after the US-only placement rule (written
 # by apps/map/scripts/companies-compact.mjs --write-full from the raw pull, which stays off the dataset). A new
-# companies pull adds its line here. check_companies refuses a bundle that still places a non-US filer or
+# companies pull adds its line here and in EXTRA_FILE_PUBLISHERS (data/schema/licenses.test.mjs). check_companies refuses a bundle that still places a non-US filer or
 # leaves an unplaced company without a geoReason.
 EXTRA_FILES = ["companies/companies.full.2026-10-20.us-placed.json"]
 STATES_JSON = REPO / "apps" / "map" / "lib" / "places" / "data" / "states.json"
