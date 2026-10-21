@@ -26,13 +26,15 @@ import { judgeSite, literalText, scanSource, type PublishedSite, type SourceScan
 // Round 3 (review of aa34a59). One residual of the same class: `kind: "published" || "estimate",` and `&&` were filed
 // as a type member by the lexer (it returned the `|` or `&`) and counted type-like by writtenPublished() below (it
 // took any `|` or `&` for a union or an intersection), so entries 0 / type members 1 / misread null: balanced and
-// unjudged, and tsc accepts both (the type stays "published"; eslint-config-next does not enable
-// no-constant-binary-expression). Now `||` and `&&` are an expression: the lexer files an entry with kindIsExpression,
-// judgeSite refuses it, and writtenPublished() counts `|` and `&` as a type position only when the next character is
-// not the same. Refused on purpose, not judged: `as const` or `satisfies T` on the line after the value is a clean entry
-// that writtenPublished() reads as the next interface member, so the file is refused (none in the tree). Shared with
-// the forms above and not covered: `| 0`, `& 1` and a newline then `in obj` after the value read as types to both
-// readings; tsc refuses them (reported by the round-2 reviewer; tsc is not run on them here).
+// unjudged, and tsc accepts both (the type stays "published"). No lint rule was found to refuse them either:
+// eslint-config-next 16.3.4 and typescript-eslint, read in another checkout (eslint 9.39.5), do not enable
+// no-constant-binary-expression; this repo pins 16.4.2 and eslint 10, which are not installed here. Now `||` and
+// `&&` are an expression: the lexer files an entry with kindIsExpression, judgeSite refuses it, and writtenPublished()
+// counts `|` and `&` as a type position only when the next character is not the same. Refused on purpose, not
+// judged: `as const` or `satisfies T` on the line after the value is a clean entry that writtenPublished() reads as
+// the next interface member, so the file is refused (none in the tree). Shared with the forms above and not covered:
+// `| 0`, `& 1` and a newline then `in obj` after the value read as types to both readings; tsc refuses them
+// (reported by the round-2 reviewer; tsc is not run on them here).
 
 const MAP = fileURLToPath(new URL("../../", import.meta.url));
 
