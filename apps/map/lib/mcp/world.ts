@@ -571,14 +571,21 @@ function scheduleBlocked(url: string | null): boolean {
 }
 
 /**
- * How old a snapshot may be, in days, before its source is stale, by the cadence of its release-calendar entry: one period of
+ * How old a date may be, in days, before its source is stale, by the cadence of its release-calendar entry: one period of
  * the cadence and a few days' grace for a release that runs late (annual 366, a year with a leap day; quarterly 100 against
- * a quarter's 91; monthly 35 against 31; weekly 10 against 7; daily 2). The cadence is the publisher's, as the calendar
- * records it; the grace is eye's. A snapshot exactly that old is not stale; one older is. `continuous` has no row: a source
- * that releases continuously is never stale by age. Committed here and held by world.test.ts ("the committed age table ..."),
- * which keeps its own copy.
+ * a quarter's 91; monthly 35 against 31; daily 2). The cadence is the publisher's, as the calendar records it; the grace is
+ * eye's. A date exactly that old is not stale; one older is. `continuous` has no row: a source that releases continuously
+ * is never stale by age. Committed here and held by world.test.ts ("the committed age table ..."), which keeps its own copy.
+ *
+ * Weekly is 12 = 7 + 2 + 3. 7 is the cadence. 2 is the lag between the date and the release, for the one weekly source that
+ * states a date: the Drought Monitor dates its map on a Tuesday and releases it on the Thursday after (calendar.ts: weekly
+ * THU, 08:30 ET = 12:30Z), so the newest map is already 9.5 days old on the day the next one appears. 3 is the grace for a
+ * release that runs late. A county reading is also served from the hazards route's one-day cache and its edge copy (s-maxage
+ * 3600 plus stale-while-revalidate 3600), so a reading fetched just before a release can be shown for 26 hours after it: 10.6
+ * days old. A window of 10 labelled that reading stale for up to 14.5 hours after every release, and any release more than
+ * 11.5 hours late; with 12 a release up to 33 hours late, cache included, still reads current.
  */
-export const STALE_AFTER_DAYS = { annual: 366, quarterly: 100, monthly: 35, weekly: 10, daily: 2 } as const;
+export const STALE_AFTER_DAYS = { annual: 366, quarterly: 100, monthly: 35, weekly: 12, daily: 2 } as const;
 
 const DAY_MS = 86_400_000;
 
@@ -592,7 +599,7 @@ export function staleBy(snapshotAt: string, kind: string, now: number): { ageDay
 
 /** What the reply says about every item, once (not per item, for the byte cap). */
 export const WORLD_REPLY_NOTE =
-  "Cite upstreamRecordUrl for a fact (the publisher's own URL for that exact record), or upstreamUrl where an item's note says it has no record-level URL; `link` is the eye route that reproduces it. kind about-eye marks a claim about eye's own catalogue, not about the world. kind estimate marks a count eye computed from a route's list, not a number the publisher states; its inputs name the source, the route and when that source was retrieved. Missing is listed with its reason, never filled in. snapshotAt is when the data eye serves for that source was fixed: the retrievedAt its route sent, or a bundle's own recorded date; null, with the reason in the note, where none is recorded. publishedAt is the date the publisher puts on the data (a last-edit date, or the Drought Monitor's map date) where the item's route states one, else null. cadence is the publisher's release cadence from eye's release calendar, absent where the calendar has no entry. A source whose publishedAt, else snapshotAt, is older than its cadence allows is listed in missing as stale; its items are still shown. Names appear only on places, hospitals and non-private dams.";
+  "Cite upstreamRecordUrl for a fact (the publisher's own URL for that exact record), or upstreamUrl where an item's note says it has no record-level URL; `link` is the eye route that reproduces it. kind about-eye marks a claim about eye's own catalogue, not about the world. kind estimate marks a count eye computed from a route's list, not a number the publisher states; its inputs name the source, the route and when that source was retrieved. Missing is listed with its reason, never filled in. snapshotAt is when the data eye serves for that source was fixed: the retrievedAt its route sent, or a bundle's own recorded date; null, with the reason in the note, where none is recorded. publishedAt is the publisher's own date, which eye reads for three sources only (hifld-hospitals, cms-provider-data, usdm), else null; it declines pull dates and periods. cadence is the publisher's release cadence from eye's release calendar, absent where the calendar has no entry; a source whose publishedAt, else snapshotAt, is older than its cadence allows is listed in missing as stale, its items still shown. Names appear only on places, hospitals and non-private dams.";
 
 function section(): Section {
   return { items: [], cut: [] };

@@ -1866,7 +1866,7 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
       // the new fields cost bytes; every recorded reply must still fit whole under the cap
       expect(day.payload.truncated, `${label}: cut to the byte cap`).toBeUndefined();
       expect(allItems(day).length, `${label}: items`).toBe(allItems(plain).length);
-      // the cap's own comment promises room for a point with more fabric: Austin, the largest, leaves 1,317 bytes on the day
+      // the cap's own comment promises room for a point with more fabric: Austin, the largest, leaves about 1,300 bytes on the day
       expect(new TextEncoder().encode(JSON.stringify(day.payload)).length, `${label}: bytes, with 1,000 to spare`).toBeLessThan(WORLD_MAX_BYTES - 1000);
 
       const later = await run(rec, yearOn);
