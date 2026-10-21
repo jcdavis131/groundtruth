@@ -16,22 +16,34 @@
 // relative imports only (no "@/") so it compiles on its own. The emit is
 // skipped when the outputs are newer than the sources, so a warm start is
 // instant. Logs go to stderr: stdout is the protocol channel.
+//
+// world_context also takes the release calendar (releaseCadence), as app/api/mcp/route.ts passes it:
+// lib/releases/calendar.ts has one import, a type from "@/lib/provenance/sources", which tsc cannot resolve
+// when it compiles alone, so scripts/mcp-calendar.mjs transpiles that one file without type-checking into
+// .tmp-mcp/release-calendar.js and its cadenceOf is injected.
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { emitCalendar } from "./mcp-calendar.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const srcDir = path.join(root, "lib", "mcp");
 const outDir = path.join(root, ".tmp-mcp");
 const sources = readdirSync(srcDir).filter((f) => f.endsWith(".ts") && !f.endsWith(".test.ts"));
+const calendarSrc = path.join(root, "lib", "releases", "calendar.ts");
+const calendarOut = path.join(outDir, "release-calendar.js");
 
 function stale() {
   const newest = Math.max(...sources.map((f) => statSync(path.join(srcDir, f)).mtimeMs));
-  return sources.some((f) => {
-    const out = path.join(outDir, f.replace(/\.ts$/, ".js"));
-    return !existsSync(out) || statSync(out).mtimeMs < newest;
-  });
+  return (
+    sources.some((f) => {
+      const out = path.join(outDir, f.replace(/\.ts$/, ".js"));
+      return !existsSync(out) || statSync(out).mtimeMs < newest;
+    }) ||
+    !existsSync(calendarOut) ||
+    statSync(calendarOut).mtimeMs < statSync(calendarSrc).mtimeMs
+  );
 }
 
 if (stale()) {
@@ -47,10 +59,13 @@ if (stale()) {
     writeFileSync(jp, readFileSync(jp, "utf8").replace(/from "(\.\/[^"]+?)"/g, (m, spec) => (spec.endsWith(".js") ? m : `from "${spec}.js"`)));
   }
   writeFileSync(path.join(outDir, "package.json"), '{ "type": "module" }');
+  const ts = (await import("typescript")).default;
+  emitCalendar(ts, calendarSrc, calendarOut);
 }
 
 const { createServer, toolManifest, toolTable } = await import(pathToFileURL(path.join(outDir, "server.js")).href);
 const { httpFetchJson, DEFAULT_BASE_URL } = await import(pathToFileURL(path.join(outDir, "tools.js")).href);
+const { cadenceOf } = await import(pathToFileURL(calendarOut).href);
 
 if (process.argv.includes("--manifest")) {
   process.stdout.write(JSON.stringify(toolManifest(), null, 2) + "\n");
@@ -74,6 +89,7 @@ const countyPoint = (fips) => {
 const server = createServer({
   fetchJson: httpFetchJson(base),
   countyPoint,
+  releaseCadence: (sourceId) => cadenceOf(sourceId),
   docsDir: path.join(root, "docs"),
   openapiPath: path.join(root, "public", "openapi.json"),
 });

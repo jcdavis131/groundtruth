@@ -1718,9 +1718,14 @@ describe("world_context: counts computed here are estimates with inputs", () => 
 // (lib/mcp compiles alone and cannot import lib/releases), and "now" through the opts seam, so no replay depends on
 // the wall clock. These tests read the new fields through loose types on purpose: they say what the reply must
 // carry, not what the compiler happens to know.
+//
+// Server 0.7.0 (still world/2) adds publishedAt: the date the publisher itself puts on the data, read only from what the
+// item's route states (the infra route's dataLastEdited and provenance period, the hazards route's Drought Monitor map
+// date), null where it states none. stale compares publishedAt, else snapshotAt, with the window; the stale reason is
+// written once; a cadence the calendar has no entry for is absent, not null.
 describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
   type Cad = { kind: string; precision: string; source: string };
-  type Fresh = WorldItem & { snapshotAt?: string | null; cadence?: Cad | null };
+  type Fresh = WorldItem & { snapshotAt?: string | null; cadence?: Cad | null; publishedAt?: string | null };
   type Lookup = (sourceId: string) => Cad | null;
   const DAY = 86_400_000;
   const NOW = Date.parse(T);
@@ -1733,7 +1738,7 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
    * The age table, days a snapshot may be old before its source is stale, written here a second time so the test does
    * not share the code's copy. A continuous source is never stale by age and has no row.
    */
-  const WINDOW: Record<string, number> = { annual: 366, quarterly: 100, monthly: 35, weekly: 10, daily: 2 };
+  const WINDOW: Record<string, number> = { annual: 366, quarterly: 100, monthly: 35, weekly: 12, daily: 2 };
 
   function runFresh(input: unknown, over: Record<string, Answer> = {}, o: { now?: number; lookup?: Lookup | null } = {}) {
     const f = router(over);
@@ -1761,11 +1766,13 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
     const out: string[] = [];
     for (const [topic, sec] of Object.entries(payload.topics as Record<string, WorldSection>)) {
       for (const it of sec.items as Fresh[]) {
-        if (!it.cadence || !it.snapshotAt) continue;
+        // the publisher's own date when the item has one, else the snapshot: the rule, written a second time
+        const dated = it.publishedAt ?? it.snapshotAt;
+        if (!it.cadence || !dated) continue;
         const days = WINDOW[it.cadence.kind];
-        if (days === undefined || now - Date.parse(it.snapshotAt) <= days * DAY) continue;
+        if (days === undefined || now - Date.parse(dated) <= days * DAY) continue;
         const flagged = (sec.missing ?? []).some((m) => String(m.code) === "stale" && m.what === `${it.sourceId} freshness`);
-        if (!flagged) out.push(`${topic}: ${it.sourceId} snapshot ${it.snapshotAt} is older than its ${it.cadence.kind} window (${days} days) and carries no stale entry`);
+        if (!flagged) out.push(`${topic}: ${it.sourceId} ${it.publishedAt ? "publishedAt" : "snapshot"} ${dated} is older than its ${it.cadence.kind} window (${days} days) and carries no stale entry`);
       }
     }
     return out;
@@ -1779,7 +1786,11 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
     expect((eco.missing ?? []).filter((m) => String(m.code) === "stale")).toEqual([
       { what: "bls-qcew freshness", code: "stale", action: "none", reason: expect.stringMatching(new RegExp(`^U\\.S\\. Bureau of Labor Statistics releases quarterly; eye serves a snapshot from ${old.replace(/\./g, "\\.")}.*100 days`)) },
     ]);
-    expect(eco.coverageStatus!.basis).toContainEqual({ code: "stale", text: expect.stringMatching(/^bls-qcew freshness: /) });
+    // the reason is written once, on the entry; the topic's basis line is the code and the source, not the sentence again
+    expect(eco.coverageStatus!.basis).toContainEqual({ code: "stale", text: "bls-qcew freshness" });
+    expect(r.payload.coverageStatus).toMatchObject({ basis: expect.arrayContaining([{ code: "stale", text: "economy: bls-qcew freshness" }]) });
+    const reason = String(eco.missing!.find((m) => String(m.code) === "stale")!.reason);
+    expect(JSON.stringify(r.payload).split(JSON.stringify(reason).slice(1, -1)).length - 1, "the stale sentence appears once in the reply").toBe(1);
     // stale is a label, not a withholding: the items are there, with the date and the cadence beside the value
     const emp = eco.items.find((i) => i.fact.startsWith("covered employment")) as Fresh;
     expect(emp).toMatchObject({ value: 812345, snapshotAt: old, cadence: { kind: "quarterly", precision: "approximate", source: "bls-qcew" } });
@@ -1812,7 +1823,7 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
     expect(await staleCount("continuous", 3650 * DAY), "continuous, ten years old").toBe(0);
   });
 
-  it("the committed age table is annual 366, quarterly 100, monthly 35, weekly 10, daily 2, and covers every cadence the calendar uses but continuous", async () => {
+  it("the committed age table is annual 366, quarterly 100, monthly 35, weekly 12, daily 2, and covers every cadence the calendar uses but continuous", async () => {
     const mod = (await import("./world")) as unknown as Record<string, unknown>;
     expect(mod.STALE_AFTER_DAYS).toEqual(WINDOW);
     const kinds = new Set(RELEASE_CALENDAR.map((e) => e.cadence as string));
@@ -1855,7 +1866,8 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
       // the new fields cost bytes; every recorded reply must still fit whole under the cap
       expect(day.payload.truncated, `${label}: cut to the byte cap`).toBeUndefined();
       expect(allItems(day).length, `${label}: items`).toBe(allItems(plain).length);
-      expect(new TextEncoder().encode(JSON.stringify(day.payload)).length, `${label}: bytes`).toBeLessThan(WORLD_MAX_BYTES);
+      // the cap's own comment promises room for a point with more fabric: Austin, the largest, leaves about 1,300 bytes on the day
+      expect(new TextEncoder().encode(JSON.stringify(day.payload)).length, `${label}: bytes, with 1,000 to spare`).toBeLessThan(WORLD_MAX_BYTES - 1000);
 
       const later = await run(rec, yearOn);
       expect(staleProblems(later.payload, yearOn), `${label} a year on`).toEqual([]);
@@ -1929,32 +1941,211 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
     expect((r.payload.place as { point: JsonObject }).point).toMatchObject({ sourceId: "census-tigerweb", retrievedAt: pulled, snapshotAt: pulled });
   });
 
-  it("cadence names the calendar entry where the publisher has one, is null where it has none, and is absent from a server given no calendar", async () => {
+  it("cadence names the calendar entry where the publisher has one and is absent where it has none, and from a server given no calendar; it is never null", async () => {
     const r = await runFresh({ fips: "48453", topics: ["economy", "hazards"] }).reply;
     const items = allItems(r) as Fresh[];
     const by = (fact: string) => items.find((i) => i.fact.startsWith(fact))!;
     expect(by("typical home value").cadence).toEqual({ kind: "monthly", precision: "approximate", source: "zillow-zhvi" });
     expect(by("U.S. Drought Monitor this week").cadence).toEqual({ kind: "weekly", precision: "official", source: "usdm" });
-    expect(by("FEMA NRI overall risk rating").cadence).toBeNull();
-    expect(by("FEMA declaration").cadence).toBeNull();
-    // every item says one or the other; a null is only ever a publisher the calendar has no entry for
-    for (const i of items) {
-      expect("cadence" in i, `${i.sourceId}: ${i.fact}`).toBe(true);
-      if (i.cadence === null) expect(findEntry(i.sourceId), `${i.sourceId} has a calendar entry, so cadence cannot be null`).toBeUndefined();
-    }
-    // no calendar given (stdio, and every older caller): no claim either way
+    expect("cadence" in by("FEMA NRI overall risk rating")).toBe(false);
+    expect("cadence" in by("FEMA declaration")).toBe(false);
+    // absent means the calendar has no entry for the publisher: every item that has a cadence has an entry, and the other way round
+    for (const i of items) expect("cadence" in i, `${i.sourceId}: ${i.fact}`).toBe(findEntry(i.sourceId) !== undefined);
+    expect(JSON.stringify(r.payload), "a null cadence costs 15 bytes an item and says what absence says").not.toContain('"cadence":null');
+    // place.point is a citation too: the county table's publisher has no calendar entry, so it has no cadence either
+    expect("cadence" in (r.payload.place as { point: JsonObject }).point).toBe(false);
+    // no calendar given (older callers): no claim either way
     const bare = await runFresh({ fips: "48453", topics: ["economy", "hazards"] }, {}, { lookup: null }).reply;
     for (const i of allItems(bare)) expect("cadence" in i, `${i.sourceId}: ${i.fact}`).toBe(false);
     expect(staleOf(bare)).toEqual([]);
   });
 
-  it("the reply's note says once what snapshotAt, a null cadence and stale mean", async () => {
+  it("the reply's note says once what snapshotAt, publishedAt, an absent cadence and stale mean", async () => {
     const r = await runFresh(ECONOMY).reply;
     const note = String(r.payload.note);
     expect(note).toMatch(/snapshotAt/);
-    expect(note).toMatch(/cadence is null/);
+    expect(note).toMatch(/publishedAt/);
+    expect(note, "the three sources whose route states the publisher's date").toMatch(/three sources only \(hifld-hospitals, cms-provider-data, usdm\)/);
+    expect(note, "what eye declines to read as a publisher's date").toMatch(/declines pull dates and periods/);
+    expect(note).toMatch(/absent where the calendar has no entry/);
+    expect(note).not.toMatch(/cadence is null/);
     expect(note).toMatch(/release calendar/);
     expect(note).toMatch(/stale/);
+  });
+
+  it("a release-window item says it has no snapshot date in one short clause", async () => {
+    const r = await runFresh({ fips: "48453", topics: ["economy", "freshness"] }).reply;
+    const windows = (allItems(r) as Fresh[]).filter((i) => i.fact === "next scheduled release");
+    expect(windows.length).toBeGreaterThan(0);
+    for (const w of windows) {
+      expect(w.snapshotAt).toBeNull();
+      expect(String(w.note), w.sourceId).toMatch(/(^|; )no snapshot date: a computed window$/);
+      expect(String(w.note), w.sourceId).not.toMatch(/worked out/);
+    }
+  });
+
+  // ---- publishedAt: the publisher's own date, from what a route states and nowhere else ----
+  //
+  // /api/infra?op=hospitals as www.arxiviq.com answered on 2026-10-21 (HTTP 200): the layer's data-last-edited date at the
+  // top level of the reply (the routes spread their meta there; there is no "meta" key on the wire), the same date in the
+  // HIFLD provenance entry's period, and CMS's dataset-modified date in its entry's period. The recorder (scripts/world-record.mjs)
+  // keeps neither, so the twelve recorded fixtures cannot show these two; the Drought Monitor's map date survives in them.
+  describe("publishedAt: the publisher's own date, only where the item's route states one", () => {
+    const stated = {
+      ...HOSPITALS,
+      dataLastEdited: "2026-04-22",
+      provenance: HOSPITALS.provenance.map((p) => ({ ...p, period: p.source.id === "hifld-hospitals" ? "data last edited 2026-04-22" : "dataset modified 2026-07-22" })),
+    };
+    const INSTITUTIONS = { lon: -97.74, lat: 30.27, topics: ["institutions"] };
+    const HAZARDS = { fips: "48453", topics: ["hazards"] };
+    const pubs = (r: ToolReply) => (allItems(r) as Fresh[]).map((i) => `${i.sourceId} | ${i.fact} | ${String(i.publishedAt)}`);
+
+    it("the HIFLD hospital's is the data-last-edited date the infra route states, the CMS rating's is CMS's dataset-modified date from its provenance period; the snapshot is not moved by either", async () => {
+      const r = await runFresh(INSTITUTIONS, { "/api/infra?op=hospitals": stated }).reply;
+      const items = allItems(r) as Fresh[];
+      const hospital = items.find((i) => i.fact === "hospital")!;
+      const rating = items.find((i) => i.fact === "CMS overall hospital star rating")!;
+      expect(hospital.publishedAt).toBe("2026-04-22");
+      expect(rating.publishedAt).toBe("2026-07-22");
+      expect(hospital.snapshotAt).toBe(hospital.retrievedAt);
+      expect(rating.snapshotAt).toBeNull();
+      expect(validateWorld(toCallResult(r).structuredContent).errorMessage).toBeUndefined();
+    });
+
+    it("a route that states no date gives a null publishedAt on the item: not its retrievedAt, not its generatedAt, not today", async () => {
+      const r = await runFresh(INSTITUTIONS).reply; // the base reply states neither dataLastEdited nor a period
+      const items = allItems(r) as Fresh[];
+      for (const fact of ["hospital", "CMS overall hospital star rating", "dam"]) {
+        const i = items.find((x) => x.fact === fact)!;
+        expect("publishedAt" in i, fact).toBe(true);
+        expect(i.publishedAt, fact).toBeNull();
+      }
+      expect(validateWorld(toCallResult(r).structuredContent).errorMessage).toBeUndefined();
+    });
+
+    it("only the sentence the route writes is read: a different period sentence or a dataLastEdited that is not a date gives null", async () => {
+      const odd = {
+        ...stated,
+        dataLastEdited: "yesterday",
+        provenance: HOSPITALS.provenance.map((p) => ({ ...p, period: p.source.id === "hifld-hospitals" ? "data last edited sometime in April" : "dataset modified 2026-07-22, re-baked 2026-10-17" })),
+      };
+      const r = await runFresh(INSTITUTIONS, { "/api/infra?op=hospitals": odd }).reply;
+      for (const i of allItems(r) as Fresh[]) if (i.fact === "hospital" || i.fact === "CMS overall hospital star rating") expect(i.publishedAt, i.fact).toBeNull();
+    });
+
+    it("the Drought Monitor's is the map date the hazards reply states", async () => {
+      const r = await runFresh(HAZARDS).reply;
+      const drought = (allItems(r) as Fresh[]).find((i) => i.fact.startsWith("U.S. Drought Monitor this week"))!;
+      expect(drought.publishedAt).toBe("2026-10-13");
+      expect(drought.period).toBe("2026-10-13");
+      expect(drought.snapshotAt).toBe(T);
+    });
+
+    it("the SEC bundle has none: the companies route's releasedAt is the day eye pulled EDGAR (the snapshot), not a date SEC puts on the file", async () => {
+      const sec = { source: src("sec-edgar", "U.S. Securities and Exchange Commission", "https://www.sec.gov/"), kind: "published", releasedAt: "2026-10-01" };
+      const full = { ...COMPANIES, generatedAt: T, pulled: "2026-10-01", bundle: { companies: 6000, geocoded: 5900, withFacts: 5000 }, provenance: [sec] };
+      const r = await runFresh({ fips: "48453", topics: ["institutions"] }, { "/api/companies": full }).reply;
+      const co = topicsOf(r).institutions.items.find((i) => i.sourceId === "sec-edgar") as Fresh;
+      expect(co.snapshotAt).toBe("2026-10-01");
+      expect("publishedAt" in co).toBe(true);
+      expect(co.publishedAt).toBeNull();
+    });
+
+    it("over a whole point reply only the three sources that state a date carry one, and each carries exactly what its route sent", async () => {
+      const r = await runFresh({ lon: -97.74, lat: 30.27 }, { "/api/infra?op=hospitals": stated }).reply;
+      const items = allItems(r) as Fresh[];
+      expect(items.length).toBeGreaterThan(20);
+      for (const i of items) expect("publishedAt" in i, `${i.sourceId}: ${i.fact}`).toBe(true);
+      const dated = new Set(items.filter((i) => typeof i.publishedAt === "string").map((i) => `${i.sourceId} ${i.publishedAt}`));
+      expect([...dated].sort()).toEqual(["cms-provider-data 2026-07-22", "hifld-hospitals 2026-04-22", "usdm 2026-10-13"]);
+      // the computed release windows and eye's own catalogue have no publisher date to state
+      for (const i of items) if (i.fact === "next scheduled release" || i.sourceId === "eye-catalog") expect(i.publishedAt, i.fact).toBeNull();
+    });
+
+    it("is never derived from today: the same replies a year apart give the same publishedAt on every item", async () => {
+      const input = { lon: -97.74, lat: 30.27 };
+      const over = { "/api/infra?op=hospitals": stated };
+      const now = await runFresh(input, over, { now: NOW }).reply;
+      const later = await runFresh(input, over, { now: NOW + 365 * DAY }).reply;
+      // a year on there are stale entries, which cost bytes, so the cap may cut an item or two: compare the items both replies hold
+      const held = new Set(pubs(now));
+      const both = pubs(later).filter((p) => held.has(p));
+      expect(both.length, "items the later reply shares with the earlier one").toBeGreaterThan(pubs(later).length - 3);
+      expect(pubs(later).length).toBeGreaterThan(20);
+      expect(pubs(now).some((p) => p.endsWith("| 2026-04-22"))).toBe(true);
+      expect(pubs(now).some((p) => p.endsWith("| null"))).toBe(true);
+    });
+
+    it("stale compares the publisher's date when the item has one: a map more than 12 days old is stale although the snapshot is newer, and the reason says whose date it used", async () => {
+      const week = (at: string) => runFresh(HAZARDS, {}, { now: Date.parse(at) }).reply;
+      // the map is dated 2026-10-13; the snapshot (retrievedAt) is 2026-10-18T12:00Z
+      expect(staleOf(await week("2026-10-25T00:00:00Z")), "exactly 12 days after the map date").toEqual([]);
+      const past = await week("2026-10-25T00:01:00Z");
+      expect(staleOf(past), "a minute past 12 days").toEqual(["hazards: usdm freshness"]);
+      const later = await week("2026-10-26T12:00:00Z"); // the snapshot is 8.0 days old and fresh; only the map date is past its window
+      const entry = (topicsOf(later).hazards.missing ?? []).find((m) => String(m.code) === "stale")!;
+      expect(entry).toMatchObject({ what: "usdm freshness", code: "stale", action: "none" });
+      expect(String(entry.reason)).toBe("National Drought Mitigation Center releases weekly; its own date for this data is 2026-10-13 (13 days old; stale after 12 days)");
+      // the item keeps its data
+      expect((allItems(later) as Fresh[]).some((i) => i.fact.startsWith("U.S. Drought Monitor this week"))).toBe(true);
+      expect(staleProblems(later.payload, Date.parse("2026-10-26T12:00:00Z"))).toEqual([]);
+      expect(validateWorld(toCallResult(later).structuredContent).errorMessage).toBeUndefined();
+    });
+
+    it("the current Drought Monitor map is never stale: the map dated Tuesday the 13th is still the newest at 12:30Z on the 22nd (9.5 days old), and a county reading cached for a day plus the edge's two hours is not stale either, nor is a Monitor released a day late", async () => {
+      const week = (at: string) => runFresh(HAZARDS, {}, { now: Date.parse(at) }).reply;
+      for (const at of [
+        "2026-10-22T12:30:00Z", // the Thursday release, 9.5 days after the map date
+        "2026-10-23T00:00:00Z", // 10.0 days: the old table's line, which it had not yet passed
+        "2026-10-23T14:30:00Z", // 10.6 days: a reading cached at the release, a day of route cache and two hours at the edge later (stale under the old 10)
+        "2026-10-24T12:00:00Z", // 11.5 days: a release a day and a half late, still unpublished (stale under the old 10)
+      ]) expect(staleOf(await week(at)), at).toEqual([]);
+    });
+
+    it("the screen route's period for BLS QCEW and Zillow is the period the value describes, not a release date: publishedAt stays null, and 38 days on a month-end value is not stale for it", async () => {
+      // as /api/screen answered on 2026-10-21: provenance period "2026 Q1" for BLS QCEW and "2026-09-30" for both Zillow tables
+      const periods: Record<string, string> = { "bls-qcew": "2026 Q1", "zillow-zhvi": "2026-09-30", "zillow-zori": "2026-09-30" };
+      const base = screenRow();
+      const screen = { ...base, provenance: base.provenance.map((p) => ({ ...p, ...(periods[p.source.id] ? { period: periods[p.source.id] } : {}) })) };
+      const r = await runFresh(ECONOMY, { "/api/screen?kind=county": screen }).reply;
+      const items = (allItems(r) as Fresh[]).filter((i) => i.sourceId in periods);
+      expect(items.length).toBeGreaterThan(3);
+      for (const i of items) expect(i.publishedAt, `${i.sourceId}: ${i.fact}`).toBeNull();
+      // 2026-09-30 is 38 days before this, past Zillow's 35-day window; the snapshot (the fetch) is 20 days old
+      const later = await runFresh(ECONOMY, { "/api/screen?kind=county": screen }, { now: NOW + 20 * DAY }).reply;
+      expect(staleOf(later)).toEqual([]);
+    });
+
+    it("a source with no publisher date is compared by its snapshot, and the reason says so", async () => {
+      const r = await runFresh(ECONOMY, { "/api/screen?kind=county": screenAt({ "bls-qcew": iso(171) }) }).reply;
+      const entry = (topicsOf(r).economy.missing ?? []).find((m) => String(m.code) === "stale")!;
+      expect(String(entry.reason)).toMatch(/eye serves a snapshot from /);
+      expect(String(entry.reason)).not.toMatch(/its own date/);
+    });
+
+    it("over the twelve recorded replies, the Drought Monitor carries the map date its route recorded and nothing else is dated; the map goes stale by that date 13 days on, and on no recorded day", async () => {
+      const calendar = (rec: Recorded, now: number) =>
+        worldContext(toolByName("world_context")!.inputSchema.parse(rec.input) as never, { fetchJson: replay(rec), countyPoint, releaseCadence: calendarLookup } as unknown as ToolCtx, { now } as unknown as { stepMs?: number });
+      let withItem = 0;
+      for (const [label, rec] of recorded) {
+        const hist = Object.entries(rec.routes).find(([p]) => p.startsWith("/api/hazards?op=history"));
+        const mapDate = ((hist?.[1].body.data as JsonObject | undefined)?.droughtNow as JsonObject | undefined)?.mapDate;
+        const day = await calendar(rec, Date.parse("2026-10-19T12:00:00Z"));
+        for (const i of allItems(day) as Fresh[]) {
+          expect("publishedAt" in i, `${label}: ${i.sourceId} ${i.fact}`).toBe(true);
+          if (i.fact.startsWith("U.S. Drought Monitor this week")) expect(i.publishedAt, label).toBe(mapDate);
+          else expect(i.publishedAt, `${label}: ${i.sourceId} ${i.fact}`).toBeNull();
+        }
+        expect(staleOf(day), `${label} on the day it was recorded`).toEqual([]);
+        // a route can list USDM as missing even when it sent a map, and then the tool shows no Drought Monitor item
+        const hasItem = (allItems(day) as Fresh[]).some((i) => i.fact.startsWith("U.S. Drought Monitor this week"));
+        const later = await calendar(rec, Date.parse("2026-10-26T12:00:00Z"));
+        expect(staleOf(later).filter((s) => s.endsWith("usdm freshness")), label).toHaveLength(hasItem ? 1 : 0);
+        expect(staleProblems(later.payload, Date.parse("2026-10-26T12:00:00Z")), label).toEqual([]);
+        if (hasItem) withItem++;
+      }
+      expect(withItem, "recorded replies that show a Drought Monitor item").toBeGreaterThan(8);
+    });
   });
 
   describe("the published outputSchema", () => {
@@ -1990,6 +2181,29 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
         expect(v.valid, JSON.stringify(bad)).toBe(false);
         expect(v.errorMessage).toContain("snapshotAt");
       }
+    });
+
+    it("accepts publishedAt as a date, a datetime or null (the reason for a null is the reply's note, not each item's), and rejects anything else", async () => {
+      const p = await pay();
+      // an item that needs no note for any other reason: a value, and a record URL
+      const first = p.topics.economy.items.find((i) => i.value !== null && typeof i.upstreamRecordUrl === "string")!;
+      delete first.note;
+      for (const ok of ["2026-04-22", "2026-04-24T19:12:10.000Z", null]) {
+        first.publishedAt = ok;
+        expect(validateWorld(p).errorMessage, JSON.stringify(ok)).toBeUndefined();
+      }
+      for (const bad of ["last April", "2026-04-22T19:12:10+00:00", 20260422, true]) {
+        first.publishedAt = bad;
+        const v = validateWorld(p);
+        expect(v.valid, JSON.stringify(bad)).toBe(false);
+        expect(v.errorMessage).toContain("publishedAt");
+      }
+    });
+
+    it("still accepts the cadence null a 0.6.0 reply carried, though 0.7.0 omits it", async () => {
+      const p = await pay();
+      p.topics.economy.items[0].cadence = null;
+      expect(validateWorld(p).errorMessage).toBeUndefined();
     });
 
     it("rejects a null snapshotAt with no note, the way it rejects a null value with none", async () => {

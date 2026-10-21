@@ -12,6 +12,7 @@ import { z } from "zod";
 import { argsSummary, createServer, describeServer, errorResult, INSTRUCTIONS, listDocs, PLACE_CITE, PROMPTS, PUBLIC_ORIGIN, SERVER_VERSION, toCallResult, toolManifest, toolTable } from "./server";
 import { ERROR_MAX_CHARS, TOOLS, type FetchJson, type ToolDef } from "./tools";
 import { WORLD_OUTPUT_SCHEMA, WORLD_SCHEMA_VERSION } from "./worldSchema";
+import { cadenceOf } from "../releases/calendar";
 
 const validateEnvelope = new AjvJsonSchemaValidator().getValidator(ERROR_ENVELOPE_SCHEMA as never);
 
@@ -470,6 +471,70 @@ describe("outputSchema on the wire", () => {
     const r = await callBad(reply({ ...item, note: "withheld by BLS for confidentiality: null, not 0" }));
     expect(r.isError).toBe(false);
     expect((r.structuredContent as { schemaVersion: string }).schemaVersion).toBe("world/2");
+  });
+});
+
+// The wiring #100 left untested: createServer({ releaseCadence }) -> ToolCtx -> world_context -> the reply a client reads.
+// world.test.ts drives worldContext() with a ctx it builds itself; this goes through tools/call, the way app/api/mcp/route.ts
+// (and, since 0.7.0, scripts/mcp-stdio.mjs) hands the real calendar to createServer.
+describe("world_context through tools/call: the calendar createServer is given reaches the reply", () => {
+  const T = "2026-10-18T12:00:00.000Z";
+  const entry = (id: string, publisher: string, over: Record<string, unknown> = {}) => ({ source: { id, name: id, publisher, url: `https://${id}.example.gov/`, license: "public domain" }, retrievedAt: T, kind: "published", ...over });
+  // the economy and hazard-history routes as a county FIPS asks for them, cut to what the tool reads; any other route is not deployed (404)
+  const routes: Array<[string, unknown]> = [
+    [
+      "/api/screen?kind=county",
+      {
+        data: { rows: [{ id: "county:48453", kind: "county", name: "Travis County, TX", geo: [-97.69, 30.24], values: { name: "Travis County", geoid: "48453", state: "TX", "jobs.emp": 812345, "jobs.avgWeeklyWage": 1688, "jobs.period": "2026 Q1", "jobs.suppressed": "false" } }], total: 1 },
+        provenance: [entry("census-tigerweb", "U.S. Census Bureau"), entry("bls-qcew", "U.S. Bureau of Labor Statistics", { upstreamUrl: "https://data.bls.gov/cew/data/api/2026/1/area/48453.csv" })],
+        generatedAt: T,
+      },
+    ],
+    [
+      "/api/hazards?op=history",
+      {
+        // the Drought Monitor's map is dated 2025-01-07: by the wall clock it is far past a weekly window, whatever day this runs
+        data: { fips: "48453", declarations: [], declarationRows: 0, droughtNow: { mapDate: "2025-01-07", none: 60, d0: 40, d1: 0, d2: 0, d3: 0, d4: 0 }, missing: [] },
+        provenance: [entry("usdm", "National Drought Mitigation Center", { upstreamUrl: "https://usdmdataservices.unl.edu/api/CountyStatistics/GetDroughtSeverityStatisticsByAreaPercent?aoi=48453" })],
+        generatedAt: T,
+      },
+    ],
+  ];
+  type Reply = { topics: Record<string, { items: Array<Record<string, unknown>>; missing?: Array<Record<string, unknown>> }> };
+
+  async function callWorld(withCalendar: boolean): Promise<Reply> {
+    const fetchJson: FetchJson = async (p) => {
+      const hit = routes.find(([k]) => p.startsWith(k));
+      return hit ? { status: 200, body: hit[1], url: "http://t" + p } : { status: 404, body: { error: "non-JSON reply" }, url: "http://t" + p };
+    };
+    const server = createServer({ fetchJson, docsDir: dir, openapiPath: path.join(dir, "openapi.json"), ...(withCalendar ? { releaseCadence: (sourceId: string) => cadenceOf(sourceId) } : {}) });
+    const [ct, st] = InMemoryTransport.createLinkedPair();
+    const client = new Client({ name: "test", version: "0.0.0" });
+    await server.connect(st);
+    await client.connect(ct);
+    const r = await client.callTool({ name: "world_context", arguments: { fips: "48453", topics: ["economy", "hazards"] } });
+    expect(r.isError, JSON.stringify(r.structuredContent).slice(0, 400)).toBe(false);
+    return r.structuredContent as unknown as Reply;
+  }
+
+  it("a server given the calendar sends each item its publisher's cadence, the map date as publishedAt, and a stale entry for a map past its window", async () => {
+    const t = (await callWorld(true)).topics;
+    const emp = t.economy.items.find((i) => String(i.fact).startsWith("covered employment"))!;
+    expect(emp.cadence).toEqual({ kind: "quarterly", precision: "approximate", source: "bls-qcew" });
+    expect(emp.publishedAt, "the screen route states a period, not a release date").toBeNull();
+    const drought = t.hazards.items.find((i) => String(i.fact).startsWith("U.S. Drought Monitor this week"))!;
+    expect(drought).toMatchObject({ publishedAt: "2025-01-07", snapshotAt: T, cadence: { kind: "weekly", precision: "official", source: "usdm" } });
+    const stale = (t.hazards.missing ?? []).filter((m) => m.code === "stale");
+    expect(stale).toHaveLength(1);
+    expect(stale[0]).toMatchObject({ what: "usdm freshness", action: "none" });
+    expect(String(stale[0].reason)).toContain("its own date for this data is 2025-01-07");
+  });
+
+  it("the same server given no calendar sends no cadence and flags nothing, though it still states the publisher's date", async () => {
+    const t = (await callWorld(false)).topics;
+    for (const s of Object.values(t)) for (const i of s.items) expect("cadence" in i, `${i.sourceId}: ${i.fact}`).toBe(false);
+    expect(Object.values(t).flatMap((s) => s.missing ?? []).filter((m) => m.code === "stale")).toEqual([]);
+    expect(t.hazards.items.find((i) => String(i.fact).startsWith("U.S. Drought Monitor this week"))).toMatchObject({ publishedAt: "2025-01-07" });
   });
 });
 

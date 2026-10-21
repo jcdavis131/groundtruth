@@ -14,8 +14,12 @@
 //     value, a property, and rules that apply only to the new value (CHANGELOG.md, 0.5.0);
 //   - snapshotAt says when the data eye serves for the item's source was fixed (a date or a UTC datetime, as the route or
 //     bundle wrote it), or is null with the reason in the note; cadence is the release calendar's entry for the
-//     publisher (kind, precision, entry id) or null. Both optional, added with 0.6.0 and additive: two properties and a
-//     rule that applies only to a null snapshotAt (CHANGELOG.md, 0.6.0); the absence code `stale` came with them;
+//     publisher (kind, precision, entry id), left out where the calendar has none (0.6.0 sent null; the schema still
+//     accepts it). Both optional, added with 0.6.0 and additive: two properties and a rule that applies only to a null
+//     snapshotAt (CHANGELOG.md, 0.6.0); the absence code `stale` came with them;
+//   - publishedAt is the date the publisher itself puts on the data, as the item's route states it (same date patterns),
+//     or null where the route states none. Optional, added with 0.7.0 and additive: one property. A null needs no note
+//     beside it: the reason is the same for every item and the reply's `note` says it once (CHANGELOG.md, 0.7.0);
 //   - a topic with missing[] entries has a coverageStatus; a reply that was cut (truncated) has one;
 //   - missing[] entries and coverageStatus.basis lines are the typed ones of ./absence;
 //   - coverageStatus.status is "partial" and nothing else ("complete" would be a claim eye cannot make).
@@ -42,7 +46,7 @@ const NO_RECORD_NOTE = "no record-level URL: \\S";
 /** A retrieval time as every item and input states it: ISO 8601 in UTC, ending Z. */
 const RETRIEVED_AT = "^\\d{4}-\\d{2}-\\d{2}T[0-9:.]+Z$";
 
-/** A snapshot date as a route or a bundle writes it: a day, or a UTC datetime (the SEC bundle's `pulled` is a bare day, and is not padded). */
+/** A snapshot or publisher date as a route or a bundle writes it: a day, or a UTC datetime (the SEC bundle's `pulled` is a bare day, and is not padded). */
 const SNAPSHOT_AT = "^\\d{4}-\\d{2}-\\d{2}(T[0-9:.]+Z)?$";
 
 /** The release calendar's entry for an item's publisher (lib/releases/calendar.ts: Cadence, Precision, the entry's id). */
@@ -110,6 +114,7 @@ const ITEM_SCHEMA = {
     upstreamRecordUrl: { type: "string", pattern: "^https://" },
     retrievedAt: { type: "string", pattern: RETRIEVED_AT },
     snapshotAt: { type: ["string", "null"], pattern: SNAPSHOT_AT },
+    publishedAt: { type: ["string", "null"], pattern: SNAPSHOT_AT },
     cadence: { anyOf: [{ type: "null" }, CADENCE_SCHEMA] },
     link: { type: "string", pattern: "^https?://" },
     kind: { type: "string", enum: ["about-eye", "estimate"] },
