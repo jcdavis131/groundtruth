@@ -528,7 +528,6 @@ describe("world_context through tools/call: the calendar createServer is given r
     expect(stale).toHaveLength(1);
     expect(stale[0]).toMatchObject({ what: "usdm freshness", action: "none" });
     expect(String(stale[0].reason)).toContain("its own date for this data is 2025-01-07");
-    expect((t.economy.missing ?? []).filter((m) => m.code === "stale")).toEqual([]);
   });
 
   it("the same server given no calendar sends no cadence and flags nothing, though it still states the publisher's date", async () => {

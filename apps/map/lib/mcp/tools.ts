@@ -54,8 +54,8 @@ export interface ToolCtx {
   /**
    * The release calendar's entry for a source id, or null when the calendar has none. Injected, not imported, for the
    * same reason as countyPoint: lib/releases/calendar.ts imports "@/..." and this directory compiles alone. The Next
-   * route passes it; scripts/mcp-stdio.mjs does not, so over stdio a world_context item has no `cadence` and nothing is
-   * called stale. A server that passes none makes no claim about cadence either way.
+   * route and scripts/mcp-stdio.mjs (since 0.7.0) pass it. A server that passes none (a test, an older caller) makes no
+   * claim about cadence either way: its items have no `cadence` and nothing is called stale.
    */
   releaseCadence?: (sourceId: string) => ReleaseCadence | null;
 }

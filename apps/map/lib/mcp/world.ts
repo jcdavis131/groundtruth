@@ -27,9 +27,12 @@
 //     source's own retrieval time) where another item has a record URL, and says so in its note.
 //   - Every item says when the data eye serves for its source was fixed (snapshotAt: the retrievedAt its
 //     route sent, or a bundle's own recorded date; null, with the reason in the note, where none is
-//     recorded) and, where eye's release calendar has an entry for the publisher, how often it releases
-//     (cadence). A source whose snapshot is older than its cadence allows (STALE_AFTER_DAYS) is listed in
-//     its topic's missing with the code `stale`, once; its items are still shown. Stale is a label.
+//     recorded), the date the publisher itself puts on the data where the item's route states one
+//     (publishedAt: PUBLISHED below reads it from named fields, never from retrievedAt, never from today;
+//     null where the route states none) and, where eye's release calendar has an entry for the publisher,
+//     how often it releases (cadence; absent where the calendar has none). A source whose publishedAt, else
+//     snapshotAt, is older than its cadence allows (STALE_AFTER_DAYS) is listed in its topic's missing with
+//     the code `stale`, once; its items are still shown. Stale is a label.
 //   - Missing is absent with a reason (topics[t].missing), never a placeholder;
 //     a value BLS withheld is null with the reason, not 0. Every missing entry also
 //     carries a code and the action the agent may take (./absence): not_published and
@@ -106,11 +109,17 @@ export interface WorldItem {
    */
   snapshotAt?: string | null;
   /**
-   * How often the publisher releases, from eye's release calendar (kind, whether the date is official or approximate, the
-   * calendar entry's id). null where the calendar has no entry for the publisher (that says nothing about how often it
-   * releases). Absent when this server was given no calendar.
+   * The date the publisher itself puts on the data behind this item (a last-edit date, or the Drought Monitor's map date), as
+   * the item's route states it (a date or a UTC datetime, as written). null where the route states none, which most do; the
+   * reply's note says so once. Never the retrievedAt, never the reply's time, never today. Added with 0.7.0.
    */
-  cadence?: ReleaseCadence | null;
+  publishedAt?: string | null;
+  /**
+   * How often the publisher releases, from eye's release calendar (kind, whether the date is official or approximate, the
+   * calendar entry's id). Absent where the calendar has no entry for the publisher (that says nothing about how often it
+   * releases) and when this server was given no calendar.
+   */
+  cadence?: ReleaseCadence;
   link: string;
   /**
    * "about-eye": a claim about eye's own catalogue, not about the world; it has no upstream to confirm.
@@ -238,6 +247,8 @@ interface Prov {
   source: JsonObject;
   upstreamUrl?: string;
   retrievedAt?: string;
+  /** The period or note the route writes beside the entry; CMS's is "dataset modified YYYY-MM-DD". */
+  period?: string;
 }
 
 /**
@@ -306,8 +317,10 @@ interface Cite {
   link: string;
   /** When the data behind this citation was fixed, or why no date is recorded. Not copied onto the item as it is: item() states snapshotAt and the reason. */
   snap: Snap;
-  /** The release calendar's entry for this source; null when it has none; undefined (not stated) when the server has no calendar. */
-  cadence?: ReleaseCadence | null;
+  /** The date the publisher puts on the data, as this source's route states it (PUBLISHED); null where it states none. */
+  pub: string | null;
+  /** The release calendar's entry for this source; absent when it has none, and when the server has no calendar. */
+  cadence?: ReleaseCadence;
 }
 
 /** The date the data behind a citation was fixed (as the route or bundle wrote it), or null and why not. */
@@ -345,6 +358,35 @@ function snapOf(got: Got, id: string, p: Prov): Snap {
   return { at: null, why: at ? `the route's retrievedAt (${at.slice(0, 40)}) is not an ISO 8601 UTC date` : "the route sent no retrievedAt for it" };
 }
 
+/** A date as a route writes one, only when it is a real date: the schema pattern checks the shape, this the calendar. */
+function dateOf(v: unknown): string | null {
+  return typeof v === "string" && SNAP_DATE.test(v) && Number.isFinite(Date.parse(v)) ? v : null;
+}
+
+/**
+ * The date the publisher itself puts on the data behind a citation, read from the one field its route states it in. A
+ * whitelist by source id (like BUNDLES): a source not listed has none, so a route that starts sending a date is read
+ * only once someone has checked what the date is. Never the retrievedAt, never the reply's time. What each route sent
+ * was read from the live replies on 2026-10-21 (CHANGELOG.md, 0.7.0, has the table).
+ *   - hifld-hospitals: the infra route's `dataLastEdited`, the HIFLD layer's data-last-edited date. It is a constant in
+ *     lib/infra/hospitals.ts that the route sends, not read from the layer on each call.
+ *   - cms-provider-data: the infra route's provenance entry for CMS, whose period reads "dataset modified YYYY-MM-DD".
+ *   - usdm: the hazards route's Drought Monitor map date. The Monitor dates its weekly map by the Tuesday it is valid for
+ *     and releases it two days later.
+ * Not read: the screen route's period for BLS QCEW and Zillow ("2026 Q1", "2026-09-30") is the period the value describes,
+ * not a release date; the companies route's releasedAt for SEC EDGAR is BUNDLE.pulled, the day eye pulled the file, which is
+ * the item's snapshotAt already.
+ */
+const PUBLISHED: Record<string, (got: Got, p: Prov) => string | null> = {
+  "hifld-hospitals": (got) => dateOf(got.body.dataLastEdited),
+  "cms-provider-data": (_got, p) => dateOf(/^dataset modified (\d{4}-\d{2}-\d{2})$/.exec(typeof p.period === "string" ? p.period : "")?.[1]),
+  usdm: (got) => dateOf(obj(obj(got.body.data).droughtNow).mapDate),
+};
+
+function publishedOf(got: Got, id: string, p: Prov): string | null {
+  return Object.prototype.hasOwnProperty.call(PUBLISHED, id) ? PUBLISHED[id](got, p) : null;
+}
+
 /** Why a source has no citation on this call: the route lists it missing, or sent no provenance for it. */
 interface NoCite {
   none: string;
@@ -363,7 +405,8 @@ function cite(got: Got, id: string, pick?: (p: Prov) => boolean): Cite | NoCite 
   if (!p || !publisher) return { none: id, reason: `${id}: the route sent no provenance for it, so nothing from it is shown`, code: id === "eye-catalog" ? "about_eye" : "no_citation" };
   const upstreamUrl = (typeof p.upstreamUrl === "string" && p.upstreamUrl) || (typeof src.url === "string" && src.url) || got.url;
   const retrievedAt = (typeof p.retrievedAt === "string" && p.retrievedAt) || (typeof got.body.generatedAt === "string" && got.body.generatedAt) || new Date().toISOString();
-  return { sourceId: id, publisher, upstreamUrl, retrievedAt, link: got.url, snap: snapOf(got, id, p), ...(got.cadenceOf ? { cadence: got.cadenceOf(id) } : {}) };
+  const cadence = got.cadenceOf?.(id);
+  return { sourceId: id, publisher, upstreamUrl, retrievedAt, link: got.url, snap: snapOf(got, id, p), pub: publishedOf(got, id, p), ...(cadence ? { cadence } : {}) };
 }
 
 function isCite(c: Cite | NoCite): c is Cite {
@@ -391,11 +434,13 @@ function item(c: Cite | NoCite, fact: string, value: WorldItem["value"], extra: 
   const { record, ...rest } = extra;
   if (typeof record !== "string") rest.note = [rest.note, `no record-level URL: ${record.noRecord}`].filter(Boolean).join("; ");
   for (const [k, v] of Object.entries(rest)) if (v !== undefined && v !== null && v !== "") (out as unknown as JsonObject)[k] = v;
-  const { snap, cadence, ...cited } = c;
+  const { snap, pub, cadence, ...cited } = c;
   Object.assign(out, cited);
-  // Set outside the loop above, which drops null: a null snapshotAt is the claim "none recorded", with its reason in the note.
+  // Set outside the loop above, which drops null: a null snapshotAt is the claim "none recorded", with its reason in the note;
+  // a null publishedAt is the claim "the route states none", which the reply's note says once.
   out.snapshotAt = snap.at;
-  if (cadence !== undefined) out.cadence = cadence;
+  out.publishedAt = pub;
+  if (cadence) out.cadence = cadence;
   if (snap.at === null) out.note = [out.note, `no snapshot date: ${snap.why ?? "none is recorded for this source"}`].filter(Boolean).join("; ");
   if (typeof record === "string") out.upstreamRecordUrl = record;
   if (rest.kind) {
@@ -547,7 +592,7 @@ export function staleBy(snapshotAt: string, kind: string, now: number): { ageDay
 
 /** What the reply says about every item, once (not per item, for the byte cap). */
 export const WORLD_REPLY_NOTE =
-  "Cite upstreamRecordUrl for a fact (the publisher's own URL for that exact record), or upstreamUrl where an item's note says it has no record-level URL; `link` is the eye route that reproduces it. kind about-eye marks a claim about eye's own catalogue, not about the world. kind estimate marks a count eye computed from a route's list, not a number the publisher states; its inputs name the source, the route and when that source was retrieved. Missing is listed with its reason, never filled in. snapshotAt is when the data eye serves for that source was fixed: the retrievedAt its route sent, or a bundle's own recorded date; null, with the reason in the note, where none is recorded. cadence is the publisher's release cadence from eye's release calendar; cadence is null where the calendar has no entry for the publisher (that says nothing about how often it releases) and absent when this server has no calendar. A source whose snapshotAt is older than its cadence allows is listed in missing as stale; its items are still shown. Names appear only on places, hospitals and non-private dams.";
+  "Cite upstreamRecordUrl for a fact (the publisher's own URL for that exact record), or upstreamUrl where an item's note says it has no record-level URL; `link` is the eye route that reproduces it. kind about-eye marks a claim about eye's own catalogue, not about the world. kind estimate marks a count eye computed from a route's list, not a number the publisher states; its inputs name the source, the route and when that source was retrieved. Missing is listed with its reason, never filled in. snapshotAt is when the data eye serves for that source was fixed: the retrievedAt its route sent, or a bundle's own recorded date; null, with the reason in the note, where none is recorded. publishedAt is a date the publisher itself puts on the data (a last-edit date, or the Drought Monitor's map date), only where the item's route states one; null where it states none, which most do (the SEC route's releasedAt is eye's pull date, so it is null there too). cadence is the publisher's release cadence from eye's release calendar. cadence is absent where the calendar has no entry for the publisher (that says nothing about how often it releases). A source whose publishedAt, else snapshotAt, is older than its cadence allows is listed in missing as stale; its items are still shown. Names appear only on places, hospitals and non-private dams.";
 
 function section(): Section {
   return { items: [], cut: [] };
@@ -842,6 +887,7 @@ function pointOut(p: Resolved["point"], cadenceOf?: ToolCtx["releaseCadence"]): 
   if (!p) return null;
   const { census, ...rest } = p;
   if (!census) return rest;
+  const cadence = cadenceOf?.("census-tigerweb");
   const dated = !!census.pulled && SNAP_DATE.test(census.pulled);
   return {
     ...rest,
@@ -852,7 +898,7 @@ function pointOut(p: Resolved["point"], cadenceOf?: ToolCtx["releaseCadence"]): 
     upstreamRecordUrl: `${TIGER_ACS2023_COUNTIES}/query?where=${enc(`GEOID='${census.geoid}'`)}&outFields=GEOID,NAME,INTPTLAT,INTPTLON&returnGeometry=false&f=json`,
     ...(census.pulled ? { retrievedAt: census.pulled } : {}),
     snapshotAt: dated ? census.pulled : null,
-    ...(cadenceOf ? { cadence: cadenceOf("census-tigerweb") } : {}),
+    ...(cadence ? { cadence } : {}),
   };
 }
 
@@ -1428,7 +1474,8 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
       for (const x of capList(s, "next releases", rel, max)) {
         const w = obj(x.window);
         const sid = String(x.sourceId);
-        const it = item({ sourceId: sid, publisher: publishers.get(sid)!, upstreamUrl: str(x.scheduleUrl) ?? cal.url, retrievedAt: typeof cal.body.generatedAt === "string" ? cal.body.generatedAt : new Date().toISOString(), link: cal.url, snap: { at: null, why: "this window is worked out from eye's calendar rules on each call" }, ...(ctx.releaseCadence ? { cadence: ctx.releaseCadence(sid) } : {}) }, "next scheduled release", str(x.title), {
+        const cadenceOfSource = ctx.releaseCadence?.(sid);
+        const it = item({ sourceId: sid, publisher: publishers.get(sid)!, upstreamUrl: str(x.scheduleUrl) ?? cal.url, retrievedAt: typeof cal.body.generatedAt === "string" ? cal.body.generatedAt : new Date().toISOString(), link: cal.url, snap: { at: null, why: "a computed window" }, pub: null, ...(cadenceOfSource ? { cadence: cadenceOfSource } : {}) }, "next scheduled release", str(x.title), {
           period: str(w.nominal) ?? undefined,
           note: [str(x.precision) ? `${str(x.precision)} date` : null, str(w.earliest) && str(w.latest) ? `window ${str(w.earliest)} to ${str(w.latest)}` : null, scheduleBlocked(str(x.scheduleUrl)) ? SCHEDULE_BLOCKED_NOTE : null].filter(Boolean).join("; "),
           record: noRecord("upstreamUrl is the publisher's own schedule for this release"),
@@ -1443,11 +1490,14 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
   for (const sec of Object.values(S)) {
     const said = new Set<string>();
     for (const it of sec.items) {
-      if (said.has(it.sourceId) || !it.cadence || !it.snapshotAt) continue;
-      const late = staleBy(it.snapshotAt, it.cadence.kind, now);
+      // The publisher's own date where the route states one, else the date eye's copy was fixed; the reason says which.
+      const dated = it.publishedAt ?? it.snapshotAt;
+      if (said.has(it.sourceId) || !it.cadence || !dated) continue;
+      const late = staleBy(dated, it.cadence.kind, now);
       if (!late) continue;
       said.add(it.sourceId);
-      miss(sec, `${it.sourceId} freshness`, `${it.publisher} releases ${it.cadence.kind}; eye serves a snapshot from ${it.snapshotAt} (${late.ageDays} days old; stale after ${late.limit} days)`, "stale");
+      const whose = it.publishedAt ? `its own date for this data is ${dated}` : `eye serves a snapshot from ${dated}`;
+      miss(sec, `${it.sourceId} freshness`, `${it.publisher} releases ${it.cadence.kind}; ${whose} (${late.ageDays} days old; stale after ${late.limit} days)`, "stale");
     }
   }
 
@@ -1499,7 +1549,8 @@ export async function worldContext(input: WorldInput, ctx: ToolCtx, opts: { step
     const basis: BasisLine[] = [];
     for (const k of order) {
       const sec = S[k];
-      const lines: BasisLine[] = [...(sec.missing ?? []).map((m) => ({ code: m.code, text: `${m.what}: ${m.reason}` })), ...sec.cut];
+      // A stale entry's sentence is written once, on the entry; its basis line is the code and the source.
+      const lines: BasisLine[] = [...(sec.missing ?? []).map((m) => ({ code: m.code, text: m.code === "stale" ? m.what : `${m.what}: ${m.reason}` })), ...sec.cut];
       if (lines.length) out[k].coverageStatus = { status: "partial", basis: lines };
       else delete out[k].coverageStatus;
       for (const l of lines) basis.push({ code: l.code, text: `${k}: ${l.text}` });
