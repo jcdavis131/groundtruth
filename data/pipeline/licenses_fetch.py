@@ -15,6 +15,10 @@ sha256 and byte count are recorded too, but a CMS page (census.gov, nps.gov) cha
 --check reports "sha256 differs" as information and fails only on a status other than 200, a quote that is no longer on
 the page, or a "states no licence" page that now mentions one. This is not run in CI: a publisher being down should not
 fail a pull request.
+
+A target with an emptyField (the USACE FeatureServer, whose JSON has a copyrightText) also records that top-level field of the
+JSON response in the lock, and is refused unless it is the empty string: data/LICENSES.md says the service's copyrightText is
+empty, and data/schema/licenses.test.mjs holds that sentence to the lock's copyrightText. --check reads the field again.
 """
 
 from __future__ import annotations
@@ -42,7 +46,8 @@ MIN_INTERVAL_S = 1.05
 MAX_HOPS = 5
 
 # One entry per terms URL in data/LICENSES.md, in the file's order. kind "quote": the page carries `quote`.
-# kind "no-licence": the page's visible text has no match for `searched` (a licence or copyright word).
+# kind "no-licence": the page's visible text has no match for `searched` (a licence or copyright word). emptyField: a top-level
+# string field of the JSON response that the row says is empty; the lock records it, and it must be "".
 TARGETS = [
     {
         "publisher": "U.S. Army Corps of Engineers (USACE), National Inventory of Dams",
@@ -55,6 +60,7 @@ TARGETS = [
         "url": "https://geospatial.sec.usace.army.mil/dls/rest/services/NID/National_Inventory_of_Dams_Public_Service/FeatureServer?f=pjson",
         "kind": "no-licence",
         "searched": r"licen[cs]e|public domain|copyright|terms of use|permission",
+        "emptyField": "copyrightText",
     },
     {
         "publisher": "U.S. Department of Education, National Center for Education Statistics (NCES)",
@@ -243,6 +249,16 @@ def squash(s: str) -> str:
 # ---------------------------------------------------------------- the lock
 
 
+def json_field(body: bytes, name: str):
+    """The top-level string field `name` of a JSON response, or None when the body is not a JSON object or the field is not a string."""
+    try:
+        obj = json.loads(_decode(body))
+    except ValueError:
+        return None
+    value = obj.get(name) if isinstance(obj, dict) else None
+    return value if isinstance(value, str) else None
+
+
 def examine(target: dict, got: dict) -> dict:
     """What the page says about the target, as lock fields."""
     text = page_text(got["_body"], got["contentType"])
@@ -256,14 +272,19 @@ def examine(target: dict, got: dict) -> dict:
         out["searched"] = target["searched"]
         out["matches"] = len(hits)
         out["textChars"] = len(re.sub(r"\s+", " ", text).strip())
+        if target.get("emptyField"):
+            out[target["emptyField"]] = json_field(got["_body"], target["emptyField"])
     return out
 
 
-def ok(entry: dict) -> bool:
+def ok(entry: dict, target: dict | None = None) -> bool:
     if entry["status"] != 200:
         return False
     if entry["kind"] == "quote":
         return entry["quoteFound"] is True and entry["quoteWords"] < 25
+    field = (target or {}).get("emptyField")
+    if field and entry.get(field) != "":
+        return False
     return entry["matches"] == 0 and entry["textChars"] > 0
 
 
@@ -280,7 +301,7 @@ def write() -> int:
         got = fetch(t["url"])
         e = entry_for(t, got)
         entries.append(e)
-        print(f"{e['status']} {e['bytes']:>8} {'ok  ' if ok(e) else 'FAIL'} {t['url']}", flush=True)
+        print(f"{e['status']} {e['bytes']:>8} {'ok  ' if ok(e, t) else 'FAIL'} {t['url']}", flush=True)
     lock = {
         "schemaVersion": "licenses-lock/1",
         "about": (
@@ -292,7 +313,7 @@ def write() -> int:
         ),
         "fetches": entries,
     }
-    bad = [e["url"] for e in entries if not ok(e)]
+    bad = [e["url"] for t, e in zip(TARGETS, entries) if not ok(e, t)]
     if bad:
         print("not written; these did not check out:\n  " + "\n  ".join(bad), file=sys.stderr)
         return 1
@@ -313,9 +334,11 @@ def check() -> int:
         got = fetch(t["url"])
         e = entry_for(t, got)
         what = f"quote {'found' if e.get('quoteFound') else 'MISSING'}" if t["kind"] == "quote" else f"{e['matches']} licence words"
+        if t.get("emptyField"):
+            what += f"; {t['emptyField']} {'empty' if e.get(t['emptyField']) == '' else 'NOT EMPTY: ' + repr(e.get(t['emptyField']))}"
         same = "sha256 same" if e["sha256"] == old["sha256"] else "sha256 differs (information only)"
-        print(f"{'ok  ' if ok(e) else 'FAIL'}  {e['status']}  {what}; {same}; bytes {old['bytes']} -> {e['bytes']}  {t['url']}")
-        bad += 0 if ok(e) else 1
+        print(f"{'ok  ' if ok(e, t) else 'FAIL'}  {e['status']}  {what}; {same}; bytes {old['bytes']} -> {e['bytes']}  {t['url']}")
+        bad += 0 if ok(e, t) else 1
     return 1 if bad else 0
 
 

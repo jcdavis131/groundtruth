@@ -14,8 +14,17 @@
 // data/manifests, the row of that source's publisher must exist and must name the collection in its Collections cell.
 // A row naming a collection in that cell for a source it does not publish fails (the Census Bureau is not the source of
 // a collection because the county join uses its boundaries: that goes under "Also used for"). A publisher that a
-// manifest's joins[].boundary names must have a row that names the collection under "Also used for". The SEC row, for
-// the Hugging Face companies file, is tied to no manifest, so dropping it is not caught; PIPELINE.md and the PR say so.
+// manifest's joins[].boundary names must have a row that names the collection under "Also used for".
+//
+// The files the Hugging Face dataset ships that no manifest lists (the companies file: SEC and Census) are held by
+// shipped file. data/hf/publish.py's EXTRA_FILES says what is shipped; EXTRA_FILE_PUBLISHERS below says whose data each
+// file is drawn from; for every publisher of every shipped file, a row must exist and name the file under "Also used
+// for". A shipped file with no line in EXTRA_FILE_PUBLISHERS fails, and so does a line for a file no longer shipped.
+// publish.py is Python, so EXTRA_FILES is read by scanning its literal (extraFilesOf), not by importing it; a literal that
+// is not a plain list of quoted strings fails by name rather than reading as empty.
+//
+// A "what they grant" statement that says the service's copyrightText is empty (the USACE FeatureServer row) is held to
+// the lock: the lock entry must record copyrightText as the empty string, which licenses_fetch.py reads off the response.
 import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -30,6 +39,7 @@ const HF_README = path.join(ROOT, "data", "hf", "README.md");
 const PIPELINE_MD = path.join(ROOT, "data", "PIPELINE.md");
 const SERVER_TS = path.join(ROOT, "apps", "map", "lib", "mcp", "server.ts");
 const MCP_MD = path.join(ROOT, "apps", "map", "docs", "MCP.md");
+const PUBLISH_PY = path.join(ROOT, "data", "hf", "publish.py");
 
 /** Cam's open decision (board cam_asks licence-line): the line is written as given, with a plain apostrophe. */
 export const COMPILATION_LINE =
@@ -49,12 +59,31 @@ export const SOURCE_PUBLISHERS = {
 };
 
 /**
+ * A file the Hugging Face dataset ships that no manifest lists (EXTRA_FILES in data/hf/publish.py, a path relative to the
+ * data root) -> words the Publisher cell of each row that must name it contains: the publishers whose data the file is
+ * drawn from. For each of them a row must exist and name the file under "Also used for". A file in EXTRA_FILES with no
+ * line here fails, naming the file: a new shipped file needs a line here and a row. Not keyed to the card's prose list.
+ */
+export const EXTRA_FILE_PUBLISHERS = {
+  "companies/companies.full.2026-10-20.us-placed.json": ["U.S. Securities and Exchange Commission", "U.S. Census Bureau"],
+};
+
+// One space or hyphen, in the spellings a page or a paste produces: any whitespace (the no-break space included), any
+// hyphen or dash (U+2010 to U+2015, the non-breaking hyphen U+2011 among them) and the minus sign (U+2212). Built from
+// character codes and never typed: the mojibake guard reads every tracked text file.
+const code = (n) => String.fromCharCode(n);
+const SEP = `[\\s${code(0xa0)}${code(0x2010)}-${code(0x2015)}${code(0x2212)}-]`;
+/**
  * Names of licences. A "what they grant" cell may carry one only inside the quote the lock found on the page (a page
  * may say "public domain"); a remark after the quote, or the words of a stated absence, may not. Word-bounded and
- * case-insensitive, so "(MIT)", "cc-by-sa" and "Public-Domain" are seen and "permit" and "submitted" are not.
+ * case-insensitive, so "(MIT)", "cc-by-sa", "CC-0" and "Public-Domain" are seen and "permit" and "submitted" are not.
+ * Where the name has a space or a hyphen, SEP stands for it, so a no-break space or a non-breaking hyphen does not slip
+ * a name past. A list, not a proof: a name this list does not know passes.
  */
-export const LICENCE_NAMES =
-  /\b(?:CC0|CC[ -]?BY|Creative[ -]Commons|MIT|Apache|ODbL|ODC|Open[ -]Data[ -](?:Commons|Licen[cs]e)|Open[ -]Government[ -]Licen[cs]e|A?L?GPL|BSD|MPL|PDDL|Unlicense|Public[ -]Domain)\b/i;
+export const LICENCE_NAMES = new RegExp(
+  `\\b(?:CC${SEP}*0|CC${SEP}*BY|Creative${SEP}+Commons|MIT|Apache|ODbL|ODC|Open${SEP}+Data${SEP}+(?:Commons|Licen[cs]e)|Open${SEP}+Government${SEP}+Licen[cs]e|OGL|A?L?GPL|BSD|MPL|Mozilla${SEP}+Public|PDDL|Unlicense|Public${SEP}+Domain|ISC|EUPL|WTFPL|Zlib)\\b`,
+  "i",
+);
 const licenceName = (s) => LICENCE_NAMES.exec(s)?.[0] ?? null;
 
 let passed = 0;
@@ -185,8 +214,76 @@ export function joinProblems(rows, facts) {
   return out;
 }
 
-/** Everything wrong with a licences table, its lock and the manifests it must cover; empty when they agree. */
-export function licenseProblems(md, facts, lock, sourcePublishers = SOURCE_PUBLISHERS) {
+/**
+ * The strings of EXTRA_FILES in data/hf/publish.py: { files, problems }. publish.py is Python, so this scans its literal
+ * and does not import it. Anything but a plain list of quoted strings (a missing assignment, a second assignment or +=,
+ * a concatenation, an f-string, a name, a comprehension, an escape, an unclosed list) is a problem that names it, with no
+ * files, so a reformat of publish.py cannot make the check read an empty list and pass.
+ */
+export function extraFilesOf(py) {
+  const none = { files: [], problems: [] };
+  const fail = (m) => ({ ...none, problems: [`licenses: ${m}`] });
+  const starts = [...py.matchAll(/^EXTRA_FILES\b/gm)];
+  if (starts.length === 0) return fail("data/hf/publish.py has no EXTRA_FILES assignment, so the files the Hugging Face dataset ships beyond the manifests cannot be read");
+  if (starts.length > 1) return fail("EXTRA_FILES in data/hf/publish.py is assigned more than once (a second assignment or +=), so its files cannot be read as one list literal");
+  const head = /^EXTRA_FILES\s*(?::[^=\n]+)?=\s*\[/m.exec(py);
+  if (!head) return fail("EXTRA_FILES in data/hf/publish.py is not a list literal (EXTRA_FILES = [...]), so its files cannot be read");
+  const bad = (why) => fail(`EXTRA_FILES in data/hf/publish.py is not a plain list of string literals (${why}), so the files the Hugging Face dataset ships cannot be read`);
+  const files = [];
+  let i = head.index + head[0].length;
+  let comma = false; // a string was just read, so a comma or the end must come next
+  while (i < py.length) {
+    const c = py[i];
+    if (c === "]") return { files, problems: [] };
+    if (/\s/.test(c)) i++;
+    else if (c === "#") while (i < py.length && py[i] !== "\n") i++;
+    else if (c === ",") {
+      if (!comma) return bad("a stray comma");
+      comma = false;
+      i++;
+    } else if (c === '"' || c === "'") {
+      if (comma) return bad("two strings with no comma between them");
+      const end = py.indexOf(c, i + 1);
+      const text = end < 0 ? "" : py.slice(i + 1, end);
+      if (end < 0 || /[\\\n]/.test(text) || py.startsWith(c.repeat(3), i)) return bad("a string with an escape, a line break or triple quotes");
+      files.push(text);
+      comma = true;
+      i = end + 1;
+    } else return bad(`unexpected "${c}"`);
+  }
+  return bad("the list is not closed");
+}
+
+/**
+ * Every file data/hf/publish.py ships beyond the manifests (EXTRA_FILES, read as `shipped`) has a line in
+ * EXTRA_FILE_PUBLISHERS, and every publisher on that line has a row that names the file under "Also used for". A line for
+ * a file that is no longer shipped fails too, so the constant cannot go stale.
+ */
+export function extraFileProblems(rows, shipped, publishers = EXTRA_FILE_PUBLISHERS) {
+  const out = [];
+  for (const file of shipped) {
+    const names = publishers[file];
+    if (!names?.length) {
+      out.push(`licenses: data/hf/publish.py ships ${file} (EXTRA_FILES) and EXTRA_FILE_PUBLISHERS (data/schema/licenses.test.mjs) has no publisher for it, so no row can be required for it`);
+      continue;
+    }
+    for (const name of names) {
+      const theirs = rows.filter((r) => r.publisher.includes(name));
+      if (theirs.length === 0) out.push(`licenses: ${name} has no publisher row, and data/hf/publish.py ships ${file} (EXTRA_FILES), which EXTRA_FILE_PUBLISHERS says is drawn from it`);
+      else if (!theirs.some((r) => r.also.includes(file))) out.push(`licenses: the row for ${name} does not name ${file} under "Also used for", and data/hf/publish.py ships that file (EXTRA_FILES), which EXTRA_FILE_PUBLISHERS says is drawn from that publisher`);
+    }
+  }
+  for (const file of Object.keys(publishers)) {
+    if (!shipped.includes(file)) out.push(`licenses: EXTRA_FILE_PUBLISHERS names ${file}, which data/hf/publish.py's EXTRA_FILES does not ship; drop the line`);
+  }
+  return out;
+}
+
+/**
+ * Everything wrong with a licences table, its lock and the manifests it must cover; empty when they agree. facts.shipped,
+ * when present, is the files data/hf/publish.py ships beyond the manifests (extraFilesOf), held by extraFilePublishers.
+ */
+export function licenseProblems(md, facts, lock, sourcePublishers = SOURCE_PUBLISHERS, extraFilePublishers = EXTRA_FILE_PUBLISHERS) {
   const out = [];
   const { rows, problems } = parseTable(md);
   out.push(...problems.map((p) => `licenses: ${p}`));
@@ -234,10 +331,17 @@ export function licenseProblems(md, facts, lock, sourcePublishers = SOURCE_PUBLI
       const outside = q ? g.slice(q[0].length) : g;
       const named = q || absence ? licenceName(outside) : null;
       if (named) out.push(`licenses: ${who}: the statement for ${u} names a licence ("${named}") outside the quote the lock found; a licence name no page gave is never written`);
+      // "the service's copyrightText is empty" is a claim about the response, so the lock must hold it: the fetcher reads
+      // the field off the response, and --check reads it again.
+      if (f && /copyrightText\s+is\s+empty/i.test(g) && f.copyrightText !== "") {
+        const what = f.copyrightText === undefined ? "the entry has no copyrightText" : `it has ${JSON.stringify(f.copyrightText)}`;
+        out.push(`licenses: ${who}: the statement for ${u} says the service's copyrightText is empty, but the lock does not record copyrightText as the empty string (${what})`);
+      }
     });
   }
   out.push(...sourceProblems(rows, facts, sourcePublishers));
   out.push(...joinProblems(rows, facts));
+  if (Array.isArray(facts.shipped)) out.push(...extraFileProblems(rows, facts.shipped, extraFilePublishers));
   const cited = new Set(rows.flatMap((r) => r.urls));
   for (const f of lock?.fetches ?? []) if (!cited.has(f.url)) out.push(`licenses: ${f.url} is in the lock but in no row`);
   return out;
@@ -408,6 +512,37 @@ attempt("manifestFacts reads sources and joins from every manifest of a collecti
     rmSync(dir, { recursive: true, force: true });
   }
 });
+attempt("extraFilesOf reads EXTRA_FILES from publish.py's literal (one line, many lines with comments, single quotes, a type annotation) and fails by name on anything but a plain list of quoted strings", () => {
+  const good = [
+    ['x = 1\nEXTRA_FILES = ["a/b.json"]\ny = 2\n', "a/b.json"],
+    ["EXTRA_FILES: list[str] = [\n    \"a/b.json\",  # the companies file ]\n    'c/d.json',\n]\n", "a/b.json c/d.json"],
+    ["EXTRA_FILES = []\n", ""],
+  ];
+  const bad = [
+    ["x = 1\n", /has no EXTRA_FILES assignment/],
+    ['EXTRA_FILES = ("a.json",)\n', /is not a list literal/],
+    ['EXTRA_FILES = ["a.json"]\nEXTRA_FILES += ["b.json"]\n', /assigned more than once/],
+    ['EXTRA_FILES = ["a" + ".json"]\n', /not a plain list of string literals \(unexpected "\+"\)/],
+    ['EXTRA_FILES = ["a" "b"]\n', /two strings with no comma/],
+    ['EXTRA_FILES = [f"a/{x}.json"]\n', /unexpected "f"/],
+    ["EXTRA_FILES = [OTHER]\n", /unexpected "O"/],
+    ['EXTRA_FILES = [p for p in ["a"]]\n', /unexpected "p"/],
+    ['EXTRA_FILES = ["a\\\\b"]\n', /an escape, a line break or triple quotes/],
+    ['EXTRA_FILES = ["""a"""]\n', /an escape, a line break or triple quotes/],
+    ['EXTRA_FILES = [,"a"]\n', /a stray comma/],
+    ['EXTRA_FILES = ["a.json",\n', /the list is not closed/],
+  ];
+  const wrong = [];
+  for (const [py, want] of good) {
+    const r = extraFilesOf(py);
+    if (r.problems.length || r.files.join(" ") !== want) wrong.push(`${JSON.stringify(py.slice(0, 40))}: ${r.files.join(" ")} ${r.problems.join(";")}`);
+  }
+  for (const [py, re] of bad) {
+    const r = extraFilesOf(py);
+    if (r.files.length || !re.test(r.problems.join(";"))) wrong.push(`${JSON.stringify(py.slice(0, 40))} should fail ${re}: ${r.files.join(" ")} ${r.problems.join(";") || "no problem"}`);
+  }
+  return wrong.length === 0 ? true : wrong.join(" | ");
+});
 attempt("a terms URL that is not https fails, naming the publisher", () => {
   const url = "http://example.org/alpha/terms";
   const errs = problemsOf(table(row({ urls: url })), F_ALPHA, lockOf(fetched(url)));
@@ -526,6 +661,9 @@ attempt("a row with a different number of URLs and statements fails", () => {
 // ---------------------------------------------------------------- the committed files
 const read = (p) => readFileSync(p, "utf8");
 const committed = manifestFacts(MANIFESTS);
+// What data/hf/publish.py ships beyond the manifests, read off its literal; a literal the reader cannot read is a problem here.
+const shippedRead = extraFilesOf(read(PUBLISH_PY));
+const committedFacts = { ...committed, shipped: shippedRead.files, problems: [...committed.problems, ...shippedRead.problems] };
 
 attempt("the manifests read cleanly: every collection folder has manifests and names at least one source", () => {
   const n = committed.collections.length;
@@ -533,7 +671,7 @@ attempt("the manifests read cleanly: every collection folder has manifests and n
   return n > 0 && committed.problems.length === 0 && bare.length === 0 ? true : `${n} collection folders; ${show(committed.problems)}; no source: ${bare.join(", ")}`;
 });
 attempt("data/LICENSES.md passes against the committed manifests and data/licenses.lock.json", () => {
-  const errs = licenseProblems(read(LICENSES), committed, JSON.parse(read(LOCK)));
+  const errs = licenseProblems(read(LICENSES), committedFacts, JSON.parse(read(LOCK)));
   return errs.length === 0 ? true : show(errs);
 });
 attempt("every collection in data/manifests has a row from the publisher of each of its sources, naming it in the Collections cell, and no row names a collection it does not publish", () => {
@@ -546,10 +684,21 @@ attempt("every publisher a manifest's joins[].boundary names has a row that name
   const errs = joinProblems(rows, committed);
   return errs.length === 0 ? true : show(errs);
 });
+attempt("data/hf/publish.py ships at least one file beyond the manifests (EXTRA_FILES reads as a plain list), and EXTRA_FILE_PUBLISHERS has publishers for each", () => {
+  const noLine = shippedRead.files.filter((f) => !EXTRA_FILE_PUBLISHERS[f]?.length);
+  return shippedRead.problems.length === 0 && shippedRead.files.length > 0 && noLine.length === 0 ? true : `${shippedRead.files.length} files read from EXTRA_FILES; ${show(shippedRead.problems)}; no publisher line for: ${noLine.join(" ")}`;
+});
+attempt("every file data/hf/publish.py ships (EXTRA_FILES) has, for each publisher EXTRA_FILE_PUBLISHERS gives it, a row that names the file under Also used for, and the SEC and Census rows are among them", () => {
+  const { rows } = parseTable(read(LICENSES));
+  const errs = extraFileProblems(rows, shippedRead.files);
+  const who = shippedRead.files.flatMap((f) => EXTRA_FILE_PUBLISHERS[f] ?? []);
+  const both = ["U.S. Securities and Exchange Commission", "U.S. Census Bureau"].every((n) => who.includes(n));
+  return shippedRead.files.length > 0 && errs.length === 0 && both ? true : show(errs.length ? errs : ["EXTRA_FILE_PUBLISHERS does not name both the SEC and the Census Bureau for the companies file"]);
+});
 attempt("the committed quotes that say 'public domain' (the NCES and NPS pages' own words) still pass: the licence-name rule reads only outside a quote", () => {
   const { rows } = parseTable(read(LICENSES));
   const quoted = rows.flatMap((r) => r.grants).filter((g) => /^"[^"]*public domain/i.test(g));
-  const errs = licenseProblems(read(LICENSES), committed, JSON.parse(read(LOCK))).filter((e) => /names a licence/.test(e));
+  const errs = licenseProblems(read(LICENSES), committedFacts, JSON.parse(read(LOCK))).filter((e) => /names a licence/.test(e));
   return quoted.length >= 3 && errs.length === 0 ? true : `${quoted.length} committed quotes say public domain; ${show(errs)}`;
 });
 attempt("the committed lock records copyrightText as the empty string for each URL whose statement says the service's copyrightText is empty (and some statement does)", () => {

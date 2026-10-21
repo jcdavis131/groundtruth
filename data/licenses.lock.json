@@ -32,7 +32,8 @@
    "userAgent": "groundtruth-snapshots/0.1 (eye.jcamd.com)",
    "searched": "licen[cs]e|public domain|copyright|terms of use|permission",
    "matches": 0,
-   "textChars": 419
+   "textChars": 419,
+   "copyrightText": ""
   },
   {
    "publisher": "U.S. Department of Education, National Center for Education Statistics (NCES)",
