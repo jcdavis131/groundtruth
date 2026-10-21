@@ -1965,7 +1965,7 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
     const note = String(r.payload.note);
     expect(note).toMatch(/snapshotAt/);
     expect(note).toMatch(/publishedAt/);
-    expect(note, "the three sources whose route states the publisher's date").toMatch(/three sources only (hifld-hospitals, cms-provider-data, usdm/);
+    expect(note, "the three sources whose route states the publisher's date").toMatch(/three sources only \(hifld-hospitals, cms-provider-data, usdm\)/);
     expect(note, "what eye declines to read as a publisher's date").toMatch(/declines pull dates and periods/);
     expect(note).toMatch(/absent where the calendar has no entry/);
     expect(note).not.toMatch(/cadence is null/);
