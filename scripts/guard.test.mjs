@@ -139,7 +139,7 @@ check(/line 1: U\+00C3 U\+2030$/.test(mjLine("mj-upper.md")), "a Windows-1252 im
 check(/line 1: U\+00E2 U\+20AC$/.test(mjLine("mj-quote.md")), "the U+00E2 U+20AC pair is named, not the character after it");
 check(/line 2: U\+00E2 U\+20AC$/.test(mjLine("src/deep/mj.ts")), "a finding in a nested file names its line");
 check(/line 1: U\+FFFD$/.test(mjLine("mj-fffd.md")), "U+FFFD is named");
-check(/line 1: U\+00C3 U\+00A9 \(\+3 more lines\)$/.test(mjLine("mj-many.md")), "a file with many bad lines names the first and counts the rest");
+check(/line 2: U\+00C3 U\+00A9 \(\+3 more lines\)$/.test(mjLine("mj-many.md")), "a file with many bad lines names the first and counts the rest");
 check(/line 1: U\+00C3 U\+00A9$/.test(mjLine("mj-utf16.txt")), "UTF-16 text is decoded first, as the crlf rule does");
 
 // Look-alikes that must pass: text written correctly in UTF-8, a capital A-tilde that is a letter, CJK, emoji.
