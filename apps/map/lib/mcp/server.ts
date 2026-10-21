@@ -38,6 +38,8 @@ export const INSTRUCTIONS = [
   "Two rules:",
   "1. Cite upstreamRecordUrl, the publisher's own URL for that record (upstreamUrl where the note says there is no record-level URL). Do not cite eye for a number a publisher owns.",
   "2. Read missing[] before relying on an absence. An entry there says what could not be answered and why; it is not a zero. coverageStatus partial means something is missing or was cut.",
+  "",
+  "Licences: eye adds no licence of its own to any publisher's data. The terms for the committed snapshot collections, one row per publisher, are at https://github.com/jcdavis131/groundtruth/blob/master/data/LICENSES.md.",
 ].join("\n");
 
 export interface ServerOptions {

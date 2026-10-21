@@ -50,6 +50,8 @@ Records from [groundtruth](https://github.com/jcdavis131/groundtruth): every sou
 
 **LICENSE: Cam's call — the records are compiled from US federal public-domain sources (NID/USACE, NCES, NPS, SEC EDGAR, Census); the compilation's licence is not decided yet.** Until it is, the front matter says `license: other`. Each source keeps its own terms; they are quoted in every manifest's `sources[].licence`.
 
+**Licences, publisher by publisher:** [data/LICENSES.md](https://github.com/jcdavis131/groundtruth/blob/master/data/LICENSES.md) gives each publisher's terms page and what its own page grants. Compilation licence: not yet chosen (Cam decides; until then the bundle carries no licence of its own and each record stays under its publisher's terms)
+
 Four rules come with every record. Every record cites its source. Missing means missing: no placeholder values. Public, keyless sources only. No search or embedding of private individuals.
 
 ## What a snapshot is
