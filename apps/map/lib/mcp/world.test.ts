@@ -2131,8 +2131,7 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
         const dated = (allItems(b) as Fresh[]).filter((i) => typeof i.publishedAt === "string").length;
         lines.push(`SIZES ${label} as-recorded ${size(a.payload)} items ${allItems(a).length} dropped ${(a.payload.truncated as { droppedItems?: number } | undefined)?.droppedItems ?? 0} | stated ${size(b.payload)} dated ${dated} dropped ${(b.payload.truncated as { droppedItems?: number } | undefined)?.droppedItems ?? 0} | per-item-reason ${size(c)} nulls ${nulls}`);
       }
-      console.info(lines.join("
-"));
+      console.info(lines.join(String.fromCharCode(10)));
     });
 
     it("a source with no publisher date is compared by its snapshot, and the reason says so", async () => {
