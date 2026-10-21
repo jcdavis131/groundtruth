@@ -62,11 +62,17 @@ describe("scripts/bake-cms-hospitals.mjs: the build time it records in the bake'
     expect(meta.hifldDataLastEdit, "the saved layer description stated no last-edit date").toBeNull();
   });
 
-  it("refuses a --built-at that is not an ISO 8601 UTC instant, and writes no file", async () => {
-    const a = bake("bad.json", "--built-at", "yesterday");
-    expect(a.run.status).not.toBe(0);
-    expect(a.run.stderr).toContain("--built-at");
-    await expect(read(a.out)).rejects.toThrow();
+  // 'yesterday' fails the shape. 2026-02-31T00:00:00.000Z passes the shape and Date.parse (V8 reads it as 2026-03-03), so
+  // only a round trip through toISOString() shows it is not on the calendar. Each probe gets its own --out, so a file
+  // one wrote cannot be mistaken for another's.
+  const REFUSED = ["yesterday", "2026-02-31T00:00:00.000Z"];
+  it("refuses a --built-at that is not a calendar-valid ISO 8601 UTC instant, shaped like one or not, and writes no file", async () => {
+    for (const [i, bad] of REFUSED.entries()) {
+      const a = bake(`bad-${i}.json`, "--built-at", bad);
+      expect(a.run.status, `--built-at ${bad}: ${a.run.stdout}\n${a.run.stderr}`).toBe(2);
+      expect(a.run.stderr, `--built-at ${bad}`).toContain("--built-at");
+      await expect(read(a.out), `--built-at ${bad} wrote a file`).rejects.toThrow();
+    }
   });
 
   it("a live run (no --from) stamps the instant it wrote the file, new Date().toISOString(), after reading the answers; read from the script's source, because running it would ask the publishers", async () => {

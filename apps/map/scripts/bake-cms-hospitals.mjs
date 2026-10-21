@@ -23,7 +23,12 @@
 // answers were read: new Date() on a live run, which the route sends as the CMS
 // entry's retrievedAt. A rebuild from a saved set (--from) cannot know when the
 // answers were read, so it writes no builtAt unless --built-at gives one; the key
-// is left out, never null and never the time of the rebuild.
+// is left out, never null and never the time of the rebuild. --built-at must be a
+// calendar-valid instant: 2026-02-31T00:00:00.000Z exits 2, as "yesterday" does.
+//
+// No committed bake records a builtAt yet. The world.test.ts case that holds the committed bake's meta to no build date
+// goes red on purpose on the first bake that records meta.builtAt; the same PR must update
+// BUNDLES['cms-provider-data'] in lib/mcp/world.ts and decide SERVER_VERSION.
 
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -39,8 +44,10 @@ const flag = (n) => {
 const saveDir = flag("--save-dir");
 const fromDir = flag("--from");
 const builtAtFlag = flag("--built-at");
-if (builtAtFlag !== undefined && !(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(builtAtFlag) && !Number.isNaN(Date.parse(builtAtFlag)))) {
-  console.error(`--built-at ${builtAtFlag}: not an ISO 8601 UTC instant such as 2026-10-21T12:34:56.789Z`);
+// The shape, then a date at all (Date.parse; first, because toISOString() throws on an Invalid Date), then the calendar:
+// V8 reads 2026-02-31T00:00:00.000Z as 2026-03-03, so only the round trip through toISOString() refuses a day the month lacks.
+if (builtAtFlag !== undefined && !(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(builtAtFlag) && !Number.isNaN(Date.parse(builtAtFlag)) && new Date(builtAtFlag).toISOString() === builtAtFlag)) {
+  console.error(`--built-at ${builtAtFlag}: not a calendar-valid ISO 8601 UTC instant such as 2026-10-21T12:34:56.789Z`);
   process.exit(2);
 }
 if (saveDir) mkdirSync(saveDir, { recursive: true });

@@ -336,8 +336,11 @@ const SNAP_DATE = /^\d{4}-\d{2}-\d{2}(T[0-9:.]+Z)?$/;
  * Sources whose rows eye serves from a file committed in the repo (a bundle, or its own catalogue), and what the route's
  * reply says about when that file was built. A source not listed is a live or cached route: its snapshot is the
  * retrievedAt its provenance entry states. A bundle that records no build date has none here; the route may type one in its
- * own code (app/api/infra/route.ts does for CMS) and that is not the bundle's record. world.test.ts holds the CMS claim to
- * the bundle's own meta.
+ * own code and that is not the bundle's record. app/api/infra/route.ts did that for CMS; it now sends the bake's meta.builtAt
+ * as the CMS entry's retrievedAt when the bake records one, and its typed date (CMS_RETRIEVED_FALLBACK) is the fallback only,
+ * for a bake that records none (the committed one). world.test.ts holds the CMS claim to the bundle's own meta, and that case
+ * goes red on purpose on the first bake that records builtAt; the same PR must update the cms-provider-data entry below and
+ * decide SERVER_VERSION.
  */
 const BUNDLES: Record<string, (body: JsonObject) => Snap> = {
   // companies route: `pulled` is the date of a full EDGAR pull, null for the committed hand-checked fixture
