@@ -44,6 +44,7 @@ export const ROW = {
   cites: "Every record cites its source",
   missing: "Missing means missing. No placeholder",
   mcp: "The MCP server tells a fresh client",
+  freshness: "A `world_context` item names when the data eye serves for its source was fixed",
   legend: "The field's legend is derived",
   joined: "Missing means missing, for a joined field",
   eval: "The v4 eval's sealed material",
@@ -63,8 +64,12 @@ const VALIDATE = "data/schema/validate.mjs";
 const ATHLETES = "data/athletes/validate.mjs";
 const ALLOWLIST = "data/athletes/allowlist.json";
 const GUARD = "scripts/guard.mjs";
+const STDIO = "apps/map/scripts/mcp-stdio.mjs";
 
 const WORLD_TEST = ["lib/mcp/world.test.ts"];
+// Only the end-to-end test is named for the stdio break, so a kill is the end-to-end test's: scripts/mcp-calendar.test.ts
+// also reads the script, but for the strings this break leaves in place.
+const STDIO_TEST = ["scripts/mcp-stdio.e2e.test.ts"];
 const FIELD_TESTS = ["lib/fabric/emergence.test.ts", "lib/fabric/layerCoverage.test.ts"];
 const SCHEMA_TEST = ["data/schema/validate.test.mjs"];
 const ATHLETE_TEST = ["data/athletes/validate.test.mjs"];
@@ -148,6 +153,67 @@ export const MUTANTS = [
     from: "groupByCode(data.nullPlaces, (x) => x)",
     to: "groupByCode(undefined, (x) => x)",
     vitest: ["lib/mcp/server.test.ts", "lib/mcp/tools.test.ts"],
+    node: [],
+  },
+  // ---- a world_context item says when its data was fixed and what its publisher dates it; a source past its cadence is labelled, its items kept (#100, #103)
+  {
+    name: "stale-never-flagged",
+    row: ROW.freshness,
+    rule: "a source whose date is older than its cadence window carries a stale entry in its topic",
+    file: WORLD,
+    from: "  return Number.isFinite(age) && age > limit ? { ageDays: Math.floor(age), limit } : null;",
+    to: "  return Number.isFinite(age) && age > limit && false ? { ageDays: Math.floor(age), limit } : null;",
+    vitest: WORLD_TEST,
+    node: [],
+  },
+  {
+    name: "stale-window-weekly-10",
+    row: ROW.freshness,
+    rule: "the weekly window is 12 days (7 + 2 from the Drought Monitor's map date to its release + 3 of grace), not 10, which labelled a current map stale after every Thursday release",
+    file: WORLD,
+    from: "export const STALE_AFTER_DAYS = { annual: 366, quarterly: 100, monthly: 35, weekly: 12, daily: 2 } as const;",
+    to: "export const STALE_AFTER_DAYS = { annual: 366, quarterly: 100, monthly: 35, weekly: 10, daily: 2 } as const;",
+    vitest: WORLD_TEST,
+    node: [],
+  },
+  {
+    name: "stale-withholds-item",
+    row: ROW.freshness,
+    rule: "stale is a label, not a withholding: the source's items stay in the reply beside the stale entry",
+    file: WORLD,
+    from: '(${late.ageDays} days old; stale after ${late.limit} days)`, "stale");',
+    to: '(${late.ageDays} days old; stale after ${late.limit} days)`, "stale");\n      sec.items = sec.items.filter((x) => x.sourceId !== it.sourceId);',
+    vitest: WORLD_TEST,
+    node: [],
+  },
+  {
+    name: "published-at-borrows-pull-date",
+    row: ROW.freshness,
+    rule: "publishedAt is the date the publisher puts on the data where the route states one, else null; it never borrows the day eye pulled or fetched the data (snapshotAt)",
+    file: WORLD,
+    from: "  out.publishedAt = pub;",
+    to: "  out.publishedAt = pub ?? snap.at;",
+    vitest: WORLD_TEST,
+    node: [],
+  },
+  {
+    name: "stale-ignores-publisher-date",
+    row: ROW.freshness,
+    rule: "stale compares the publisher's own date when the item has one, else the snapshot: a map older than its window is stale although eye fetched it today",
+    file: WORLD,
+    from: "      const dated = it.publishedAt ?? it.snapshotAt;",
+    to: "      const dated = it.snapshotAt;",
+    vitest: WORLD_TEST,
+    node: [],
+  },
+  {
+    name: "stdio-calendar-null",
+    row: ROW.freshness,
+    rule: "the stdio server hands world_context the release calendar the HTTP route does, so over stdio an item carries its publisher's cadence",
+    file: STDIO,
+    from: "const { cadenceOf } = await import(pathToFileURL(calendarOut).href);",
+    to: "const { cadenceOf } = { cadenceOf: () => null };",
+    vitest: STDIO_TEST,
     node: [],
   },
   // ---- the construct field says "not loaded" instead of painting zero (#58)
