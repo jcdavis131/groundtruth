@@ -1921,6 +1921,8 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
 
   it("the CMS-to-HIFLD bundle's own meta records no build date, which is what makes its null snapshotAt true", () => {
     const meta = (JSON.parse(readFileSync(path.resolve(__dirname, "../infra/data/cms-hospitals.json"), "utf8")) as { meta: Record<string, unknown> }).meta;
+    // This case goes red on purpose on the first bake that records meta.builtAt; the same PR must update
+    // BUNDLES['cms-provider-data'] in lib/mcp/world.ts and decide SERVER_VERSION.
     // cmsModified and hifldDataLastEdit are the publishers' dates; none of these keys would be the bundle's own
     expect(Object.keys(meta).filter((k) => /^(pulled|baked|bakedOn|builtAt|builtOn|generatedAt|createdAt|retrievedAt|fetchedAt|asOf)$/i.test(k))).toEqual([]);
   });
