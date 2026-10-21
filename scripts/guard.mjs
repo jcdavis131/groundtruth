@@ -88,7 +88,7 @@ function evalLeakName(base) {
 // Written as escapes so this file never matches its own rule.
 const MOJIBAKE = /\u00C3[\u0080-\u00BF\u0152\u0153\u0160\u0161\u0178\u017D\u017E\u0192\u02C6\u02DC\u2013\u2014\u2018\u2019\u201A\u201C\u201D\u201E\u2020\u2021\u2022\u2026\u2030\u2039\u203A\u20AC\u2122]|\u00E2\u20AC|\uFFFD/gu;
 const WORKFLOW = /^\.github\/workflows\/[^/]+\.ya?ml$/;
-const USES =/^\s*(?:-\s+)?uses:\s*["']?([^"'\s#]+)/;
+const USES = /^\s*(?:-\s+)?uses:\s*["']?([^"'\s#]+)/;
 const SHA_PIN = /@[0-9a-f]{40}$/;
 
 // Every unpinned "uses:" in one workflow's text, as [line number, value].
