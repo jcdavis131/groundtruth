@@ -2091,6 +2091,20 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
       expect(validateWorld(toCallResult(later).structuredContent).errorMessage).toBeUndefined();
     });
 
+    it("the screen route's period for BLS QCEW and Zillow is the period the value describes, not a release date: publishedAt stays null, and 38 days on a month-end value is not stale for it", async () => {
+      // as /api/screen answered on 2026-10-21: provenance period "2026 Q1" for BLS QCEW and "2026-09-30" for both Zillow tables
+      const periods: Record<string, string> = { "bls-qcew": "2026 Q1", "zillow-zhvi": "2026-09-30", "zillow-zori": "2026-09-30" };
+      const base = screenRow();
+      const screen = { ...base, provenance: base.provenance.map((p) => ({ ...p, ...(periods[p.source.id] ? { period: periods[p.source.id] } : {}) })) };
+      const r = await runFresh(ECONOMY, { "/api/screen?kind=county": screen }).reply;
+      const items = (allItems(r) as Fresh[]).filter((i) => i.sourceId in periods);
+      expect(items.length).toBeGreaterThan(3);
+      for (const i of items) expect(i.publishedAt, `${i.sourceId}: ${i.fact}`).toBeNull();
+      // 2026-09-30 is 38 days before this, past Zillow's 35-day window; the snapshot (the fetch) is 20 days old
+      const later = await runFresh(ECONOMY, { "/api/screen?kind=county": screen }, { now: NOW + 20 * DAY }).reply;
+      expect(staleOf(later)).toEqual([]);
+    });
+
     it("a source with no publisher date is compared by its snapshot, and the reason says so", async () => {
       const r = await runFresh(ECONOMY, { "/api/screen?kind=county": screenAt({ "bls-qcew": iso(171) }) }).reply;
       const entry = (topicsOf(r).economy.missing ?? []).find((m) => String(m.code) === "stale")!;
