@@ -2105,6 +2105,36 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
       expect(staleOf(later)).toEqual([]);
     });
 
+    it("TEMP (removed in the next commit): print the recorded replies' sizes", async () => {
+      const periods: Record<string, string> = { "hifld-hospitals": "data last edited 2026-04-22", "cms-provider-data": "dataset modified 2026-07-22" };
+      const size = (v: unknown) => new TextEncoder().encode(JSON.stringify(v)).length;
+      const lines: string[] = [];
+      for (const [label, rec] of recorded) {
+        const mk =
+          (patch: boolean): FetchJson =>
+          async (p) => {
+            const r = rec.routes[p];
+            if (!r) return { status: 500, body: { error: `not recorded: ${p}` }, url: "http://t" + p };
+            const body = structuredClone(r.body) as JsonObject;
+            if (patch && p.startsWith("/api/infra?op=hospitals")) {
+              body.dataLastEdited = "2026-04-22";
+              for (const pr of (body.provenance as Array<{ source: { id: string }; period?: string }>) ?? []) if (periods[pr.source.id]) pr.period = periods[pr.source.id];
+            }
+            return { status: r.status, body, url: "http://t" + p };
+          };
+        const go = (patch: boolean) => worldContext(toolByName("world_context")!.inputSchema.parse(rec.input) as never, { fetchJson: mk(patch), countyPoint, releaseCadence: calendarLookup } as unknown as ToolCtx, { now: Date.parse("2026-10-19T12:00:00Z") } as unknown as { stepMs?: number });
+        const a = await go(false);
+        const b = await go(true);
+        const c = structuredClone(a.payload) as unknown as { topics: Record<string, { items: Array<Record<string, unknown>> }> };
+        let nulls = 0;
+        for (const sec of Object.values(c.topics)) for (const it of sec.items) if (it.publishedAt === null) { nulls++; it.note = [it.note, "no publisher date stated"].filter(Boolean).join("; "); }
+        const dated = (allItems(b) as Fresh[]).filter((i) => typeof i.publishedAt === "string").length;
+        lines.push(`SIZES ${label} as-recorded ${size(a.payload)} items ${allItems(a).length} dropped ${(a.payload.truncated as { droppedItems?: number } | undefined)?.droppedItems ?? 0} | stated ${size(b.payload)} dated ${dated} dropped ${(b.payload.truncated as { droppedItems?: number } | undefined)?.droppedItems ?? 0} | per-item-reason ${size(c)} nulls ${nulls}`);
+      }
+      console.info(lines.join("
+"));
+    });
+
     it("a source with no publisher date is compared by its snapshot, and the reason says so", async () => {
       const r = await runFresh(ECONOMY, { "/api/screen?kind=county": screenAt({ "bls-qcew": iso(171) }) }).reply;
       const entry = (topicsOf(r).economy.missing ?? []).find((m) => String(m.code) === "stale")!;

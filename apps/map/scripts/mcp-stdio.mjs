@@ -19,12 +19,13 @@
 //
 // world_context also takes the release calendar (releaseCadence), as app/api/mcp/route.ts passes it:
 // lib/releases/calendar.ts has one import, a type from "@/lib/provenance/sources", which tsc cannot resolve
-// when it compiles alone, so that one file is transpiled without type-checking (TypeScript's transpileModule
-// drops a type-only import) into .tmp-mcp/release-calendar.js and its cadenceOf is injected.
+// when it compiles alone, so scripts/mcp-calendar.mjs transpiles that one file without type-checking into
+// .tmp-mcp/release-calendar.js and its cadenceOf is injected.
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { emitCalendar } from "./mcp-calendar.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const srcDir = path.join(root, "lib", "mcp");
@@ -59,8 +60,7 @@ if (stale()) {
   }
   writeFileSync(path.join(outDir, "package.json"), '{ "type": "module" }');
   const ts = (await import("typescript")).default;
-  const calendar = ts.transpileModule(readFileSync(calendarSrc, "utf8"), { compilerOptions: { module: ts.ModuleKind.ES2022, target: ts.ScriptTarget.ES2022 } });
-  writeFileSync(calendarOut, calendar.outputText);
+  emitCalendar(ts, calendarSrc, calendarOut);
 }
 
 const { createServer, toolManifest, toolTable } = await import(pathToFileURL(path.join(outDir, "server.js")).href);
