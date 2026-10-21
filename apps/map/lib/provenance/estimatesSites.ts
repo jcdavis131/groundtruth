@@ -78,7 +78,9 @@ const ASSERTION = /^(?:as|satisfies)\b(?!\s*[:?])/;
  * `kind: "published" satisfies Kind,` and a last property with a trailing comment (`kind: "published" // note` then
  * `}`) are entries; reading only the next character filed all three as type members, where nothing judges them.
  * `|` and `&` alone are a union and an intersection (a type); doubled they are expressions. So `kind: "published" ||
- * "estimate",` is an entry (tsc accepts it, and the type stays "published"); the raw-text check in
+ * "estimate",` is an entry (that tsc accepts it, and that the type stays "published", was not run here: it follows from
+ * the TypeScript checker's rule for `||` and `&&` on a non-falsy literal, as the round-2 and round-3 reviewers read it,
+ * and no CI step reads the planted template strings in provenance-kinds.test.ts); the raw-text check in
  * provenance-kinds.test.ts must not take the doubled form for a type either.
  */
 function afterValue(src: string, from: number): string {

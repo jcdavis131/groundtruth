@@ -26,7 +26,9 @@ import { judgeSite, literalText, scanSource, type PublishedSite, type SourceScan
 // Round 3 (review of aa34a59). One residual of the same class: `kind: "published" || "estimate",` and `&&` were filed
 // as a type member by the lexer (it returned the `|` or `&`) and counted type-like by writtenPublished() below (it
 // took any `|` or `&` for a union or an intersection), so entries 0 / type members 1 / misread null: balanced and
-// unjudged, and tsc accepts both (the type stays "published"). No lint rule was found to refuse them either:
+// unjudged. That tsc accepts both, and that the type stays "published", was not run here: it follows from the
+// TypeScript checker's rule for `||` and `&&` on a non-falsy literal, as the round-2 and round-3 reviewers read it,
+// and no CI step reads the planted template strings. No lint rule was found to refuse them either:
 // eslint-config-next 16.3.4 and typescript-eslint, read in another checkout (eslint 9.39.5), do not enable
 // no-constant-binary-expression; this repo pins 16.4.2 and eslint 10, which are not installed here. Now `||` and
 // `&&` are an expression: the lexer files an entry with kindIsExpression, judgeSite refuses it, and writtenPublished()
@@ -221,7 +223,7 @@ function writtenPublished(src: string): { all: number; typeLike: number } {
       } else break;
     }
     const ch = k < code.length ? code[k] : "";
-    // `|` and `&` are a union and an intersection only alone; `||` and `&&` are expressions (tsc accepts them after a string)
+    // `|` and `&` are a union and an intersection only alone; `||` and `&&` are expressions (that tsc accepts them after a string was not run here; see the header)
     const typeOperator = (ch === "|" || ch === "&") && code[k + 1] !== ch;
     if (ch !== "" && (typeOperator || ch === ";" || (newline && /[A-Za-z_$]/.test(ch)))) typeLike++;
   }
