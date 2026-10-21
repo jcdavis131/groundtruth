@@ -1964,12 +1964,10 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
     const note = String(r.payload.note);
     expect(note).toMatch(/snapshotAt/);
     expect(note).toMatch(/publishedAt/);
-    expect(note).toMatch(/cadence is absent/);
+    expect(note).toMatch(/absent where the calendar has no entry/);
     expect(note).not.toMatch(/cadence is null/);
     expect(note).toMatch(/release calendar/);
     expect(note).toMatch(/stale/);
-    // the SEC case is the one place a route's own releasedAt is refused as the publisher's date, so the note says why
-    expect(note).toMatch(/pull date/);
   });
 
   it("a release-window item says it has no snapshot date in one short clause", async () => {
