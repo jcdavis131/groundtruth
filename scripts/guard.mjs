@@ -36,11 +36,12 @@
 //              the header marker the eval kit puts in its gold, key and split files. The sealed files live outside
 //              the repo until scoring is done (writeups PREREG-TEMPLATE rule 6); code such as eval/split.mjs is
 //              not flagged.
-//   rules      a "Checked here" row of AGENTS.md's rules table names no tracked path or a missing workflow file.
-//              A "Tested here" row is held to a stricter reading of the same thing: it names at least one path,
-//              every path it names is tracked, and every workflow it names exists. A bare basename (no directory)
-//              counts when it matches exactly one tracked file; two matches or none is a finding. No mutant is
-//              asked of a Tested row (scripts/rules-table.test.mjs reads Checked rows only).
+//   rules      a "Checked here" or "Tested here" row of AGENTS.md's rules table that names no path, names a path
+//              that is not tracked, or names a workflow that does not exist. Both kinds are read the same way:
+//              every path-looking word in the backticks of the Enforced-by cell is judged, and a path that is not
+//              in this repo (eye's) is written without backticks. A bare basename (no directory) counts when it
+//              matches exactly one tracked file; two matches or none is a finding. A mutant is asked of a Checked
+//              row only, and by scripts/rules-table.test.mjs, not here.
 //   angle      a bare tag-looking token (<word>, <word attr="x">, <word/>) in a table row of a tracked .md file. GitHub drops
 //              a tag it does not know from a cell (a row holding <outdir> renders without it) and keeps <br>. A row is a line
 //              whose first non-blank character is a pipe. The row is split into cells on unescaped pipes first, because
