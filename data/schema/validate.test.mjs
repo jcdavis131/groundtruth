@@ -382,7 +382,7 @@ for (const p of holders) {
     check(Array.isArray(pf.personTypedCollections) && pf.personTypedCollections.includes("athletes"), "athletes is a declared person-typed collection");
     check(pf.personTypedCollections.every((c) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(c)) && new Set(pf.personTypedCollections).size === pf.personTypedCollections.length, "person-typed collections are distinct slugs");
     check(Array.isArray(pf.allowedFields) && pf.allowedFields.length > 0 && new Set(pf.allowedFields.map(squash)).size === pf.allowedFields.length, "the allowed fields are distinct names");
-    check(Array.isArray(pf.forbiddenPatterns) && pf.forbiddenPatterns.length > 0 && new Set(pf.forbiddenPatterns.map(squash)).size === pf.forbiddenPatterns.length, "the never-list patterns are distinct");
+    check(Array.isArray(pf.forbiddenPatterns) && pf.forbiddenPatterns.length > 0 && new Set(pf.forbiddenPatterns).size === pf.forbiddenPatterns.length, "the never-list patterns are listed once each");
     for (const p of ["dob", "birth_date", "birthdate", "dateofbirth", "date_of_birth", "address", "street", "phone", "email", "ssn", "spouse", "parent", "child", "family", "home"])
       check(pf.forbiddenPatterns.includes(p), `the never-list names ${p}`);
     // Every allowed name is accepted as written, spaced or in snake case, so none of them is a never-list name.

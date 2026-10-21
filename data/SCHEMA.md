@@ -8,6 +8,7 @@ Files:
 
 - `schema/record.schema.json` and `schema/manifest.schema.json`: JSON Schema 2020-12.
 - `schema/validate.mjs`: the validator. Plain Node, no install. It reads the two schemas and adds the checks a schema can't express (below).
+- `schema/person-fields.json`: the collections that are people, the `details` keys they may carry and the names they never carry (see "Names and privacy").
 - `schema/validate.test.mjs`: the tests, run by `.github/workflows/data.yml`.
 - `schema/fixtures/`: three real snapshots built from eye's live API, plus invalid copies with one thing broken in each. The valid-and-invalid fixture pattern follows openrig's `docs/reference/schemas/bundle-status.v1.schema.json` (Apache-2.0, `mvschwarz/openrig` at `0463591`); no text or code was copied.
 
@@ -77,6 +78,8 @@ One JSON object. In a snapshot file, it's one line of JSONL.
 ### Names and privacy
 
 eye's privacy rules apply to every snapshot as they are written in eye: no private-person search or embedding, owner names only in the one clicked parcel's record, and the `GEV_PEOPLE_WITHHELD` list. A snapshot is a copy that leaves eye, so it adds one rule. A source field eye shows on click but that can hold a person's name is withheld from the snapshot, and the manifest lists it under `withheldFields` with the reason. The first case is NRHP's property name (`RESNAME`): eye's card says it can be a person's name and never searches or embeds it, so the historic snapshots leave it out and label each record by its NRIS number. The second is NID's `published name` detail: eye shows a private dam's NAME on click under that key, since it can be its owner's (`<Surname> Pond Dam`), and labels the dam by its NID id. The dam snapshots leave the detail out on every dam; a dam whose name is allowed carries it in `name`.
+
+People get a stricter test than that. A collection of people is declared in `schema/person-fields.json` (`personTypedCollections`; `athletes` is the only one, by Cam's 2026-10-18 exception, which the file quotes from AGENTS.md). A record of such a collection fails with `person-fields` when any key in it, nested included, is on the never-list (`forbiddenPatterns`: a birth date, age, address, phone, email, spouse, parent, child, family, home and the rest), and when a `details` key is not on `allowedFields`: name, league, team, team city, arena, season, school, and birth city, region and country. Those are `data/athletes/allowlist.json`'s record fields, and a test holds the two equal; a birthplace is joined by Wikidata QID and P131 when the record is built (rule A5a) and has no field of its own. A key matches however it is spelled (`birth_date`, `birthDate`, `Birth Date`) and by whole words, so `stage` is off the list without being mistaken for `age`. This reads field names only. It does not read values (`data/athletes/validate.mjs` does, for `athlete/1` records) or GeoParquet rows (plain Node can't, and `data/pipeline/read.py` has no such check), and it cannot tell that a collection is made of people: one nobody lists is not read, and listing it is a reviewed change. `athletes` is not in `PUBLIC_NAME_COLLECTIONS`, so a `record/1` athlete says `label-by-id` until a reviewed change to both lists says otherwise. The one fixture is fictional: `schema/fixtures/person/athletes.fixture.json`.
 
 ## The snapshot
 
@@ -166,6 +169,7 @@ Every `countyFips` written must be a geoid in `apps/map/lib/places/data/counties
 - `time`: the record was retrieved after its snapshot's day.
 - `public-name`: `nameRule` is `public-name` on a collection with no public-name rule, or on a record whose `name` is in its collection's label-by-id form (`Dam TX00028`, `<designation> · PAD-US 12345`).
 - `withheld`: a record carries a detail its collection always withholds (`published name` on `nid-dams` and `padus-units`).
+- `person-fields`: a record of a person-typed collection (`schema/person-fields.json`) has a key on the never-list anywhere in it, or a `details` key that is not on the allowed list (see "Names and privacy").
 - `embeddable`: a manifest's `embeddableFields` or `embeddableName` differs from what `embeddable.mjs` derives from eye's `embedFields.ts`, or only one of the two is there.
 - `bbox`: the box isn't west < east and south < north.
 - `count`: `recordCount` doesn't match the files.

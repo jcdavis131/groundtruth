@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "person-fields/1",
+  "decision": "Cam 2026-10-18, \"Map + models, scoped\" (C5 in apps/map/docs/PEOPLE.md, Athletes), as the rules table in AGENTS.md words it. The same decision is data/athletes/allowlist.json's, which checks athlete/1 records; this file is the check at record/1.",
+  "exception": "Professional athletes only by Cam's 2026-10-18 exception: name, team, team city, arena, season, school, birthplace city, region and country, every field cited; never a birth date, age, address, family, contact or health",
+  "personTypedCollections": [
+    "athletes"
+  ],
+  "personTypedCollectionsNote": "A collection whose records are people. Joined by a reviewed change to this list, like PUBLIC_NAME_COLLECTIONS in validate.mjs. validate.mjs cannot tell that a collection is made of people, so one nobody lists here is not read by this rule. Athletes are the only people allowed (the exception above); nobody else is added.",
+  "allowedFields": [
+    "name",
+    "league",
+    "team",
+    "teamCity",
+    "arena",
+    "season",
+    "school",
+    "birthCity",
+    "birthRegion",
+    "birthCountry"
+  ],
+  "allowedFieldsNote": "The details keys a person-typed record may carry: data/athletes/allowlist.json's record fields, no more and no fewer (data/schema/validate.test.mjs holds the two equal). A key matches however it is spelled: teamCity, team_city and \"team city\" are one name. A birthplace is joined by Wikidata QID and P131 when the record is built (rule A5a) and has no field of its own here. The envelope fields of record/1 (id, name, geometry, place, provenance and so on) are record.schema.json's business, not this list's.",
+  "forbiddenPatterns": [
+    "dob",
+    "birth_date",
+    "birthdate",
+    "dateofbirth",
+    "date_of_birth",
+    "address",
+    "street",
+    "phone",
+    "email",
+    "ssn",
+    "spouse",
+    "parent",
+    "child",
+    "family",
+    "home",
+    "birthday",
+    "age",
+    "children",
+    "contact",
+    "health"
+  ],
+  "forbiddenPatternsNote": "Names that never appear on a person-typed record, in details or anywhere else in it, nested included. The first fifteen are the starting list; birthday, age, children, contact and health are the exception's own words (and one plural). A name matches when its words, split at case changes, underscores, hyphens and spaces, hold a pattern's words in a row, a final s or es ignored: home_address and spouseName match, stage and adobe do not match age and dob. This names the reason; a details key off the allowed list fails anyway, and a pattern wins over the allowed list."
+}
