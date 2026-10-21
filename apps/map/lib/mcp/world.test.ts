@@ -1989,7 +1989,9 @@ describe("world_context: freshness (snapshotAt, cadence, stale)", () => {
   // /api/infra?op=hospitals as www.arxiviq.com answered on 2026-10-21 (HTTP 200): the layer's data-last-edited date at the
   // top level of the reply (the routes spread their meta there; there is no "meta" key on the wire), the same date in the
   // HIFLD provenance entry's period, and CMS's dataset-modified date in its entry's period. The recorder (scripts/world-record.mjs)
-  // keeps neither, so the twelve recorded fixtures cannot show these two; the Drought Monitor's map date survives in them.
+  // now keeps the period (scripts/world-record.test.ts) but still drops the top-level dataLastEdited; the twelve fixtures
+  // committed here were recorded before that and hold neither date, so they cannot show these two until they are recorded
+  // again; the Drought Monitor's map date survives in them.
   describe("publishedAt: the publisher's own date, only where the item's route states one", () => {
     const stated = {
       ...HOSPITALS,

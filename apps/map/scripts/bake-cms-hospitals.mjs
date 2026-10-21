@@ -8,14 +8,22 @@
 //   node scripts/bake-cms-hospitals.mjs
 //   node scripts/bake-cms-hospitals.mjs --save-dir <dir>   (keep every answer read)
 //   node scripts/bake-cms-hospitals.mjs --from <dir>       (rebuild from a saved set, no network)
+//   node scripts/bake-cms-hospitals.mjs --from <dir> --built-at <ISO instant>
+//                                                          (the same, saying when the saved answers were read)
 //
 // Keyless. It reads CMS's metastore (for the dataset's modified date), the
 // datastore in pages of 1,500 with the named columns only (never the
 // telephone), HIFLD's layer 6 description (dataLastEditDate) and HIFLD's rows
 // (ID, ADDRESS, ZIP, STATUS, NAME, TYPE; every status) in pages of 2,000. The
 // two names and types are read only for tenantConflict and no row stores them.
-// The output depends only on those answers, so a rerun on a saved set is
-// byte-identical.
+// The output depends only on those answers and on meta.builtAt, so a rerun on a
+// saved set is byte-identical with the same --built-at.
+//
+// meta.builtAt is the instant (ISO 8601 UTC) this file was written, after the
+// answers were read: new Date() on a live run, which the route sends as the CMS
+// entry's retrievedAt. A rebuild from a saved set (--from) cannot know when the
+// answers were read, so it writes no builtAt unless --built-at gives one; the key
+// is left out, never null and never the time of the rebuild.
 
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -30,6 +38,11 @@ const flag = (n) => {
 };
 const saveDir = flag("--save-dir");
 const fromDir = flag("--from");
+const builtAtFlag = flag("--built-at");
+if (builtAtFlag !== undefined && !(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(builtAtFlag) && !Number.isNaN(Date.parse(builtAtFlag)))) {
+  console.error(`--built-at ${builtAtFlag}: not an ISO 8601 UTC instant such as 2026-10-21T12:34:56.789Z`);
+  process.exit(2);
+}
 if (saveDir) mkdirSync(saveDir, { recursive: true });
 
 async function text(name, url) {
@@ -68,10 +81,13 @@ for (let page = 0; page < 10; page++) {
   if (!j.exceededTransferLimit && j.features.length < 2000) break;
 }
 
+// After the last answer is read: a live run stamps the time it is, a rebuild from saved answers stamps nothing unless told.
+const builtAt = builtAtFlag ?? (fromDir ? null : new Date().toISOString());
 const bake = bakeCms(cms, hifld, {
   cmsModified: typeof meta.modified === "string" ? meta.modified : null,
   hifldDataLastEdit: typeof edit === "number" ? new Date(edit).toISOString().slice(0, 10) : null,
   sha256: { cms: sha.digest("hex"), hifld: hsha.digest("hex") },
+  builtAt,
 });
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1")), "..");
 const out = path.join(root, flag("--out") ?? "lib/infra/data/cms-hospitals.json");

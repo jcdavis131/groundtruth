@@ -366,6 +366,7 @@ export function bakeCms(
       unattachedByCmsType: sortKeys(unattached),
       ratings: sortKeys(ratings),
       sha256: info.sha256 ?? { cms: null, hifld: null },
+      ...(info.builtAt ? { builtAt: info.builtAt } : {}),
       generatedBy: "scripts/bake-cms-hospitals.mjs",
     },
     columns: CMS_COLUMNS,
