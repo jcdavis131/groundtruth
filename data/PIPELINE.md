@@ -169,6 +169,20 @@ For each collection it prints its newest committed snapshot (across regions), th
 
 `node data/schema/validate.mjs cadence` (code `cadence`, run by `data/schema/validate.test.mjs`) fails a committed collection with no row, a row with no committed manifest, a number that disagrees with its cadence word or that no quote carries, and a null with no reason. To add a collection, read its publisher's own page, copy the sentence into a row, and leave the number `null` if there is no sentence that gives an interval.
 
+## Licences
+
+[`LICENSES.md`](LICENSES.md) has one row per publisher that a committed collection (or the Hugging Face companies file) draws on: the terms page, what the publisher's own page grants as a quote of under 25 words (or that it states no licence, or that no terms page was found), and what we grant on top, which is always nothing beyond their terms. The compilation licence of the bundle is Cam's open decision and the file says so. A licence name no page gave is never written down.
+
+```
+python -I data/pipeline/licenses_fetch.py --write     # fetch every terms page, check the quotes, rewrite licenses.lock.json
+python -I data/pipeline/licenses_fetch.py --check     # fetch them again and report; writes nothing
+node data/schema/licenses.test.mjs
+```
+
+[`licenses.lock.json`](licenses.lock.json) holds, per terms URL, the status, bytes and sha256 of the response, the User-Agent sent, and whether the quote was on the page. `licenses_fetch.py` asks each host for one page at most once a second, with `net.UA` (the SEC with the string it asks for), follows redirects by hand, and refuses to write the lock when a quote is not on its page. `--check` fails on a status other than 200, a quote that has left its page or a "states no licence" page that now mentions one; a sha256 that differs is reported and does not fail it, because census.gov and nps.gov pages change without their terms changing. Neither mode runs in CI: a publisher being down should not fail a pull request.
+
+`node data/schema/licenses.test.mjs` (run by `data/schema/validate.test.mjs`, so by the `data` workflow) fails a collection folder under `data/manifests/` that no row names, a terms URL that is not https, a statement that is not a quote, a stated absence or a no-page finding, a quote of 25 words or more or one the lock did not find on the page, anything granted on top, a retrieved day that is not the lock's fetch day, and a lost compilation line. It also holds the Hugging Face card, `apps/map/lib/mcp/server.ts` (the server instructions) and `apps/map/docs/MCP.md` to the link. It reads the lock and never the network.
+
 ## Pack raw/
 
 ```
