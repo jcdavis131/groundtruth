@@ -10,6 +10,13 @@
 //              .tflite .pb .ckpt .npz .npy .pkl .joblib .parquet .arrow)
 //   env        a tracked .env, .env.<x> or .envrc file other than .env.example
 //   crlf       a carriage return in a text file (this repo is LF only; UTF-16 text is decoded first)
+//   mojibake   UTF-8 read as Windows-1252 and written back, in the same text files crlf reads: U+00C3 followed by
+//              U+0080-U+00BF or by Windows-1252's image of a byte 0x80-0x9F (the e-acute, a-acute, a-tilde family),
+//              the pair U+00E2 U+20AC (the smart-quote and dash family), or U+FFFD. A capital A-tilde before a
+//              letter, space, digit or ASCII mark is a letter and passes. The finding names the file, the first
+//              line, its code points and how many more lines carry one. Waived by a guard.allow.json entry for
+//              the exact bytes, as size is. Cause: a Get-Content/Set-Content round trip of a UTF-8 file in
+//              Windows PowerShell 5.1; edit with an editor tool, or ReadAllText/WriteAllText with UTF8Encoding($false).
 //   secret     a token-shaped string: AWS (AKIA/ASIA), GitHub, Hugging Face, sk- and sk_live_ keys,
 //              Slack, Google API keys, private key blocks (RSA, EC, OpenSSH, DSA, encrypted, PGP).
 //              Binary files are scanned for these too.
@@ -37,8 +44,8 @@
 // patterns and test fixtures are written so they never match themselves.
 //
 // An intended large or model file (a model the browser loads, a baked bundle) is allowed only by its
-// exact bytes: guard.allow.json lists {path, sha256, reason}, and the size and weights rules are waived
-// for a file whose sha256 matches. Content scans still run on it. Changed bytes fail again until the new
+// exact bytes: guard.allow.json lists {path, sha256, reason}, and the size, weights and mojibake rules are
+// waived for a file whose sha256 matches. The other content scans still run on it. Changed bytes fail again until the new
 // hash is reviewed in; an entry whose file is gone fails too.
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
@@ -73,6 +80,13 @@ const EVAL_MARKER = /groundtruth-eval-(?:gold|key|split)-v\d/;
 function evalLeakName(base) {
   return /^(?:gold|key|split)$/i.test(base) || (EVAL_DATA_EXT.test(base) && EVAL_STEM.test(base));
 }
+// UTF-8 read as Windows-1252 and saved again. U+00C3 is the lead byte (0xC3) of e-acute, a-acute, n-tilde, u-diaeresis
+// and the rest; the byte after it (0x80-0xBF) comes back as U+0080-U+00BF, or as Windows-1252's image of 0x80-0x9F
+// (euro, low and curly quotes, ellipsis, dagger, per mille, trade mark, dashes and the Latin letters it holds). A
+// capital A-tilde before a letter, space, digit or ASCII mark is a letter (Portuguese capitals) and does not match.
+// U+00E2 U+20AC is the lead of a curly quote or dash. U+FFFD is what a decoder writes for bytes that were not UTF-8.
+// Written as escapes so this file never matches its own rule.
+const MOJIBAKE = /\u00C3[\u0080-\u00BF\u0152\u0153\u0160\u0161\u0178\u017D\u017E\u0192\u02C6\u02DC\u2013\u2014\u2018\u2019\u201A\u201C\u201D\u201E\u2020\u2021\u2022\u2026\u2030\u2039\u203A\u20AC\u2122]|\u00E2\u20AC|\uFFFD/gu;
 const WORKFLOW = /^\.github\/workflows\/[^/]+\.ya?ml$/;
 const USES = /^\s*(?:-\s+)?uses:\s*["']?([^"'\s#]+)/;
 const SHA_PIN = /@[0-9a-f]{40}$/;
@@ -85,6 +99,24 @@ function unpinned(text) {
     if (m && !m[1].startsWith("./") && !SHA_PIN.test(m[1])) out.push([i + 1, m[1]]);
   });
   return out;
+}
+
+// "line 3: U+00C3 U+00A9" for the first mojibake in a text, with " (+2 more lines)" when other lines carry one; null when none.
+function mojibake(text) {
+  let first = null;
+  let line = 1;
+  let at = 0;
+  const lines = new Set();
+  for (const m of text.matchAll(MOJIBAKE)) {
+    line += text.slice(at, m.index).split("\n").length - 1;
+    at = m.index;
+    lines.add(line);
+    first ??= [line, m[0]];
+  }
+  if (!first) return null;
+  const codes = [...first[1]].map((c) => "U+" + c.codePointAt(0).toString(16).toUpperCase().padStart(4, "0")).join(" ");
+  const more = lines.size - 1;
+  return `line ${first[0]}: ${codes}${more ? ` (+${more} more line${more > 1 ? "s" : ""})` : ""}`;
 }
 
 function textOf(buf) {
@@ -195,9 +227,11 @@ for (const f of files) {
   }
   const buf = readFileSync(full);
   const allowed = ALLOW.get(f);
+  let pinned = false; // an allow entry whose sha256 is these exact bytes
   if (allowed) {
     const sha = createHash("sha256").update(buf).digest("hex");
     if (sha !== allowed.sha256) findings.push(`allow    ${f}  sha256 ${sha.slice(0, 12)} is not the reviewed ${String(allowed.sha256).slice(0, 12)}`);
+    else pinned = true;
   } else {
     if (st.size > MAX_BYTES) findings.push(`size     ${f}  ${(st.size / 1048576).toFixed(1)} MB > 5 MB`);
     if (WEIGHTS.test(f)) findings.push(`weights  ${f}`);
@@ -210,6 +244,8 @@ for (const f of files) {
   if (evalLeakName(base) || EVAL_MARKER.test(scan)) findings.push(`eval-leak ${f}`);
   if (text === null) continue;
   if (text.includes("\r")) findings.push(`crlf     ${f}`);
+  const garbled = pinned ? null : mojibake(text);
+  if (garbled) findings.push(`mojibake ${f}  ${garbled}`);
   const m = [...text.matchAll(new RegExp(HOME_PATH.source, "gi"))].find(
     (h) => /^[A-Za-z]:/.test(h[0]) || GITBASH_CASE.test(h[0]),
   );

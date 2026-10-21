@@ -112,6 +112,70 @@ const keyed = "AKIA" + caps;
 check(flags(run(repo({ "k.bin": keyed, "guard.allow.json": allowJson("k.bin", sha(keyed)) })).stdout, "secret", "k.bin"),
   "an allow-listed file is still scanned for secrets");
 
+// mojibake: UTF-8 read as Windows-1252 and written back (the 2026-08-10 Get-Content/Set-Content round trip).
+// Every fixture is written with unicode escapes, never the literal characters, so this file never matches the rule.
+const mj = repo({
+  "mj-eacute.md": "caf\u00C3\u00A9\n",
+  "mj-sao.md": "fine line\nS\u00C3\u00A3o Paulo\n",
+  "mj-aacute.md": "p\u00C3\u00A1gina\n",
+  "mj-nbsp.md": "voil\u00C3\u00A0\n",
+  "mj-upper.md": "PR\u00C3\u2030SENTE\n",
+  "mj-quote.md": "it\u00E2\u20AC\u2122s\n",
+  "mj-dash.md": "a \u00E2\u20AC\u201D b\n",
+  "mj-fffd.md": "caf\uFFFD\n",
+  "mj-utf16.txt": Buffer.from("\uFEFFcaf\u00C3\u00A9\n", "utf16le"),
+  "mj-many.md": "ok\n" + "caf\u00C3\u00A9\n".repeat(3) + "fine\ncaf\uFFFD\n",
+  "src/deep/mj.ts": "const s = 'x';\nconst t = 'don\u00E2\u20AC\u2122t';\n",
+});
+const rm = run(mj);
+check(rm.status === 1, "a repo with mojibake fails");
+for (const f of ["mj-eacute.md", "mj-sao.md", "mj-aacute.md", "mj-nbsp.md", "mj-upper.md", "mj-quote.md", "mj-dash.md", "mj-fffd.md", "mj-utf16.txt", "mj-many.md", "src/deep/mj.ts"])
+  check(flags(rm.stdout, "mojibake", f), `flags mojibake in ${f}`);
+const mjLine = (f) => rm.stdout.split("\n").find((l) => new RegExp(`^mojibake\\s+${esc(f)}(\\s|$)`).test(l)) ?? "";
+check(/line 1: U\+00C3 U\+00A9$/.test(mjLine("mj-eacute.md")), "a finding names the line and the code points (U+00C3 U+00A9 on line 1)");
+check(/line 2: U\+00C3 U\+00A3$/.test(mjLine("mj-sao.md")), "the misdecoded Sao names line 2 and U+00C3 U+00A3");
+check(/line 1: U\+00C3 U\+00A0$/.test(mjLine("mj-nbsp.md")), "a no-break space after U+00C3 is named");
+check(/line 1: U\+00C3 U\+2030$/.test(mjLine("mj-upper.md")), "a Windows-1252 image (U+2030) after U+00C3 is named");
+check(/line 1: U\+00E2 U\+20AC$/.test(mjLine("mj-quote.md")), "the U+00E2 U+20AC pair is named, not the character after it");
+check(/line 2: U\+00E2 U\+20AC$/.test(mjLine("src/deep/mj.ts")), "a finding in a nested file names its line");
+check(/line 1: U\+FFFD$/.test(mjLine("mj-fffd.md")), "U+FFFD is named");
+check(/line 2: U\+00C3 U\+00A9 \(\+3 more lines\)$/.test(mjLine("mj-many.md")), "a file with many bad lines names the first and counts the rest");
+check(/line 1: U\+00C3 U\+00A9$/.test(mjLine("mj-utf16.txt")), "UTF-16 text is decoded first, as the crlf rule does");
+
+// Look-alikes that must pass: text written correctly in UTF-8, a capital A-tilde that is a letter, CJK, emoji.
+const mjClean = repo({
+  "accents.md": "caf\u00E9 na\u00EFve S\u00E3o Paulo \u00FCber se\u00F1or fa\u00E7ade \u00E2me P\u00E2ques \u00E0 la carte \u00E8 \u00E9\n",
+  "capitals.md":
+    "S\u00C3O PAULO A\u00C7\u00C3O M\u00C3E P\u00C3O AMANH\u00C3\nUm \u00C3 so, \u00C3. \u00C3, \u00C30 \u00C3-x \u00C3\u00C3 \"\u00C3\" '\u00C3'\n",
+  "smart.md": "it\u2019s \u201Cquoted\u201D \u2014 dash \u2026 \u20AC5 \u2122 \u00E2 \u20AC (apart) \u00E2\n",
+  "cjk.md": "\u65E5\u672C\u8A9E\u306E\u30C6\u30AD\u30B9\u30C8 \u4E2D\u6587 \uD55C\uAD6D\uC5B4\n",
+  "emoji.md": "party \uD83C\uDF89 rocket \uD83D\uDE80 flag \uD83C\uDDFA\uD83C\uDDF8 family \uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67\n",
+  "cyrillic.md": "\u041F\u0440\u0438\u0432\u0435\u0442 \u03B1\u03B2\u03B3\n",
+  "bom.md": "\uFEFFplain text with a byte order mark\n",
+  // Not text: a NUL in the first 8000 bytes makes it binary, which the rule does not read (the crlf rule does not either).
+  "blob.dat": Buffer.concat([Buffer.from([0, 1, 2]), Buffer.from("caf\u00C3\u00A9 \uFFFD", "utf8")]),
+});
+const rmc = run(mjClean);
+check(rmc.status === 0, `correct accents, capital A-tilde letters, smart punctuation, CJK, emoji, Cyrillic and a binary file pass${rmc.status ? ": " + rmc.stdout.trim() : ""}`);
+
+// An allow entry waives a file by its exact bytes, as it does for size; the other content scans still run on it.
+const legacy = "caf\u00C3\u00A9\n";
+check(run(repo({ "legacy.txt": legacy, "guard.allow.json": allowJson("legacy.txt", sha(legacy)) })).status === 0,
+  "an allow-listed file with mojibake and its reviewed hash passes");
+const rw1 = run(repo({ "legacy.txt": legacy + "more\n", "guard.allow.json": allowJson("legacy.txt", sha(legacy)) }));
+check(rw1.status === 1 && flags(rw1.stdout, "allow", "legacy.txt") && flags(rw1.stdout, "mojibake", "legacy.txt"),
+  "an allow-listed file whose bytes changed fails again, on the hash and on the mojibake");
+const crlfLegacy = "caf\u00C3\u00A9\r\n";
+const rw2 = run(repo({ "legacy.txt": crlfLegacy, "guard.allow.json": allowJson("legacy.txt", sha(crlfLegacy)) }));
+check(rw2.status === 1 && flags(rw2.stdout, "crlf", "legacy.txt") && !flags(rw2.stdout, "mojibake", "legacy.txt"),
+  "the waiver covers mojibake only: an allow-listed file still fails crlf");
+const keyedMj = "AKIA" + caps + " caf\u00C3\u00A9\n";
+const rw3 = run(repo({ "k.txt": keyedMj, "guard.allow.json": allowJson("k.txt", sha(keyedMj)) }));
+check(rw3.status === 1 && flags(rw3.stdout, "secret", "k.txt") && !flags(rw3.stdout, "mojibake", "k.txt"),
+  "an allow-listed mojibake file is still scanned for secrets");
+check(flags(run(repo({ "other.txt": legacy, "legacy.txt": "x\n", "guard.allow.json": allowJson("legacy.txt", sha("x\n")) })).stdout, "mojibake", "other.txt"),
+  "an allow entry for one file waives no other file");
+
 // Workflow actions must be pinned to a full commit sha; a tag or branch fails. Only workflow files are judged.
 const hex = "0123456789abcdef".repeat(3).slice(0, 40);
 const steps = (...uses) => "on: push\njobs:\n  a:\n    steps:\n" + uses.map((u) => `      - uses: ${u}\n`).join("");

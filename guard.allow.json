@@ -8,5 +8,10 @@
     "path": "apps/map/lib/companies/data/raw/tab20_zcta520_county20_natl.txt",
     "sha256": "3ed41278d637dc249e0323306f68be8a6c234e3090f4de88ef328dee71aeaaaf",
     "reason": "Census 2020 ZCTA-to-county crosswalk (6.5 MB, public domain, from www2.census.gov rel2020), an offline input to the companies build. Allowed for the eye import only: move it to the data tier or a build-time fetch later."
+  },
+  {
+    "path": "apps/map/lib/permits/fixtures/permits-losangeles.json",
+    "sha256": "6410157fafc2be4dcce0d3966fdd9cd605c951885d4ff9de8954e2486c9aa757",
+    "reason": "publisher-sent U+FFFD in a recorded reply (LA permits row, retrieved as sent); the mojibake rule is waived for this file only; content scans still run"
   }
 ]
