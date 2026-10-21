@@ -219,9 +219,11 @@ export function joinProblems(rows, facts) {
   return out;
 }
 
-// Where the name is assigned or changed in place, anywhere on a line: the name, then = or an augmented assignment, a
-// method call or a subscript. == is not one, and neither is a plain read (in EXTRA_FILES, = EXTRA_FILES, len(EXTRA_FILES)).
-const CHANGES_EXTRA_FILES = /\bEXTRA_FILES\b[ \t]*(?:(?:\/\/|\*\*|<<|>>|[-+*\/%&|^@])?=(?!=)|\.|\[)/g;
+// Where the name is assigned or changed in place, anywhere on a line: the name, an optional type annotation (: list[str]),
+// then = or an augmented assignment, a method call or a subscript. == is not one, and neither is a plain read
+// (in EXTRA_FILES, = EXTRA_FILES, len(EXTRA_FILES)). The annotated head counts as one write like a plain one, so a single
+// later mid-line write after `EXTRA_FILES: list[str] = [...]` is a second change (the #104 round-2 reviewer's mutant).
+const CHANGES_EXTRA_FILES = /\bEXTRA_FILES\b[ \t]*(?:(?::[^=\n]*)?(?:\/\/|\*\*|<<|>>|[-+*\/%&|^@])?=(?!=)|\.|\[)/g;
 
 /** Whether idx sits after a # on its line (a # inside quotes does not count). */
 function inComment(src, idx) {
