@@ -10,10 +10,11 @@
 //              .tflite .pb .ckpt .npz .npy .pkl .joblib .parquet .arrow)
 //   env        a tracked .env, .env.<x> or .envrc file other than .env.example
 //   crlf       a carriage return in a text file (this repo is LF only; UTF-16 text is decoded first)
-//   mojibake   UTF-8 read as Windows-1252 and written back, in the same text files crlf reads: U+00C3 followed by
-//              U+0080-U+00BF or by Windows-1252's image of a byte 0x80-0x9F (the e-acute, a-acute, a-tilde family),
-//              the pair U+00E2 U+20AC (the smart-quote and dash family), or U+FFFD. A capital A-tilde before a
-//              letter, space, digit or ASCII mark is a letter and passes. The finding names the file, the first
+//   mojibake   UTF-8 read as Windows-1252 and written back, in the same text files crlf reads: U+00C3, U+00C2 or
+//              U+00E2 followed by U+0080-U+00BF or by Windows-1252's image of a byte 0x80-0x9F (the e-acute family;
+//              the middle dot, no-break space, degree and section family; the quote, dash, star, circle and arrow
+//              family), or U+FFFD. A capital A-tilde, a capital A-circumflex or an a-circumflex before a letter, space,
+//              digit or ASCII mark is a letter and passes. The finding names the file, the first
 //              line, its code points and how many more lines carry one. Waived by a guard.allow.json entry for
 //              the exact bytes, as size is. Cause: a Get-Content/Set-Content round trip of a UTF-8 file in
 //              Windows PowerShell 5.1; edit with an editor tool, or ReadAllText/WriteAllText with UTF8Encoding($false).
@@ -80,13 +81,16 @@ const EVAL_MARKER = /groundtruth-eval-(?:gold|key|split)-v\d/;
 function evalLeakName(base) {
   return /^(?:gold|key|split)$/i.test(base) || (EVAL_DATA_EXT.test(base) && EVAL_STEM.test(base));
 }
-// UTF-8 read as Windows-1252 and saved again. U+00C3 is the lead byte (0xC3) of e-acute, a-acute, n-tilde, u-diaeresis
-// and the rest; the byte after it (0x80-0xBF) comes back as U+0080-U+00BF, or as Windows-1252's image of 0x80-0x9F
-// (euro, low and curly quotes, ellipsis, dagger, per mille, trade mark, dashes and the Latin letters it holds). A
-// capital A-tilde before a letter, space, digit or ASCII mark is a letter (Portuguese capitals) and does not match.
-// U+00E2 U+20AC is the lead of a curly quote or dash. U+FFFD is what a decoder writes for bytes that were not UTF-8.
-// Written as escapes so this file never matches its own rule.
-const MOJIBAKE = /\u00C3[\u0080-\u00BF\u0152\u0153\u0160\u0161\u0178\u017D\u017E\u0192\u02C6\u02DC\u2013\u2014\u2018\u2019\u201A\u201C\u201D\u201E\u2020\u2021\u2022\u2026\u2030\u2039\u203A\u20AC\u2122]|\u00E2\u20AC|\uFFFD/gu;
+// UTF-8 read as Windows-1252 and saved again. The lead byte of a multi-byte sequence comes back as a letter: U+00C3 (0xC3)
+// for e-acute, a-acute, n-tilde, u-diaeresis and the rest of U+00C0-U+00FF; U+00C2 (0xC2) for U+0080-U+00BF (middle dot,
+// no-break space, degree, section, copyright, guillemets); U+00E2 (0xE2) for U+2000-U+2FFF (curly quotes, dashes, stars,
+// circles, arrows, the euro). The byte after it (0x80-0xBF) comes back as U+0080-U+00BF, or as Windows-1252's image of
+// 0x80-0x9F (euro, low and curly quotes, ellipsis, dagger, per mille, trade mark, dashes and the Latin letters it holds).
+// Any of the three leads before one of those matches. Before a letter, space, digit or ASCII mark each is a letter
+// (Portuguese capitals, French and Romanian a-circumflex) and does not. U+FFFD is what a decoder writes for bytes that
+// were not UTF-8. The other lead bytes (U+00C4-U+00DF, U+00E0-U+00E1, U+00E3-U+00F4) are not read. Written as escapes so
+// this file never matches its own rule.
+const MOJIBAKE = /[\u00C2\u00C3\u00E2][\u0080-\u00BF\u0152\u0153\u0160\u0161\u0178\u017D\u017E\u0192\u02C6\u02DC\u2013\u2014\u2018\u2019\u201A\u201C\u201D\u201E\u2020\u2021\u2022\u2026\u2030\u2039\u203A\u20AC\u2122]|\uFFFD/gu;
 const WORKFLOW = /^\.github\/workflows\/[^/]+\.ya?ml$/;
 const USES = /^\s*(?:-\s+)?uses:\s*["']?([^"'\s#]+)/;
 const SHA_PIN = /@[0-9a-f]{40}$/;

@@ -73,7 +73,7 @@ describe("the search allowlist", () => {
   });
 
   it("finds a zoning district by its code, never by its ordinance or the city's description", () => {
-    const d = props({ layer: "zoning", id: "zoning:point:47.60670,-122.33250", name: "DOC1 U/450-U Â· Seattle", details: { zoning: "DOC1 U/450-U", ordinance: "125291", description: "Downtown Office Core 1 U/450-U", city: "Seattle" } });
+    const d = props({ layer: "zoning", id: "zoning:point:47.60670,-122.33250", name: "DOC1 U/450-U · Seattle", details: { zoning: "DOC1 U/450-U", ordinance: "125291", description: "Downtown Office Core 1 U/450-U", city: "Seattle" } });
     expect(matchScore(d, "doc1")).toBe(2);
     expect(matchScore(d, "u/450")).toBe(1);
     expect(matchScore(d, "125291")).toBe(0);

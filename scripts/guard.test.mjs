@@ -158,6 +158,64 @@ const mjClean = repo({
 const rmc = run(mjClean);
 check(rmc.status === 0, `correct accents, capital A-tilde letters, smart punctuation, CJK, emoji, Cyrillic and a binary file pass${rmc.status ? ": " + rmc.stdout.trim() : ""}`);
 
+// mojibake, wider: the same misdecoding for the lead bytes 0xE2 (U+2000-U+2FFF: quotes, dashes, stars, circles, arrows)
+// and 0xC2 (U+0080-U+00BF: middle dot, no-break space, degree, section). Fixtures are built from code points with
+// String.fromCharCode, so this file holds no escape text and never matches the rule.
+const cp = (...n) => String.fromCharCode(...n);
+const [A, a] = [cp(0xC2), cp(0xE2)]; // capital A-circumflex, a-circumflex
+// The 27 Windows-1252 images of the bytes 0x80-0x9F that are not C1 controls, listed here on purpose and not read from
+// guard.mjs, so a change to the class there is noticed here.
+const IMAGES = [0x20AC, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021, 0x02C6, 0x2030, 0x0160, 0x2039, 0x0152, 0x017D, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014, 0x02DC, 0x2122, 0x0161, 0x203A, 0x0153, 0x017E, 0x0178];
+const CONT = [...Array.from({ length: 0x40 }, (_, i) => 0x80 + i), ...IMAGES]; // what a continuation byte reads back as
+check(IMAGES.length === 27 && new Set(IMAGES).size === 27 && CONT.length === 91, "the continuation class under test has 91 members (64 + 27 images)");
+const sweep = (lead, chars) => chars.map((c) => cp(lead, c) + "\n").join("");
+const mjw = repo({
+  "mjw-star.md": "rated 5 " + cp(0xE2, 0x02DC, 0x2026) + " stars\n",
+  "mjw-circle.md": "ok\nmarker " + cp(0xE2, 0x2014, 0x017D) + " here\n",
+  "mjw-arrow.md": "a " + cp(0xE2, 0x2020, 0x2019) + " b\n",
+  "mjw-latin1.md": "it" + cp(0xE2, 0x0080, 0x0099) + "s\n",
+  "mjw-middot.md": "Wells Fargo Bank " + cp(0xC2, 0xB7) + " BRANCH\n",
+  "mjw-nbsp.md": "5" + cp(0xC2, 0xA0) + "km\n",
+  "mjw-degree.md": "72" + cp(0xC2, 0xB0) + "F\n",
+  "mjw-section.md": "see " + cp(0xC2, 0xA7) + " 4\n",
+  "mjw-utf16.txt": Buffer.from(cp(0xFEFF) + "x " + cp(0xE2, 0x02DC, 0x2026) + "\n", "utf16le"),
+  "mjw-mixed.md": "fine\n5" + cp(0xC2, 0xB0) + "\nstar " + cp(0xE2, 0x02DC, 0x2026) + "\n",
+  "mjw-sweep-e2.md": sweep(0xE2, CONT),
+  "mjw-sweep-c2.md": sweep(0xC2, CONT),
+});
+const rmw = run(mjw);
+check(rmw.status === 1, "a repo with the U+00E2 and U+00C2 families fails");
+for (const f of ["mjw-star.md", "mjw-circle.md", "mjw-arrow.md", "mjw-latin1.md", "mjw-middot.md", "mjw-nbsp.md", "mjw-degree.md", "mjw-section.md", "mjw-utf16.txt", "mjw-mixed.md", "mjw-sweep-e2.md", "mjw-sweep-c2.md"])
+  check(flags(rmw.stdout, "mojibake", f), `flags mojibake in ${f}`);
+const mjwLine = (f) => rmw.stdout.split("\n").find((l) => new RegExp(`^mojibake\\s+${esc(f)}(\\s|$)`).test(l)) ?? "";
+check(/line 1: U\+00E2 U\+02DC$/.test(mjwLine("mjw-star.md")), "the broken star (U+00E2 U+02DC U+2026) is named by its first two code points");
+check(/line 2: U\+00E2 U\+2014$/.test(mjwLine("mjw-circle.md")), "the broken circle (U+00E2 U+2014 U+017D) is named, on line 2");
+check(/line 1: U\+00E2 U\+2020$/.test(mjwLine("mjw-arrow.md")), "a broken arrow (U+00E2 U+2020 U+2019) is named");
+check(/line 1: U\+00E2 U\+0080$/.test(mjwLine("mjw-latin1.md")), "a Latin-1 decode (U+00E2 U+0080 U+0099) is named");
+check(/line 1: U\+00C2 U\+00B7$/.test(mjwLine("mjw-middot.md")), "the misdecoded middle dot (U+00C2 U+00B7) is named");
+check(/line 1: U\+00C2 U\+00A0$/.test(mjwLine("mjw-nbsp.md")), "the misdecoded no-break space (U+00C2 U+00A0) is named");
+check(/line 1: U\+00C2 U\+00B0$/.test(mjwLine("mjw-degree.md")), "the misdecoded degree sign (U+00C2 U+00B0) is named");
+check(/line 1: U\+00C2 U\+00A7$/.test(mjwLine("mjw-section.md")), "the misdecoded section sign (U+00C2 U+00A7) is named");
+check(/line 1: U\+00E2 U\+02DC$/.test(mjwLine("mjw-utf16.txt")), "UTF-16 text with the broken star is decoded first, as the crlf rule does");
+check(/line 2: U\+00C2 U\+00B0 \(\+1 more line\)$/.test(mjwLine("mjw-mixed.md")), "a file with both families names the first and counts the other");
+check(/line 1: U\+00E2 U\+0080 \(\+90 more lines\)$/.test(mjwLine("mjw-sweep-e2.md")), "all 91 members of the class are flagged after U+00E2");
+check(/line 1: U\+00C2 U\+0080 \(\+90 more lines\)$/.test(mjwLine("mjw-sweep-c2.md")), "all 91 members of the class are flagged after U+00C2");
+
+// Look-alikes that must pass: a-circumflex and capital A-circumflex as letters, the same marks written correctly, and
+// every ordinary character after either lead.
+const letters = [...Array.from({ length: 0x5F }, (_, i) => 0x20 + i), ...Array.from({ length: 0x40 }, (_, i) => 0xC0 + i), 0x0141, 0x0107, 0x011F, 0x0416, 0x65E5];
+const mjwClean = repo({
+  "circumflex.md": "p" + a + "t" + cp(0xE9) + " ch" + a + "teau " + a + "me R" + a + "mnicu c" + a + "nd tr" + a + "ne b" + a + "timent\n",
+  "capital.md": A + "GE " + A + " la " + A + "ME TR" + A + "NE\n" + A + " 5 " + A + "5 " + A + "-x " + A + ", " + A + ". " + A + '" ' + A + "\n" + a + "\n" + a + A + " " + a + a + " " + A + A + "\n",
+  "eof-a.md": "ends with " + a,
+  "eof-capital.md": "ends with " + A,
+  "correct-marks.md": "rated 5 " + cp(0x2605) + " " + cp(0x25CE) + " 72" + cp(0xB0) + "F Wells " + cp(0xB7) + " Branch 5" + cp(0xA0) + "km " + cp(0xA7) + "4 " + cp(0x2192) + " " + cp(0xA9) + " " + cp(0xAB) + "x" + cp(0xBB) + " it" + cp(0x2019) + "s " + cp(0x201C) + "q" + cp(0x201D) + " " + cp(0x2014) + " " + cp(0x2026) + "\n",
+  "sweep-e2.md": sweep(0xE2, letters) + a + cp(0xD83C, 0xDF89) + "\n",
+  "sweep-c2.md": sweep(0xC2, letters) + A + cp(0xD83C, 0xDF89) + "\n",
+});
+const rmwc = run(mjwClean);
+check(rmwc.status === 0, `a-circumflex and capital A-circumflex as letters, the marks written correctly, and every ordinary character after either lead pass${rmwc.status ? ": " + rmwc.stdout.trim().split("\n").slice(0, 5).join(" | ") : ""}`);
+
 // An allow entry waives a file by its exact bytes, as it does for size; the other content scans still run on it.
 const legacy = "caf\u00C3\u00A9\n";
 check(run(repo({ "legacy.txt": legacy, "guard.allow.json": allowJson("legacy.txt", sha(legacy)) })).status === 0,
