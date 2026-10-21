@@ -15,7 +15,8 @@
 //   2. Rules JSON Schema can't say (data/SCHEMA.md, "Checks beyond the schema"): no placeholder values, closed
 //      polygon rings, state and county codes that agree, the snapshot id's parts, the public-name list, no
 //      public-name on a name in label-by-id form, a dam's public-name only under public owner types, no name segment
-//      in a label-by-id record's text, no withheld detail (a dam's published name), the count gap, embeddableFields
+//      in a label-by-id record's text, no withheld detail (a dam's published name), no never-list field and no field
+//      off the allowed list on a record of a person-typed collection (person-fields.json, code person-fields), the count gap, embeddableFields
 //      and embeddableName as embeddable.mjs derives them from eye's embedFields.ts, and the listed files' bytes,
 //      sha256 and record counts.
 //      The joins block (data/SCHEMA.md, Joins): placed + unplaced = recordCount, the methods add up, the cross-check adds up
@@ -37,6 +38,8 @@ export const RECORD_SCHEMA = JSON.parse(readFileSync(path.join(HERE, "record.sch
 export const MANIFEST_SCHEMA = JSON.parse(readFileSync(path.join(HERE, "manifest.schema.json"), "utf8"));
 export const DIFF_SCHEMA = JSON.parse(readFileSync(path.join(HERE, "diff.schema.json"), "utf8"));
 export const CADENCE_SCHEMA = JSON.parse(readFileSync(path.join(HERE, "cadence.schema.json"), "utf8"));
+/** Which collections are people, the details keys a person may carry and the names a person never carries (person-fields.json). */
+export const PERSON_FIELDS = JSON.parse(readFileSync(path.join(HERE, "person-fields.json"), "utf8"));
 
 // ---------------------------------------------------------------- JSON Schema subset
 
@@ -183,6 +186,58 @@ function placeholders(v, at, out) {
   else if (v && typeof v === "object") for (const [k, x] of Object.entries(v)) placeholders(x, `${at}/${k}`, out);
 }
 
+// ---------------------------------------------------------------- person-typed collections
+
+/** A field name as lower-case words, split at case changes, underscores, hyphens and spaces: teamCity, team_city and "team city" agree. */
+const wordsOf = (k) => String(k).replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2").toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+const squash = (k) => wordsOf(k).join("");
+const PERSON_COLLECTIONS = new Set(PERSON_FIELDS.personTypedCollections);
+const PERSON_ALLOWED = new Set(PERSON_FIELDS.allowedFields.map(squash));
+const NEVER_LIST = PERSON_FIELDS.forbiddenPatterns.map((p) => ({ pattern: p, key: squash(p) }));
+
+/**
+ * The never-list pattern a field name matches, or undefined: its words hold the pattern's words in a row, a final
+ * s or es ignored (home_address, spouseName and parents match; stage, adobe and agent do not match age or dob).
+ */
+export function neverListPart(name) {
+  const w = wordsOf(name);
+  for (let i = 0; i < w.length; i++) {
+    let run = "";
+    for (let j = i; j < w.length; j++) {
+      run += w[j];
+      const hit = NEVER_LIST.find((n) => run === n.key || run === `${n.key}s` || run === `${n.key}es`);
+      if (hit) return hit.pattern;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * The no-private-individuals rule for a record of a person-typed collection (person-fields.json; athletes today):
+ * no key anywhere in the record, nested included, matches the never-list, and every key of `details` is on the allowed
+ * list. The never-list is read first, so an allowed name that matched a pattern would be refused. A record of any other
+ * collection is not read here, and the envelope's own fields are record.schema.json's business.
+ */
+function personFieldProblems(r) {
+  const out = [];
+  if (!PERSON_COLLECTIONS.has(r.collection)) return out;
+  const walk = (v, at) => {
+    if (Array.isArray(v)) return v.forEach((x, i) => walk(x, `${at}/${i}`));
+    if (typeOf(v) !== "object") return;
+    for (const [k, x] of Object.entries(v)) {
+      const part = neverListPart(k);
+      if (part) out.push({ code: "person-fields", path: `${at}/${k}`, message: `${k} is on the never-list (${part}); ${r.collection} is a person-typed collection and its records never carry it` });
+      walk(x, `${at}/${k}`);
+    }
+  };
+  walk(r, "");
+  if (typeOf(r.details) === "object")
+    for (const k of Object.keys(r.details))
+      if (!PERSON_ALLOWED.has(squash(k)) && !neverListPart(k))
+        out.push({ code: "person-fields", path: `/details/${k}`, message: `${k} is not on the allowed list for ${r.collection}, a person-typed collection (data/schema/person-fields.json)` });
+  return out;
+}
+
 const dateOf = (snapshotId) => snapshotId.split(".")[2];
 const realDate = (d) => !Number.isNaN(Date.parse(`${d}T00:00:00Z`)) && new Date(`${d}T00:00:00Z`).toISOString().slice(0, 10) === d;
 
@@ -237,6 +292,7 @@ export function validateRecord(r) {
     for (const k of WITHHELD_DETAILS[r.collection] ?? [])
       if (Object.hasOwn(r.details, k))
         out.push({ code: "withheld", path: `/details/${k}`, message: `${r.collection} never carries ${JSON.stringify(k)}: it can be a person's name; leave it out and list it in the manifest's withheldFields` });
+  out.push(...personFieldProblems(r));
   return out;
 }
 

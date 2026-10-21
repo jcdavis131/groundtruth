@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import { CASES, build, fileOf, goodJoins } from "./fixtures/make-invalid.mjs";
 import { LOCK_PATH, MANIFESTS_DIR, lockErrors, writeLock } from "./lock.mjs";
 import { DETAILS_KEY, embeddableFor, withEmbeddable } from "./embeddable.mjs";
+import { CITABLE } from "../athletes/validate.mjs";
 import { MANIFEST_SCHEMA, PUBLIC_NAME_COLLECTIONS, RECORD_SCHEMA, damOwnerProblem, schemaErrors, validateManifest, validateRecord, verifyFiles } from "./validate.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -303,6 +304,104 @@ for (const p of holders) {
     refused = String(e.message);
   }
   check(/refus/.test(refused) && refused.includes(first) && readFileSync(lockFile, "utf8") === before, "--write refuses to change an existing id's sha, and leaves the lock untouched", refused);
+}
+
+// Person-typed collections (person-fields.json, code person-fields): the no-private-individuals rule as a test.
+// A record of a collection declared person-typed fails on a never-list field name anywhere in it, and on a details
+// key outside the allowed list; a record of any other collection is not read by this rule. The fixture is fictional.
+{
+  let pf = null;
+  try {
+    pf = json(path.join(HERE, "person-fields.json"));
+  } catch (e) {
+    check(false, "person-fields.json is readable", e.message);
+  }
+  const athlete = json(path.join(FIX, "person", "athletes.fixture.json"));
+  const personHits = (errs, p) => errs.filter((e) => e.code === "person-fields" && (p === undefined || e.path === p));
+  const withDetails = (d) => ({ ...athlete, details: d });
+  const spaced = (k) => k.replace(/([a-z0-9])([A-Z])/g, "$1 $2").toLowerCase();
+
+  check(athlete.collection === "athletes" && athlete.nameRule === "label-by-id", "the athlete fixture is a label-by-id record of the athletes collection");
+  check(validateRecord(athlete).length === 0, "a person record with only allowed fields passes", show(validateRecord(athlete)));
+
+  // The three invalid fixtures (make-invalid.mjs) are checked above; these are the same rule on spellings and neighbours.
+  for (const k of [
+    "birth_date", "birthDate", "BIRTH-DATE", "Birth Date", "dateOfBirth", "date_of_birth", "dob", "DOB", "birthday",
+    "home address", "homeAddress", "address", "street", "phone", "phone_number", "e-mail", "email", "SSN", "spouseName", "spouse",
+    "parents", "parent", "child", "children", "family", "contact", "health", "age", "home",
+  ]) {
+    const errs = validateRecord(withDetails({ ...athlete.details, [k]: "x" }));
+    check(personHits(errs, `/details/${k}`).some((e) => /never-list/.test(e.message)), `a person record with a "${k}" detail fails with person-fields, on the never-list`, `got: ${show(errs) || "no errors"}`);
+  }
+  {
+    const errs = validateRecord(withDetails({ ...athlete.details, mascot: "x" }));
+    check(personHits(errs, "/details/mascot").some((e) => /not on the allowed list/.test(e.message) && !/never-list/.test(e.message)), "a person record with a detail outside the allowed list fails with person-fields, not as a never-list name", `got: ${show(errs) || "no errors"}`);
+  }
+  // Whole words, so a harmless neighbour is off the list but not called a never-list name.
+  for (const k of ["stage", "adobe", "classname", "agent"]) {
+    const errs = personHits(validateRecord(withDetails({ ...athlete.details, [k]: "x" })), `/details/${k}`);
+    check(errs.length === 1 && !/never-list/.test(errs[0].message), `"${k}" is off the allowed list but is not mistaken for a never-list name`, show(errs) || "no person-fields error");
+  }
+  // A never-list name nested inside a detail is found too (the schema also refuses the object).
+  check(
+    personHits(validateRecord(withDetails({ ...athlete.details, contact: { phone: "x" } })), "/details/contact/phone").some((e) => /never-list/.test(e.message)),
+    "a never-list name nested inside a detail fails with person-fields at its own path",
+  );
+  // A never-list field at the top level fails by code person-fields as well as the schema's 'additional'.
+  {
+    const errs = validateRecord({ ...athlete, birth_date: "2000-01-01" });
+    check(personHits(errs, "/birth_date").length === 1 && errs.some((e) => e.code === "additional" && e.path === "/birth_date"), "a top-level birth_date fails with person-fields and with additional", show(errs) || "no errors");
+  }
+
+  // A record of a collection that is not person-typed is not read by this rule: a school's street address is a place's.
+  const schoolErrs = validateRecord(school);
+  check(typeof school.details.address === "string" && schoolErrs.length === 0, "a non-person record with an address detail passes", show(schoolErrs));
+  check(
+    personHits(validateRecord({ ...school, collection: "athletes", snapshotId: school.snapshotId.replace(/^[^.]+/, "athletes") }), "/details/address").length === 1,
+    "the same address detail on a record of the person-typed athletes collection fails with person-fields",
+  );
+
+  // Through a snapshot's files and from the command line.
+  {
+    const bad = json(path.join(FIX, "record", "invalid", "person-birth-date.json"));
+    const body = `${JSON.stringify(bad)}\n`;
+    const dir = mkdtempSync(path.join(tmpdir(), "gt-person-"));
+    writeFileSync(path.join(dir, "records.jsonl"), body);
+    const mp = { ...m0, snapshotId: bad.snapshotId, collection: "athletes", recordCount: 1, files: [{ path: "records.jsonl", format: "jsonl", sha256: createHash("sha256").update(body).digest("hex"), bytes: Buffer.byteLength(body), records: 1 }] };
+    check(verifyFiles(mp, dir).some((e) => e.code === "file-record" && /\/details\/birth_date: person-fields/.test(e.message)), "a snapshot file holding a person record with a birth_date fails with file-record naming person-fields");
+    const cli = spawnSync(process.execPath, [path.join(HERE, "validate.mjs"), "record", path.join(FIX, "record", "invalid", "person-birth-date.json")], { encoding: "utf8" });
+    check(cli.status === 1 && /person-fields \/details\/birth_date/.test(cli.stdout), "validate.mjs record on the birth_date fixture exits 1 and prints person-fields", `exit ${cli.status}: ${cli.stdout}`);
+    const cliOk = spawnSync(process.execPath, [path.join(HERE, "validate.mjs"), "record", path.join(FIX, "person", "athletes.fixture.json")], { encoding: "utf8" });
+    check(cliOk.status === 0, "validate.mjs record on the allowed-fields fixture exits 0", `exit ${cliOk.status}: ${cliOk.stdout}`);
+  }
+
+  // The list itself.
+  if (pf) {
+    const squash = (k) => spaced(k).split(/[^a-z0-9]+/).filter(Boolean).join("");
+    check(pf.schemaVersion === "person-fields/1", "person-fields.json is person-fields/1");
+    check(Array.isArray(pf.personTypedCollections) && pf.personTypedCollections.includes("athletes"), "athletes is a declared person-typed collection");
+    check(pf.personTypedCollections.every((c) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(c)) && new Set(pf.personTypedCollections).size === pf.personTypedCollections.length, "person-typed collections are distinct slugs");
+    check(Array.isArray(pf.allowedFields) && pf.allowedFields.length > 0 && new Set(pf.allowedFields.map(squash)).size === pf.allowedFields.length, "the allowed fields are distinct names");
+    check(Array.isArray(pf.forbiddenPatterns) && pf.forbiddenPatterns.length > 0 && new Set(pf.forbiddenPatterns).size === pf.forbiddenPatterns.length, "the never-list patterns are listed once each");
+    for (const p of ["dob", "birth_date", "birthdate", "dateofbirth", "date_of_birth", "address", "street", "phone", "email", "ssn", "spouse", "parent", "child", "family", "home"])
+      check(pf.forbiddenPatterns.includes(p), `the never-list names ${p}`);
+    // Every allowed name is accepted as written, spaced or in snake case, so none of them is a never-list name.
+    for (const k of pf.allowedFields ?? [])
+      for (const v of new Set([k, spaced(k), spaced(k).replaceAll(" ", "_")])) {
+        const errs = personHits(validateRecord(withDetails({ [v]: "x" })));
+        check(errs.length === 0, `the allowed field ${JSON.stringify(v)} is accepted on a person record`, show(errs));
+      }
+    // Drift: the allowed list is the athlete/1 allowlist's record fields (data/athletes/allowlist.json), no more and no fewer.
+    check(
+      JSON.stringify([...pf.allowedFields].sort()) === JSON.stringify([...CITABLE].sort()),
+      "the allowed fields equal data/athletes/allowlist.json's record fields",
+      `person-fields.json: ${[...pf.allowedFields].sort().join(", ")}; allowlist.json: ${[...CITABLE].sort().join(", ")}`,
+    );
+    // The exception is quoted from AGENTS.md word for word, so a reworded rule shows up here.
+    const agents = readFileSync(path.join(HERE, "..", "..", "AGENTS.md"), "utf8");
+    check(typeof pf.exception === "string" && pf.exception.length > 80 && agents.includes(pf.exception), "the quoted exception is a substring of AGENTS.md");
+    check(/never a birth date, age, address, family, contact or health/.test(pf.exception ?? ""), "the quoted exception carries the never-list sentence");
+  }
 }
 
 // The evaluator refuses keywords it does not implement, so a schema can't claim more than is checked.
