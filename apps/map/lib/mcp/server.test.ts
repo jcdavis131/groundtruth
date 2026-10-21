@@ -563,6 +563,11 @@ describe("docs/MCP.md stays in sync with the manifest", () => {
     );
   });
 
+  it("keeps two touching tokens apart, so each is its own code span", () => {
+    const entry = { name: "demo", title: "Demo", description: "x<a><b>y", inputSchema: { type: "object", properties: {} }, alwaysLoad: false };
+    expect(toolTable([entry]).split("\n")[2]).toBe("| `demo` | (none) | x`<a>` `<b>`y |");
+  });
+
   it("leaves no bare angle token in any cell of the real table", () => {
     const rows = toolTable().split("\n").slice(2);
     expect(rows).toHaveLength(TOOLS.length);

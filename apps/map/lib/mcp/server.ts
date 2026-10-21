@@ -99,11 +99,73 @@ export function argsSummary(schema: Record<string, unknown>): string {
     .join(", ");
 }
 
+// GitHub drops a tag it does not know from a Markdown table cell: a description that says '<where> [SORT field]' renders
+// as ' [SORT field]' in docs/MCP.md. toolTable writes each bare angle token of a cell in backticks. The reading is the
+// `angle` rule's in scripts/guard.mjs (the token regex; a code span, a backslash-escaped character and an autolink are not
+// bare), written twice because lib/mcp compiles alone and cannot import a script; the guard runs over the file this writes.
+// tools/list is not touched: the descriptions a client reads are the tools' own, and only this table's cells change.
+const ANGLE_TAG = /<[A-Za-z][A-Za-z0-9._-]*(?:\s[^<>]*)?\/?>/g;
+const ASCII_PUNCT = /[!-\/:-@[-`{-~]/;
+
+/** `s` with its code spans and its backslash-escaped punctuation blanked to spaces (same length). */
+function blankSpans(s: string): string {
+  const out = s.split("");
+  let i = 0;
+  while (i < s.length) {
+    if (s[i] === "\\" && i + 1 < s.length && ASCII_PUNCT.test(s[i + 1])) {
+      out[i] = out[i + 1] = " ";
+      i += 2;
+    } else if (s[i] === "`") {
+      let n = 1;
+      while (s[i + n] === "`") n++;
+      let close = -1;
+      for (let j = i + n; j < s.length; ) {
+        if (s[j] !== "`") {
+          j++;
+          continue;
+        }
+        let m = 1;
+        while (s[j + m] === "`") m++;
+        if (m === n) {
+          close = j;
+          break;
+        }
+        j += m;
+      }
+      if (close < 0) {
+        i += n;
+      } else {
+        for (let k = i; k < close + n; k++) out[k] = " ";
+        i = close + n;
+      }
+    } else i++;
+  }
+  return out.join("");
+}
+
+/** `s` with every bare angle token written in backticks; a token already in a code span, escaped or an autolink is left as it is. */
+export function backtickAngleTokens(s: string): string {
+  let out = "";
+  let at = 0;
+  for (const m of blankSpans(s).matchAll(ANGLE_TAG)) {
+    const start = m.index ?? 0;
+    const end = start + m[0].length;
+    // A backtick touching the new span (a code span before it, or the span written for the token before it) would join the two
+    // into one, so a space keeps them apart.
+    out += s.slice(at, start);
+    out += (out.endsWith("`") ? " " : "") + "`" + s.slice(start, end) + "`" + (s[end] === "`" ? " " : "");
+    at = end;
+  }
+  return out + s.slice(at);
+}
+
 /** Markdown table of the tools, kept in sync with docs/MCP.md by a test. */
 export function toolTable(entries: ManifestEntry[] = toolManifest()): string {
   const esc = (s: string) => s.replace(/\|/g, "\\|");
+  // Pipes are escaped first, so the token scan reads the text the cell holds, as the guard does.
+  const cell = (s: string) => backtickAngleTokens(esc(s));
   const lines = ["| Tool | Arguments | Returns |", "| --- | --- | --- |"];
-  for (const e of entries) lines.push(`| \`${e.name}\` | ${esc(argsSummary(e.inputSchema)) || "(none)"} | ${esc(e.description)} |`);
+  for (const e of entries) lines.push(`| \`${e.name}\` | ${cell(argsSummary(e.inputSchema)) || "(none)"} | ${cell(e.description)} |`);
   return lines.join("\n");
 }
 
