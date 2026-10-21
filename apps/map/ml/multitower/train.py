@@ -11,9 +11,13 @@ Protocol (honest, matches the gas-forecaster discipline):
   classification vs 0.5 and vs majority class.
 - Metrics are reported in ORIGINAL units.
 
-Saves models/multitower_v0/: config.json, metrics.json, windows.csv,
-weights_final.npz (last window), scalers_final.json.
+With --write-artifacts, saves models/multitower_v0/: config.json,
+metrics.json, windows.csv, weights_final.npz (last window), scalers_final.json.
+Without it (the default) the walk-forward runs and prints, and nothing under
+DATAOPS_ROOT is written: a measuring run must not overwrite the live model,
+the files forecast.py reads.
 """
+import argparse
 import json
 import os
 import sys
@@ -59,6 +63,12 @@ def standardize_fit(X):
 
 
 def main():
+    ap = argparse.ArgumentParser(description="Walk-forward trainer for the "
+                                 "multi-tower multitask model.")
+    ap.add_argument("--write-artifacts", action="store_true",
+                    help="save the model files under DATAOPS_ROOT/models/ "
+                         "(off by default: a dry run writes nothing)")
+    args = ap.parse_args()
     task_cfg = load_tasks()
     frame = pd.read_csv(C.root_path("frames", "multitower_daily.csv"),
                         parse_dates=["date"])
@@ -200,6 +210,10 @@ def main():
         final_artifacts = (model, tmu, ymu, towers, tasks)
 
     outdir = os.path.join(C.ROOT, "models", MODEL_ID)
+    if not args.write_artifacts:
+        print(f"\ndry run: no artifacts written; pass --write-artifacts "
+              f"to save to {outdir}")
+        return
     os.makedirs(outdir, exist_ok=True)
     model, tmu, ymu, towers, tasks = final_artifacts
     model.save(os.path.join(outdir, "weights_final.npz"))

@@ -5,7 +5,8 @@ Pure-NumPy (no torch): per-domain tower encoders → shared trunk → task heads
 ## Quickstart
 
 ```bash
-npm run ml:train                 # walk-forward train, saves models/multitower_v0/
+npm run ml:train                 # walk-forward, a dry run: prints metrics, writes nothing
+npm run ml:train -- --write-artifacts   # the same run, then saves models/multitower_v0/
 npm run ml:eval                  # baselines comparison -> REPORT.md
 npm run ml:forecast -- --site-bundle   # next-7d forecasts + lib/ml/data bundle
 ```
