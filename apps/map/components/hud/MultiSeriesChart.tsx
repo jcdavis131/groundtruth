@@ -205,6 +205,17 @@ export default function MultiSeriesChart({ series, title = "Series", height = 32
 
       {plan.overflow.length > 0 && <p className="px-2 text-[10px] text-warn">More than two units on the chart: {plan.overflow.join(", ")} share the left axis. Turn on normalise to compare shapes.</p>}
 
+      {[...new Map(series.flatMap((s) => (s.caption ? [[s.caption, s.captionLink] as const] : []))).entries()].map(([c, link]) => (
+        <p key={c} className="px-2 text-[10px] text-muted-foreground">
+          {c}{" "}
+          {link && (
+            <a href={link.href} target="_blank" rel="noreferrer" className="underline hover:text-foreground">
+              {link.label}
+            </a>
+          )}
+        </p>
+      ))}
+
       {shown.length === 0 || !tx || !left ? (
         <p className="p-3 text-[11px] text-muted-foreground">{series.length === 0 ? "Add a series to draw." : "Nothing to draw: every series is hidden or empty."}</p>
       ) : (
@@ -258,7 +269,7 @@ export default function MultiSeriesChart({ series, title = "Series", height = 32
             ))}
             {/* series */}
             {drawn.map(({ s, path }) => (
-              <path key={s.id} d={path} fill="none" stroke={s.color} strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
+              <path key={s.id} d={path} fill="none" stroke={s.color} strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" strokeDasharray={s.dash ? "6 3" : undefined} />
             ))}
             {/* crosshair */}
             {hoverT != null && (

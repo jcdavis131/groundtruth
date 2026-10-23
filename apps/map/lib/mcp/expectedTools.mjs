@@ -39,5 +39,7 @@ export const EXPECTED_TOOL_NAMES = [
   "catalog_search",
   "place_export",
   "world_context",
+  "momentum_forecast",
+  "similar_places",
   "openapi",
 ];

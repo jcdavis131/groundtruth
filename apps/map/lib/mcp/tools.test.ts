@@ -185,6 +185,9 @@ describe("every tool asks for the exact route URL", () => {
     ["place_export", { collection: "npl-status" }, "/api/catalog?op=place-export&collection=npl-status"],
     ["place_export", { collection: "fuds-properties" }, "/api/catalog?op=place-export&collection=fuds-properties"],
     ["place_export", { collection: "ust-releases-county" }, "/api/catalog?op=place-export&collection=ust-releases-county"],
+    ["momentum_forecast", { fips: "48453" }, "/api/ml?op=forecast&fips=48453"],
+    ["similar_places", { fips: "48453" }, "/api/ml?op=similar&fips=48453"],
+    ["similar_places", { fips: "48453", k: 6 }, "/api/ml?op=similar&fips=48453&k=6"],
     ["openapi", {}, "/api/openapi"],
   ];
   for (const [name, input, url] of cases) {

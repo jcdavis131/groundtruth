@@ -21,7 +21,8 @@ import { reportFromGlobe } from "@/lib/water/reportClient";
 import { DESK_TABS, PANE_MAX_FRACTION, PANE_MIN_PX, initDeskFromUrl, syncDeskUrl, useDesk, withDeskParam, type DeskTab } from "@/lib/desk/store";
 import { columnsFor, ECONOMY_LAYERS, featureRows, type Row } from "@/lib/desk/table";
 import { toChartSeries, type ChartSeries } from "@/lib/desk/chart";
-import { fetchSeries, isCountyFips, listPicker, type Fetched, type PickerItem, type PickerSource } from "@/lib/desk/api";
+import { fetchSeries, fipsFromHistoryId, isCountyFips, listPicker, type Fetched, type PickerItem, type PickerSource } from "@/lib/desk/api";
+import { forecastChartSeries, type ForecastPayload } from "@/lib/desk/forecast";
 import { notesMarkdown, type ReportCite } from "@/lib/desk/notes";
 import DataTable from "./DataTable";
 import MultiSeriesChart from "./MultiSeriesChart";
@@ -260,6 +261,9 @@ function ChartTab({ theme }: { theme: "light" | "dark" }) {
   const refs = useDesk((s) => s.series);
   const removeSeries = useDesk((s) => s.removeSeries);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [forecast, setForecast] = useState<ChartSeries[] | null>(null);
+  const [forecastState, setForecastState] = useState<"idle" | "loading" | "error">("idle");
+  const [forecastErr, setForecastErr] = useState("");
 
   // One query per picked series; the cache survives tab switches and re-adds.
   const queries = useQueries({
@@ -286,6 +290,39 @@ function ChartTab({ theme }: { theme: "light" | "dark" }) {
   const problems = refs.map((ref, i) => ({ ref, r: queries[i]?.data })).filter((x): x is { ref: (typeof refs)[number]; r: Fetched<Series> & { ok: false } } => !!x.r && !x.r.ok);
   const loading = queries.some((q) => q.isPending);
 
+  // A county ZHVI history series can carry a 12-month momentum-v1 forecast.
+  const forecastable = refs.findIndex((r) => r.source === "history" && r.id.startsWith("zhvi:county:"));
+  const forecastFips = forecastable >= 0 ? fipsFromHistoryId(refs[forecastable].id) : null;
+  const runForecast = useCallback(async () => {
+    if (!forecastFips) return;
+    const r = results[forecastable];
+    const pts = r && r.ok ? [...r.data.points].sort((a, b) => a.t - b.t).filter((p) => p.v != null) : [];
+    const last = pts[pts.length - 1];
+    if (!last || last.v == null) {
+      setForecastState("error");
+      setForecastErr("No observed values to anchor the forecast.");
+      return;
+    }
+    setForecastState("loading");
+    setForecastErr("");
+    try {
+      const res = await fetch(`/api/ml?op=forecast&fips=${encodeURIComponent(forecastFips)}`, { headers: { accept: "application/json" } });
+      const json = (await res.json()) as { data?: ForecastPayload; error?: string };
+      if (!res.ok || !json.data) {
+        setForecastState("error");
+        setForecastErr(json.error ?? `HTTP ${res.status}`);
+        return;
+      }
+      setForecast(forecastChartSeries(last.t, last.v, json.data, "#7c3aed"));
+      setForecastState("idle");
+    } catch (e) {
+      setForecastState("error");
+      setForecastErr(e instanceof Error ? e.message : String(e));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forecastFips, resultsKey]);
+  const chartWithForecast = forecast ? [...chart, ...forecast] : chart;
+
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
       <div className="desk-noprint flex items-center gap-2 border-b border-border px-2 py-1">
@@ -300,6 +337,23 @@ function ChartTab({ theme }: { theme: "light" | "dark" }) {
         <span className="text-[10px] text-muted-foreground">
           {refs.length} series{loading ? " · loading…" : ""} · sources: published series, indicators, county history
         </span>
+        {forecastFips && !forecast && (
+          <button
+            type="button"
+            onClick={runForecast}
+            disabled={forecastState === "loading"}
+            className="desk-btn"
+            title="Draw the momentum-v1 12-month ZHVI outlook as dashed bands (empirical band, not a calibrated interval)"
+          >
+            {forecastState === "loading" ? "Forecasting…" : "Forecast 12 mo"}
+          </button>
+        )}
+        {forecast && (
+          <button type="button" onClick={() => setForecast(null)} className="desk-btn" title="Remove the forecast bands">
+            Clear forecast
+          </button>
+        )}
+        {forecastState === "error" && forecastErr && <span className="text-[10px] text-warn">{forecastErr}</span>}
       </div>
       {pickerOpen && <SeriesPicker onClose={() => setPickerOpen(false)} />}
       {problems.length > 0 && (
@@ -311,7 +365,7 @@ function ChartTab({ theme }: { theme: "light" | "dark" }) {
           ))}
         </ul>
       )}
-      <MultiSeriesChart series={chart} title="Series" onRemove={removeSeries} ink={INK[theme]} paper={PAPER[theme]} filename="gev-chart" />
+      <MultiSeriesChart series={chartWithForecast} title="Series" onRemove={removeSeries} ink={INK[theme]} paper={PAPER[theme]} filename="gev-chart" />
     </div>
   );
 }

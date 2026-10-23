@@ -1,0 +1,92 @@
+{
+  "version": "momentum-v1",
+  "lambda": 1,
+  "mean": [
+    0.04452833540986607,
+    0.021558179767726796,
+    0.010516080108006526,
+    0.04430252263856186,
+    0.0002258127713037253
+  ],
+  "sd": [
+    0.06498159538755986,
+    0.03660767527418677,
+    0.02030824353956939,
+    0.06592278193372017,
+    0.06644947394558746
+  ],
+  "yMean": 0.04375150805263625,
+  "weights": [
+    0.00724515864151186,
+    0.007315957535936903,
+    0.008819806971656708,
+    0.0033370029069159104,
+    0.0037745588869825884,
+    -3.9385426181470406e-16
+  ],
+  "residualP10": -0.07248084406832192,
+  "residualP90": 0.07684271678758459,
+  "vintage": "2026-09",
+  "nTrain": 479770,
+  "featureNames": [
+    "chg12",
+    "chg6",
+    "chg3",
+    "seasonal",
+    "accel"
+  ],
+  "horizonMonths": 12,
+  "evalSpatial": {
+    "n": 115021,
+    "ridge": {
+      "mae": 0.04684254548260919,
+      "rmse": 0.06537419377854585
+    },
+    "naive": {
+      "mae": 0.06874790114953883,
+      "rmse": 0.09029206586724448
+    },
+    "seasonal": {
+      "mae": 0.07017994439572822,
+      "rmse": 0.10067539691531602
+    },
+    "pairedVsNaive": {
+      "meanDiff": -0.021905355666929322,
+      "t": -175.96353272242297
+    }
+  },
+  "evalRegime": {
+    "n": 144004,
+    "ridge": {
+      "mae": 0.06130647844659216,
+      "rmse": 0.08034334204921681
+    },
+    "naive": {
+      "mae": 0.09120701565835956,
+      "rmse": 0.11441846902625917
+    },
+    "seasonal": {
+      "mae": 0.10256665027637854,
+      "rmse": 0.12477657295855797
+    },
+    "pairedVsNaive": {
+      "meanDiff": -0.029900537211765454,
+      "t": -210.48843505646502
+    }
+  },
+  "formula": "12m ZHVI change = yMean + w·((features − mean)/sd); features = [12m change, 6m change, 3m change, 12m change a year ago, acceleration]; ridge penalty λ on standardised weights; band = point ± empirical p10/p90 residuals on the spatial holdout.",
+  "source": {
+    "publisher": "Zillow",
+    "dataset": "ZHVI county, all homes (smoothed, seasonally adjusted), files.zillowstatic.com/research/public_csvs",
+    "release": "2026-09",
+    "retrievedAt": "2026-10-23T18:59:37.331Z"
+  },
+  "sources": [
+    "Zillow ZHVI county file (files.zillowstatic.com/research/public_csvs)"
+  ],
+  "caveats": [
+    "Zillow revises recent months in each release, so backtest months are cleaner than live months.",
+    "County coverage grows over time: early months over-represent large metros.",
+    "A county is not a tradable asset; this is a descriptive model, not advice."
+  ]
+}
