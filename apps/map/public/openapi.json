@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Embedding Atlas data API",
-    "version": "0.7.0",
+    "version": "0.8.0",
     "summary": "Keyless, CORS-open JSON and CSV over public water, trade, jobs, housing, hazard and land sources, with provenance on every number.",
     "description": "Every JSON response is an envelope: route-specific fields at the top level, the payload in `data`, one `provenance` record per upstream release the numbers came from (estimates carry their formula in `method`), and `generatedAt`. Tabular ops answer `format=csv` with the same provenance as `#` comment lines after the data. See docs/API.md for citation format, caching, courtesy and per-source revision caveats.",
     "license": {

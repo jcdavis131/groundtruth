@@ -10,6 +10,7 @@ import { useGlobe } from "@/lib/store/globe";
 import { marketCitations, marketReportText, type MarketItem, type MarketReport, type MarketSection } from "@/lib/economy/report";
 import ProvenanceList from "./ProvenanceList";
 import CountyCompanies from "./CountyCompanies";
+import { ForecastLine, SimilarPlaces } from "./MlPanels";
 import { marketReportFromGlobe } from "@/lib/economy/reportClient";
 import { fmtNum, fmtPct, fmtUsd } from "@/lib/economy/features";
 import { copyShareLink } from "@/lib/globe/share";
@@ -216,6 +217,8 @@ export default function MarketReportPanel() {
             )}
           </Section>
           <Section s={report.rent} />
+          <ForecastLine fips={fips} />
+          <SimilarPlaces fips={fips} />
           <section className="border-t border-border/60 px-3 py-2">
             <div className="hud-label">
               Affordability <span className="text-warn">ESTIMATE</span>
