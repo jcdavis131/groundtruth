@@ -4193,6 +4193,77 @@
           }
         }
       }
+    },
+    "/api/ml": {
+      "get": {
+        "summary": "Phase 1 ML models: momentum-v1 12-month county ZHVI-change forecast and county-sim-v1 similar-county embedding",
+        "tags": [
+          "ml"
+        ],
+        "parameters": [
+          {
+            "name": "op",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "forecast",
+                "similar"
+              ]
+            },
+            "required": true
+          },
+          {
+            "name": "fips",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{5}$"
+            },
+            "description": "Five-digit county FIPS (SSCCC)",
+            "required": true
+          },
+          {
+            "name": "k",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 10
+            },
+            "description": "similar: neighbours to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Envelope { data, provenance[], generatedAt, caveats? }; data carries modelVersion, vintage and a modelCard link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Envelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "County not in the similarity embedding (needs 10 years of ZHVI)"
+          },
+          "422": {
+            "description": "Insufficient history for a forecast (needs 25 months of ZHVI); the route refuses to guess"
+          }
+        }
+      }
     }
   },
   "components": {
