@@ -20,7 +20,7 @@ import { flyToSelection } from "@/lib/globe/camera";
 import { formatLatLon } from "@/lib/globe/geo";
 import { useAreaContext, usePulse } from "./EconomyAsides";
 
-function useReport(open: boolean): { report: MarketReport | null; refresh: () => void } {
+function useReport(open: boolean): { report: MarketReport | null; refresh: () => void; fips: string | null } {
   const view = useGlobe((s) => s.view);
   const status = useGlobe((s) => s.status);
   const [nonce, setNonce] = useState(0);
@@ -40,7 +40,7 @@ function useReport(open: boolean): { report: MarketReport | null; refresh: () =>
     }, 600);
     return () => clearTimeout(id);
   }, [open, stamps, target, nonce, pulseData, ctxData]);
-  return { report, refresh: () => setNonce((n) => n + 1) };
+  return { report, refresh: () => setNonce((n) => n + 1), fips };
 }
 
 const FLAG: Record<NonNullable<MarketItem["flag"]>, string> = {
@@ -98,7 +98,7 @@ function Section({ s, children }: { s: MarketSection; children?: React.ReactNode
 export default function MarketReportPanel() {
   const open = useGlobe((s) => s.marketReportOpen);
   const setOpen = useGlobe((s) => s.setMarketReportOpen);
-  const { report, refresh } = useReport(open);
+  const { report, refresh, fips } = useReport(open);
   const momentumColor = useMemo(() => {
     const sc = report?.momentum.score;
     if (sc == null) return "var(--muted-foreground)";
