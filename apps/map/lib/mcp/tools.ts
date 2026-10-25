@@ -835,6 +835,27 @@ export const TOOLS: ToolDef[] = [
     handler: (i, ctx) => worldContext(i, ctx),
   }),
   defineTool({
+    name: "momentum_forecast",
+    title: "12-month county home-value change forecast",
+    description:
+      "momentum-v1: ridge regression on five point-in-time momentum features predicting a county's 12-month forward ZHVI change. Returns point, lo, hi (empirical p10/p90 band — a band, not a calibrated interval), model version, data vintage, the formula, provenance with named inputs, and a model-card link. Held-out eval: ridge MAE 4.68% vs naive 6.88% vs seasonal 7.02% (spatial holdout, n=115,021); 6.13% vs 9.12% vs 10.26% on the regime-shift slice (train ≤2019-12, test 2020-01..2023-12, n=144,004). Descriptive, not advice; a county is not a tradable asset. 422 when the county has < 25 months of history — the route refuses to guess.",
+    inputSchema: z.object({
+      fips: countyFips,
+    }),
+    handler: (i, ctx) => relay(ctx, "/api/ml" + qs({ op: "forecast", fips: i.fips })),
+  }),
+  defineTool({
+    name: "similar_places",
+    title: "Counties with similar housing trajectories",
+    description:
+      "county-sim-v1: k-nearest counties by Euclidean distance on standardized [12-month, 5-year, 10-year ZHVI change, 12-month rent change]. Returns neighbours with distance and similarity 1/(1+d), model version, vintage, provenance with named inputs, and a model-card link. v1 uses home values + rents only: similar housing trajectories, not similar places in full. 404 when the county lacks 10 years of ZHVI.",
+    inputSchema: z.object({
+      fips: countyFips,
+      k: z.number().int().min(1).max(50).optional().describe("Neighbours to return; default 10."),
+    }),
+    handler: (i, ctx) => relay(ctx, "/api/ml" + qs({ op: "similar", fips: i.fips, k: i.k })),
+  }),
+  defineTool({
     name: "openapi",
     title: "OpenAPI description of the HTTP API",
     description: "The OpenAPI 3 document for this server's /api routes (paths, parameters, response envelopes). Use it to call routes this tool list does not cover.",

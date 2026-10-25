@@ -2,6 +2,10 @@
 
 The public MCP server and its published schema, newest first. `SERVER_VERSION` (`lib/mcp/server.ts`) is the server string a client reads from `initialize` and `GET /api/mcp`; it is not the `world/N` schema version, which is `schemaVersion` on a `world_context` reply. `lib/mcp/server.lock.json` holds a hash of what `tools/list` says for each version here, and `lib/mcp/server.test.ts` fails when `tools/list` or `world_context`'s `outputSchema` changes without a new version and a dated heading below. The rules are in `docs/MCP.md`, "Versioning promise": additive within `world/N`, and a removed or renamed tool is announced under "Deprecated" here at least 30 days before it goes.
 
+## 0.8.0 - 2026-10-23
+
+Phase 1 ML (atlas SOTA platform SPEC-1.1/1.2/1.3): two new tools relaying the bundled `/api/ml` routes. `momentum_forecast` returns the ridge 12-month county ZHVI-change forecast (point + empirical p10/p90 band, 422 under 25 months of history); `similar_places` returns k-nearest counties by housing-trajectory embedding (404 under 10 years of ZHVI). Both are ESTIMATE-kind provenance with named inputs and link their model cards. The desk Chart tab gains a "Forecast 12 mo" button on county ZHVI history series (dashed bands, version+vintage+card-link caption), and the market report panel gains forecast + similar-places sections.
+
 ## 0.7.0 - 2026-10-21
 
 A `world_context` item says what date its publisher puts on the data, where its route states one, and `stale` compares that date, so it can fire on live data. Three byte trims from the 0.6.0 review. Additive within `world/2`.

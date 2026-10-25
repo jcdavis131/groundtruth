@@ -11,6 +11,11 @@ export interface ChartSeries {
   color: string;
   unit: string;
   points: Point[];
+  /** Dashed stroke (forecast bands). */
+  dash?: boolean;
+  /** Caption line under the chart; captionLink renders as a link after it. */
+  caption?: string;
+  captionLink?: { label: string; href: string };
 }
 
 export interface Extent {

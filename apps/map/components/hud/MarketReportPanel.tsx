@@ -10,6 +10,7 @@ import { useGlobe } from "@/lib/store/globe";
 import { marketCitations, marketReportText, type MarketItem, type MarketReport, type MarketSection } from "@/lib/economy/report";
 import ProvenanceList from "./ProvenanceList";
 import CountyCompanies from "./CountyCompanies";
+import { ForecastLine, SimilarPlaces } from "./MlPanels";
 import { marketReportFromGlobe } from "@/lib/economy/reportClient";
 import { fmtNum, fmtPct, fmtUsd } from "@/lib/economy/features";
 import { copyShareLink } from "@/lib/globe/share";
@@ -19,7 +20,7 @@ import { flyToSelection } from "@/lib/globe/camera";
 import { formatLatLon } from "@/lib/globe/geo";
 import { useAreaContext, usePulse } from "./EconomyAsides";
 
-function useReport(open: boolean): { report: MarketReport | null; refresh: () => void } {
+function useReport(open: boolean): { report: MarketReport | null; refresh: () => void; fips: string | null } {
   const view = useGlobe((s) => s.view);
   const status = useGlobe((s) => s.status);
   const [nonce, setNonce] = useState(0);
@@ -39,7 +40,7 @@ function useReport(open: boolean): { report: MarketReport | null; refresh: () =>
     }, 600);
     return () => clearTimeout(id);
   }, [open, stamps, target, nonce, pulseData, ctxData]);
-  return { report, refresh: () => setNonce((n) => n + 1) };
+  return { report, refresh: () => setNonce((n) => n + 1), fips };
 }
 
 const FLAG: Record<NonNullable<MarketItem["flag"]>, string> = {
@@ -97,7 +98,7 @@ function Section({ s, children }: { s: MarketSection; children?: React.ReactNode
 export default function MarketReportPanel() {
   const open = useGlobe((s) => s.marketReportOpen);
   const setOpen = useGlobe((s) => s.setMarketReportOpen);
-  const { report, refresh } = useReport(open);
+  const { report, refresh, fips } = useReport(open);
   const momentumColor = useMemo(() => {
     const sc = report?.momentum.score;
     if (sc == null) return "var(--muted-foreground)";
@@ -216,6 +217,8 @@ export default function MarketReportPanel() {
             )}
           </Section>
           <Section s={report.rent} />
+          <ForecastLine fips={fips} />
+          <SimilarPlaces fips={fips} />
           <section className="border-t border-border/60 px-3 py-2">
             <div className="hud-label">
               Affordability <span className="text-warn">ESTIMATE</span>
