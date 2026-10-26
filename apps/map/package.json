@@ -57,7 +57,7 @@
     "eslint": "^10",
     "eslint-config-next": "16.4.2",
     "tailwindcss": "^4",
-    "typescript": "^5",
+    "typescript": "^7",
     "vitest": "^5.0.5"
   },
   "description": "Ask eye about a US place and get a cited, dated public record: where it comes from, when it was read, and what it leaves out.",
