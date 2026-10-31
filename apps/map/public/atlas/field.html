@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Embedding Atlas — Living Field (Phase 1)</title>
+<meta name="description" content="Static embedding-first map core: 12,966 player-seasons projected from MTNN v5 64-d embeddings. Phase 1: no motion, no lens, no scrubber.">
+<style>
+:root{
+  --paper:#f6f3ea; --ink:#1c1a16; --ink-soft:rgba(28,26,22,.62);
+  --grid:rgba(28,26,22,.08); --accent:#b3541e; --panel:#fffdf7;
+  --bad:#a01c1c;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --paper:#16150f; --ink:#e8e2d2; --ink-soft:rgba(232,226,210,.62);
+    --grid:rgba(232,226,210,.07); --accent:#e08a3c; --panel:#1d1c15; --bad:#e06a5a; }
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);
+  font:14px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  -webkit-text-size-adjust:100%}
+body{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+header,footer{flex:0 0 auto;padding:8px 12px;background:var(--panel);
+  border-bottom:1px solid var(--grid);z-index:2}
+footer{border-bottom:0;border-top:1px solid var(--grid);min-height:44px}
+h1{font-size:13px;margin:0;font-weight:600;letter-spacing:.02em}
+.sub{color:var(--ink-soft);font-size:11px}
+#stage{position:relative;flex:1 1 auto;overflow:hidden;touch-action:none;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:28px 28px}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#readout{font-size:12px;color:var(--ink-soft)}
+#readout b{color:var(--ink)}
+#vintage{font-size:11px;color:var(--ink-soft)}
+#err503{position:absolute;inset:0;display:none;place-items:center;background:var(--paper);z-index:3}
+#err503.show{display:grid}
+#err503 .card{background:var(--panel);border:2px solid var(--bad);padding:24px;max-width:420px;margin:16px}
+#err503 h2{color:var(--bad);margin:0 0 8px;font-size:16px}
+#hint{position:absolute;right:12px;top:8px;font-size:11px;color:var(--ink-soft);z-index:2;
+  background:color-mix(in srgb,var(--panel) 85%,transparent);padding:2px 8px;border:1px solid var(--grid)}
+</style>
+</head>
+<body>
+<header>
+  <h1>EMBEDDING ATLAS · LIVING FIELD <span class="sub">phase 1 — static core</span></h1>
+  <div class="sub" id="vintage">loading manifest…</div>
+</header>
+<div id="stage">
+  <canvas id="gl"></canvas>
+  <div id="hint">drag pan · wheel/pinch zoom · tap a dot</div>
+  <div id="err503"><div class="card">
+    <h2>503 — data unavailable</h2>
+    <p id="err503msg">The atlas export could not be loaded. No stale data is shown.</p>
+    <p class="sub">Retry by reloading. If this persists, the export pipeline is down — not your connection.</p>
+  </div></div>
+</div>
+<footer>
+  <div id="readout">tap a dot to identify it · 12,966 player-seasons</div>
+</footer>
+<script>
+"use strict";
+/* Phase 1 static map core. Vanilla JS, no framework, no runtime inference.
+   Data: /atlas/v1/ static export (manifest + seed + raster + tiles + names).
+   Honest 503: any failed fetch -> 503 panel, never stale dots. */
+const V = "/atlas/v1";
+const $ = id => document.getElementById(id);
+const stage = $("stage"), canvas = $("gl"), readout = $("readout");
+
+function fail503(msg){
+  $("err503msg").textContent = msg + " No stale data is shown.";
+  $("err503").classList.add("show");
+}
+async function getJSON(p){
+  const r = await fetch(p, {cache:"force-cache"});
+  if(!r.ok) throw new Error("HTTP " + r.status + " on " + p);
+  return r.json();
+}
+async function getBytes(p){
+  const r = await fetch(p, {cache:"force-cache"});
+  if(!r.ok) throw new Error("HTTP " + r.status + " on " + p);
+  return new Uint8Array(await r.arrayBuffer());
+}
+
+let MAN = null, NAMES = null;           // manifest, lazy id->name map
+const view = {cx:0, cy:0, scale:1};     // data coords in [-1,1]^2
+let seedPts = null;                     // Float32Array [x,y,id]* (seed 5000)
+const tileCache = new Map();            // "tx,ty" -> Float32Array, LRU cap 64
+let dpr = Math.min(2, window.devicePixelRatio || 1);
+
+function dataToPx(x, y, w, h){
+  const s = view.scale * Math.min(w, h) / 2;
+  return [(x - view.cx) * s + w/2, (y - view.cy) * s + h/2];
+}
+
+/* ---------- WebGL2 renderer ---------- */
+let gl = null, prog = null, hitProg = null, vbo = null, hitFBO = null;
+const VS = `#version 300 es
+in vec2 a_xy; in float a_id;
+uniform vec2 u_center; uniform float u_scale; uniform vec2 u_px; uniform float u_size;
+flat out float v_id;
+void main(){
+  vec2 p = (a_xy - u_center) * u_scale * min(u_px.x,u_px.y) * 0.5 + u_px * 0.5;
+  gl_Position = vec4(p / u_px * 2.0 - 1.0, 0.0, 1.0);
+  gl_Position.y *= -1.0;
+  gl_PointSize = u_size;
+  v_id = a_id;
+}`;
+const FS = `#version 300 es
+precision mediump float;
+uniform vec3 u_ink;
+out vec4 o;
+void main(){
+  vec2 d = gl_PointCoord - 0.5;
+  if(dot(d,d) > 0.25) discard;
+  o = vec4(u_ink, 1.0);
+}`;
+const HITFS = `#version 300 es
+precision mediump float;
+flat in float v_id;
+out vec4 o;
+void main(){
+  vec2 d = gl_PointCoord - 0.5;
+  if(dot(d,d) > 0.25) discard;
+  float id = v_id + 1.0;
+  o = vec4(mod(id,256.0)/255.0, mod(floor(id/256.0),256.0)/255.0,
+           floor(id/65536.0)/255.0, 1.0);
+}`;
+function shader(type, src){
+  const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+  if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+  return s;
+}
+function program(fsSrc){
+  const p = gl.createProgram();
+  gl.attachShader(p, shader(gl.VERTEX_SHADER, VS));
+  gl.attachShader(p, shader(gl.FRAGMENT_SHADER, fsSrc));
+  gl.linkProgram(p);
+  if(!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+  return p;
+}
+function initGL(){
+  gl = canvas.getContext("webgl2", {antialias:false, alpha:false});
+  if(!gl) return false;
+  prog = program(FS); hitProg = program(HITFS);
+  vbo = gl.createBuffer();
+  hitFBO = gl.createFramebuffer();
+  const rb = gl.createRenderbuffer();
+  gl.bindRenderbuffer(gl.RENDERBUFFER, rb);
+  // sized on first draw
+  gl.bindFramebuffer(gl.FRAMEBUFFER, hitFBO);
+  gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.RENDERBUFFER, rb);
+  gl._hitRB = rb;
+  return true;
+}
+function inkRGB(){
+  const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+  return dark ? [0.91,0.89,0.82] : [0.11,0.10,0.086];
+}
+function setHitSize(w, h){
+  gl.bindRenderbuffer(gl.RENDERBUFFER, gl._hitRB);
+  gl.renderbufferStorage(gl.RENDERBUFFER, gl.RGBA8, w, h);
+}
+function drawPoints(pts, forHit){
+  // pts: Float32Array [x,y,id]*, x,y in [-1,1]
+  const p = forHit ? hitProg : prog;
+  gl.useProgram(p);
+  gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+  gl.bufferData(gl.ARRAY_BUFFER, pts, gl.DYNAMIC_DRAW);
+  const locX = gl.getAttribLocation(p, "a_xy"), locI = gl.getAttribLocation(p, "a_id");
+  gl.enableVertexAttribArray(locX); gl.vertexAttribPointer(locX, 2, gl.FLOAT, false, 12, 0);
+  gl.enableVertexAttribArray(locI); gl.vertexAttribPointer(locI, 1, gl.FLOAT, false, 12, 8);
+  gl.uniform2f(gl.getUniformLocation(p, "u_center"), view.cx, view.cy);
+  gl.uniform1f(gl.getUniformLocation(p, "u_scale"), view.scale);
+  const w = canvas.width, h = canvas.height;
+  gl.uniform2f(gl.getUniformLocation(p, "u_px"), w, h);
+  gl.uniform1f(gl.getUniformLocation(p, "u_size"), Math.max(2, 2 * dpr));
+  if(!forHit){
+    const ink = inkRGB();
+    gl.uniform3f(gl.getUniformLocation(p, "u_ink"), ink[0], ink[1], ink[2]);
+  }
+  gl.drawArrays(gl.POINTS, 0, pts.length / 3);
+  gl.disableVertexAttribArray(locX); gl.disableVertexAttribArray(locI);
+}
+function render(){
+  const w = canvas.width, h = canvas.height;
+  const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(0, 0, w, h);
+  gl.clearColor(dark?0.086:0.965, dark?0.082:0.953, dark?0.059:0.918, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  const pts = currentPoints();
+  drawPoints(pts, false);
+  window.__atlas = window.__atlas || {};
+  window.__atlas.drawn = pts.length / 3;
+  window.__atlas.tilesCached = tileCache.size;
+  window.__atlas.using2D = false;
+}
+function currentPoints(){
+  // zoomed in (>=2x): visible tiles; else seed. Cap 5000 drawn.
+  if(view.scale >= 2){
+    const pts = visibleTilePoints();
+    if(pts.length) return pts.length/3 > 5000 ? pts.slice(0, 15000) : pts;
+  }
+  return seedPts;
+}
+
+/* raster underlay: separate 2D canvas so the GL path stays point-sprites only */
+let under = null, uctx = null, rasterImg = null;
+function drawUnderlay(){
+  const w = canvas.width, h = canvas.height;
+  uctx.clearRect(0, 0, w, h);
+  if(!rasterImg) return;
+  // raster covers data [-1,1]^2 -> map through view
+  const [x0,y0] = dataToPx(-1, -1, w, h), [x1,y1] = dataToPx(1, 1, w, h);
+  uctx.globalAlpha = 0.22;
+  uctx.drawImage(rasterImg, x0, y1, x1 - x0, y0 - y1);
+  uctx.globalAlpha = 1;
+}
+function frame(){
+  resize();
+  drawUnderlay();
+  if(gl) render(); else render2D();
+}
+
+/* ---------- tiles (LRU 64) ---------- */
+function tileXY(tx, ty, bytes){
+  const dv = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const n = bytes.byteLength / 9, out = new Float32Array(n * 3);
+  for(let i = 0; i < n; i++){
+    const o = i * 9;
+    out[i*3]   = dv.getInt16(o + 4, true) / 32767;
+    out[i*3+1] = dv.getInt16(o + 6, true) / 32767;
+    out[i*3+2] = dv.getUint32(o, true);
+  }
+  return out;
+}
+async function loadTile(tx, ty){
+  const k = tx + "," + ty;
+  if(tileCache.has(k)){ const v = tileCache.get(k); tileCache.delete(k); tileCache.set(k, v); return v; }
+  const bytes = await getBytes(`${V}/tiles/all/2/${tx}/${ty}.bin`);
+  const pts = tileXY(tx, ty, bytes);
+  tileCache.set(k, pts);
+  if(tileCache.size > 64){ tileCache.delete(tileCache.keys().next().value); }
+  return pts;
+}
+function visibleTileRange(){
+  const w = canvas.width, h = canvas.height;
+  const s = view.scale * Math.min(w, h) / 2;
+  const x0 = view.cx + (0 - w/2) / s, x1 = view.cx + (w - w/2) / s;
+  const y0 = view.cy + (0 - h/2) / s, y1 = view.cy + (h - h/2) / s;
+  const t = v => Math.max(0, Math.min(3, Math.floor((v + 1) / 2 * 4)));
+  return {tx0:t(Math.min(x0,x1)), tx1:t(Math.max(x0,x1)), ty0:t(Math.min(y0,y1)), ty1:t(Math.max(y0,y1))};
+}
+function visibleTilePoints(){
+  const r = visibleTileRange(), out = [];
+  for(let tx = r.tx0; tx <= r.tx1; tx++) for(let ty = r.ty0; ty <= r.ty1; ty++){
+    const p = tileCache.get(tx + "," + ty);
+    if(p) out.push(p);
+  }
+  if(!out.length) return new Float32Array(0);
+  const cat = new Float32Array(out.reduce((a,p)=>a+p.length,0));
+  let o = 0; for(const p of out){ cat.set(p, o); o += p.length; }
+  return cat;
+}
+function prefetchTiles(){
+  if(view.scale < 2) return;
+  const r = visibleTileRange();
+  for(let tx = r.tx0; tx <= r.tx1; tx++) for(let ty = r.ty0; ty <= r.ty1; ty++){
+    if(!tileCache.has(tx + "," + ty)) loadTile(tx, ty).then(frame).catch(()=>{});
+  }
+}
+
+/* ---------- Canvas2D fallback ---------- */
+let use2D = false;
+function render2D(){
+  const w = canvas.width, h = canvas.height, ctx = uctx;
+  const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+  ctx.fillStyle = dark ? "#16150f" : "#f6f3ea";
+  ctx.fillRect(0, 0, w, h);
+  drawUnderlay();
+  const pts = currentPoints();
+  ctx.fillStyle = dark ? "#e8e2d2" : "#1c1a16";
+  const s = Math.max(2, 2 * dpr);
+  for(let i = 0; i < pts.length; i += 3){
+    const [px, py] = dataToPx(pts[i], pts[i+1], w, h);
+    if(px < -4 || py < -4 || px > w+4 || py > h+4) continue;
+    ctx.fillRect(px - s/2, py - s/2, s, s);
+  }
+  window.__atlas = window.__atlas || {};
+  window.__atlas.drawn = pts.length / 3;
+  window.__atlas.using2D = true;
+}
+function hitTest2D(px, py){
+  const pts = currentPoints();
+  const w = canvas.width, h = canvas.height;
+  let best = -1, bd = (12 * dpr) ** 2;
+  for(let i = 0; i < pts.length; i += 3){
+    const [qx, qy] = dataToPx(pts[i], pts[i+1], w, h);
+    const d = (qx-px)**2 + (qy-py)**2;
+    if(d < bd){ bd = d; best = pts[i+2]; }
+  }
+  return best;
+}
+
+/* ---------- hit testing (color-ID) ---------- */
+function hitTestGL(px, py){
+  const w = canvas.width, h = canvas.height;
+  setHitSize(w, h);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, hitFBO);
+  gl.viewport(0, 0, w, h);
+  gl.clearColor(0,0,0,1); gl.clear(gl.COLOR_BUFFER_BIT);
+  drawPoints(currentPoints(), true);
+  const pix = new Uint8Array(4);
+  gl.readPixels(Math.round(px*dpr), Math.round((canvas.clientHeight-py)*dpr), 1, 1,
+                gl.RGBA, gl.UNSIGNED_BYTE, pix);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  const id = pix[0] + pix[1]*256 + pix[2]*65536;
+  return id === 0 ? -1 : id - 1;
+}
+
+/* ---------- identity ---------- */
+async function identify(id){
+  if(!NAMES){
+    readout.innerHTML = "resolving identity…";
+    try{
+      const arr = await getJSON(V + "/names.min.json");
+      NAMES = new Map(arr.map(t => [t[0], [t[1], t[2]]]));
+    }catch(e){ readout.innerHTML = "<b>503</b> — identity index unavailable."; return; }
+  }
+  const hit = NAMES.get(id);
+  const vintage = MAN ? `model ${MAN.model_id} · vintage ${MAN.model_vintage} · proj ${MAN.projection_vintage}` : "";
+  readout.innerHTML = hit
+    ? `<b>${esc(hit[0])}</b> · ${esc(hit[1])} <span class="sub">id ${id} · ${esc(vintage)}</span>`
+    : `id ${id} — no identity row <span class="sub">${esc(vintage)}</span>`;
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+/* ---------- input: drag pan, wheel/pinch zoom, tap identify ---------- */
+let drag = null, pinchD0 = 0;
+function evPos(e){ const r = canvas.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+stage.addEventListener("pointerdown", e => {
+  stage.setPointerCapture(e.pointerId);
+  drag = {x:e.clientX, y:e.clientY, cx:view.cx, cy:view.cy, moved:0, t:performance.now()};
+});
+stage.addEventListener("pointermove", e => {
+  if(!drag) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  drag.moved = Math.max(drag.moved, Math.abs(dx) + Math.abs(dy));
+  const s = view.scale * Math.min(canvas.width, canvas.height) / 2;
+  view.cx = drag.cx - dx / s; view.cy = drag.cy + dy / s;
+  frame();
+});
+stage.addEventListener("pointerup", e => {
+  const wasTap = drag && drag.moved < 8 && performance.now() - drag.t < 500;
+  drag = null;
+  if(!wasTap) return;
+  const [px, py] = evPos(e);
+  const id = gl && !use2D ? hitTestGL(px, py) : hitTest2D(px, py);
+  if(id >= 0) identify(id);
+  else readout.textContent = "no entity there — try another dot";
+});
+stage.addEventListener("pointercancel", () => drag = null);
+stage.addEventListener("wheel", e => {
+  e.preventDefault();
+  const [px, py] = evPos(e);
+  const w = canvas.width, h = canvas.height;
+  const s0 = view.scale * Math.min(w,h)/2;
+  const dx = (px - w/2)/s0, dy = (py - h/2)/s0;
+  view.scale = Math.min(32, Math.max(0.5, view.scale * Math.exp(-e.deltaY * 0.0015)));
+  const s1 = view.scale * Math.min(w,h)/2;
+  view.cx = view.cx + dx - (px - w/2)/s1;
+  view.cy = view.cy + dy - (py - h/2)/s1;
+  prefetchTiles(); frame();
+}, {passive:false});
+stage.addEventListener("touchmove", e => {
+  if(e.touches.length === 2 && drag){
+    e.preventDefault();
+    const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX,
+                          e.touches[0].clientY - e.touches[1].clientY);
+    if(pinchD0 > 0) view.scale = Math.min(32, Math.max(0.5, view.scale * d / pinchD0));
+    pinchD0 = d; prefetchTiles(); frame();
+  }
+}, {passive:false});
+stage.addEventListener("touchend", () => pinchD0 = 0);
+
+/* debug hook for the CI render check (honest instrumentation, not a feature) */
+window.__atlasDebug = {
+  hitAt(clientX, clientY){
+    const r = canvas.getBoundingClientRect();
+    const px = clientX - r.left, py = clientY - r.top;
+    return gl && !use2D ? hitTestGL(px, py) : hitTest2D(px, py);
+  }
+};
+
+/* ---------- boot ---------- */
+function resize(){
+  const r = stage.getBoundingClientRect();
+  const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
+  if(canvas.width !== w || canvas.height !== h){ canvas.width = w; canvas.height = h; }
+  if(under){ under.width = w; under.height = h; }
+}
+async function boot(){
+  try{
+    MAN = await getJSON(V + "/manifest.json");
+  }catch(e){ fail503("manifest.json: " + e.message); return; }
+  $("vintage").textContent =
+    `model ${MAN.model_id} · model vintage ${MAN.model_vintage} · projection ${MAN.projection_id} (${MAN.projection_vintage}) · ${MAN.entity_count.toLocaleString()} entities`;
+  try{
+    const [seedBytes, rasterBlob] = await Promise.all([
+      getBytes(V + "/seed/all.bin"),
+      fetch(V + "/raster/all.png", {cache:"force-cache"}).then(r => { if(!r.ok) throw new Error("HTTP "+r.status); return r.blob(); })
+    ]);
+    seedPts = tileXY(0, 0, seedBytes); // same record layout
+    rasterImg = await createImageBitmap(rasterBlob);
+  }catch(e){ fail503("seed/raster: " + e.message); return; }
+
+  under = document.createElement("canvas");
+  stage.insertBefore(under, canvas);
+  under.style.cssText = "position:absolute;inset:0;width:100%;height:100%";
+  uctx = under.getContext("2d");
+
+  use2D = !initGL();
+  if(use2D) readout.textContent += " · canvas2d fallback";
+  resize();
+  frame();
+  window.addEventListener("resize", frame);
+}
+boot();
+</script>
+</body>
+</html>

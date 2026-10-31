@@ -1,0 +1,1 @@
+[{"gzip":true,"limit":"105 kB","name":"atlas field.html — page JS+CSS+HTML (gz)","path":"public/atlas/field.html"},{"gzip":false,"limit":"80 kB","name":"atlas first-paint raster (transfer bytes)","path":"public/atlas/v1/raster/all.png"},{"gzip":false,"limit":"60 kB","name":"atlas first-paint seed (transfer bytes)","path":"public/atlas/v1/seed/all.bin"}]
