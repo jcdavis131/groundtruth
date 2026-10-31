@@ -8,6 +8,8 @@ import { useReleases } from "@/lib/releases/store";
 import { useWatchlists } from "@/lib/watch/store";
 import { useScreener } from "@/lib/screener/store";
 import DeskToggle from "./DeskToggle";
+import PlayToggles from "@/components/play/PlayToggles";
+import { usePlay } from "@/lib/play/store";
 import ThemeToggle, { applyTheme, currentTheme } from "./ThemeToggle";
 import { useLens } from "@/lib/personas/store";
 import { PERSONA_BY_ID } from "@/lib/personas/registry";
@@ -105,7 +107,11 @@ export default function TopBar() {
   };
   const toggleSpace = () => useGlobe.getState().setSpaceWeatherOpen(!spaceOpen);
   // Off leaves the tool and keeps the shape (the panel stays with its readout); its close button clears it.
-  const toggleMeasure = () => setMeasureMode(measuring ? "off" : "distance");
+  // On parks a play mode first: a measure tool and a play mode both own globe clicks.
+  const toggleMeasure = () => {
+    if (!measuring) usePlay.getState().setMode("off");
+    setMeasureMode(measuring ? "off" : "distance");
+  };
   const closeMenu = (fn: () => void) => () => {
     setMenuOpen(false);
     fn();
@@ -223,6 +229,7 @@ export default function TopBar() {
           <Ruler className="size-3.5" />
           <span className="sr-only">Measure</span>
         </button>
+        <PlayToggles />
         <button type="button" onClick={toggleInd} aria-pressed={indOpen} className={btn} title="Named indicators with thresholds: river stages, freight, housing, energy, labour, trade">
           <Activity className="size-3.5" />
           <span className="sr-only">Signals</span>

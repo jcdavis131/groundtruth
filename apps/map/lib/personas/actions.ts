@@ -13,6 +13,7 @@ import { useTeleport } from "@/lib/live/teleportStore";
 import type { PanelId } from "./registry";
 import { useStrata } from "@/lib/fabric/strataStore";
 import { measureOpen, setMeasureMode } from "@/lib/globe/measure";
+import { usePlay } from "@/lib/play/store";
 
 export function isPanelOpen(id: PanelId): boolean {
   const g = useGlobe.getState();
@@ -39,6 +40,10 @@ export function isPanelOpen(id: PanelId): boolean {
       return useWatchlists.getState().open;
     case "teleport":
       return useTeleport.getState().active;
+    case "command":
+      return usePlay.getState().mode === "command";
+    case "fisherman":
+      return usePlay.getState().mode === "fisherman";
     default:
       return false;
   }
@@ -100,6 +105,12 @@ export function setPanel(id: PanelId, on: boolean): void {
       return;
     case "share":
       if (on) void copyShareLink();
+      return;
+    case "command":
+    case "fisherman":
+      // Play modes toggle like tools: tapping the active one stands down,
+      // tapping the other switches.
+      usePlay.getState().setMode(on ? id : "off");
       return;
   }
 }

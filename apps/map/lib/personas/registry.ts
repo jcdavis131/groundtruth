@@ -10,7 +10,7 @@ import type { EntityKind } from "@/lib/screener/fields";
 export type PersonaId = "realestate" | "economist" | "trader" | "water" | "logistics" | "banking" | "civic" | "explorer";
 
 /** Panels a lens can open on arrival; ids match lib/personas/actions.ts. */
-export type PanelId = "layers" | "strata" | "water" | "market" | "space" | "measure" | "signals" | "screen" | "releases" | "watch" | "explore" | "teleport" | "share";
+export type PanelId = "layers" | "strata" | "water" | "market" | "space" | "measure" | "signals" | "screen" | "releases" | "watch" | "explore" | "teleport" | "share" | "command" | "fisherman";
 
 export interface PersonaStep {
   text: string;
