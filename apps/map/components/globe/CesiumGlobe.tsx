@@ -13,6 +13,8 @@ import { cinematicTick, followTick } from "@/lib/globe/camera";
 import { isMobileViewport } from "@/lib/hooks/useIsMobile";
 import { satWorker } from "@/lib/globe/satWorker";
 import { measureClick, startMeasureOverlay } from "@/lib/globe/measure";
+import { usePlay } from "@/lib/play/store";
+import { playClick } from "@/lib/play/actions";
 import { groundClickWanted, identifyGround, startGroundOverlay } from "@/lib/terrain/ground";
 import { openHere, startHereOverlay } from "@/lib/whatshere/here";
 import { identifyParcel, startParcelOverlay } from "@/lib/parcels/pick";
@@ -354,6 +356,17 @@ export default function CesiumGlobe() {
           dropPinB(e.position.x, e.position.y, true);
           return;
         }
+        // A play mode owns the click the way a measure tool does: Command
+        // marches the probe and claims the county, Fisherman casts the hook.
+        if (usePlay.getState().mode !== "off") {
+          const ray = viewer!.camera.getPickRay(e.position);
+          const hit = (ray && scene.globe.pick(ray, scene)) || viewer!.camera.pickEllipsoid(e.position, ellipsoid);
+          if (hit) {
+            const c = C.Cartographic.fromCartesian(hit);
+            void playClick(C.Math.toDegrees(c.longitude), C.Math.toDegrees(c.latitude));
+          }
+          return;
+        }
         // While a measure tool is active a click places a vertex (or asks for
         // the elevation) on the ground under the cursor instead of picking.
         if (useGlobe.getState().measure.mode !== "off") {
@@ -437,6 +450,12 @@ export default function CesiumGlobe() {
         const st = useGlobe.getState();
         // A measure tool owns the cursor: clicks place points, they do not select.
         if (st.measure.mode !== "off") {
+          if (st.hover) st.setHover(null);
+          canvas.style.cursor = "crosshair";
+          return;
+        }
+        // A play mode owns the cursor too: clicks march the probe or cast the hook.
+        if (usePlay.getState().mode !== "off") {
           if (st.hover) st.setHover(null);
           canvas.style.cursor = "crosshair";
           return;

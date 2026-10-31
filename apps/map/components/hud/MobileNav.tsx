@@ -4,7 +4,7 @@
 // target; the active ones light up. The strip snaps so a flick lands on
 // whole chips.
 
-import { Activity, Aperture, Bell, CalendarDays, Compass, Droplets, Landmark, Layers, Layers3, Link2, Ruler, Sun, Table2, Zap } from "lucide-react";
+import { Activity, Aperture, Bell, CalendarDays, Compass, Droplets, Fish, Landmark, Layers, Layers3, Link2, Ruler, Sun, Swords, Table2, Zap } from "lucide-react";
 import type { ComponentType } from "react";
 import { useGlobe } from "@/lib/store/globe";
 import { useIndicators } from "@/lib/indicators/store";
@@ -18,6 +18,7 @@ import { togglePanel } from "@/lib/personas/actions";
 import { useTeleport } from "@/lib/live/teleportStore";
 import { useStrata } from "@/lib/fabric/strataStore";
 import { measureOpen } from "@/lib/globe/measure";
+import { usePlay } from "@/lib/play/store";
 
 interface Chip {
   id: PanelId;
@@ -38,6 +39,8 @@ const CHIPS: Chip[] = [
   { id: "watch", label: "Watch", icon: Bell },
   { id: "explore", label: "Explore", icon: Compass },
   { id: "teleport", label: "Teleport", icon: Zap },
+  { id: "command", label: "Command", icon: Swords },
+  { id: "fisherman", label: "Fish", icon: Fish },
   { id: "share", label: "Share", icon: Link2 },
 ];
 
@@ -67,6 +70,7 @@ export default function MobileNav() {
   const relOpen = useReleases((s) => s.releasesOpen);
   const watchOpen = useWatchlists((s) => s.open);
   const teleporting = useTeleport((s) => s.active);
+  const playMode = usePlay((s) => s.mode);
   const personaId = useLens((s) => s.personaId);
   const setPickerOpen = useLens((s) => s.setPickerOpen);
   const persona = personaId ? PERSONA_BY_ID[personaId] : null;
@@ -83,6 +87,8 @@ export default function MobileNav() {
     watch: watchOpen,
     explore: false,
     teleport: teleporting,
+    command: playMode === "command",
+    fisherman: playMode === "fisherman",
     share: false,
   };
   const chips = orderChips(persona?.nav);

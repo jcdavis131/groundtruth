@@ -44,6 +44,10 @@ import SearchCommand from "./SearchCommand";
 import TitleCard from "./TitleCard";
 import { FieldLegendHud } from "./FieldLegendLive";
 import { useGlobe } from "@/lib/store/globe";
+import { usePlay } from "@/lib/play/store";
+import FogVeil from "@/components/play/FogVeil";
+import CommandPanel from "@/components/play/CommandPanel";
+import FishermanPanel from "@/components/play/FishermanPanel";
 import { LAYERS } from "@/lib/layers";
 import { expandPerfLink } from "@/lib/perf/link";
 import PerfOverlay from "./PerfOverlay";
@@ -162,8 +166,10 @@ export default function Cockpit({ initialMobile = false }: { initialMobile?: boo
         setSettingsOpen(true);
       } else if (e.key === "Escape") {
         const st = useGlobe.getState();
-        // First Escape leaves a measure tool (the shape stays); the next one deselects.
-        if (st.measure.mode !== "off") st.setMeasure({ mode: "off" });
+        // First Escape leaves a play mode; then a measure tool (the shape
+        // stays); the next one deselects.
+        if (usePlay.getState().mode !== "off") usePlay.getState().setMode("off");
+        else if (st.measure.mode !== "off") st.setMeasure({ mode: "off" });
         else st.select(null);
       }
     };
@@ -183,6 +189,7 @@ export default function Cockpit({ initialMobile = false }: { initialMobile?: boo
       )}
       <CesiumGlobe />
       <LayerHost />
+      <FogVeil />
       <TimeMachineTicker />
       <PerfOverlay />
       <HudFrame />
@@ -201,6 +208,8 @@ export default function Cockpit({ initialMobile = false }: { initialMobile?: boo
             <MobileSheet>
               {layersOpen && <LayerPanel embedded />}
               <StrataRail />
+              <CommandPanel />
+              <FishermanPanel />
               <MeasurePanel />
               <AreaPanel />
               <WhatsHerePanel />
@@ -240,6 +249,8 @@ export default function Cockpit({ initialMobile = false }: { initialMobile?: boo
           >
             <StrataRail />
             <StartHere />
+            <CommandPanel />
+            <FishermanPanel />
             <MeasurePanel />
             <AreaPanel />
             <WhatsHerePanel />
