@@ -353,7 +353,10 @@ def build_datacenters(raw, out):
             operating.append(norm_point(name, operator, lat, lon))
 
     construction = []
-    for fname in ("osm_datacenters_us_construction.json", "osm_datacenters_texas_construction.json"):
+    # collect_osm.py writes no Texas-only construction file; the US
+    # construction query (24.5,-125.0,49.4,-66.9) already covers the whole
+    # Texas box, so requiring a Texas file failed every energy run here.
+    for fname in ("osm_datacenters_us_construction.json",):
         for e in load_any(fname):
             tags = e.get("tags", {})
             name = e.get("name") or tags.get("name")
