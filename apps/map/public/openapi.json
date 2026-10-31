@@ -4264,6 +4264,87 @@
           }
         }
       }
+    },
+    "/api/play": {
+      "get": {
+        "summary": "Play modes: the county a point is in (Census TIGERweb) — what Command claims and Fisherman casts on",
+        "tags": [
+          "fabric"
+        ],
+        "parameters": [
+          {
+            "name": "op",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "county"
+              ]
+            },
+            "required": true
+          },
+          {
+            "$ref": "#/components/parameters/lon"
+          },
+          {
+            "$ref": "#/components/parameters/lat"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "{ county: { geoid, name, basename, state } | null }; a null county is open water, not an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "county": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "geoid": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "basename": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "The county service did not answer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
