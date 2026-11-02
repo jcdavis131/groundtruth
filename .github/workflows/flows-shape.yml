@@ -1,7 +1,8 @@
 # The flow data refresh's shape check. Scout's cron runs
-# apps/map/scripts/flows-data.mjs every 6 h and opens a data-only pull request
-# touching apps/map/lib/flows/data/wind.json and currents.json. On such a pull
-# request, apps/map/scripts/flows-shape-check.mjs compares each file with the
+# apps/map/scripts/flows-data.mjs every 12 h, one layer per run, and opens a
+# data-only pull request touching apps/map/lib/flows/data/wind.json or
+# currents.json. On such a pull request,
+# apps/map/scripts/flows-shape-check.mjs compares each file with the
 # base's copy: same keys, same grid, same array lengths, same non-null counts
 # (land stays null, never zero-filled), same source, an as-of that is newer
 # and not in the future, every value finite and in range. It runs on the

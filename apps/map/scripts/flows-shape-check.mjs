@@ -1,9 +1,9 @@
 // Shape check for a flow data refresh (apps/map/scripts/flows-data.mjs writes
-// lib/flows/data/wind.json and currents.json every 6 h from Scout's cron, and
-// each run opens a data-only pull request). A refresh may change the numbers
-// and the as-of time and nothing else. This compares the working-tree files
-// with the same paths at a base ref, read with `git show <ref>:<path>` (no
-// checkout), and passes a file only if:
+// lib/flows/data/wind.json or currents.json, one layer per run, every 12 h from
+// Scout's cron, and each run opens a data-only pull request). A refresh may
+// change the numbers and the as-of time and nothing else. This compares the
+// working-tree files with the same paths at a base ref, read with
+// `git show <ref>:<path>` (no checkout), and passes a file only if:
 //
 //   keys     the top-level keys are the same set
 //   grid     every field of `grid` is identical (lat0, lon0, dlat, dlon, nlat, nlon)
