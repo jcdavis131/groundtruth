@@ -138,9 +138,19 @@ function seed(windAsof: string | null, currentsAsof: string | null) {
   }
 }
 
-/** Copies of the committed bundles (both as-of 2026-11-01T20:15:00Z on the base this was written on). */
+/**
+ * Copies of the committed bundles, with the as-of of each copy pinned to one fixed value, so that
+ * `--layer auto` always ties and a tie goes to wind. Every data PR moves the committed as-of of one
+ * layer; without the pin, the tests that run auto on these copies would pass only while wind is not
+ * newer than currents. Only the as-of field changes: every other byte is as committed.
+ */
+const PINNED_ASOF = "2026-11-01T20:15:00Z";
 function seedCommitted() {
-  for (const f of ["wind.json", "currents.json"]) writeFileSync(path.join(dataDir, f), readFileSync(path.join(COMMITTED, f)));
+  for (const f of ["wind.json", "currents.json"]) {
+    const text = readFileSync(path.join(COMMITTED, f), "utf8");
+    if (!/"asof":"[^"]*"/.test(text)) throw new Error(`${f}: no "asof" field to pin`);
+    writeFileSync(path.join(dataDir, f), text.replace(/"asof":"[^"]*"/, `"asof":"${PINNED_ASOF}"`));
+  }
 }
 
 const snapshot = () =>
@@ -480,8 +490,17 @@ describe("arguments and the call log's home", () => {
   it("exits 2 on a bad argument, from the command line too", async () => {
     const clock = fakeClock();
     expect(await run(["--layer", "sideways"], clock, fakeOpenMeteo(clock).fetch)).toBe(EXIT.USAGE);
-    const res = spawnSync(process.execPath, [SCRIPT, "--layer", "sideways"], { encoding: "utf8" });
+    const noNet = path.join(dir, "no-net.mjs");
+    writeFileSync(noNet, 'globalThis.fetch = () => { console.error("NETWORK CALL"); process.exit(99); };\n');
+    const res = spawnSync(
+      process.execPath,
+      ["--import", pathToFileURL(noNet).href, SCRIPT, "--layer", "sideways", "--call-log", callLog, "--data-dir", dataDir],
+      { encoding: "utf8" },
+    );
     expect(res.status).toBe(2);
+    expect(res.stderr).toMatch(/--layer must be auto, wind or currents/);
+    expect(res.stderr).not.toMatch(/NETWORK CALL/);
+    expect(existsSync(callLog)).toBe(false);
   });
 
   it("keeps the call log outside the repo: --call-log, then $FLOWS_CALL_LOG, then the XDG state folder", () => {
