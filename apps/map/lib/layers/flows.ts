@@ -18,17 +18,31 @@ import type { FlowGrid } from "@/lib/globe/flowField";
 import windBundle from "@/lib/flows/data/wind.json";
 import currentsBundle from "@/lib/flows/data/currents.json";
 
-const STALE_MS = 30 * 3_600_000; // bundles refresh every 6 h; flag past 30 h
+// Each bundle refreshes once a day: the cron runs scripts/flows-data.mjs every
+// 12 h with --layer auto, one layer per run, to stay inside Open-Meteo's free
+// limits (each location is one call; 10,000 a day). Stale past 28 h = the 24 h
+// cadence + 4 h of grace. In normal operation a bundle is at most about 24 h
+// 40 min old when its replacement deploys (its as-of is the 15-minute slot the
+// fetch starts in, and the paced fetch, data PR and deploy take about 25 min),
+// so 28 h leaves over 3 h for a slow run without a false flag. A missed daily
+// refresh crosses 28 h about 4 h after it was due and stays flagged until the
+// retry, 12 h after the miss, deploys (age about 36 h 40 min).
+export const STALE_MS = 28 * 3_600_000;
 
-function bundleAgeNote(bundle: FlowGrid): { note: string; stale: boolean } {
+export function bundleAgeNote(bundle: FlowGrid, now = Date.now()): { note: string; stale: boolean } {
   const asof = Date.parse(bundle.asof);
-  const stale = !Number.isFinite(asof) || Date.now() - asof > STALE_MS;
+  const stale = !Number.isFinite(asof) || now - asof > STALE_MS;
   const when = Number.isFinite(asof) ? new Date(asof).toUTCString().slice(5, 22) : "unknown time";
   return {
-    note: `${stale ? "STALE — " : ""}as of ${when} UTC · refreshes every 6 h`,
+    note: `${stale ? "STALE — " : ""}as of ${when} UTC · refreshes daily`,
     stale,
   };
 }
+
+// How often an open tab re-reads the bundled grid. The data changes once a day;
+// re-reading every 6 h keeps the as-of note and the stale flag current in a
+// tab left open, and costs no network request (the bundle is built in).
+const REREAD_MS = 21_600_000;
 
 function flowFetch(bundle: FlowGrid, source: string) {
   return async (): Promise<FetchResult> => {
@@ -67,9 +81,9 @@ export const windFlowLayer = makeFlowLayer(
   {
     label: "Wind flow",
     description:
-      "Animated wind particles over the whole globe, coloured by speed. Live 10 m wind from the current GFS cycle.",
+      "Animated wind particles over the whole globe, coloured by speed. 10 m wind from GFS, refreshed daily.",
     color: "#38BDF8",
-    updateIntervalMs: 21_600_000,
+    updateIntervalMs: REREAD_MS,
     defaultEnabled: false,
     attribution: "Open-Meteo (GFS)",
     source: "Open-Meteo (GFS 10 m wind)",
@@ -85,7 +99,7 @@ export const oceanFlowLayer = makeFlowLayer(
     description:
       "Animated surface-current particles, coloured by water temperature with brightness by speed — the tidal-reel look, worldwide.",
     color: "#2DD4BF",
-    updateIntervalMs: 21_600_000,
+    updateIntervalMs: REREAD_MS,
     defaultEnabled: false,
     attribution: "Open-Meteo Marine",
     source: "Open-Meteo Marine (currents + SST)",
