@@ -10,20 +10,33 @@ cost no request. (build_bundles.py reads the global, Texas and
 US-construction files; every Texas element is also in the global result.)
 
 Retry policy: an HTTP 502, 503 or 504, a network error, a body that is not
-complete JSON, or a 200 response with an Overpass runtime-error remark gets
-up to two more attempts. The wait is 60 s before attempt 2 and 120 s before
-attempt 3. A numeric Retry-After header (300 s maximum) replaces the wait.
-Any other HTTP error, 429 (rate limit) included, stops the run at once.
-The run stops before it uses more than 20 minutes, because a long process on
-the refresh machine loses outbound connections after about 30 minutes.
+a complete JSON object, or a 200 response with an Overpass runtime-error
+remark gets up to two more attempts. The wait is 60 s before attempt 2 and
+120 s before attempt 3. A numeric Retry-After header (0 to 300 s) replaces
+the wait. Any other HTTP error, 429 (rate limit) included, stops the run at
+once, and so does a malformed OVERPASS_URL (a setup error, not a server
+error).
+
+Time budget: 20 minutes per run, because a long process on the refresh
+machine loses outbound connections after about 30 minutes. No attempt, the
+first one included, starts unless its 220 s timeout fits in what is left.
+The timeout limits each wait for data, not a whole reply, so a reply that
+arrives slowly can run a little past the budget: 20 minutes is the plan, not
+a hard cap.
 
 Rate limits: an HTTP 429 or 403 writes overpass_paused.json in the raw
 folder. While that file exists, the collector sends no request and exits
 non-zero. Only the owner resumes it: delete the file.
 
-Writes: the collector writes its files only after both requests succeed. A
-failed run keeps the previous files, so the raw folder always holds one
-complete, matched set.
+Writes: the collector writes nothing until both requests succeed, so a
+failed request leaves every previous file as it was. Then it replaces the
+four files one after another, each in one step (a temp file, then a rename).
+The four renames are not one step together.
+
+Folder: ENERGY_RAW, which scripts/energy-data.mjs always sets to
+lib/energy/data/raw/ (gitignored). A direct run without it uses that same
+folder, so raw files and the pause file never land among the committed
+bundles.
 """
 import http.client
 import json
@@ -36,7 +49,7 @@ import urllib.request
 from datetime import datetime, timezone
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA = os.environ.get("ENERGY_RAW", os.path.join(BASE, "data"))
+DATA = os.environ.get("ENERGY_RAW", os.path.join(BASE, "data", "raw"))
 DEFAULT_OVERPASS = "https://overpass-api.de/api/interpreter"
 
 RETRY_CODES = {502, 503, 504}
@@ -58,7 +71,7 @@ class OverpassError(RuntimeError):
 def _retry_after(err):
     value = err.headers.get("Retry-After") if err.headers else None
     try:
-        return min(int(value), MAX_RETRY_AFTER) if value is not None else None
+        return max(0, min(int(value), MAX_RETRY_AFTER)) if value is not None else None
     except ValueError:
         return None
 
@@ -67,22 +80,33 @@ def overpass(query, deadline, url=None, waits=WAITS, timeout=QUERY_TIMEOUT,
              sleep=time.sleep, clock=time.monotonic):
     base = url or os.environ.get("OVERPASS_URL") or DEFAULT_OVERPASS
     full = base + "?" + urllib.parse.urlencode({"data": query})
+    # Built once, before any attempt: a malformed URL raises ValueError here,
+    # outside the retry loop, so it stops the run at once.
+    req = urllib.request.Request(full, headers={"User-Agent": "energy-texas/1.0"})
     attempts = len(waits) + 1
+    reason = None
     for attempt in range(1, attempts + 1):
+        # Every attempt, the first one included, must fit in the budget.
+        if clock() + timeout > deadline:
+            last = f"; last: {reason}" if reason else ""
+            raise OverpassError(f"time budget too small for attempt {attempt} of {attempts}{last}")
         try:
-            req = urllib.request.Request(full, headers={"User-Agent": "energy-texas/1.0"})
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 data = json.loads(resp.read().decode())
+            if not isinstance(data, dict):
+                raise OverpassError("reply is not a JSON object")
             remark = data.get("remark") or ""
             if "error" in remark.lower():
                 raise OverpassError("remark: " + remark[:200])
             return data
         except urllib.error.HTTPError as err:
             if err.code not in RETRY_CODES:
-                raise  # 429 and every other HTTP error: stop now, no retry
+                raise  # 429, 403 and every other HTTP error: stop now, no retry
             reason, wait = f"HTTP {err.code}", _retry_after(err)
-        except (OverpassError, urllib.error.URLError, http.client.HTTPException,
-                TimeoutError, ConnectionError, ValueError) as err:
+        # HTTPError is caught above. OSError covers the other network errors:
+        # URLError, timeouts, connection resets and TLS errors.
+        except (OverpassError, OSError, http.client.HTTPException,
+                json.JSONDecodeError, UnicodeDecodeError) as err:
             reason, wait = f"{type(err).__name__}: {str(err)[:160]}", None
         if attempt == attempts:
             raise OverpassError(f"gave up after {attempts} attempts; last: {reason}")

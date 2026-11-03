@@ -93,6 +93,27 @@ class RetryPolicy(Base):
             self.ask([(400, {}, "bad query"), OK_GLOBAL])
         self.assertEqual(self.sleeps, [])
 
+    def test_403_stops_at_once(self):
+        with self.assertRaises(urllib.error.HTTPError) as cm:
+            self.ask([(403, {}, "forbidden"), OK_GLOBAL])
+        self.assertEqual(cm.exception.code, 403)
+        self.assertEqual(self.sleeps, [])
+        self.assertEqual(len(Script.seen), 1)
+
+    def test_500_is_not_retried(self):
+        with self.assertRaises(urllib.error.HTTPError) as cm:
+            self.ask([(500, {}, "oops"), OK_GLOBAL])
+        self.assertEqual(cm.exception.code, 500)
+        self.assertEqual(self.sleeps, [])
+        self.assertEqual(len(Script.seen), 1)
+
+    def test_malformed_url_stops_before_any_request(self):
+        with self.assertRaises(ValueError):
+            collect_osm.overpass("[out:json];node(1);out;", 10_000, url="no-scheme/api/interpreter",
+                                 timeout=5, sleep=self.sleeps.append, clock=lambda: 0.0)
+        self.assertEqual(self.sleeps, [])
+        self.assertEqual(Script.seen, [])
+
     def test_three_server_errors_give_up(self):
         with self.assertRaises(collect_osm.OverpassError):
             self.ask([(502, {}, ""), (503, {}, ""), (504, {}, ""), OK_GLOBAL])
@@ -105,6 +126,9 @@ class RetryPolicy(Base):
         self.setUp()
         self.ask([(503, {"Retry-After": "9999"}, ""), OK_GLOBAL])
         self.assertEqual(self.sleeps, [collect_osm.MAX_RETRY_AFTER])
+        self.setUp()
+        self.ask([(503, {"Retry-After": "-5"}, ""), OK_GLOBAL])
+        self.assertEqual(self.sleeps, [0])
 
     def test_runtime_error_remark_is_retried(self):
         remark = json.dumps({"elements": [], "remark": 'runtime error: Query timed out in "query" at line 1 after 181 seconds.'})
@@ -116,11 +140,21 @@ class RetryPolicy(Base):
         self.ask([(200, {}, '{"elements": [{"type": "node"'), OK_GLOBAL])
         self.assertEqual(self.sleeps, [60])
 
+    def test_json_that_is_not_an_object_is_retried(self):
+        self.ask([(200, {}, "[]"), OK_GLOBAL])
+        self.assertEqual(self.sleeps, [60])
+
     def test_no_retry_past_the_time_budget(self):
         with self.assertRaises(collect_osm.OverpassError) as cm:
             self.ask([(502, {}, ""), OK_GLOBAL], deadline=30)
         self.assertIn("time budget", str(cm.exception))
         self.assertEqual(self.sleeps, [])
+
+    def test_no_first_attempt_past_the_time_budget(self):
+        with self.assertRaises(collect_osm.OverpassError) as cm:
+            self.ask([OK_GLOBAL], deadline=4)
+        self.assertIn("time budget", str(cm.exception))
+        self.assertEqual(Script.seen, [])
 
 
 class Main(Base):
@@ -185,6 +219,14 @@ class Main(Base):
             collect_osm.main(sleep=self.sleeps.append)
         self.assertEqual(Script.seen, [])
         self.assertFalse(os.path.exists(os.path.join(self.raw, "osm_datacenters_us.json")))
+
+    def test_403_writes_pause_file(self):
+        Script.replies = [OK_GLOBAL, (403, {}, "forbidden")]
+        with self.assertRaises(urllib.error.HTTPError):
+            collect_osm.main(sleep=self.sleeps.append)
+        self.assertEqual(self.load(collect_osm.PAUSE_FILE)["http_status"], 403)
+        self.assertEqual(self.sleeps, [])
+        self.assertEqual(sorted(os.listdir(self.raw)), [collect_osm.PAUSE_FILE])
 
 
 if __name__ == "__main__":
