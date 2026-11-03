@@ -398,14 +398,26 @@ def main():
         raw = args[args.index("--raw") + 1]
     if "--out" in args:
         out = args[args.index("--out") + 1]
+    # --skip a.json,b.json: do not build those bundles; their files stay as
+    # they are (energy-data.mjs passes datacenters.json when osm fails).
+    skip = set()
+    if "--skip" in args:
+        skip = {s for s in args[args.index("--skip") + 1].split(",") if s}
     os.makedirs(out, exist_ok=True)
 
-    bundles = {
-        "ercot_prices.json": build_ercot(raw, out),
-        "us_electricity_prices.json": build_us_prices(raw, out),
-        "global_generation.json": build_global_generation(raw, out),
-        "datacenters.json": build_datacenters(raw, out),
+    builders = {
+        "ercot_prices.json": build_ercot,
+        "us_electricity_prices.json": build_us_prices,
+        "global_generation.json": build_global_generation,
+        "datacenters.json": build_datacenters,
     }
+    unknown = sorted(skip - builders.keys())
+    if unknown:
+        sys.exit(f"unknown --skip bundle: {', '.join(unknown)}")
+    # Build every bundle before writing any, so a failed build writes nothing.
+    bundles = {name: fn(raw, out) for name, fn in builders.items() if name not in skip}
+    for name in sorted(skip):
+        print(f"skipped {name}: previous file kept")
     for name, bundle in bundles.items():
         path = os.path.join(out, name)
         tmp = path + ".tmp"

@@ -19,7 +19,8 @@
 // Raw collector outputs land in lib/energy/data/raw/ (gitignored); only the
 // bundles are committed. Fails fast: any stage exiting non-zero stops the
 // refresh and leaves the previous bundles in place (never a half-written
-// bundle).
+// bundle). One exception: when only the osm stage fails, the script prints a
+// PARTIAL line, keeps the previous datacenters.json and rebuilds the others.
 //
 // Cadence: ERCOT real-time prices move every 15 minutes, so the ERCOT bundle
 // is a snapshot the moment it is built. Recommended refresh: ERCOT collectors
@@ -54,12 +55,32 @@ const stages = [
   ["ember", "collect_ember.py"],
   ["osm", "collect_osm.py"],
 ];
+// The data-center layer has one free community source (Overpass), and
+// collect_osm.py already retries it. When that stage still fails, keep the
+// previous datacenters.json (its meta.built keeps its old date) and let the
+// price and generation bundles refresh. Every other stage still fails fast.
+const skip = [];
 for (const [name, script] of stages) {
   if (only && only !== name) continue;
-  sh(PY, [path.join(COLLECTORS, script)], { env });
+  try {
+    sh(PY, [path.join(COLLECTORS, script)], { env });
+  } catch (err) {
+    if (name !== "osm") throw err;
+    console.log(
+      `PARTIAL: osm stage failed (exit ${err.status ?? "unknown"}); datacenters.json keeps its previous build`,
+    );
+    skip.push("datacenters.json");
+  }
 }
 
-// Bundles always rebuild from whatever raw is present.
-sh(PY, [path.join(ENERGY, "build_bundles.py"), "--raw", RAW], { env });
+// Bundles rebuild from whatever raw is present, except a skipped bundle,
+// which keeps its committed file.
+const bundleArgs = ["--raw", RAW];
+if (skip.length) bundleArgs.push("--skip", skip.join(","));
+sh(PY, [path.join(ENERGY, "build_bundles.py"), ...bundleArgs], { env });
 
-console.log("energy data refresh complete: lib/energy/data/*.json");
+console.log(
+  skip.length
+    ? `energy data refresh PARTIAL: kept previous ${skip.join(", ")}; other bundles rebuilt`
+    : "energy data refresh complete: lib/energy/data/*.json",
+);
