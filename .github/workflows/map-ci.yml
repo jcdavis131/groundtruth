@@ -3,7 +3,8 @@
 # freeze check first (plain Node, no install, a second), then tsc --noEmit,
 # vitest and eslint on the files the pull request changed, and a reporting-only
 # receipt coverage table (see the step). Every step runs in apps/map, the same
-# as it did at eye's repo root.
+# as it did at eye's repo root. A third job runs the energy collectors' Python
+# unit tests (see the job).
 #
 # Install is npm ci --ignore-scripts, then only the half of postinstall the
 # tests read: scripts/patch-knockout-csp.mjs, which security-headers.test.ts
@@ -56,6 +57,21 @@ jobs:
           node-version: 22
 
       - run: node scripts/freeze-check.mjs
+
+  # The energy collectors (lib/energy/collectors) are stdlib-only Python, run
+  # by scripts/energy-data.mjs. Their unittest files play the remote server
+  # on 127.0.0.1, so this job needs no install and sends no request off the
+  # runner. python3 comes with the runner image.
+  energy-collectors:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - run: python3 -m unittest discover -s lib/energy/collectors -p "test_*.py" -v
 
   check:
     runs-on: ubuntu-latest

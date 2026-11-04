@@ -19,7 +19,10 @@
 // Raw collector outputs land in lib/energy/data/raw/ (gitignored); only the
 // bundles are committed. Fails fast: any stage exiting non-zero stops the
 // refresh and leaves the previous bundles in place (never a half-written
-// bundle).
+// bundle). One exception: in a full run (no --only), when only the osm stage
+// fails, the script prints a line that starts with "PARTIAL:", keeps the
+// previous datacenters.json and rebuilds the others. An --only=osm run still
+// fails fast: it has nothing else to refresh.
 //
 // Cadence: ERCOT real-time prices move every 15 minutes, so the ERCOT bundle
 // is a snapshot the moment it is built. Recommended refresh: ERCOT collectors
@@ -28,7 +31,7 @@
 //   npm run data:energy -- --only=ercot
 
 import { execFileSync } from "node:child_process";
-import { mkdirSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -36,6 +39,18 @@ const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const ENERGY = path.join(ROOT, "lib", "energy");
 const COLLECTORS = path.join(ENERGY, "collectors");
 const RAW = path.join(ENERGY, "data", "raw");
+const DATACENTERS = path.join(ENERGY, "data", "datacenters.json");
+// collect_osm.py writes this after an HTTP 429 or 403 and sends no request
+// while it exists. Only the owner deletes it.
+const OVERPASS_PAUSE = path.join(RAW, "overpass_paused.json");
+
+function builtOf(file) {
+  try {
+    return JSON.parse(readFileSync(file, "utf8")).meta?.built ?? "unknown";
+  } catch {
+    return "unknown";
+  }
+}
 
 function sh(cmd, args, opts = {}) {
   console.log(`$ ${cmd} ${args.join(" ")}`);
@@ -54,12 +69,36 @@ const stages = [
   ["ember", "collect_ember.py"],
   ["osm", "collect_osm.py"],
 ];
+// The data-center layer has one free community source (Overpass), and
+// collect_osm.py already retries it. When that stage still fails in a full
+// run, keep the previous datacenters.json (its meta.built keeps its old date)
+// and let the price and generation bundles refresh. Every other stage, and an
+// --only=osm run, still fails fast.
+const skip = [];
 for (const [name, script] of stages) {
   if (only && only !== name) continue;
-  sh(PY, [path.join(COLLECTORS, script)], { env });
+  try {
+    sh(PY, [path.join(COLLECTORS, script)], { env });
+  } catch (err) {
+    if (name !== "osm" || only) throw err;
+    const why = existsSync(OVERPASS_PAUSE)
+      ? `paused (${path.relative(ROOT, OVERPASS_PAUSE)} exists after an HTTP 429/403; delete it to resume)`
+      : `failed (exit ${err.status ?? "unknown"})`;
+    console.log(
+      `PARTIAL: osm stage ${why}; datacenters.json keeps its previous build (meta.built ${builtOf(DATACENTERS)})`,
+    );
+    skip.push("datacenters.json");
+  }
 }
 
-// Bundles always rebuild from whatever raw is present.
-sh(PY, [path.join(ENERGY, "build_bundles.py"), "--raw", RAW], { env });
+// Bundles rebuild from whatever raw is present, except a skipped bundle,
+// which keeps its committed file.
+const bundleArgs = ["--raw", RAW];
+if (skip.length) bundleArgs.push("--skip", skip.join(","));
+sh(PY, [path.join(ENERGY, "build_bundles.py"), ...bundleArgs], { env });
 
-console.log("energy data refresh complete: lib/energy/data/*.json");
+console.log(
+  skip.length
+    ? `energy data refresh PARTIAL: kept previous ${skip.join(", ")}; other bundles rebuilt`
+    : "energy data refresh complete: lib/energy/data/*.json",
+);
