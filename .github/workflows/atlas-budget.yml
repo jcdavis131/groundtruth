@@ -1,0 +1,92 @@
+# Atlas Living Field budgets (C7) + C1 render evidence.
+#
+# Runs on every pull request and push to master that touches apps/map.
+# Jobs:
+#   size-limit  — the SPEC §3 C7 budget table (.size-limit.json). Fails the PR on breach.
+#   lhci        — Lighthouse CI on the static atlas page (mobile, simulated 4G).
+#                 FCP/LCP warn, CLS + console-errors hard fail.
+#   render      — Playwright: 5,000 points drawn, frame p95 <= 16.6ms over a
+#                 scripted 10s pan, <= 300KB before first paint, hit-test
+#                 resolves an identity. Writes evidence/c1-render-report.json.
+# Artifacts: lhci output + the render report upload as `atlas-evidence`.
+#
+# The guard rule pins every action to a full commit sha (never a tag).
+
+name: atlas-budget
+
+on:
+  pull_request:
+    paths:
+      - "apps/map/**"
+      - ".github/workflows/atlas-budget.yml"
+  push:
+    branches: [master]
+    paths:
+      - "apps/map/**"
+      - ".github/workflows/atlas-budget.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: atlas-budget-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    working-directory: apps/map
+
+jobs:
+  size-limit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/map/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npx size-limit --json > evidence/c7/size-limit.json
+      - run: npx size-limit
+
+  lhci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.0.1
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/map/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: (python3 -m http.server 8901 --directory public >/tmp/atlas-serve.log 2>&1 &)
+      - run: npx lhci autorun
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        if: always()
+        with:
+          name: atlas-lhci
+          path: apps/map/evidence/c7/lhci
+          if-no-files-found: warn
+
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.0.1
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: apps/map/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/atlas-render-check.mjs
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        if: always()
+        with:
+          name: atlas-c1-render-report
+          path: apps/map/evidence/c1-render-report.json
+          if-no-files-found: error
