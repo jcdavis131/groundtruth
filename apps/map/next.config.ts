@@ -49,11 +49,20 @@ const nextConfig: NextConfig = {
     // scripts, and 'wasm-unsafe-eval' because Cesium instantiates WebAssembly
     // to draw the globe — without it the map never renders. That keyword
     // permits WebAssembly only; plain eval() and new Function() stay blocked.
+    // F6 (2026-11-15): script-src and style-src no longer carry the bare
+    // https: wildcard — no script or stylesheet loads from a third-party
+    // host (every bundle is self-hosted; @vercel/analytics serves from this
+    // origin; next/font is build-time), so the wildcard only widened the
+    // blast radius of a supply-chain injection. img-src and connect-src keep
+    // https: for the tile and camera hosts (pinned by
+    // security-headers.test.ts). Removing 'unsafe-inline' would need a nonce
+    // migration, which forces dynamic rendering on every page — a separate
+    // decision, not this change.
     const csp = (frameAncestors: string) =>
       [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https:",
-        "style-src 'self' 'unsafe-inline' https:",
+        "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
+        "style-src 'self' 'unsafe-inline'",
         "img-src 'self' data: blob: https:",
         "font-src 'self' data: https:",
         "connect-src 'self' https: wss:",
