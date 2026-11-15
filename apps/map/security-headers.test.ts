@@ -57,6 +57,21 @@ describe("security headers", () => {
     }
   });
 
+  it("keeps script and style sources same-origin (no bare https: wildcard)", async () => {
+    // F6 (2026-11-15): no script or stylesheet loads from a third-party
+    // host — every bundle is self-hosted — so the https: wildcard only
+    // widened the blast radius of a supply-chain injection. img-src and
+    // connect-src keep https: for the tile and camera hosts (see the two
+    // tests below); 'unsafe-inline' stays because the App Router emits
+    // inline bootstrap scripts, and 'wasm-unsafe-eval' stays for Cesium.
+    for (const r of await rules()) {
+      const csp = get(r, "content-security-policy")!;
+      for (const name of ["script-src", "style-src"]) {
+        expect(directive(csp, name).split(/\s+/)).not.toContain("https:");
+      }
+    }
+  });
+
   it("lets the ISS dossier frame YouTube's privacy-enhanced player, and no other host", async () => {
     // Without a frame-src, default-src 'self' blocks the stream's iframe.
     for (const r of await rules()) {
