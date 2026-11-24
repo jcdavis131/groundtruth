@@ -1,0 +1,9 @@
+{
+  "nodes": 119,
+  "edges": 88,
+  "strong": 69,
+  "weak": 19,
+  "dropped": [],
+  "failures": [],
+  "passed": true
+}
