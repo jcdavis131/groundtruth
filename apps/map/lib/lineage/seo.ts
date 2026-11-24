@@ -1,30 +1,27 @@
-// Method Lineage SEO + deterministic seed-graph reads (SPEC C1, C2, C7).
+// Method Lineage SEO + deterministic seed-graph ops (SPEC C1, C2, C7).
 //
 // Canonical origin for every /lineage* page. Do NOT change SITE_URL in
 // lib/seo/base.ts: that would move the Embedding Atlas canonicals. Lineage
 // canonicals are built from LINEAGE_ORIGIN instead (SPEC C7).
 //
-// Graph reads: this module reads lib/lineage/graph.json directly and parses
-// it with the zod schema from ./schema. It deliberately does NOT import
-// ./load — load.ts resolves its path with
-// fileURLToPath(new URL("./graph.json", import.meta.url)) at module scope,
-// and that call throws during `next build` page-data collection
-// ("The \"path\" argument must be of type string or an instance of URL.
-// Received an instance of URL", lib/lineage/load.ts:25), which fails the
-// whole build for every page that imports it. The path here is resolved
-// from process.cwd() (apps/map, where build and start run) with a repo-root
-// fallback, and honours LINEAGE_GRAPH_PATH. Slice A owns the load.ts fix;
-// until it lands, this module is the frontend's reader. The ranking and
+// Graph reads: this module reads through ./load (loadLineage) — the single
+// graph reader for the frontend and the API routes alike. The ranking and
 // graph ops below are the single implementation of the SPEC's deterministic
 // ranking (C4 #4: exact alias match > title substring > abstract token
 // overlap). The landing developer block (C1) and the explorer (C2.1) both
 // render from searchSeedGraph, so the example response on /lineage is the
 // true response of the ranking the API slice must reuse — never pasted JSON.
 
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import {
+  edgesFrom,
+  edgesTo,
+  getMethod as loadGetMethod,
+  loadLineage,
+  type LineageIndex,
+} from "./load";
+import { STRONG_EDGE_TYPES, type LineageEdge, type LineageNode } from "./schema";
 
-import { GraphSchema, STRONG_EDGE_TYPES, type LineageEdge, type LineageGraph, type LineageNode } from "./schema";
+export type { LineageIndex };
 
 export const LINEAGE_ORIGIN = "https://www.arxiviq.com";
 
@@ -40,65 +37,25 @@ export function lineageCanonical(path: string): string {
   return lineageUrl(path);
 }
 
-export interface LineageIndex {
-  graph: LineageGraph;
-  nodesById: Map<string, LineageNode>;
-  methodsById: Map<string, LineageNode>;
-  papersById: Map<string, LineageNode>;
-  edgesFrom: Map<string, LineageEdge[]>;
-  edgesTo: Map<string, LineageEdge[]>;
-}
-
-function resolveGraphPath(): string {
-  // Statically scoped segments (not one "lib/lineage/graph.json" string)
-  // so Turbopack traces only lib/lineage instead of the whole project.
-  // Build and start both run from apps/map, so process.cwd() is apps/map.
-  if (process.env.LINEAGE_GRAPH_PATH) return process.env.LINEAGE_GRAPH_PATH;
-  return join(process.cwd(), "lib", "lineage", "graph.json");
-}
-
-let cached: LineageIndex | null = null;
-
-/** Parse + index the seed graph once per process (server-side only). */
+/** Parse + index the seed graph once per process (server-side only). Single reader: ./load. */
 export function loadSeedGraph(): LineageIndex {
-  if (cached) return cached;
-  const graph = GraphSchema.parse(JSON.parse(readFileSync(resolveGraphPath(), "utf8")));
-  const nodesById = new Map<string, LineageNode>();
-  const methodsById = new Map<string, LineageNode>();
-  const papersById = new Map<string, LineageNode>();
-  for (const node of graph.nodes) {
-    nodesById.set(node.id, node);
-    if (node.kind === "method") methodsById.set(node.id, node);
-    if (node.kind === "paper") papersById.set(node.id, node);
-  }
-  const edgesFrom = new Map<string, LineageEdge[]>();
-  const edgesTo = new Map<string, LineageEdge[]>();
-  for (const edge of graph.edges) {
-    const from = edgesFrom.get(edge.from) ?? [];
-    from.push(edge);
-    edgesFrom.set(edge.from, from);
-    const to = edgesTo.get(edge.to) ?? [];
-    to.push(edge);
-    edgesTo.set(edge.to, to);
-  }
-  cached = { graph, nodesById, methodsById, papersById, edgesFrom, edgesTo };
-  return cached;
+  return loadLineage();
 }
 
 export function getMethod(id: string): LineageNode | undefined {
-  return loadSeedGraph().methodsById.get(id);
+  return loadGetMethod(id);
 }
 
 export function getNode(id: string): LineageNode | undefined {
-  return loadSeedGraph().nodesById.get(id);
+  return loadLineage().nodesById.get(id);
 }
 
 export function edgesFromId(id: string): LineageEdge[] {
-  return loadSeedGraph().edgesFrom.get(id) ?? [];
+  return edgesFrom(id);
 }
 
 export function edgesToId(id: string): LineageEdge[] {
-  return loadSeedGraph().edgesTo.get(id) ?? [];
+  return edgesTo(id);
 }
 
 export interface LineageCounters {
