@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { MANIFEST } from "@/lib/places/registry";
+import { lineageCanonical } from "@/lib/lineage/seo";
 import { absoluteUrl } from "@/lib/seo/base";
 
 // The top of the sitemap tree: the globe, the three hubs and the catalogue, by hand.
@@ -32,5 +33,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: absoluteUrl("/metro"), lastModified: LAST_MODIFIED, changeFrequency: "weekly", priority: 0.9 },
     { url: absoluteUrl("/state"), lastModified: LAST_MODIFIED, changeFrequency: "weekly", priority: 0.9 },
     { url: absoluteUrl("/catalog"), lastModified: BUILD_DATE, changeFrequency: "weekly", priority: 0.6 },
+    { url: lineageCanonical("/lineage"), lastModified: BUILD_DATE, changeFrequency: "weekly", priority: 0.7 },
   ];
 }
