@@ -116,6 +116,11 @@
    "kind": "link",
    "publisher": "U.S. Geological Survey"
   },
+  "arxiv.org": {
+   "kind": "link",
+   "publisher": "arXiv.org e-Print archive",
+   "used": "paper abstract-page URLs cited in the lineage seed graph"
+  },
   "auth.opensky-network.org": {
    "kind": "request",
    "publisher": "OpenSky Network",
@@ -327,6 +332,13 @@
   },
   "example.invalid": {
    "kind": "identifier"
+  },
+  "export.arxiv.org": {
+   "kind": "request",
+   "publisher": "arXiv.org e-Print archive",
+   "keyless": true,
+   "used": "build-time seed metadata only",
+   "license": "arXiv API Terms of Use, read 2026-11-24: \"You are free to use descriptive metadata about arXiv e-prints under the terms of the Creative Commons Universal (CC0 1.0) Public Domain Declaration.\" Rate limit: at most one request every three seconds, single connection at a time."
   },
   "eye.jcamd.com": {
    "kind": "link",
