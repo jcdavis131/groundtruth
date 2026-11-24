@@ -313,7 +313,7 @@ export default function LineagePage() {
             Roadmap
           </h2>
           <p className={p}>
-            Seed graph v1 (shipped) · API v1 (in progress) · Knowledge-map import (when the source is named)
+            Seed graph v1 (shipped) · API v1 (shipped) · Knowledge-map import (when the source is named)
           </p>
           <h3 className="mt-6 text-[18px] font-semibold leading-snug text-foreground">
             Give your agent a structured scientific memory
