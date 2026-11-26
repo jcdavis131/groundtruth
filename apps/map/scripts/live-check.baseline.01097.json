@@ -1,6 +1,6 @@
 {
   "recordedFrom": "https://www.arxiviq.com",
-  "recordedAt": "2026-10-20T12:34:14.096Z",
+  "recordedAt": "2026-11-26T19:28:35.092Z",
   "fips": "01097",
   "shape": {
     "keys": [
@@ -29,7 +29,8 @@
       "hazards": {
         "keys": [
           "coverageStatus",
-          "items"
+          "items",
+          "missing"
         ],
         "items": 9
       },
@@ -48,10 +49,9 @@
       "institutions": {
         "keys": [
           "coverageStatus",
-          "items",
-          "missing"
+          "items"
         ],
-        "items": 5
+        "items": 8
       },
       "water": {
         "keys": [
@@ -61,6 +61,7 @@
       },
       "freshness": {
         "keys": [
+          "coverageStatus",
           "items"
         ],
         "items": 3
