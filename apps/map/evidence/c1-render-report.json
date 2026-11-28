@@ -1,0 +1,37 @@
+{
+ "url": "http://127.0.0.1:8901/atlas/field.html",
+ "at": "2026-10-31T01:59:09.027Z",
+ "checks": {
+  "drawn": {
+   "value": 5000,
+   "bar": 5000,
+   "pass": true
+  },
+  "using2d": {
+   "value": false
+  },
+  "hit_test": {
+   "value": "Kevin Garnett · 1999-00 id 1389 · model mtnn_v5_concat_b2_h160_t32_d64_mlp128_fu",
+   "pass": true
+  },
+  "frame_p95_ms": {
+   "value": 16.7,
+   "bar": 16.6,
+   "n": 593,
+   "pass": null,
+   "note": "report-only in CI; bar applies on reference device"
+  },
+  "bytes_before_first_paint": {
+   "value": 65699,
+   "bar": 300000,
+   "pass": true
+  },
+  "console_errors": {
+   "value": 0,
+   "bar": 0,
+   "pass": true,
+   "errors": []
+  }
+ },
+ "pass": true
+}
